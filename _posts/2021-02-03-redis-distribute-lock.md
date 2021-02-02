@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Welcome to wendajiang!"
+title:  "Redis分布式锁[翻译]"
 date:   2021-02-03 01:26:18 +0800
 categories: translate, redis
 ---
