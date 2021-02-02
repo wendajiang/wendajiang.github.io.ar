@@ -24,7 +24,7 @@ description: >- # this means to ignore newlines until "baseurl:"
 keywords: C++, Rust, developer
 timezone: Asia/Shanghai
 encoding: "urf-8"
-url: wendajiang.github.io
+url: //manateelazycat.github.io
 
 markdown: kramdown
 kramdown:
