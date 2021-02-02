@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "分布式算法路线图[翻译]"
+title:  "分布式算法路线图"
 date:   2021-02-03 01:02:18 +0800
 categories: distribute, algorithms
 
