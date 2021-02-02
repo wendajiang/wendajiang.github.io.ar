@@ -18,13 +18,7 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-email: wendajiang93@163.com
-description: >- # this means to ignore newlines until "baseurl:"
-  C++ developer, Rust fan
-keywords: C++, Rust, developer
-timezone: Asia/Shanghai
-encoding: "urf-8"
-url: //manateelazycat.github.io
+url: //wendajiang.github.io
 
 markdown: kramdown
 kramdown:
