@@ -2,7 +2,7 @@
 layout: post
 title:  "lock-free circular array queue[翻译]"
 date:   2021-02-05 17:26:18 +0800
-categories: translate, lock-free, ABA, queue
+categories: translate lock-free ABA queue
 ---
 
 [原链接](https://www.codeproject.com/Articles/153898/Yet-another-implementation-of-a-lock-free-circul)
