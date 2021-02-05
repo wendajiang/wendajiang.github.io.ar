@@ -30,6 +30,7 @@
                 字数{{ page.content | strip_html | strip_newlines | remove: " " | size }} {{ page.date | date: "%Y-%m-%d" }}
             </div>
             <div class="content">
+                {% include toc.html html=content %}
                 {{ content }}
             </div>
         </div>
