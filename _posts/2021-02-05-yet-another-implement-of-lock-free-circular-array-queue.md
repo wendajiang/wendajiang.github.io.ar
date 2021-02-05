@@ -188,16 +188,13 @@ queue_enqueue(Queue *q, gpointer data)
         next = tail->next;
         if (tail != q->tail)
             continue;
-
         if (next != NULL) {
             CAS(&q->tail, tail, next);
             continue;
         }
-
         if (CAS(&tail->next, null, node)
             break;
     }
-
     CAS(&q->tail, tail, node);
 }
 
@@ -205,27 +202,22 @@ gpointer
 queue_dequeue(Queue *q)
 {
     Node *node, *tail, *next;
-
     while (TRUE) {
         head = q->head;
         tail = q->tail;
         next = head->next;
         if (head != q->head)
             continue;
-
         if (next == NULL)
             return NULL; // Empty
-
         if (head == tail) {
             CAS(&q->tail, tail, next);
             continue;
         }
-
         data = next->data;
         if (CAS(&q->head, head, next))
             break;
     }
-
     g_slice_free(Node, head); // This isn't safe
     return data;
 }
@@ -239,7 +231,7 @@ queue_dequeue(Queue *q)
 4. That same thread (or a new one, for instace T3) is going to enqueue a new node. the call to malloc returns the same address that was being used by the node removed in step 2-3. It adds that node into the queue
 5. T1 takes the processor again, the `CAS` operation succeds incorrectly since the address is the same, but it's not the same node. T1 removes the wrong node
 
-ABA 问题可以对每个节点加上引用计数解决。在假定CAS操作正确之前必须检查引用计数以避免 ABA 问题。好消息时，本文提到的 queue 不会收 ABA 问题影响，因为不使用动态内存分配。
+ABA 问题可以对每个节点加上引用计数解决。在假定CAS操作正确之前必须检查引用计数以避免 ABA 问题。不过好消息是，本文提到的 queue 不会受 ABA 问题影响，因为不使用动态内存分配。
 
 <a name="no3">
 ### 2.3 Dynamic memory allocation
@@ -250,27 +242,384 @@ ABA 问题可以对每个节点加上引用计数解决。在假定CAS操作正�
 
 ## 3. The circular array based lock-free queue
 
+在此基于 array 的 lock-free 的环形队列首次登场，尽可能降低第2节三个问题的影响。可以总结为以下特性：
+
+- 作为lock-free同步机制，降低了任务被强占的频率，从而降低了 cache trashing
+- 同样的作为 lock-free 队列，线程之间竞争减少，因为lock-free：线程基本上是先声明空间已被占用，然后将数据填入
+- 不需要在堆上分配空间
+- 不会受到 ABA 问题的影响，当然也加入了 array 一些操作的开销
+
 ### 3.1 How does it work?
+
+queue 基于 array 和三个 index：
+
+- `writeIndex`:新元素要被插入的地方
+- `readIndex`:下一个被弹出的元素位置
+- `maximumReadIndex`:上一个已经‘commit’要插入的元素位置。如果与`writeIndex`位置不同，意味着有写入被挂起，也意味着这个位置已经被声明占用了，但是数据还没有写进去到队列里，所以试图读的线程需要等待数据被填入
+
+值得一提的是，三个index是必要的，因为队列允许多生产者和多消费者。有[文章](https://www.codeproject.com/articles/43510/lock-free-single-producer-single-consumer-circular)研究了单生产者单消费者，这篇文章值得一读（我一直很喜欢 [KISS 原则](https://en.wikipedia.org/wiki/KISS_principle)）。这里的事情变得复杂很多，因为队列必须对于各种线程配置都要线程安全。
 
 #### 3.1.1 The CAS operation 
 
+Lock-free queue 同步机制基于 CAS 的 CPU 指令。CAS 操作已经在 GCC 4.1.0 实现。因此在GCC4.4 版本编译，我采用了 GCC 的 `build_in operation: __sync_bool_compare_and_swap`（[这里是GCC文档](https://gcc.gnu.org/onlinedocs/gcc-4.4.2/gcc/Atomic-Builtins.html)），为了移植性考虑，这个操作通过宏定义了 `CAS`，在`atomic_ops.h`文件中：
+
+```cpp
+#define CAS(a_ptr, a_oldVal, a_newVal) __sync_bool_compare_and_swap(a_ptr, a_oldVar, a_newVal)
+```
+
+如果要使用其他编译器或者其他版本，你需要宏定义CAS操作，接口满足如下条件：
+
+- 第一个是可变的地址参数
+- 第二个参数是老值
+- 第三个参数是新值
+- 成功返回`true`，否则返回`false`
+
+<a name="no5">
+
 #### 3.1.2 Inserting elements into the queue
+
+这是插入元素的代码：
+
+```cpp
+/* ... */
+template <typename ELEM_T, uint32_t Q_SIZE>
+inline
+uint32_t ArrayLockFreeQueue<ELEM_T, Q_SIZE>::countToIndex(uint32_t a_count)
+{
+    return (a_count % Q_SIZE);
+}
+
+/* ... */
+
+template <typename ELEM_T>
+bool ArrayLockFreeQueue<ELEM_T>::push(const ELEM_T &a_data)
+{
+    uint32_t currentReadIndex;
+    uint32_t currentWriteIndex;
+
+    do
+    {
+        currentWriteIndex = m_writeIndex;
+        currentReadIndex  = m_readIndex;
+        if (countToIndex(currentWriteIndex + 1) ==
+            countToIndex(currentReadIndex))
+        {
+            // the queue is full
+            return false;
+        }
+
+    } while (!CAS(&m_writeIndex, currentWriteIndex, (currentWriteIndex + 1)));
+
+    // We know now that this index is reserved for us. Use it to save the data
+    m_theQueue[countToIndex(currentWriteIndex)] = a_data;
+
+    // update the maximum read index after saving the data. It wouldn't fail if there is only one thread
+    // inserting in the queue. It might fail if there are more than 1 producer threads because this
+    // operation has to be done in the same order as the previous CAS
+
+    while (!CAS(&m_maximumReadIndex, currentWriteIndex, (currentWriteIndex + 1)))
+    {
+        // this is a good place to yield the thread in case there are more
+        // software threads than hardware processors and you have more
+        // than 1 producer thread
+        // have a look at sched_yield (POSIX.1b)
+        sched_yield();
+    }
+
+    return true;
+}
+
+```
+
+下图描述了一个queue的初始状态，每个格子表示queue的位置，如果标记了 X 表示包含了数据，空白格子就是空的。图中表示当前queue已经插入了两个元素。`writeIndex`指向新元素将要插入的位置，`readIndex`指向下次`pop`弹出的元素位置
+
+![image-20210205150248827](../pics/2021-02-05-yet-another-implement-of-lock-free-circular-array-queue/image-20210205150248827.png)
+
+基本上，当新元素被`push`操作写入队列时，writeIndex increment。MaximumReadIndex指向最新的有效数据
+
+![image-20210205150433877](../pics/2021-02-05-yet-another-implement-of-lock-free-circular-array-queue/image-20210205150433877.png)
+
+一旦新空间被占用，当前线程就会开始将数据拷贝进queue。然后increment maximumReadIndex
+
+![image-20210205150546567](../pics/2021-02-05-yet-another-implement-of-lock-free-circular-array-queue/image-20210205150546567.png)
+
+此时，队列中有了三个被插入的元素。下一步，另一个任务试图继续插入新元素
+
+![image-20210205150728199](../pics/2021-02-05-yet-another-implement-of-lock-free-circular-array-queue/image-20210205150728199.png)
+
+已经腾出了数据的空间，但是这时被其它线程抢占也要插入一个元素（再占用一个）
+
+![image-20210205150852717](../pics/2021-02-05-yet-another-implement-of-lock-free-circular-array-queue/image-20210205150852717.png)
+
+此时，线程开始往占用的位置拷贝数据，但是**必须**按照**严格的顺序**：第一个生产者线程 increment maximumReadIndex，然后第二个线程再 increment。这个顺序很重要，因为在允许消费线程将其从队列中`pop`之前，要确保数据被保存到'commited'的位置。【译者注：这个顺序通过CAS对于maximumReadIndex保证】
+
+![image-20210205151841109](../pics/2021-02-05-yet-another-implement-of-lock-free-circular-array-queue/image-20210205151841109.png)
+
+第一个生产者【译者注：1，2的先后顺序由reversed位置定义】将数据提交位置。现在该第二个线程继续自己的任务了
+
+![image-20210205151944816](../pics/2021-02-05-yet-another-implement-of-lock-free-circular-array-queue/image-20210205151944816.png)
+
+现在队列插入了5个元素
 
 #### 3.1.3 Removing elements from the queue
 
+这是`pop`的代码：
+
+```cpp
+/* ... */
+
+template <typename ELEM_T>
+bool ArrayLockFreeQueue<ELEM_T>::pop(ELEM_T &a_data)
+{
+    uint32_t currentMaximumReadIndex;
+    uint32_t currentReadIndex;
+
+    do
+    {
+        // to ensure thread-safety when there is more than 1 producer thread
+        // a second index is defined (m_maximumReadIndex)
+        currentReadIndex        = m_readIndex;
+        currentMaximumReadIndex = m_maximumReadIndex;
+
+        if (countToIndex(currentReadIndex) ==
+            countToIndex(currentMaximumReadIndex))
+        {
+            // the queue is empty or
+            // a producer thread has allocate space in the queue but is
+            // waiting to commit the data into it
+            return false;
+        }
+
+        // retrieve the data from the queue
+        a_data = m_theQueue[countToIndex(currentReadIndex)];
+
+        // try to perfrom now the CAS operation on the read index. If we succeed
+        // a_data already contains what m_readIndex pointed to before we
+        // increased it
+        if (CAS(&m_readIndex, currentReadIndex, (currentReadIndex + 1)))
+        {
+            return true;
+        }
+
+        // it failed retrieving the element off the queue. Someone else must
+        // have read the element stored at countToIndex(currentReadIndex)
+        // before we could perform the CAS operation
+
+    } while(1); // keep looping to try again!
+
+    // Something went wrong. it shouldn't be possible to reach here
+    assert(0);
+
+    // Add this return statement to avoid compiler warnings
+    return false;
+}
+```
+
+还是用插入数据一节的queue的初始状态。有两个元素已经插入队列。
+
+![image-20210205152150470](../pics/2021-02-05-yet-another-implement-of-lock-free-circular-array-queue/image-20210205152150470.png)
+
+消费线程，从`readIndex`复制数据，然后尝试在相同的`readIndex`执行`CAS`操作。如果线程执行`CAS`成功，表示数据已经从队列取出，因为`CAS`是原子的。如果`CAS`失败，下次尝试就会从新的位置重复这个过程，如下图
+
+![image-20210205152645278](../pics/2021-02-05-yet-another-implement-of-lock-free-circular-array-queue/image-20210205152645278.png)
+
+结果就是下图
+
+![image-20210205152726271](../pics/2021-02-05-yet-another-implement-of-lock-free-circular-array-queue/image-20210205152726271.png)
+
+如果这个时候还有线程要读取数据，就会失败，因为队列已空。
+
+现在一个任务尝试在队列中插入新元素，已经占到了位置但是提交数据被挂起，然后另一个线程想要`pop`一个元素，现在知道队列不空了，（因为`writeIndex != readIndex`），但是还不能读取，因为`maximumReadIndex != readIndex`。这个线程试图`pop`，将陷入循环中，直到数据被提交让`maximumReadIndex == readIndex`或者队列称为空（如果另有一个消费线程进来先消费了，然后再次`writeIndex == readIndex`）
+
+【译者注：这里原文两个图不贴了，上面文字描述的更清楚】
+
+<a name="no4">
+
 #### 3.1.4 On the need for yielding the processor when there is more than 1 producer thread
+
+【译者注：本节详细阐述了push第二次 CAS 是为了保证 FIFO 顺序，这里如果单纯++，会导致数据错乱】
+
+读者可能注意到了`push`函数中对于`sched_yield`的调用出让CPU，对于宣称 lock-free 的算法看起来有点奇怪。正如文章开头就提到的一样，多线程的性能下降原因之一就是**cache trashing**。典型造成`cache trashing`就是被强占的线程上下文需要操作系统从cache转移到主存，恢复时又要转移回来。
+
+当算法调用`sched_yield`时，就是告诉操作系统：hi，你能把别的任务搞过来吗，我必须等会才能执行。lock-free 和 lock 同步机制的主要区别就是我们不需要阻塞，所以为啥要主动告诉操作系统赶紧抢占我？回答这个问题并不简单，涉及到了生产者将新数据保存到队列中，需要以FIFO 顺序执行两次 CAS 操作，一次申请分配空间，另一次通知消费者数据已经提交。
+
+如果应用只有一个生产线程，`sched_yield`就不需要调用了，因为第二次 CAS 绝对不会失败。操作自然就会按照 FIFO 的顺序执行，因为只有一个线程在插入数据
+
+当大于一个线程插入数据时，问题就来了。如同[3.1.2节](#no5)表述那样插入数据，1CAS已经按照 FIFO 顺序申请空间后，2CAS必须也按照 FIFO 顺序执行。让我们考虑下面的场景，三个生产者一个消费者：
+
+- 线程1，2，3按照顺序申请空间。2CAS必须按照相同顺序执行，1，2，3
+- 线程2先开始执行2CAS，但是因为Thread 1还没执行所以失败了，Thread 3也会失败
+- 2和3线程陷入循环直到线程1执行了2CAS
+- 线程1执行完之后，线程3必须等2执行
+- 最终按序执行完
+
+2CAS失败是可能spin也不失为一个好选择。当使用的多处理器机器的处理器数量大于线程数量时，这可能很好：线程卡住一直尝试在volatile variable(maximumReadIndex)上执行CAS操作，但是等待的线程可能分配到物理处理器核心，因此最终比如Thread1可能执行2CAS，自旋的操作也能结束。总而言之，该算法有保留线程循环的可能性，但是要保证这种行为是可行的，在某些特定情况可以删除`scheld_yield`。事实上，删除`scheld_yield`才是最好的性能。
+
+但是`scheld_yield`对于多个生产者和线程数量大于物理核心数的场景是必要的。考虑之前的问题，当三个线程试图插入新数据到队列中，线程1在分配空间后被抢占，线程2，3会一直死循环直到线程1被唤醒，这就需要`sheld_yield`，操作系统不比一直让线程2，3保持循环，它们必须尽快阻塞，以让线程1执行2CAS，让自己能够继续执行。
 
 ## 4. Known issues of the queue
 
+这个lock-free 队列的主要目的是提供一个不需要动态内存分配的 lock-free 队列，已经搞定，但是算法存在一些已知的缺点，在生产环境中使用该算法应该考虑这些缺点是不是你关注的。
+
 ### 4.1 Using more than one producer thread 
+
+如同在[3.1.4](#no4)中描述一样（如果你要在多生产者环境中使用这个算法要仔细阅读这一节内容），如果有超过一个生产线程，由于必须按照 FIFO 顺序操作 `maximumReadIndex`，所以可能多次调用`sched_yield`导致花费很多开销。这个队列设计的原始场景只有一个生产线程，因此在多生产线程的场景，性能是肯定会下降的。
+
+此外，如果你计划将此队列用于单生产者线程的场景，不需要第二个 CAS 操作。对于 `m_maximumReadIndex`的 CAS 可以被删除，所以代码如下：
+
+```cpp
+template <typename ELEM_T>
+bool ArrayLockFreeQueue<ELEM_T>::push(const ELEM_T &a_data)
+{
+    uint32_t currentReadIndex;
+    uint32_t currentWriteIndex;
+
+    currentWriteIndex = m_writeIndex;
+    currentReadIndex  = m_readIndex;
+    if (countToIndex(currentWriteIndex + 1) ==
+        countToIndex(currentReadIndex))
+    {
+        // the queue is full
+        return false;
+    }
+
+    // save the date into the q
+    m_theQueue[countToIndex(currentWriteIndex)] = a_data;
+
+    // No need to increment write index atomically. It is a 
+    // requierement of this queue that only one thred can push stuff in
+    m_writeIndex++;
+
+    return true;
+}
+
+template <typename ELEM_T>
+bool ArrayLockFreeQueue<ELEM_T>::pop(ELEM_T &a_data)
+{
+uint32_t currentMaximumReadIndex;
+uint32_t currentReadIndex;
+
+do
+{
+    // m_maximumReadIndex doesn't exist when the queue is set up as
+    // single-producer. The maximum read index is described by the current
+    // write index
+    currentReadIndex        = m_readIndex;
+    currentMaximumReadIndex = m_writeIndex;
+
+    if (countToIndex(currentReadIndex) ==
+        countToIndex(currentMaximumReadIndex))
+    {
+        // the queue is empty or
+        // a producer thread has allocate space in the queue but is
+        // waiting to commit the data into it
+        return false;
+    }
+
+    // retrieve the data from the queue
+    a_data = m_theQueue[countToIndex(currentReadIndex)];
+
+    // try to perfrom now the CAS operation on the read index. If we succeed
+    // a_data already contains what m_readIndex pointed to before we
+    // increased it
+    if (CAS(&m_readIndex, currentReadIndex, (currentReadIndex + 1)))
+    {
+        return true;
+    }
+
+    // it failed retrieving the element off the queue. Someone else must
+    // have read the element stored at countToIndex(currentReadIndex)
+    // before we could perform the CAS operation
+
+} while(1); // keep looping to try again!
+
+// Something went wrong. it shouldn't be possible to reach here
+assert(0);
+
+// Add this return statement to avoid compiler warnings
+return false;
+}
+```
+
+如果你要在单生产者，单消费者场景使用，再次推荐[此文章](https://www.codeproject.com/articles/43510/lock-free-single-producer-single-consumer-circular)，用了类似的环形队列设计。
 
 ### 4.2 Using the queue with smart pointers
 
+如果队列每个位置保存的是只能指针，请注意，插入队列的元素会由于智能指针的保护不能被完整删除，保存过元素的位置直到被新的智能指针占用才会完全删除这个数据，所以对于繁忙的队列这不是问题，不过开发者要注意的是，一旦队列第一次被占满，应用使用的内存就不会降下去了，即使队列已空【译者注：适配这个场景，要改代码，比如使用偏特化指定smart_pointer data_type要加入多余的处理？】
+
 ### 4.3 Calculating size of queue
+
+原始`size`可能会返回错的size数据
+
+```cpp
+template <typename ELEM_T>
+inline uint32_t ArrayLockFreeQueue<ELEM_T>::size()
+{
+    uint32_t currentWriteIndex = m_writeIndex;
+    uint32_t currentReadIndex  = m_readIndex;
+
+    if (currentWriteIndex >= currentReadIndex)
+    {
+        return (currentWriteIndex - currentReadIndex);
+    }
+    else
+    {
+        return (m_totalSize + currentWriteIndex - currentReadIndex);
+    }
+}
+```
+
+下面的场景会返回错误size：
+
+1. `uint32_t currentWriteIndex = m_writeIndex`被执行，`m_writeIndex`为3，`m_readIndex`为2，真实的size是1
+2. 这个线程被抢占，当此线程处于非活动状态时，队列中被插入，删除了两个元素，此时`m_writeIndex`为5，`m_readIndex`为4，size还是1
+3. 现在线程回来继续执行，`uint32_t currentReadIndex = m_readIndex`，读取到为4
+4. `currentReadIndex > currentWriteIndex`，所以返回`m_totalSize + currentWriteIndex - currentReadIndex`，也就是说当队列几乎为空的时候，返回队列几乎已满
+
+本文上传的代码已经解决了这个问题，加入了一个新的类数据成员，表示当前队列的数据个数，也是用原子操作进行操作。这个方案引入了很大的开销，因为不能被编译器优化，所以原子操作是昂贵的。
+
+这也是为什么留给开发者选择是否激活这个size变量的原因，取决于应用对于需求的要求，这个`size`操作是不是必要的，来决定是不是要引入这个开销。编译器会预处理`array_lock_free_queue.h`调用`ARRAY_LOCK_FREE_Q_KEEP_REAL_SIZE`定义，来决定size开销是否会激活。如果没有定义就不会激活这个开销，但是函数可能会返回错误size
 
 ## 5. Compiling the code 
 
+【译者注：本节简单意译】
+
+这里的代码都是模板代码，所以只需要头文件，不过提供了对应测试代码，是`cpp`格式。测试代码中使用了 `comp`，跨平台内存共享并行编程OpenMP 接口的 GNU c/c++实现已经包含在了 GCC4.2 中。OpenMP 是跨平台开发并发程序一个简单灵活的接口。
+
+所以代码分为了三个部分：
+
+1. array based lock-free queue:
+
+   - 有两个版本的代码，分别在 array_lock_free_queue.h 和 array_lock_free_queue_single_producer.h 中，单生产者版本为场景优化过
+   - 注意，代码没有在64位环境中测试过
+
+2. Glib based blocking queue: 
+
+   - 首先你的系统中需要有Glib，Linux系统一般已经包含
+   - 使用了glib的 mutex 和 cond variable ，所以编译时要连接上
+
+3. 测试程序：
+
+   - 上面两个部分
+
+   - GNU make 程序
+
+     ```shell
+     make N_PRODUCERS=1 N_CONSUMERS=1 N_ITERATIONS=10000000 QUEUE_SIZE=1000
+     ```
+
+     - N_PRODUCERS 是生产线程的数量
+     - N_CONSUMERS 是消费线程的数量
+     - N_ITERATIONS 是将要插入和弹出元素之和
+     - QUEUE_SIZE 是队列的最大长度
+
+   - GCC版本大于 4.2
+
+   - 需要加上`OMP_NESTED=TRUE`前缀，例如`OMP_NESTED=TRUE ./test_lock_free_q`
+
 ## 6. A few figures
+
+【译者注：本大节全是测试图例，不搬运，感兴趣请在原链接看，或者自己运行代码得到直观对比】
 
 ### 6.1 The impact on performance of the 2nd CAS operation 
 
@@ -310,4 +659,4 @@ ABA 问题可以对每个节点加上引用计数解决。在假定CAS操作正�
 31st July 2015: Updated code after [Artem Elkin](http://www.codeproject.com/script/Membership/View.aspx?mid=8409915) ([single producer](http://www.codeproject.com/Messages/4995350/Single-producer-push.aspx and)) and [Member 11590800](http://www.codeproject.com/script/Membership/View.aspx?mid=11590800) [(overflow bug](http://www.codeproject.com/Messages/5038886/overflow-bug.aspx)) comments.
 
 ## 9. References
-请参考原文中的引用
+【译者注：请参考原文中的引用，有些引用连接已经失效，在正文翻译中已经尽可能还原了可用链接】
