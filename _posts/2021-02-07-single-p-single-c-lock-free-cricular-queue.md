@@ -1,3 +1,12 @@
+---
+layout: post
+date: 2021-02-07
+categories: translate queue lock-free
+title: "Lock-Free Single-Producer - Single Consumer Circular Queue"
+---
+
+[原文链接](https://www.codeproject.com/articles/43510/lock-free-single-producer-single-consumer-circular)
+
 # Part I
 
 ## Introduction
