@@ -253,7 +253,7 @@ queue 基于 array 和三个 index：
 - `readIndex`:下一个被弹出的元素位置
 - `maximumReadIndex`:上一个已经‘commit’要插入的元素位置。如果与`writeIndex`位置不同，意味着有写入被挂起，也意味着这个位置已经被声明占用了，但是数据还没有写进去到队列里，所以试图读的线程需要等待数据被填入
 
-值得一提的是，三个index是必要的，因为队列允许多生产者和多消费者。有[文章](https://www.codeproject.com/articles/43510/lock-free-single-producer-single-consumer-circular)研究了单生产者单消费者，这篇文章值得一读（我一直很喜欢 [KISS 原则](https://en.wikipedia.org/wiki/KISS_principle)）。这里的事情变得复杂很多，因为队列必须对于各种线程配置都要线程安全。
+值得一提的是，三个index是必要的，因为队列允许多生产者和多消费者。有[文章](https://wendajiang.github.io/translate/queue/lock-free/2021/02/07/single-p-single-c-lock-free-cricular-queue.html)研究了单生产者单消费者，这篇文章值得一读（我一直很喜欢 [KISS 原则](https://en.wikipedia.org/wiki/KISS_principle)）。这里的事情变得复杂很多，因为队列必须对于各种线程配置都要线程安全。
 
 #### 3.1.1 The CAS operation 
 
@@ -537,7 +537,7 @@ return false;
 }
 ```
 
-如果你要在单生产者，单消费者场景使用，再次推荐[此文章](https://www.codeproject.com/articles/43510/lock-free-single-producer-single-consumer-circular)，用了类似的环形队列设计。
+如果你要在单生产者，单消费者场景使用，再次推荐[此文章](https://wendajiang.github.io/translate/queue/lock-free/2021/02/07/single-p-single-c-lock-free-cricular-queue.html)，用了类似的环形队列设计。
 
 ### 4.2 Using the queue with smart pointers
 
