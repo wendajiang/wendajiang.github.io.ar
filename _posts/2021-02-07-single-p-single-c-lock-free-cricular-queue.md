@@ -20,9 +20,10 @@
 
 在元素被读取和写入（pop或者push）后马上更新头或者尾index是必要的。因此，任何对于头尾index的更新必须保证正确，所以这需要是原子操作并且不能被重排序。
 
-
-
 ## Atomic operations and the different Memory Models
+
+
+
 ## Sequential Consistent
 ### Rules for Sequential Consistent Memory Model and Operations
 ### Sequential Consistent Atmic Code
