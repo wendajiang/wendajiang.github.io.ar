@@ -1,7 +1,7 @@
 ---
 layout: post
 date: 2021-03-02
-categories: awesomepaper 翻译
+categories: awesomepaper translate
 title: "dataflow_model"
 ---
 
