@@ -4,4 +4,4 @@ _site
 .jekyll-metadata
 vendor
 .MWebMetaData
-genmd/target
+genmd/target/**
