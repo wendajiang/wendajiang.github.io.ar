@@ -82,3 +82,4 @@ Raft是一个管理第二节描述的复制日志的算法。图2简介的展示
 
 ![image-20200902005912684](https://wendajiang.github.io/pics/raft-extended/raft-3.png)
 
+Raft 通过首先选举一个 leader，然后让这个 leader 完全管理 replicated log 的方式实现共识（consensus）。leader 从客户端接收 log entries，在其他服务器上 replicate log entries ，并告诉其他服务器何时可以安全地将日志条目应用于
