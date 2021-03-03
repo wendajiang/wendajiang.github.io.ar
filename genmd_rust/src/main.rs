@@ -43,19 +43,17 @@ fn main() {
     let str_datetime = local_time.format("%Y-%m-%d %T");
     let file_prefix = local_time.format("%Y-%m-%d");
 
-    let file_name = std::format!("{}-{}.md", file_prefix, file_name_in);
+    let file_name = std::format!("{}{}-{}.md", file_path, file_prefix, file_name_in);
     println!("file_name is {}", file_name);
 
     let content = std::format!("{}{} GMT\ncategories:\ntitle:{}\n---\n", pre_content, str_datetime, title);
     println!("{}", content);
 
-    let full_file_name = std::format!("{}{}", file_path, file_name);
-
     let mut file = std::fs::OpenOptions::new()
                                             .read(true)
                                             .write(true)
                                             .create(true)
-                                            .open(full_file_name).unwrap();
+                                            .open(file_name).unwrap();
     
     file.write_fmt(format_args!("{}", content)).unwrap();
 
