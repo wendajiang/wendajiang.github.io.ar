@@ -13,6 +13,28 @@
     </head>
     <body>
         {% include navigatebar.html %}
+
+        {% if page.mermaid %}
+        <script>
+        function initMermaid() {
+          var config = {
+            startOnLoad: true,
+            theme: "forest",
+            flowchart:{
+              useMaxWidth: true,
+              htmlLabels: true
+            }
+          };
+          mermaid.initialize(config);
+          window.mermaid.init(undefined, document.querySelectorAll('.mermaid'));
+        }
+        </script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/mermaid/8.9.1/mermaid.min.js"
+          async
+          onload="initMermaid()">
+        </script>
+        {% endif %}
+
         <div class="content-area">
             <div class="title">
                 {{ page.title }}
