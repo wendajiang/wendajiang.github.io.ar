@@ -46,7 +46,7 @@ fn main() {
     let file_name = std::format!("{}{}-{}.md", file_path, file_prefix, file_name_in);
     println!("file_name is {}", file_name);
 
-    let content = std::format!("{}{} GMT\ncategories:\ntitle:{}\n---\n", pre_content, str_datetime, title);
+    let content = std::format!("{}{} GMT\ncategories:\ntitle: \"{}\"\n---\n", pre_content, str_datetime, title);
     println!("{}", content);
 
     let mut file = std::fs::OpenOptions::new()
