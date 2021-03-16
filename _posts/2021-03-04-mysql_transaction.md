@@ -175,10 +175,10 @@ graph LR
 
 以上所有级别的事务隔离级别都不允许脏写（Dirty Write），就是当前事务更新了另一个事务已经更新但是没有提交的数据，大部分数据库使用了READ COMMITED作为默认的事务隔离级别，但是MySQL使用了ERPEATABLE READ作为默认级别，从 RAED UNCOMMITED 到 SERIALIZABLE，随着事务隔离级别变得越来越严格，数据库对于并发执行事务的性能也逐渐下降
 
-```mermaid
+<div class="mermaid">
 graph LR
 	A["High Performance"] --- B1((READ UNCOMMITED)) --- B2((READ COMMITED)) --- B3((REPEATABLE READ)) --- B4((SERIALIZABLE)) --> C[Low Performance]
-```
+</div>
 
 展示各个隔离级别对于脏读，不可重复读，幻读的解决情况：
 
