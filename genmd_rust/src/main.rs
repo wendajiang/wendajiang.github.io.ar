@@ -33,21 +33,21 @@ fn main() {
             .required(true)
             .index(1))
         .get_matches();
-    
+
     let file_path = matches.value_of("file_path").unwrap_or("./_posts/");
     let title = matches.value_of("title").unwrap_or("");
     let file_name_in = matches.value_of("file_name").unwrap();
     let mermaid_flag = matches.value_of("mermaid").unwrap_or("false");
-    let mut mermaid_template = "<!--\nmermaid example:\n<div class=\"mermaid\"\n    mermaid program\n</div>\n-->";
+    let mut mermaid_template = "<!--\nmermaid example:\n<div class=\"mermaid\">\n    mermaid program\n</div>\n-->";
     if mermaid_flag == "false" {
         mermaid_template = "";
     }
-    
+
 
     let pre_content = "---\nlayout: post\ndate: ";
 
-    // let utc_time: DateTime<Utc> = Utc::now();       
-    let local_time: DateTime<Local> = Local::now(); 
+    // let utc_time: DateTime<Utc> = Utc::now();
+    let local_time: DateTime<Local> = Local::now();
 
     // println!("{}", utc_time.format("%Y-%m-%d %T"));
     // println!("{}", local_time.format("%Y-%m-%d %T"));
@@ -57,7 +57,7 @@ fn main() {
     let file_name = std::format!("{}{}-{}.md", file_path, file_prefix, file_name_in);
     println!("file_name is {}", file_name);
 
-    let content = std::format!("{}{} +0800\ncategories:\ntitle: \"{}\"\nmermaid: {}\n---\n{}", pre_content, str_datetime, title, 
+    let content = std::format!("{}{} +0800\ncategories:\ntitle: \"{}\"\nmermaid: {}\n---\n{}", pre_content, str_datetime, title,
                 mermaid_flag, mermaid_template);
     println!("{}", content);
 
@@ -66,7 +66,7 @@ fn main() {
                                             .write(true)
                                             .create(true)
                                             .open(file_name).unwrap();
-    
+
     file.write_fmt(format_args!("{}", content)).unwrap();
 
 }
