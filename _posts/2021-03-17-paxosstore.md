@@ -35,7 +35,7 @@ PaxosStore 设计并实施为微信后端高可用性存储的解决方案。在
 
 ## 2.1 架构 (Overall Architecture)
 
-![image-20210317155231443](https://github.com/wendajiang/pics/2021-03-03-paxosstore/image-20210317155231443.png)
+![image-20210317155231443](https://wendajiang.github.io/pics/2021-03-03-paxosstore/image-20210317155231443.png)
 
 图 1 说明了 PaxosStore 的总体体系结构，该架构包含了三层。编程模型层提供了暴露给应用的各种数据结构，共识层实现了 Paxos-based 存储协议，存储层包含了基于不同存储模型的不同存储引擎，以使不同数据结构的性能最大化。PaxosStore 不同于传统存储系统主要在于将中间层的共识协议解耦出来，为底层多种数据引擎提供共识保证。
 
@@ -45,7 +45,7 @@ PaxosStore 设计并实施为微信后端高可用性存储的解决方案。在
 
 ## 2.2 共识层 (Consensus Layer)
 
-![image-20210317160824556](https://github.com/wendajiang/pics/2021-03-03-paxosstore/image-20210317160824556.png)
+![image-20210317160824556](https://wendajiang.github.io/pics/2021-03-03-paxosstore/image-20210317160824556.png)
 
 协议栈三层如图 2 所示
 
@@ -61,13 +61,13 @@ PaxosStore 设计并实施为微信后端高可用性存储的解决方案。在
 
 PaxosLog 在 PaxosStore 中作为数据更新的 write-ahead log。图 3 展现了数据结构，每个 log entry 由 Paxos 算法决定，可以被一个不变的序列号索引--entry ID，唯一递增。最大的 entry ID 表示版本。
 
-![image-20210317163451037](https://github.com/wendajiang/pics/2021-03-03-paxosstore/image-20210317163451037.png)
+![image-20210317163451037](https://wendajiang.github.io/pics/2021-03-03-paxosstore/image-20210317163451037.png)
 
 概念上，PaxosLog 实例可以被无限生成。实际上，通过 LRU 策略，异步删除过时的 log entries。除了数据 value 之外，每个 PaxosLog 包含 Paxos 关联的元数据，promise number *m* 和 proposal number *n*, 在 2.2.1 节中的 Paxos 算法使用，但是一旦 log entry 完成就会被丢弃（蓝色线框标记出）。此外，由于同一数据的多个副本主机可能同时发出写入请求，但是只有一个请求会被接受，proposer ID 附加到被选中的 value 上表明 value 的 proposer。Proposer ID 是 32 位的机器 ID，数据中心中唯一表征一个 node。用于预准备阶段的优化，如果当前写入可以跳过 pre-pare/promise 阶段，如果与上次写入的相同请求的原点，则符合写请求的局部性。此外，request ID 唯一标志与 value 相关联的写请求。用于防止重复写入（详细讨论在 3.3）。特别的，request ID 包含了三个部分：32 位的 client ID（比如 IPv4 地址）表明提出写请求的客户端，16 位的时间戳表明客户端本地时间，16 位的序列号表明客户端请求序列区分同一秒的请求
 
 根据 write-ahead log 对于数据更新的机制，PaxosLog entry 在将值写入到存储引擎中时必须被处理。通常，PaxosLog 存储和数据对象存储是分离的，如图 4 所示，一次数据更新，两次有序的写 I/O ：一次写 PaxosLog entry，接下来更新数据对象
 
-![image-20210317165229646](https://github.com/wendajiang/pics/2021-03-03-paxosstore/image-20210317165229646.png)
+![image-20210317165229646](https://wendajiang.github.io/pics/2021-03-03-paxosstore/image-20210317165229646.png)
 
 **PaxosLog 对于 Key-Value 数据的使用。**考虑下 k-v 存储，我们有两种优化，简化了 paxoslog 的构建和操作。
 
@@ -75,7 +75,7 @@ PaxosLog 在 PaxosStore 中作为数据更新的 write-ahead log。图 3 展现�
 
 其次，裁剪了 paxoslog 存储，只存储最新的两个数据历史，如图 5 所示，早于最新的数据被视为过时的，可以被删除，所以对于 k-v data 的 PaxosLog 长度恒定为 2。由于 PaxosLog 不会增大，所以可以消除对于数据更新对于内存和硬盘的影响，节省存储和计算计算。此外，简化了 k-v 数据的恢复。最新的 PaxosLog 包含了最新 k-v 数据的快照，可以在出问题时直接恢复数据。
 
-![image-20210317165959798](https://github.com/wendajiang/pics/2021-03-03-paxosstore/image-20210317165959798.png)
+![image-20210317165959798](https://wendajiang.github.io/pics/2021-03-03-paxosstore/image-20210317165959798.png)
 
 相比之下，正常数据的恢复需要对于 PaxosLog 在 last checkpoint 开始重放所有历史 log entry（如图 4 中表示），尤其是面向集合的数据结构，例如 list, queue,set
 
