@@ -67,7 +67,7 @@ PaxosLog 在 PaxosStore 中作为数据更新的 write-ahead log。图 3 展现�
 
 根据 write-ahead log 对于数据更新的机制，PaxosLog entry 在将值写入到存储引擎中时必须被处理。通常，PaxosLog 存储和数据对象存储是分离的，如图 4 所示，一次数据更新，两次有序的写 I/O ：一次写 PaxosLog entry，接下来更新数据对象
 
-![image-20210317165229646](../pics/2021-03-03-paxosstore/image-20210317165229646.png)
+![image-20210317165229646](https://github.com/wendajiang/pics/2021-03-03-paxosstore/image-20210317165229646.png)
 
 **PaxosLog 对于 Key-Value 数据的使用。**考虑下 k-v 存储，我们有两种优化，简化了 paxoslog 的构建和操作。
 
