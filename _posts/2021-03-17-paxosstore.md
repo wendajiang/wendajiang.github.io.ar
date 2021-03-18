@@ -89,6 +89,10 @@ PaxosStore 被设计为多地系统，在多个数据中心之上运行，同时
 
 ## 2.3 存储层 (Storage Layer)
 
+微信生产系统中的应用提出了多种数据访问的要求以及性能问题。在重组上一代存储系统之后，我们意识到在存储层支持多种存储模型是必要的。这启发了 PaxosStore 存储层的设计，基于不同的存储模型构建多个存储引擎。具体来说，[BitCask](https://wendajiang.github.io/awesomepaper/translate/2021/03/02/bitcask.html) 和 LSM-tree 是在 PaxosStore 中使用的两种主要模型，都是为了 key-value 存储设计：Bitcask 模型在单点查询更优，LSM-tree 在范围查询上更优。我们在存储层中实现了两种存储引擎，主要设计可用性，效率和可扩展性，不包括共识问题。将共识协议从存储层解耦出来称为中间层，使 PaxosStore 存储层的开发，调优和维护容易很多。存储引擎不仅可以单独调优，还可以协作一起工作，所以支持更加灵活的选项来支持应用特定的需求。
+
+在 PaxosStore 中最常用的物理数据结构就是 key-value 和关系表。Key-value 原生被 Bitcask 和 LSM-tree 支持。根本上，PaxosStore 的关系表也被存储为 key-value 对，每个表是 value，被唯一 key 索引。但是，简单将表作为普通 key-value 会导致性能问题，因为大多数表都是频繁读取的，而且通常每张表包含成千上百个行，但是微信应用一次大多只访问其中一两行。因此，磁盘/SSD 和内存之间频繁的读写严重影响系统性能。为了解决这个问题，PaxosStore 采用了 differentail update 技术降低表更新的开销。为此，将表分解为两个元表：读优化的 main-table 管理表的主要数据，写优化的 delta-table 管理表的变化（比如更新，插入，删除）。因此表的访问是通过 main-table 的 view 结合 delta-table 管理的增量数据。更深一步，为了保持 delta-table 最小化（保留写友好的属性），会定时将增量数据合并回 main-table
+
 # 3. 容错性与可用性 (Fault Tolerance and Availability)
 
 ## 3.1 容错 (Fault-tolerant Scheme)
