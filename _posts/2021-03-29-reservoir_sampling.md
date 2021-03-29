@@ -4,6 +4,7 @@ date: 2021-03-29 12:50:38 +0800
 categories: math alg
 title: "蓄水池采样"
 mermaid: on
+usemathjax: true
 ---
 <!--
 mermaid example:
@@ -37,7 +38,7 @@ ReservoirSample(S[1...n], R[1...k])
     	R[j] := S[i]
 ```
 
-该算法建立了 size k 的蓄水池，开始保存输入的 k项。随着输入的迭代，按照条件更新蓄水池。对于第$i^{th}$元素来说，被选上的概率为 $\frac{k}{i}$。对于蓄水池的项，被代替的概率为 $\frac{1}{k} \times \frac{k}{i} = \frac{1}{i}$。当算法结束时，每个输入项被选到蓄水池的概率相等$\frac{k}{n}$ （$\frac{k}{i} \times (1 - \frac{1}{i+1}) \times (1 - \frac{1}{i + 2}) \times ... \times (1 - \frac{1}{n}) = \frac{k}{n}$），算法时间复杂度为 O(n)
+该算法建立了 size k 的蓄水池，开始保存输入的 k项。随着输入的迭代，按照条件更新蓄水池。对于第$$i^{th}$$元素来说，被选上的概率为 $$\frac{k}{i}$$。对于蓄水池的项，被代替的概率为 $$\frac{1}{k} \times \frac{k}{i} = \frac{1}{i}$$。当算法结束时，每个输入项被选到蓄水池的概率相等$$\frac{k}{n}$$ （$$\frac{k}{i} \times (1 - \frac{1}{i+1}) \times (1 - \frac{1}{i + 2}) \times ... \times (1 - \frac{1}{n}) = \frac{k}{n}$$），算法时间复杂度为 O(n)
 
 ### 一个优化算法
 
@@ -97,10 +98,10 @@ ReservoirSample(S[1..?])
 
 ### 权重蓄水池
 
-Some applications require items' sampling probabilities to be according to weights associated with each item. For example, it might be required to sample queries in a search engine with weight as number of times they were performed so that the sample can be analyzed for overall impact on user experience. Let the weight of item *i* be $$, and the sum of all weights be *W*. There are two ways to interpret weights assigned to each item in the set:[[4\]](https://en.wikipedia.org/wiki/Reservoir_sampling#cite_note-efraimidis-4)
+Some applications require items' sampling probabilities to be according to weights associated with each item. For example, it might be required to sample queries in a search engine with weight as number of times they were performed so that the sample can be analyzed for overall impact on user experience. Let the weight of item *i* be $$$$, and the sum of all weights be *W*. There are two ways to interpret weights assigned to each item in the set:[[4\]](https://en.wikipedia.org/wiki/Reservoir_sampling#cite_note-efraimidis-4)
 
-1. In each round, the probability of every *unselected* item to be selected in that round is proportional to its weight relative to the weights of all unselected items. If *X* is the current sample, then the probability of an item $i \notin X$ to be selected in the current round is $\frac{w_i}{W - \sum_{j \in X}w_j}$
-2. The probability of each item to be included in the random sample is proportional to its relative weight, i.e. $\frac{w_i}{W}$. Note that this interpretation might not be achievable in some cases, e.g., $k = n$.
+1. In each round, the probability of every *unselected* item to be selected in that round is proportional to its weight relative to the weights of all unselected items. If *X* is the current sample, then the probability of an item $$i \notin X$$ to be selected in the current round is $$\frac{w_i}{W - \sum_{j \in X}w_j}$$
+2. The probability of each item to be included in the random sample is proportional to its relative weight, i.e. $$\frac{w_i}{W}$$. Note that this interpretation might not be achievable in some cases, e.g., $$k = n$$.
 
 #### Algorithm A-Res
 
@@ -132,7 +133,7 @@ ReservoirSample(S[1..?])
   return items in H
 ```
 
-此算法除了item key的生成与 Reservoir Sampling with Radnom Sort 是一样的。算法等于为每个item赋值一个key $r^{\frac{1}{w_i}}$，$r$是随机数，然后选择k个item最大key的那个。数学上是相等的计算key $ln(r) / w_i$
+此算法除了item key的生成与 Reservoir Sampling with Radnom Sort 是一样的。算法等于为每个item赋值一个key $$r^{\frac{1}{w_i}}$$，$$r$$是随机数，然后选择k个item最大key的那个。数学上是相等的计算key $$ln(r) / w_i$$
 
 #### Algorithms A-ExpJ
 
