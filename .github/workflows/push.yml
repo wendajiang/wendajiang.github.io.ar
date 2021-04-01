@@ -7,12 +7,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Checkout
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@master
       # Build & deploy
       - name: Deploy to gh-pages branch
-        uses: shalzz/zola-deploy-action@v0.13.0
+        uses: shalzz/zola-deploy-action@master
         env:
-          # Target branch
           PAGES_BRANCH: gh-pages
-          # Provide personal access token
+          BUILD_DIR: docs
+          BUILD_FLAGS: --drafts
           TOKEN: ${{ secrets.TOKEN }}
