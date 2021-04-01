@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+    
+<html>
+    <head>
+        {% include "header.html" %}
+
+        <link rel="stylesheet" href="{{ get_url(path="css/font.css") }}">
+        <link rel="stylesheet" media="screen and (min-width: 600px)" href="{{ get_url(path="css/tags.css") }}">
+        <link rel="stylesheet" media="screen and (max-width: 600px)" href="{{ get_url(path="css/tags_mobile.css") }}">
+        <link rel="stylesheet" media="screen and (min-width: 600px)" href="{{ get_url(path="css/navigatebar.css") }}">
+        <link rel="stylesheet" media="screen and (max-width: 600px)" href="{{ get_url(path="css/navigatebar_mobile.css") }}">
+        <link rel="stylesheet" href="{{ get_url(path="css/highlight.css") }}">
+    </head>
+    <body>
+        {% include "navigatebar.html" %}
+        <div class="tag-box">
+            <div id="archives">
+                {% for term in terms %}
+                <div class="archive-group">
+                    <div id="#{{ term.name }}"></div>
+                    <p></p>
+                    <a name="{{ term.name }}"><div class="category-head">「{{ term.name }}」</div></a>
+                    <a name="{{ term.name }}"></a>
+                    {% for page in term.pages %}
+                        <article class="archive-item">
+                            <a href="{{ page.permalink }}">{{ page.title }}</a>
+                        </article>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        
+            <div class="categories-area">
+                <div class="categories-area-title">
+                    [Tags]
+                </div>
+        
+                {% for term in terms %}
+                <a
+                    class="category-item"
+                    href="{{ current_path }}/#{{term.name}}">
+                    <div class="category-name">
+                        {{ term.name }}
+                    </div>
+                    <div class="category-number">
+                        [{{ term.pages | length }}]
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        
+
+
+    </body>
+</html>

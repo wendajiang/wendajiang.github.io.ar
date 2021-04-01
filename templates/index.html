@@ -1,0 +1,96 @@
+<!-- inspire
+https://github.com/manateelazycat/manateelazycat.github.io
+-->
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        {% include "header.html" %}
+
+        <link rel="stylesheet" href="{{ get_url(path="css/font.css") }}">
+        <link rel="stylesheet" media="screen and (min-width: 600px)" href="{{ get_url(path="css/home.css") }}">
+        <link rel="stylesheet" media="screen and (max-width: 600px)" href="{{ get_url(path="css/home_mobile.css") }}">
+        <link rel="stylesheet" href="{{ get_url(path="home.css") }}">
+    </head>
+    <body>
+        <div class="content">
+            {% include "topbar.html" %}
+            
+            <div class="slogan">
+                「靡不有初，鲜克有终」
+            </div>
+            
+            <ul>
+                <div class="char-total-counter">
+                    {{ paginator.total_pages }}篇文章
+                </div>
+
+                {% for page in paginator.pages %}
+            
+                <li class="page-line">
+                    <a
+                        class="page-title"
+                        href="{{ page.permalink }}">
+                        {{ page.title }}
+                    </a>
+            
+                    <a href="{{ page.permalink }}">
+                        <div class="page-summary">
+                            {% if page.extra.summary %}
+                                {{ page.extra.summary | safe | striptags }}
+                            {% else %}
+                                {{ page.content | safe | striptags | truncate(length=80) }}
+                            {% endif %}
+                        </div>
+                    </a>
+                    <div class="page-info">
+                        <div class="category-area">
+                            {% if page.taxonomies.tags %}
+                            {% for tag in page.taxonomies.tags %}
+                            <a href="{{ get_url(path="@/_index.md") }}tags/{{tag}}">
+                                <div class="category">
+                                    {{ tag }}
+                                </div>
+                            </a>
+                            {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="right-info-area">
+                            <div class="char-counter">
+                                字数 {{ page.content | safe | striptags | trim | length }}
+                            </div>
+                            <div class="page-date">
+                                {{ page.date }}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            
+                {% endfor %}
+                
+            </ul>
+            <div class="pagination">
+                <ul class="clearfix">
+              {% if paginator.next %}
+                <li class="next">
+                  <a class="btn" role="navigation" href="{{ paginator.next }}">
+                    Next Page
+                  </a>
+                </li>
+              {% endif %}
+              {% if paginator.previous %}
+                <li class="pre">
+                  <a class="btn" role="navigation" href="{{ paginator.previous }}">
+                    Prev Page
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+        
+    </body>
+</html>
+
+
