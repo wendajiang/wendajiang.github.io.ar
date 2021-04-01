@@ -15,4 +15,4 @@ jobs:
           # Target branch
           PAGES_BRANCH: gh-pages
           # Provide personal access token
-          TOKEN: 42d12bd24f11ba3902389c2f00647929ea76cf0b
+          TOKEN: "42d12bd24f11ba3902389c2f00647929ea76cf0b"
