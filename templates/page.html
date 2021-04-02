@@ -13,9 +13,6 @@
         <link rel="stylesheet" media="screen and (min-width: 600px)" href="{{ get_url(path="css/navigatebar.css") }}">
         <link rel="stylesheet" media="screen and (max-width: 600px)" href="{{ get_url(path="css/navigatebar_mobile.css") }}">
         <link rel="stylesheet" href="{{ get_url(path="css/highlight.css") }}">
-    </head>
-    <body>
-        {% include "navigatebar.html" %}
 
         {% if page.extra.mermaid %}
         <script>
@@ -46,6 +43,9 @@
           </script>
           <script type="text/javascript" async src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
         {% endif %}
+    </head>
+    <body>
+        {% include "navigatebar.html" %}
 
         <div class="content-area">
             <div class="title">
