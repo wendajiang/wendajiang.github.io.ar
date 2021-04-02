@@ -19,3 +19,39 @@
 </div>
 {% endblock content %} -->
 
+<!DOCTYPE html>
+    
+<html>
+    <head>
+        {% include "header.html" %}
+
+        <link rel="stylesheet" href="{{ get_url(path="css/font.css") }}">
+        <link rel="stylesheet" media="screen and (min-width: 600px)" href="{{ get_url(path="css/tags.css") }}">
+        <link rel="stylesheet" media="screen and (max-width: 600px)" href="{{ get_url(path="css/tags_mobile.css") }}">
+        <link rel="stylesheet" media="screen and (min-width: 600px)" href="{{ get_url(path="css/navigatebar.css") }}">
+        <link rel="stylesheet" media="screen and (max-width: 600px)" href="{{ get_url(path="css/navigatebar_mobile.css") }}">
+        <link rel="stylesheet" href="{{ get_url(path="css/highlight.css") }}">
+
+        <link rel="stylesheet" href="{{ get_url(path="single.css") }}">
+    </head>
+    <body>
+        {% include "navigatebar.html" %}
+        
+        <ul class="list-with-title">
+            <div class="archive">
+            <div class="listing-title">{{ term.name }}</div>
+            <ul class="listing">
+            {% for post in term.pages %}
+                <div class="listing-item">
+                    <div class="listing-post">
+                        <a href="{{ post.permalink }}" title="{{ post.title }}">{{ post.title }}</a>
+                        <div class="post-time"><span class="date">{{ post.date | date(format="%Y-%m-%d") }}</span></div>
+                    </div>
+                </div>
+            {% endfor %}
+            </ul>
+            </div>
+        </ul>
+    
+    </body>
+</html>
