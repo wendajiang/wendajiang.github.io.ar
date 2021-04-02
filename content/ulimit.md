@@ -562,19 +562,21 @@ cat /proc/sys/fs/file-max
 cat /proc/sys/fs/file-nr 
 864     0       3274116
 have 864 out of max 3274116 open files
+```
 
-8.利用lsof统计每个进程打开的文件数目
+### 8.利用lsof统计每个进程打开的文件数目
+```
 lsof -n |awk '{print $2}'|sort|uniq -c |sort -nr|more 
+```
 
-9. 设置普通用户下打开文件的最大值
+### 9. 设置普通用户下打开文件的最大值
  ulimit -n 4096
 -bash: ulimit: open files: cannot modify limit: Operation not permitted
-9.1 在/etc/security/limits.conf中添加
+#### 9.1 在/etc/security/limits.conf中添加
 * hard nofile 100000
 * soft nofile 100000
-9.2 /etc/pam.d/login 添加
+#### 9.2 /etc/pam.d/login 添加
 session required     /lib64/security/pam_limits.so
-9.3 重启 ssh2和rccron，这样只进程就自动继承了nofile
+#### 9.3 重启 ssh2和rccron，这样只进程就自动继承了nofile
 /etc/init.d/ssh2 restart
 rccron restart
-```
