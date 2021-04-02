@@ -106,6 +106,7 @@ mermaid example:
 
 ​    vi /etc/security/limits.conf
 
+```
 ​    \# 添加如下的行
 
 ​    \* soft noproc 11000
@@ -115,7 +116,7 @@ mermaid example:
 ​    \* soft nofile 4100
 
 ​    \* hard nofile 4100 
-
+```
 ​    说明：* 代表针对所有用户
 
 ​      noproc 是代表最大进程数
@@ -124,7 +125,7 @@ mermaid example:
 
  
 
-#### 3) 修改所有 linux 用户的环境变量文件：
+#### 2) 修改所有 linux 用户的环境变量文件：
 
 vi /etc/profile 
 
@@ -184,7 +185,7 @@ session required /lib/security/$ISA/pam_limits.so
 
  
 
-### 3. /proc目录：
+#### 3) /proc目录：
 
 1）/proc目录里面包括很多系统当前状态的参数，例如：引用
 
