@@ -36,12 +36,11 @@
         {% endif %}
 
         {% if page.extra.usemathjax %}
+        <!-- Math rendering -->
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
         <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({
-            TeX: { equationNumbers: { autoNumber: "AMS" } }
-            });
-          </script>
-          <script type="text/javascript" async src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+            MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+        </script>
         {% endif %}
     </head>
     <body>
