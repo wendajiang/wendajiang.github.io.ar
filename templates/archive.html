@@ -1,0 +1,78 @@
+<!-- inspire
+https://github.com/manateelazycat/manateelazycat.github.io
+-->
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        {% include "header.html" %}
+
+        <link rel="stylesheet" href="{{ get_url(path="css/font.css") }}">
+        <link rel="stylesheet" media="screen and (min-width: 600px)" href="{{ get_url(path="css/home.css") }}">
+        <link rel="stylesheet" media="screen and (max-width: 600px)" href="{{ get_url(path="css/home_mobile.css") }}">
+        <link rel="stylesheet" href="{{ get_url(path="single.css") }}">
+    </head>
+    <body>
+        <div class="content">
+            {% include "topbar.html" %}
+            
+            <div class="slogan">
+                「靡不有初，鲜克有终」
+            </div>
+            <div class="archive-group">
+                <a name="Home"><div class="category-head">「Home」</div></a>
+                <p></p>
+                {% set section = get_section(path="_index.md") %}
+                {% for year, posts in section.pages | group_by(attribute="year") %}
+                <ul class="list-with-title">
+                    <div class="archive">
+                    <div class="listing-title">{{ year }}</div>
+                    <ul class="listing">
+                    {% for post in posts %}
+                        <div class="listing-item">
+                            <div class="listing-post">
+                                <a href="{{ post.permalink }}" title="{{ post.title }}">{{ post.title }}</a>
+                                <div class="post-time"><span class="date">{{ post.date | date(format="%Y-%m-%d") }}</span></div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </ul>
+                    </div>
+                </ul>
+                {% endfor %}
+                <p></p>
+            </div>
+            
+            <div class="archive-group">
+                <a name="Q&A"><div class="category-head">「Q&A」</div></a>
+                <p></p>
+                {% set section = get_section(path="QA/_index.md") %}
+                {% for year, posts in section.pages | group_by(attribute="year") %}
+
+                <ul class="list-with-title">
+                    <div class="archive">
+                    <div class="listing-title">{{ year }}</div>
+                    <ul class="listing">
+                    {% for post in posts %}
+                        <div class="listing-item">
+                            <div class="listing-post">
+                                <a href="{{ post.permalink }}" title="{{ post.title }}">{{ post.title }}</a>
+                                <div class="post-time"><span class="date">{{ post.date | date(format="%Y-%m-%d") }}</span></div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </ul>
+                    </div>
+                </ul>
+
+                {% endfor %}
+                <p></p>
+            </div>
+            
+        </div>
+        
+    </body>
+</html>
+
+
