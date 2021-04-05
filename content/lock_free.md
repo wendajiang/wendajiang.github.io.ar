@@ -24,11 +24,11 @@ mermaid example:
 
 ### what is it
 
-![image-20210405160006637](../static/pics/lock_free/image-20210405160006637.png)
+![image-20210405160006637](https://wendajiang.github.io/pics/lock_free/image-20210405160006637.png)
 
 ### techniques
 
-![image-20210405160054136](../static/pics/lock_free/image-20210405160054136.png)
+![image-20210405160054136](https://wendajiang.github.io/pics/lock_free/image-20210405160054136.png)
 
 ------------------
 
