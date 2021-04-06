@@ -69,7 +69,31 @@ https://github.com/manateelazycat/manateelazycat.github.io
                 {% endfor %}
                 <p></p>
             </div>
-            
+
+            <div class="archive-group">
+                <a name="Home"><div class="category-head">「Essay」</div></a>
+                <p></p>
+                {% set section = get_section(path="essay/_index.md") %}
+                {% for year, posts in section.pages | group_by(attribute="year") %}
+                <ul class="list-with-title">
+                    <div class="archive">
+                    <div class="listing-title">{{ year }}</div>
+                    <ul class="listing">
+                    {% for post in posts %}
+                        <div class="listing-item">
+                            <div class="listing-post">
+                                <a href="{{ post.permalink }}" title="{{ post.title }}">{{ post.title }}</a>
+                                <div class="post-time"><span class="date">{{ post.date | date(format="%Y-%m-%d") }}</span></div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </ul>
+                    </div>
+                </ul>
+                {% endfor %}
+                <p></p>
+            </div>
+ 
         </div>
         
     </body>
