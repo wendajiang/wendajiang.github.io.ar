@@ -128,11 +128,11 @@ void BlockingQueue<T>::Pop(T &out_data)
 
 `Pop`从对列中弹出一个元素（并删除它）。要使用的线程会阻塞如果另一个线程正在使用该队列。如果队列是空的，线程会阻塞，直到有其他队列往队列里加入元素，当然在等待其他线程插入元素时不会占用 CPU 时间，因为已被置为睡眠状态。
 
-正如我在上一节解释的一样，**阻塞不是一件平凡操作**。它涉及操作系统将当前任务“挂起”，或者睡眠（不使用CPU等待）。一旦资源（比如mutex）可用，阻塞的任务就会被唤醒，同样不是平凡操作。**在负载很重的应用中使用这种阻塞队列在线程间传递消息就引起竞争，**意味着，**将会花费大量时间（sleeping, waiting, awakenging）在试图访问queue，而不是执行真正的任务**
+正如我在上一节解释的一样，**阻塞不是一件平凡操作**。它涉及操作系统将当前任务“挂起”，或者睡眠（不使用CPU等待）。一旦资源（比如mutex）可用，阻塞的任务就会被唤醒，同样不是平凡操作。** 在负载很重的应用中使用这种阻塞队列在线程间传递消息就引起竞争，**意味着，**将会花费大量时间（sleeping, waiting, awakenging）在试图访问queue，而不是执行真正的任务**
 
 在最简单的场景中，一个生产者线程往队列插入数据，一个消费者线程消费数据，两个线程都在竞争线程安全队列的互斥量。如果我们自己来实现而不是包装现成的队列，就可以使用两个不同的互斥量，一个用来插入数据，一个用来弹出数据。这种实现里面，竞争只会发生在边界情况，就是队列满或者空之时。现在，一旦需要超过一个生产者线程或者消费者线程，问题就又回来了。
 
-这就是应用无阻塞机制的地方。**Tasks don't "fight" for any resource, they "reserve" a place in the queue without being blocked or unblocked, and then they insert/remove data from the queue**【译者注：这里不翻译】。这个机制需要一个特殊操作：CAS（Compare And Swap），维基百科中的定义：a special instruction that atomically compares the contents of a memory location to a given value and, only if they are the same, modifies the contents of that memory location to a given new value，举例如下
+这就是应用无阻塞机制的地方。** Tasks don't "fight" for any resource, they "reserve" a place in the queue without being blocked or unblocked, and then they insert/remove data from the queue**【译者注：这里不翻译】。这个机制需要一个特殊操作：CAS（Compare And Swap），维基百科中的定义：a special instruction that atomically compares the contents of a memory location to a given value and, only if they are the same, modifies the contents of that memory location to a given new value，举例如下
 
 ```cpp
 volatile int a;
@@ -233,7 +233,7 @@ ABA 问题可以对每个节点加上引用计数解决。在假定CAS操作正�
 <a name="no3">
 ### 2.3 Dynamic memory allocation
 
-在多线程系统中，必须慎重考虑内存分配。**标准内存分配机制在为一个任务在堆上分配内存时会阻塞所有共享内存空间的任务**（进程内的所有线程）。这种方式简单正确，不会出现两个线程分配相同的地址，因为不会同时分配内存。但是当存在很多内存分配操作时就会导致性能很差（**必须提到的是类似标准库中 queue 或者 map 的插入操作就会在堆上分配内存**）
+在多线程系统中，必须慎重考虑内存分配。** 标准内存分配机制在为一个任务在堆上分配内存时会阻塞所有共享内存空间的任务**（进程内的所有线程）。这种方式简单正确，不会出现两个线程分配相同的地址，因为不会同时分配内存。但是当存在很多内存分配操作时就会导致性能很差（**必须提到的是类似标准库中 queue 或者 map 的插入操作就会在堆上分配内存**）
 
 有一些库可以覆盖标准分配机制，提供无锁的内存分配机制来减少堆的争用，比如，[libhoard](https://github.com/pld-linux/libhoard)。有许多不同的类型的库，但是当你使用它们覆盖标准库操作时可能会对你的系统产生巨大的影响，因为你可能需要修改你的同步机制来适配无锁的内存分配机制。
 
