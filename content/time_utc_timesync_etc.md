@@ -114,7 +114,7 @@ mermaid example:
 
 贴个维基的图：
 
-> ![NTP时间同步](https://segmentfault.com/img/bVwyAB)
+> ![image-20210406211933550](https://wendajiang.github.io/pics/time_utc_timesync_etc/image-20210406211933550.png)
 
 - 时差计算
 
@@ -156,7 +156,7 @@ mermaid example:
 
 下图是两OC主从时钟之间的同步过程：
 
-> ![ptp时间同步](https://segmentfault.com/img/bVwyAE)
+> ![image-20210406211952436](https://wendajiang.github.io/pics/time_utc_timesync_etc/image-20210406211952436.png)
 >
 > - a.主时钟向从时钟发送Sync报文，并在本地记录发送时间t1；从时钟收到该报文后，记录接收时间t2。
 > - b.时钟发送Sync报文之后，紧接着发送一个携带有t1的Follow_Up报文。
