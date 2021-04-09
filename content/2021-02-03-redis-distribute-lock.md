@@ -285,7 +285,7 @@ antirez 反驳说：
 >
 > **Martin**:@antirez Agree about message delay between app and lock server. Delay between app and resource being accessed is still problematic.
 >
-> （译文：**antirez **问：我想知道，在我发文回复之后，我们能否在一点上达成一致，就是大的消息延迟不会给 Redlock 的运行造成损害。** Martin **答：对于客户端和锁服务器之间的消息延迟，我同意你的观点。但客户端和被访问资源之间的延迟还是有问题的。）
+> （译文：**antirez** 问：我想知道，在我发文回复之后，我们能否在一点上达成一致，就是大的消息延迟不会给 Redlock 的运行造成损害。**Martin** 答：对于客户端和锁服务器之间的消息延迟，我同意你的观点。但客户端和被访问资源之间的延迟还是有问题的。）
 
 通过这段对话可以看出，对于 Redlock 在第 4 步所做的锁有效性的检查，Martin 是予以肯定的。但他认为客户端和资源服务器之间的延迟还是会带来问题的。Martin 在这里说的有点模糊。就像 antirez 前面分析的，客户端和资源服务器之间的延迟，对所有的分布式锁的实现都会带来影响，这不单单是 Redlock 的问题了。
 
