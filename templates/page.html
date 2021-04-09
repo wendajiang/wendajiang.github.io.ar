@@ -109,12 +109,12 @@
     <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
     <script>
         var gitalk = new Gitalk({
-            id: '{{ page.permalink | truncate(length=50) }}',
+            id: '{{ page.title | truncate(length=48) }}',
             clientID: '{{ config.extra.gitalk.ClientId  }}',
             clientSecret: '{{ config.extra.gitalk.ClientSecret  }}',
-            repo: '{{ config.extra.gitalk.Repo  }}',
-            owner: '{{ config.extra.gitalk.Owner  }}',
-            admin: ['{{ config.extra.gitalk.Owner  }}'],
+            repo: '{{ config.extra.gitalk.Repo }}',
+            owner: '{{ config.extra.gitalk.Owner }}',
+            admin: ['{{ config.extra.gitalk.Owner }}'],
             perPage: 50,
 
         })
