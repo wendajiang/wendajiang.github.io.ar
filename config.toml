@@ -25,3 +25,9 @@ highlight_code = true
 [extra.show]
 tags=true
 links=true
+
+[extra.gitalk]
+ClientId='a17500877ddbb2dd70b9'
+ClientSecret='77e1c5816e97e2473c0a617bd0e3ece99f33559f'
+Owner='wendajiang'
+Repo='wendajiang.github.io'

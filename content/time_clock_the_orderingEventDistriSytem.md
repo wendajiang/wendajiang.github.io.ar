@@ -20,7 +20,11 @@ mermaid example:
 原文作者：Leslie Lamport
 [原文链接](https://lamport.azurewebsites.net/pubs/time-clocks.pdf)
 
-译者声明：本文中的进程（process）表示过程，不是典型意义上计算机的进程
+译者声明：
+
+本文中的进程（process）表示过程，不是典型意义上计算机的进程
+
+偏序、局部顺序 partial ordering
 
 ## Abstract
 
@@ -48,11 +52,17 @@ mermaid example:
 
 *定义*. '$\rightarrow$' 是系统中事件的最小关系，满足以下三个条件：
 
-1. 如果a和b是同一个进程中的事件，而且a发生于b之前，那么$a \rightarrow b$
-2. 如果a是一个进程中发送消息，b是另一个进程中接收消息，那么$a \rightarrow b$
+1. 如果$a$和$b$是同一个进程中的事件，而且$a$发生于$b$之前，那么$a \rightarrow b$
+2. 如果$a$是一个进程中发送消息，$b$是另一个进程中接收消息，那么$a \rightarrow b$
 3. 如果$a \rightarrow b$并且$b \rightarrow c$，那么$a \rightarrow c$
 
-两个事件$a$和 $b$，如果$a \not \rightarrow b$，而且$b \not \rightarrow a$，就说$a$和$b$是并发的。
+两个事件$a$和 $b$，如果$a \nrightarrow b$，而且$b \nrightarrow a$，就说$a$和$b$是并发的。
+
+对于任意事件$a$，$a \nrightarrow a$。这意味着$\rightarrow$就可以表示系统中所有事件的局部顺序。
+
+![image-20210409111648200](../static/pics/time_clock_the_orderingEventDistriSytem/image-20210409111648200.png)
+
+上图对于理解这个定义
 
 ## Logical Clocks
 
@@ -66,3 +76,18 @@ mermaid example:
 
 ## Appendix 
 略
+
+
+
+## 参考文章：
+
+1. https://lrita.github.io/2018/10/24/lamport-logical-clocks-vector-lock/
+2. 狭义相对论与分布式系统中的时间  https://www.jianshu.com/p/0c79d650d13f
+   1. 阐述了分布式系统中时间的本质，探索了分布式理论的本质
+   2. 提出了Logical Clock算法，是后续Vector Clock，HLC(混合逻辑时钟，包含了logic clock, physical clock)等的基础
+   3. 提出了Replicated State Machine的理念，是后续Paxos及其应用的基础
+   4. 设计了无中心的分布式临界资源算法，是后续多种无中心分布式算法的鼻祖
+   5. 设计了时间同步的雏形算法，后续NTP等的基础
+3. 阿里数据库的HLC https://database.51cto.com/art/201911/606198.htm
+4. https://lrita.github.io/2018/10/19/communication-model-in-distribution/
+

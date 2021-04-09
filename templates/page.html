@@ -103,4 +103,21 @@
             </div>
         </div>
     </body>
+  
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+        var gitalk = new Gitalk({
+            id: '{{ page.permalink | truncate(length=50) }}',
+            clientID: '{{ config.extra.gitalk.ClientId  }}',
+            clientSecret: '{{ config.extra.gitalk.ClientSecret  }}',
+            repo: '{{ config.extra.gitalk.Repo  }}',
+            owner: '{{ config.extra.gitalk.Owner  }}',
+            admin: ['{{ config.extra.gitalk.Owner  }}'],
+            perPage: 50,
+
+        })
+        gitalk.render('gitalk-container')
+    </script>
 </html>
