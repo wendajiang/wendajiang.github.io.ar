@@ -90,4 +90,5 @@ mermaid example:
    5. 设计了时间同步的雏形算法，后续NTP等的基础
 3. 阿里数据库的HLC https://database.51cto.com/art/201911/606198.htm
 4. https://lrita.github.io/2018/10/19/communication-model-in-distribution/
+5. http://zhangtielei.com/posts/blog-distributed-causal-consistency.html 【推荐】
 

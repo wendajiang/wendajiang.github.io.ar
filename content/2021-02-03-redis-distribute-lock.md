@@ -3,7 +3,7 @@ template = "page.html"
 title =  "Redis 分布式锁 [翻译]"
 date =   "2021-02-03 01:26:18"
 [taxonomies]
-tags = ["translate", "redis"]
+tags = ["translate", "redis", "转载"]
 +++
 
 # 翻译
@@ -14,7 +14,13 @@ tags = ["translate", "redis"]
 
 @TODO
 
-# 整体讨论
+
+
+# 整体讨论[转载]
+
+http://zhangtielei.com/posts/blog-redlock-reasoning.html
+
+http://zhangtielei.com/posts/blog-redlock-reasoning-part2.html
 
 关于 Redis 分布式锁的安全性问题，在分布式系统专家 Martin Kleppmann 和 Redis 的作者 antirez 之间就发生过一场争论。由于对这个问题一直以来比较关注，所以我前些日子仔细阅读了与这场争论相关的资料。这场争论的大概过程是这样的：为了规范各家对基于 Redis 的分布式锁的实现，Redis 的作者提出了一个更安全的实现，叫做 Redlock。有一天，Martin Kleppmann 写了一篇 blog，分析了 Redlock 在安全性上存在的一些问题。然后 Redis 的作者立即写了一篇 blog 来反驳 Martin 的分析。但 Martin 表示仍然坚持原来的观点。随后，这个问题在 Twitter 和 Hacker News 上引发了激烈的讨论，很多分布式系统的专家都参与其中。
 
