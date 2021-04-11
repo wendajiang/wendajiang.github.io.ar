@@ -6,3 +6,4 @@ vendor
 .MWebMetaData
 genmd_rust/target
 public
+.DS_Store
