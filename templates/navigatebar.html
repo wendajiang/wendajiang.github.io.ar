@@ -3,15 +3,13 @@
         <a href="{{ config.base_url }}">David</a>
     </div>
     <div class="navigatebar-button">
-        <a href="{{ config.base_url }}/QA">Q&A</a>
-    </div>
-    <div class="navigatebar-button">
-        <a href="{{ config.base_url }}/essay">Essay</a>
-    </div>
-    <div class="navigatebar-button">
         <a href="{{ config.base_url }}/tags">Tags</a>
     </div>
-    <div class="navigatebar-button navigatebar-about">
-        <a href="{{ config.base_url }}/about">About</a>
-    </div>
+    {% set index = get_section(path="_index.md") %}
+    {% for s in index.subsections %}
+        {% set subsection = get_section(path=s) %}
+        <div class="navigatebar-button">
+            <a href="{{ subsection.permalink }}">{{ subsection.title }}</a>
+        </div>
+    {% endfor %}
 </div>

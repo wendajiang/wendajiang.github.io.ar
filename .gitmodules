@@ -1,3 +1,6 @@
 [submodule "src/lock_free_queue_2021_02_05"]
 	path = src/lock_free_queue_2021_02_05
 	url = https://github.com/frechilla/misc-playground/
+[submodule "content/ddia"]
+	path = content/ddia
+	url = https://github.com/wendajiang/DesigningDataIntensiveApplications
