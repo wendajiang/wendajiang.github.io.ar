@@ -72,7 +72,7 @@ This definition will appear quit natural to the reader familiar with the invaria
 
 ## Logical Clocks
 
-现在我们来将时钟引入系统。我们开始于很抽象的时钟概念，只用来对一个事件赋值一个数值，这个数值被用来表示事件发生的时间。更精确的，我们为每个进程$P_i$定义一个时钟$C_i$，函数$C_i \langle a \rangle$表示进程中事件$a$的数值。整个系统的时钟通过$C$表示，对于其中的事件$b$的数值使用$C \langle b \rangle$表示，当事件$b$属于进程$P_j$，$C\langle b \rangle = C_j\langle b \rangle$。现在，我们没有将$C_i \langle a \rangle$与物理时间绑定起来，所以我们可以将其看做是逻辑时钟而不是物理时钟。他可以使用计数器实现而不需要是时间机制。
+现在我们来将时钟引入系统。我们开始于很抽象的时钟概念，只用来对一个事件赋值一个数值，这个数值被用来表示事件发生的时间。数学的，我们为每个进程$P_i$定义一个时钟$C_i$，函数$C_i \langle a \rangle$表示进程中事件$a$的数值。整个系统的时钟通过$C$表示，对于其中的事件$b$的数值使用$C \langle b \rangle$表示，当事件$b$属于进程$P_j$，$C\langle b \rangle = C_j\langle b \rangle$。现在，我们没有将$C_i \langle a \rangle$与物理时间绑定起来，所以我们可以将其看做是逻辑时钟而不是物理时钟。他可以使用计数器实现而不需要是时间机制。
 
 现在我们考虑的意味着系统时钟是正确的。但是我们的定义不能基于物理时间，那样我们必须保证物理时钟。我们的目的是根据事件发生的顺序来定义。最强的合理条件是，如果事件$a$发生于事件$b$之前，我们使用下面的形式表示这种关系：
 
@@ -103,17 +103,16 @@ Clock Condtion（$\rightarrow$）满足如下条件：
 
 > IR1. 进程$P_i$在两个连续事件之间的$C_i$增长
 
-为了满足条件二，我们要求消息$m$包含一个时间戳$T_m$，其等于消息发出的时间。在收到包含时间戳$T_m$的消息时，进程必须保证它的时钟大于$T_m$，更精确描述为下面的规则
+为了满足条件二，我们要求消息$m$包含一个时间戳$T_m$，其等于消息发出的时间。在收到包含时间戳$T_m$的消息时，进程必须保证它的时钟大于$T_m$，数学描述为下面的规则
 
-> IR2. 
-> 1. 如果事件$a$是进程$P_i$发送消息$m$，消息$m$包含时间戳$T_m = C_i\langle a \rangle$
-> 2. 收到消息$m$的进程$P_j$设置$C_j$大于等于$T_m$
+> IR2. 1. 如果事件$a$是进程$P_i$发送消息$m$，消息$m$包含时间戳$T_m = C_i\langle a \rangle$
+>   2. 收到消息$m$的进程$P_j$设置$C_j$大于等于$T_m$
 
 这样就可以确保系统的逻辑时钟是正确的。
 
 ## Ordering the Events Totally
 
-现在我们可以使用满足*Cloud Conditon*的系统时钟来对系统的所有事件进行全排序。可以简单通过发生时间进行排序。为了避免混淆，我们使用符号$\prec$表示进程的顺序。为了更精确的定义，使用符号$\Rightarrow$表示：如果事件$a$在进程$P_i$中，事件$b$在进程$P_j$中，$a \Rightarrow b$当且仅当(i) $C_i\langle a \rangle < C_j\langle b \rangle$或者(ii) $C_i\langle a \rangle = C_j\langle b \rangle$ 并且 $P_i \prec P_j$。可以看出如果$a \rightarrow b$那么$a \Rightarrow b$。换句话说，符号$\Rightarrow$是偏序关系$\rightarrow$在全序中的表示。
+现在我们可以使用满足*Cloud Conditon*的系统时钟来对系统的所有事件进行全排序。可以简单通过发生时间进行排序。为了避免混淆，我们使用符号$\prec$表示进程的顺序。为了数学的定义，使用符号$\Rightarrow$表示：如果事件$a$在进程$P_i$中，事件$b$在进程$P_j$中，$a \Rightarrow b$当且仅当(i) $C_i\langle a \rangle < C_j\langle b \rangle$或者(ii) $C_i\langle a \rangle = C_j\langle b \rangle$ 并且 $P_i \prec P_j$。可以看出如果$a \rightarrow b$那么$a \Rightarrow b$。换句话说，符号$\Rightarrow$是偏序关系$\rightarrow$在全序中的表示。
 
 $\Rightarrow$依赖于系统时钟，不是唯一的，不同的时钟选择会导致不同的$\Rightarrow$，而偏序关系$\rightarrow$由系统的事件唯一确定。
 
@@ -171,7 +170,7 @@ III. 如果每个被授权的进程都释放了资源，那么每个请求都被
 
 ## Physical Clocks
 
-让我们将物理时钟与上面的理论结合，让$C_i(t)$表示在物理时间$t$看到的时钟$C_i$，为了数学上的方便，我们假设时钟是连续的而不是按照离散的tick。更精确的描述就是，$C_i(t)$是连续的，这个函数关于$t$的微分$dC_i(t)/dt$表示了在时间$t$时钟的快慢程度。
+让我们将物理时钟与上面的理论结合，让$C_i(t)$表示在物理时间$t$看到的时钟$C_i$，为了数学上的方便，我们假设时钟是连续的而不是按照离散的tick。数学的描述就是，$C_i(t)$是连续的，这个函数关于$t$的微分$dC_i(t)/dt$表示了在时间$t$时钟的快慢程度。
 
 为了使得时钟$C_i(t)$与物理时钟尽可能一致，要让其微分尽可能为1.数学描述为下面的条件
 
