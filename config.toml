@@ -15,7 +15,7 @@ description = "blog of david"
 
 default_language = "en"
 
-ignored_content = ["*.png"]
+ignored_content = ["*.png", "*/README.md", "*/part3.md"]
 
 [markdown]
 # Whether to do syntax highlighting
