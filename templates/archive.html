@@ -20,11 +20,11 @@ https://github.com/manateelazycat/manateelazycat.github.io
             <div class="slogan">
                 「靡不有初，鲜克有终」
             </div>
+            {% set home = get_section(path="_index.md") %}
             <div class="archive-group">
                 <a name="Home"><div class="category-head">「Home」</div></a>
                 <p></p>
-                {% set section = get_section(path="_index.md") %}
-                {% for year, posts in section.pages | group_by(attribute="year") %}
+                {% for year, posts in home.pages | group_by(attribute="year") %}
                 <ul class="list-with-title">
                     <div class="archive">
                     <div class="listing-title">{{ year }}</div>
@@ -44,36 +44,12 @@ https://github.com/manateelazycat/manateelazycat.github.io
                 <p></p>
             </div>
             
+            {% for section_path in home.subsections %}
+            {% set section = get_section(path=section_path) %}
+            {% if section.title != "ddia" and section.title != "About" %}
             <div class="archive-group">
-                <a name="Q&A"><div class="category-head">「Q&A」</div></a>
+                <a name="Q&A"><div class="category-head">「{{ section.title }}」</div></a>
                 <p></p>
-                {% set section = get_section(path="QA/_index.md") %}
-                {% for year, posts in section.pages | group_by(attribute="year") %}
-
-                <ul class="list-with-title">
-                    <div class="archive">
-                    <div class="listing-title">{{ year }}</div>
-                    <ul class="listing">
-                    {% for post in posts %}
-                        <div class="listing-item">
-                            <div class="listing-post">
-                                <a href="{{ post.permalink }}" title="{{ post.title }}">{{ post.title }}</a>
-                                <div class="post-time"><span class="date">{{ post.date | date(format="%Y-%m-%d") }}</span></div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                    </ul>
-                    </div>
-                </ul>
-
-                {% endfor %}
-                <p></p>
-            </div>
-
-            <div class="archive-group">
-                <a name="Home"><div class="category-head">「Essay」</div></a>
-                <p></p>
-                {% set section = get_section(path="essay/_index.md") %}
                 {% for year, posts in section.pages | group_by(attribute="year") %}
                 <ul class="list-with-title">
                     <div class="archive">
@@ -93,6 +69,8 @@ https://github.com/manateelazycat/manateelazycat.github.io
                 {% endfor %}
                 <p></p>
             </div>
+            {% endif %}
+            {% endfor %}
  
         </div>
         
