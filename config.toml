@@ -15,7 +15,7 @@ description = "blog of david"
 
 default_language = "en"
 
-ignored_content = ["*.png", "*/README.md", "*/part3.md"]
+ignored_content = ["*.png", "*/README.md", "*/part3.md", "*/gsl-intro.md", "*/CONTRIBUTING.md"]
 
 hard_link_static = true
 

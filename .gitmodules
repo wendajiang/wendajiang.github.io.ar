@@ -4,3 +4,6 @@
 [submodule "content/ddia"]
 	path = content/ddia
 	url = https://github.com/wendajiang/DesigningDataIntensiveApplications
+[submodule "CppCoreGuidelines"]
+	path = CppCoreGuidelines
+	url = https://github.com/wendajiang/CppCoreGuidelines
