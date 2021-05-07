@@ -7,3 +7,6 @@
 [submodule "CppCoreGuidelines"]
 	path = CppCoreGuidelines
 	url = https://github.com/wendajiang/CppCoreGuidelines
+[submodule "content/http2ia"]
+	path = content/http2ia
+	url = https://github.com/wendajiang/http2ia
