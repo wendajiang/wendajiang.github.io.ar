@@ -3,7 +3,7 @@ template = "page.html"
 date = "2021-05-07 14:26:39"
 title = "protobuffer etc."
 [taxonomies]
-tags = ["protobuf", "capnpproto", "flatterproto"]
+tags = ["protobuf", "capn proto", "flatterproto"]
 
 [extra]
 mermaid = true
@@ -18,6 +18,9 @@ mermaid example:
 
 [TOC]
 
+## cap'n proto
+
+https://capnproto.org/index.html
 
 ## protobuf2语言
 
@@ -26,6 +29,9 @@ https://developers.google.com/protocol-buffers/docs/proto
 ## protobuf3语言
 
 https://developers.google.com/protocol-buffers/docs/proto3
+
+## protobuf style
+https://developers.google.com/protocol-buffers/docs/style
 
 ## 编码
 
@@ -308,6 +314,10 @@ Tag的格式化序列是按照message中字段后面的域号和字段类型类�
 | 5         | 32-bit        | fixed32、sfixed32、float                                  |
 
 protobuf协议使用二进制格式表示Tag字段；对value而言，不同的类型采用的编码方式也不同，如果是整型，采用二进制表示；如果是字符，会直接原样写入文件或者字符串（即不编码）。
+
+
+## cpp-serializers 对比 benchmark
+https://github.com/thekvs/cpp-serializers
 
 ## 更新记录
 2021-05-07 init 翻译protobuffer官网 encode 的文档
