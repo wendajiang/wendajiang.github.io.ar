@@ -17,12 +17,430 @@ mermaid example:
 -->
 
 # protobuf2 语言
-
 [原文](https://developers.google.com/protocol-buffers/docs/proto)
 
-# protobuf3 语言
+## 定义 message 
+### 三种标识符
+- required
+- optional
+- repeated
 
+历史原因，`repeated` 类型不能高效编码，[packed=true] 新代码可以使用这个选项使得编码更高效
+
+```protobuf
+repeated int32 samples = 4 [packed=true];
+repeated ProtoEnum results = 5 [packed=true];
+```
+### reserved field
+如果删除了 field 或者注释掉，未来可能会重用，这很危险，所以使用 `reserved` 来避免这个问题
+
+```protobuf
+message Foo {
+  reserved 2, 15, 9 to 11;
+  reserved "foo", "bar";
+}
+```
+
+## Scalar Value Types
+
+A scalar message field can have one of the following types – the table shows the type specified in the `.proto` file, and the corresponding type in the automatically generated class:
+
+| .proto Type | Notes                                                        | C++ Type | Java Type  | Python Type[2]                       | Go Type  |
+| :---------- | :----------------------------------------------------------- | :------- | :--------- | :----------------------------------- | :------- |
+| double      |                                                              | double   | double     | float                                | *float64 |
+| float       |                                                              | float    | float      | float                                | *float32 |
+| int32       | Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead. | int32    | int        | int                                  | *int32   |
+| int64       | Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead. | int64    | long       | int/long[3]                          | *int64   |
+| uint32      | Uses variable-length encoding.                               | uint32   | int[1]     | int/long[3]                          | *uint32  |
+| uint64      | Uses variable-length encoding.                               | uint64   | long[1]    | int/long[3]                          | *uint64  |
+| sint32      | Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s. | int32    | int        | int                                  | *int32   |
+| sint64      | Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s. | int64    | long       | int/long[3]                          | *int64   |
+| fixed32     | Always four bytes. More efficient than uint32 if values are often greater than 228. | uint32   | int[1]     | int/long[3]                          | *uint32  |
+| fixed64     | Always eight bytes. More efficient than uint64 if values are often greater than 256. | uint64   | long[1]    | int/long[3]                          | *uint64  |
+| sfixed32    | Always four bytes.                                           | int32    | int        | int                                  | *int32   |
+| sfixed64    | Always eight bytes.                                          | int64    | long       | int/long[3]                          | *int64   |
+| bool        |                                                              | bool     | boolean    | bool                                 | *bool    |
+| string      | A string must always contain UTF-8 encoded or 7-bit ASCII text. | string   | String     | unicode (Python 2) or str (Python 3) | *string  |
+| bytes       | May contain any arbitrary sequence of bytes.                 | string   | ByteString | bytes                                | []byte   |
+
+## Optional Fields and Default Values
+如果 optional field 没有被设置，序列化会被设置一个默认值，默认值可以定义时写好
+
+```protobuf
+optional int32 result_per_page = 3 [default = 10];
+```
+如果没有设置：对于 string，默认是空串。对于 bytes，默认也是空。对于 bools， 默认是 false。对于整型，默认是 0。对于 enums，默认是第一个。
+
+## Enumerations
+```protobuf
+message SearchRequest {
+  required string query = 1;
+  optional int32 page_number = 2;
+  optional int32 result_per_page = 3 [default = 10];
+  enum Corpus {
+    UNIVERSAL = 0;
+    WEB = 1;
+    IMAGES = 2;
+    LOCAL = 3;
+    NEWS = 4;
+    PRODUCTS = 5;
+    VIDEO = 6;
+  }
+  optional Corpus corpus = 4 [default = UNIVERSAL];
+}
+```
+可以对于不同的 enum 定义相同的值，但是要声明 `allow_alias = true`,如果没有声明，protoc 就会报错
+
+```protobuf
+enum EnumAllowingAlias {
+  option allow_alias = true;
+  UNKNOWN = 0;
+  STARTED = 1;
+  RUNNING = 1;
+}
+enum EnumNotAllowingAlias {
+  UNKNOWN = 0;
+  STARTED = 1;
+  // RUNNING = 1;  // Uncommenting this line will cause a compile error inside Google and a warning message outside.
+}
+```
+
+enum 内容必须是**32位整数**。因为 enum 类型使用 varint encoding，负数的编码效率很低，所以不推荐使用负数
+
+### Reserved Values
+如果你要删除一些 enum value 或者注释，也要使用 reverved 声明保留，以免后人重用引发问题
+
+```protobuf
+enum Foo {
+  reserved 2, 15, 9 to 11, 40 to max;
+  reserved "FOO", "BAR";
+}
+```
+
+## Import
+将 PB3 的 message import 到 PB2 的文件中使用是可行的，反之亦然。但是 PB2 的 enum 不能用在 PB3 中
+
+## 类型嵌套
+```protobuf
+message SearchResponse {
+  message Result {
+    required string url = 1;
+    optional string title = 2;
+    repeated string snippets = 3;
+  }
+  repeated Result result = 1;
+}
+
+message SomeOtherMessage {
+  optional SearchResponse.Result result = 1;
+}
+```
+## Group 
+不要用这个特性，同样 required 最好也不要用，这两个特性 PB3 中移除了
+
+## 类型更新
+这里请看原文，使用频率不高
+
+## Extensions
+extensions 可以让你在 message 声明一些 field numbers 给第三方 extensions 使用。extensions 是占位符，field number 没有在本 .proto 文件中定义。允许其他 .proto 文件定义这些 field number，看个例子：
+
+```protobuf 
+message Foo {
+  // ...
+  extensions 100 to 199;
+}
+```
+这表明 [100,199] 保留给 extensions 使用。其他用户可以通过 import 这个文件定义 Foo 的 field number，比如
+
+```protobuf
+extend Foo {
+  optional int32 bar = 126;
+}
+```
+在访问 extend 的字段时，代码与一般定义的不同，比如 C++ 中
+
+```cpp
+Foo foo;
+foo.SetExtension(bar, 15);
+```
+
+Extensions 可以是已经提到任意类型，不能是后面提到的 oneof 或者 map
+
+### 嵌套
+```protobuf
+message Baz {
+  extend Foo {
+    optional int32 bar = 126;
+  }
+  ...
+}
+```
+代码使用类似这样:
+
+```cpp
+Foo foo;
+foo.SetExtensino(Baz::bar, 15);
+```
+影响就是 Foo 的扩展定义位于 message 的 scope，C++ 就是名字空间加了限制
+
+```protobuf
+message Baz {
+  ...
+}
+
+// This can even be in a different file.
+extend Foo {
+  optional Baz foo_baz_ext = 127;
+}
+```
+这样的写法可能更清晰
+
+### 选择扩展数字
+```protobuf
+message Foo {
+  extensions 1000 to max;
+}
+```
+max 是 $2^{29} - 1$，或者 536,870,911
+
+与一般选择 field number 一样，也要避免使用 19000 到 10000（FieldDescriptor :: kFirstReservedNumber到FieldDescriptor :: kLastReservedNumber）这是为 PB 实现保留的。
+
+## Oneof
+如果你的 message 中有很多 optional 的字段，并且同时最多只有一个 optional 的字段会被 set，那么可以使用 oneof 特性来提升编码效率，进一步压缩空间。类似 CPP 中 UNION
+
+### 使用 Oneof
+```protobuf
+message SampleMessage {
+  oneof test_oneof {
+    string name = 4;
+    SubMessage sub_message = 9;
+  }
+}
+```
+
+oneof 中定义的字段不能使用 required, optional, repeated 标识关键字。如果需要增加一个 repeated 字段，需要使用 Message 包裹起来
+
+### Oneof 特性
+- set 其中一个字段，其他字段都被清空，所以只会最后一个 set 的生效
+  ```cpp
+  SampleMessage message;
+  message.set_name("name");
+  CHECK(message.has_name());
+  message.mutable_sub_message();   // Will clear name field.
+  CHECK(!message.has_name());
+  ```
+- 如果解析器看到 oneof 中有多个字段，解析出来的 message 只会是最后一个
+- Extensions 不支持 oneof
+- 反射 API 也可以用于 oneof
+- 可以设置一个 oneof 字段默认值，然后最后一个被序列化
+- 如果使用 C++，注意代码不要 crash。下面的代码就会 crash，因为 sub_message 已经被删除了，当调用 set_name 时
+  ```cpp
+  SampleMessage message;
+  Submessage *sub_message = message.mutable_sub_message();
+  message.set_name("name"); // will delete sub_message
+  sub_message->set_... // crash here
+  ```
+- 还是 C++，如果你 Swap 两个有 oneof 特性的 message，会有对方最后一个 oneof，例子中， msg1 有 sub_message， msg2 有 name
+  ```cpp
+  SampleMessage msg1;
+  msg1.set_name("name");
+  SampleMessage msg2;
+  msg2.mutable_sub_message();
+  msg1.swap(&msg2);
+  CHECK(msg1.has_sub_message());
+  CHECK(msg2.has_name());
+  ```
+### 后向兼容问题
+注意增加，删除 oneof 字段时，如果 check 返回 None/NOT_SET，意味着 oneof 没有被 set 或者设置其他版本的 oneof。无法区分
+
+所以 ！！！ 就认为 oneof 没有兼容性
+
+## Maps
+```protobuf
+map<key_type, value_type> map_field = N;
+```
+**key_type 任意整数类型或者字符串类型。注意 enum 不能作为 key_type。value_type 可以是出了 map 之外的任何类型**
+
+map API 现在支持所有 PB2 的语言
+
+### 特性
+- Extensions 不支持 map
+- maps 不使用 repeated, optional, required
+- Wire format 顺序和 map 迭代是不确定的
+- 生成文本格式时，map 通过 key 排序，数字 key 以数字顺序
+- 从 wire 格式解析，或者 merging，如果有重复 map key，使用后面的值。解析文本格式，如果有重复 key 就会报错
+
+### 兼容
+map 只是一个语法糖，实际上与下面的定义相等，所以即使 PB 实现不支持 map，也可以处理数据
+
+```protobuf
+message MapFieldEntry {
+  optional key_type key = 1;
+  optional value_type value = 2;
+}
+
+repeated MapFieldEntry map_field = N;
+```
+
+## 定义服务
+```protobuf
+service SearchService {
+  rpc Search(SearchRequest) returns (SearchResponse);
+}
+```
+
+默认，PB 编译器会生成抽象接口 `SearchService` 以及关联 stub 实现。stub 传递所有的调用为 RpcChannel，是一个抽象接口，你需要自己定义接口逻辑。比如，你可以将 RpcChannel 实现为序列化一个 message 然后通过 HTTP 发送到一个服务端。换句话说，生成的 stub 提供了一个类型安全的接口，并没有限制你做任何实现。所以，C++代码的例子如下：
+
+
+```cpp
+using google::protobuf;
+
+protobuf::RpcChannel* channel;
+protobuf::RpcController* controller;
+SearchService* service;
+SearchRequest request;
+SearchResponse response;
+
+void DoSearch() {
+  // You provide classes MyRpcChannel and MyRpcController, which implement
+  // the abstract interfaces protobuf::RpcChannel and protobuf::RpcController.
+  channel = new MyRpcChannel("somehost.example.com:1234");
+  controller = new MyRpcController;
+
+  // The protocol compiler generates the SearchService class based on the
+  // definition given above.
+  service = new SearchService::Stub(channel);
+
+  // Set up the request.
+  request.set_query("protocol buffers");
+
+  // Execute the RPC.
+  service->Search(controller, request, response, protobuf::NewCallback(&Done));
+}
+
+void Done() {
+  delete service;
+  delete channel;
+  delete controller;
+}
+```
+所有的 service 类实现 Service 接口，这样提供了编译器不知道方法名称或者输入输出类型的进行调用的方法。服务端，可以这样实现：
+
+```cpp
+using google::protobuf;
+
+class ExampleSearchService : public SearchService {
+ public:
+  void Search(protobuf::RpcController* controller,
+              const SearchRequest* request,
+              SearchResponse* response,
+              protobuf::Closure* done) {
+    if (request->query() == "google") {
+      response->add_result()->set_url("http://www.google.com");
+    } else if (request->query() == "protocol buffers") {
+      response->add_result()->set_url("http://protobuf.googlecode.com");
+    }
+    done->Run();
+  }
+};
+
+int main() {
+  // You provide class MyRpcServer.  It does not have to implement any
+  // particular interface; this is just an example.
+  MyRpcServer server;
+
+  protobuf::Service* service = new ExampleSearchService;
+  server.ExportOnPort(1234, service);
+  server.Run();
+
+  delete service;
+  return 0;
+}
+```
+
+如果不想实现你自己的 RPC 系统，可以直接使用 gRPC。
+# protobuf3 语言
 [原文](https://developers.google.com/protocol-buffers/docs/proto3)
+
+```protobuf
+syntax = "proto3";
+message SearchRequest {
+  string query = 1;
+  int32 page_number = 2;
+  int32 result_per_page = 3;
+}
+```
+
+需要声明 syntax = "proto3"
+
+同 PB2 一样，tag number 范围 $1 到 2^{29} - 1$，并且不能使用 19000 到 19999
+
+PB3 默认是 optional，没有 required 关键字，还有 repeated，并且 repeated 默认使用 packed 特性编码
+
+## Scalar Value Types
+
+与 PB2 基本一样，不过 string 和 bytes 加了最长限制 
+- string 不能超过 $2^{32}$
+- bytes 不能超过 $2^{32}$
+
+## 默认值
+- string，默认空串
+- bytes，默认空序列
+- bool，默认 false
+- 整型，默认 0
+- enum，默认第一个，必须是0
+- message 字段，看特定语言 API
+- repeated，默认没有
+
+## Enumerations
+- PB3 中第一是0，作为默认值
+- 0 必须是第一个元素，为了与 PB2 兼容，作为默认值
+
+PB2 不要求 0 是第一个值
+
+## Unknown Fields
+老代码解析新数据，可能有不认识的 field
+
+最开始，pb3 在碰到不识别的 field，简单丢弃，在 version 3.5 我们为了匹配 pb2 行为重新引入了保护机制。在 version 3.5 或者更新，在解析过程中不认识的 field 被保留，不会删除
+## Any
+特性开发中，有点类似 pb2 中的 message extensions 机制
+
+## JSON mapping
+PB3 支持了官方的对 JSON 的编码，方便与系统之间共享数据。
+
+If a value is missing in the JSON-encoded data or if its value is `null`, it will be interpreted as the appropriate [default value](https://developers.google.com/protocol-buffers/docs/proto3#default) when parsed into a protocol buffer. If a field has the default value in the protocol buffer, it will be omitted in the JSON-encoded data by default to save space. An implementation may provide options to emit fields with default values in the JSON-encoded output.
+
+| proto3                 | JSON          | JSON example                              | Notes                                                        |
+| :--------------------- | :------------ | :---------------------------------------- | :----------------------------------------------------------- |
+| message                | object        | `{"fooBar": v, "g": null, …}`             | Generates JSON objects. Message field names are mapped to lowerCamelCase and become JSON object keys. If the `json_name` field option is specified, the specified value will be used as the key instead. Parsers accept both the lowerCamelCase name (or the one specified by the `json_name` option) and the original proto field name. `null` is an accepted value for all field types and treated as the default value of the corresponding field type. |
+| enum                   | string        | `"FOO_BAR"`                               | The name of the enum value as specified in proto is used. Parsers accept both enum names and integer values. |
+| map<K,V>               | object        | `{"k": v, …}`                             | All keys are converted to strings.                           |
+| repeated V             | array         | `[v, …]`                                  | `null` is accepted as the empty list `[]`.                   |
+| bool                   | true, false   | `true, false`                             |                                                              |
+| string                 | string        | `"Hello World!"`                          |                                                              |
+| bytes                  | base64 string | `"YWJjMTIzIT8kKiYoKSctPUB+"`              | JSON value will be the data encoded as a string using standard base64 encoding with paddings. Either standard or URL-safe base64 encoding with/without paddings are accepted. |
+| int32, fixed32, uint32 | number        | `1, -10, 0`                               | JSON value will be a decimal number. Either numbers or strings are accepted. |
+| int64, fixed64, uint64 | string        | `"1", "-10"`                              | JSON value will be a decimal string. Either numbers or strings are accepted. |
+| float, double          | number        | `1.1, -10.0, 0, "NaN", "Infinity"`        | JSON value will be a number or one of the special string values "NaN", "Infinity", and "-Infinity". Either numbers or strings are accepted. Exponent notation is also accepted. -0 is considered equivalent to 0. |
+| Any                    | `object`      | `{"@type": "url", "f": v, … }`            | If the Any contains a value that has a special JSON mapping, it will be converted as follows: `{"@type": xxx, "value": yyy}`. Otherwise, the value will be converted into a JSON object, and the `"@type"` field will be inserted to indicate the actual data type. |
+| Timestamp              | string        | `"1972-01-01T10:00:20.021Z"`              | Uses RFC 3339, where generated output will always be Z-normalized and uses 0, 3, 6 or 9 fractional digits. Offsets other than "Z" are also accepted. |
+| Duration               | string        | `"1.000340012s", "1s"`                    | Generated output always contains 0, 3, 6, or 9 fractional digits, depending on required precision, followed by the suffix "s". Accepted are any fractional digits (also none) as long as they fit into nano-seconds precision and the suffix "s" is required. |
+| Struct                 | `object`      | `{ … }`                                   | Any JSON object. See `struct.proto`.                         |
+| Wrapper types          | various types | `2, "2", "foo", true, "true", null, 0, …` | Wrappers use the same representation in JSON as the wrapped primitive type, except that `null` is allowed and preserved during data conversion and transfer. |
+| FieldMask              | string        | `"f.fooBar,h"`                            | See `field_mask.proto`.                                      |
+| ListValue              | array         | `[foo, bar, …]`                           |                                                              |
+| Value                  | value         |                                           | Any JSON value. Check [google.protobuf.Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.Value) for details. |
+| NullValue              | null          |                                           | JSON null                                                    |
+| Empty                  | object        | `{}`                                      | An empty JSON object                                         |
+
+### JSON options
+
+A proto3 JSON implementation may provide the following options:
+
+- **Emit fields with default values**: Fields with default values are omitted by default in proto3 JSON output. An implementation may provide an option to override this behavior and output fields with their default values.
+- **Ignore unknown fields**: Proto3 JSON parser should reject unknown fields by default but may provide an option to ignore unknown fields in parsing.
+- **Use proto field name instead of lowerCamelCase name**: By default proto3 JSON printer should convert the field name to lowerCamelCase and use that as the JSON name. An implementation may provide an option to use proto field name as the JSON name instead. Proto3 JSON parsers are required to accept both the converted lowerCamelCase name and the proto field name.
+- **Emit enum values as integers instead of strings**: The name of an enum value is used by default in JSON output. An option may be provided to use the numeric value of the enum value instead.
 
 # protobuf style
 [原文](https://developers.google.com/protocol-buffers/docs/style)
@@ -108,12 +526,9 @@ service FooService {
 - 只有 proto2 存在 Groups
 
 # 编码
-
 [原文](https://developers.google.com/protocol-buffers/docs/encoding)
 
-
 这篇文档阐述了 protobuf 的 message 二进制编码的原理。你在应用中使用 pb 时不需要理解这个，但是知道这些可以更好地帮助你了解使用 pb 编码之后的消息大小
-
 ## A simple Message
 
 来看下这个简单的 message 定义：
@@ -202,7 +617,6 @@ message Test1 {
 ```
 
 ## More Value Types
-
 ### Signed Integers
 
 如同在前面小节看到，所有的 pb 类型为 0 的都被编码为 varints。但是在有符号整形（sint32/sint64），和标准整形（int32/int64）之间如果编码负数存在巨大区别。如果使用标准整形编码负数，varints 的结果*总是是个字节长度*，实际上，它被看做一个非常大的无符号整数，如果使用有符号整形，varint 使用 ZigZag 编码方式，这更有效率。
