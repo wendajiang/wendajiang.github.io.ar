@@ -51,7 +51,7 @@ int32_t JumpConsistentHash(uint64_t key, int32_t num_buckets)
 性能分析对比和相关工作请参考[原文](https://arxiv.org/pdf/1406.2294.pdf)
 
 # Explanation of the algorithm
-jump consistent hash 当桶数量增加时，计算输出。当 num_buckets 个桶时， `ch(key, num_buckets)` 为 key 的映射。所以，对任何 key -> k, ch(k, 1) 是 0，因为仅有一个桶。然后增大桶数量，ch(k, 2) 需要将一半 key 移动到新桶 1 中。由此可见，ch(k, n + 1) 需要保持 ch(k, n) 中 $n/(n + 1)$ 的 key，然后移动 $1/(n + 1)$ 的 key 到桶 n 中。
+jump consistent hash 当桶数量增加时，计算输出。当 num_buckets 个桶时， `ch(key, num_buckets)` 为 key 的映射即桶号。所以，对任何 key -> k, ch(k, 1) 是 0，因为仅有一个桶。然后增大桶数量，ch(k, 2) 需要将一半 key 移动到新桶 1 中。由此可见，ch(k, n + 1) 需要保持 ch(k, n) 中 $n/(n + 1)$ 的 key，然后移动 $1/(n + 1)$ 的 key 到桶 n 中。
 
 举例，有三个 key：k1, k2, k3 ，随着桶数量增长的表格：
 
@@ -61,7 +61,7 @@ jump consistent hash 当桶数量增加时，计算输出。当 num_buckets 个�
 | k2   | 0    | 1    | 1    | 1    | 1    | 1    | 1    | 7    | 7    | 7    | 7    | 7    | 7    | 7    |
 | k3   | 0    | 1    | 1    | 1    | 1    | 5    | 5    | 7    | 7    | 7    | 10   | 10   | 10   | 10   |
 
-可以通过 ch(key, j) 定义一个线性时间的算法。如同上面表格一行的变化一样。给定一个 key 和桶的数量，算法考虑下一个桶,j, 从 1 到 num_buckets - 1，使用 ch(key, j) 计算 ch(key, j + 1)。对于每个桶,j ，决定是否保持 ch(k, j) 的结果，还是将其移动到桶 j 中。为了得到 jump 的正确百分比，将 key 作为伪随机数的种子。如果随机值小于 $1/(j + 1)$ 就移动到当前桶。代码为：
+可以通过 j 增加时 ch(key, j) 是不是需要 jump 的概率定义一个线性时间的算法。如同上面表格一行的变化一样。给定一个 key 和桶的数量，算法考虑下一个桶,j, 从 1 到 num_buckets - 1，使用 ch(key, j) 计算 ch(key, j + 1)。对于每个桶,j ，决定 ch(k, j + 1) 是否保持 ch(k, j) 的结果，还是将其移动到桶 j 中。为了得到 jump 的正确百分比，将 key 作为伪随机数的种子。如果随机值小于 $1/(j + 1)$ 就移动到当前桶，循环结束，计算除了想要的结果。代码为：
 
 ```cpp
 int ch(int key, int num_buckets) {
