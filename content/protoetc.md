@@ -249,9 +249,10 @@ pb 解析器必须能够解析通过`packed`编码的`repeated`域，就好像�
 
 - 下列检查对于 pb message 实例 foo 可能是失败的：
 
-  - ```cpp
-    foo.SerializeAsString() == foo.SerializeAsString()Hash(foo.SerializeAsString()) == Hash(foo.SerializeAsString())CRC(foo.SerializeAsString()) == CRC(foo.SerializeAsString())FingerPrint(foo.SerializeAsString()) == FingerPrint(foo.SerializeAsString())
-    ```
+  - `foo.SerializeAsString() == foo.SerializeAsString()`
+  - `Hash(foo.SerializeAsString()) == Hash(foo.SerializeAsString())`
+  - `CRC(foo.SerializeAsString()) == CRC(foo.SerializeAsString())`
+  - `FingerPrint(foo.SerializeAsString()) == FingerPrint(foo.SerializeAsString())`
 
 - 有一些逻辑等效的 pb message 实例`foo`和`bar`可能序列化输出不同的场景：
 
