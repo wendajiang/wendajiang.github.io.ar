@@ -79,7 +79,7 @@ int ch(int key, int num_buckets) {
 
 $$P(j \ge i) = P(ch(k,i) = ch(k, b + 1))$$
 
-幸运的是，这个分布很容易计算。因为 $P(ch(k,10)) = ch(k,11)$ 是 $10/11$，$P(ch(k,11)) = ch(k,12)$ 是 $11/12$，然后 $P(ch(k,10) = ch(k, 11))$ 是 $10/11 \times 11/12 = 10/11$，推广，如果 $n \ge m, P(ch(k,n) = ch(k,m)) = m / n$，因此对于任意 $i \gt b$,
+幸运的是，这个分布很容易计算。因为 $P(ch(k,10)) = ch(k,11)$ 是 $10/11$，$P(ch(k,11)) = ch(k,12)$ 是 $11/12$，所以 $P(ch(k,10) = ch(k, 11))$ 是 $10/11 \times 11/12 = 10/11$，推广，如果 $n \ge m, P(ch(k,n) = ch(k,m)) = m / n$，因此对于任意 $i \gt b$,
 
 $$P(j \ge i) = P(ch(k,i) = ch(k, b + 1)) = (b + 1)/i$$
 
