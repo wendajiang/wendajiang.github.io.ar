@@ -16,7 +16,10 @@ mermaid example:
 </div>
 -->
 
-[原文](https://arxiv.org/pdf/1406.2294.pdf)
+[原文](https://arxiv.org/pdf/1406.2294.pdf
+
+# 建议参考
+[更丰富的解释](https://zhuanlan.zhihu.com/p/104124045)
 
 # Abstract
 我们提出了 jump consistent hash,一种快速，内存占用小，一致性哈希算法，可以用 5 行代码实现。相比于 Karger 提出的算法，jump consistent hash 不需要内存，更快，在桶的数量变化时，可以将 key 的空间划分的更加均匀。主要局限性是必须对存储桶进行顺序编号，这使其更适用于数据存储应用而不是分布式 web 缓存
