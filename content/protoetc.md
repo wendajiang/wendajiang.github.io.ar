@@ -18,18 +18,98 @@ mermaid example:
 
 ## protobuf2 语言
 
-[链接](https://developers.google.com/protocol-buffers/docs/proto)
+[原文](https://developers.google.com/protocol-buffers/docs/proto)
 
 ## protobuf3 语言
 
-[链接](https://developers.google.com/protocol-buffers/docs/proto3)
+[原文](https://developers.google.com/protocol-buffers/docs/proto3)
 
 ## protobuf style
-[链接](https://developers.google.com/protocol-buffers/docs/style)
+[原文](https://developers.google.com/protocol-buffers/docs/style)
+
+请注意，PB 已经随着时间而发展，因此你可能会看到不同风格编写的 .proto 文件，修改这些文件时，请尊重现有风格，一致性是关键。但是创建新的 .proto 文件时，请采用当前的最新风格
+### 标准文件格式
+- 每行不超过 80 字符
+- 使用 2 空格缩进
+- 最好对字符串使用双引号
+
+### 文件结构
+
+文件命名 `lower_snake_case.proto`
+
+所有文件应该以下列顺序排布：
+1. License header (if applicable)
+2. File overview
+3. Syntax
+4. Package
+5. Imports (sorted)
+6. File options
+7. Everything else 
+
+### Packages
+Packages 名称应该小写，还应该匹配文件层级。比如如果文件在 `my/package/`，package 名称应该为 `my.package`
+
+### Message 和 field names
+使用 CamelCase 命名 message -- 比如，`SongServerRequest`，使用 underscore_separated_names 命名 field name，比如 `song_name`
+
+```protobuf
+message SongServerRequest {
+  optional string song_name = 1;
+}
+```
+这种命名约定，语言生成为
+
+```cpp
+// cpp
+const string& song_name() {...}
+void set_song_name(const string& x) {...}
+```
+
+```java
+// java
+public String getSongName() {...}
+public Builder setSongName(String v) {...}
+```
+
+如果你的 field name 包含一个数字，不需要加下划线，比如应该是 `song_name1` 而不是 `song_name_1`
+
+### Repeated fields
+使用复数命名这种 field
+
+```protobuf
+repeated string keys = 1;
+...
+repeated MyMessage accounts = 17;
+```
+
+### Enums
+使用 CamelCase 命名 enum type name，使用 CPPITALS_WITH_UNDERSOCRES 命名 value name
+
+```protobuf
+enum FooBar {
+  FOO_BAR_UNSPECIFIED = 0;
+  FOO_BAR_FIRST_VALUE = 1;
+  FOO_BAR_SECOND_VALUE = 2;
+}
+```
+每个 enum 应该以分号结尾而不是逗号。需要为 enum 值添加前缀，因为历史代码的兼容，没有引入 C++11 的 enum class scope，零 enum 值应该有后缀
+
+### Services
+如果你的 .proto 文件定义 RPC 服务，应该使用 CamelCase 风格，同时应用于服务名和任何RPC方法名
+
+```protobuf
+service FooService {
+  rpc GetSomething(FooRequest) returns (FooResponse);
+}
+```
+
+### Things to avoid
+- 只有 proto2 存在 required field
+- 只有 proto2 存在 Groups
 
 ## 编码
 
-[链接](https://developers.google.com/protocol-buffers/docs/encoding)
+[原文](https://developers.google.com/protocol-buffers/docs/encoding)
 
 ### 翻译
 
@@ -206,8 +286,17 @@ message Test3 {
 通常，编码后的 message 不会有一个以上非`repeated`域。但是解析器必须能够处理这种情况。对于数字和字符串类型，如果同一个域出现了多次，解析器取最后一个值。对于内嵌的 message 域，解析器合并同一个域的多个实例，就像使用`Message::MergeFrom`方法，表现为所有的奇异域都会被后面的实例替代，奇异内嵌 message 都会被递归式合并，`repeated`域会被串联起来。这些规则的结果就是，解码两个串联起来的编码 message 提供了解码两条 message 得到相同的结果，例如：
 
 ```cpp
-MyMessage message;message.ParseFromString(str1 + str2);// 等于下面的 MyMessage message, message2;message.ParseFromString(str1);message2.ParseFromString(str2);message.MergeFrom(message2);
+MyMessage message;
+message.ParseFromString(str1 + str2);
 ```
+// 等于下面的 
+```cpp
+MyMessage message, message2;
+message.ParseFromString(str1);
+message2.ParseFromString(str2);
+message.MergeFrom(message2);
+```
+
 
 这个特性非常有用，允许你合并两条你不知道类型的 message。
 
@@ -218,13 +307,19 @@ MyMessage message;message.ParseFromString(str1 + str2);// 等于下面的 MyMess
 比如说，假设有一个 message type：
 
 ```protobuf
-message Test4 {	repeated int32 d = 4 [packed = true];}
+message Test4 {	
+  repeated int32 d = 4 [packed = true];
+}
 ```
 
-让我们现在构造一个 Test4，提供 d 的值为 3270 和 86942。然后编码后的形式如下：
+让我们现在构造一个 Test4，提供 field d 的值为 3270 和 86942。然后编码后的形式如下：
 
-```shell
-22        // key (field number 4, wire type 2)06        // payload size (6 bytes)03        // first element (varint 3)8E 02     // second element (varint 270)9E A7 05  // third element (varint 86942)
+```cpp
+22        // key (field number 4, wire type 2)
+06        // payload size (6 bytes)
+03        // first element (varint 3)
+8E 02     // second element (varint 270)
+9E A7 05  // third element (varint 86942)
 ```
 
 只有`repeated`的数字类型（使用 varint，32/64 位的 wire-type）会被打包编码。
