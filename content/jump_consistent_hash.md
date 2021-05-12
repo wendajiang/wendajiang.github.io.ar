@@ -16,7 +16,7 @@ mermaid example:
 </div>
 -->
 
-[原文](https://arxiv.org/pdf/1406.2294.pdf
+[原文](https://arxiv.org/pdf/1406.2294.pdf)
 
 # 建议参考
 [更丰富的解释](https://zhuanlan.zhihu.com/p/104124045)
@@ -98,7 +98,6 @@ $$P(stay_until_j) = \frac{b+1}{b+2} \times \frac{b+2}{b+3} \times ... \times \fr
 虚线框表示不变桶，概率就是乘积。
 
 > 原文翻译：
->
 > 假设这个算法跟踪的是对于键 k 的桶序号的跳跃，假设 b 是最后一个 jump 的目标，表示 ch(k, b) != ch(k, b + 1)，并且 ch(k, b + 1) = b。现在，我们想要发现下一跳。最小的 j，使得 ch(k, j + 1) != ch(k, b + 1)，或者等效的，最大的 j 使得 ch(k, j) = ch(k, b + 1)。我们使用随机变量来分析 j。为了得到 j 的概率约束，注意到对于任意桶数量 i，我们有 j >= i，当且仅当一致性哈希值不随 i 变化，等效为当且仅当 ch(k, i) = ch(k, b + 1)，因此 j 的分布满足
 > $$P(j \ge i) = P(ch(k,i) = ch(k, b + 1))$$
 > 幸运的是，这个分布很容易计算。因为 $P(ch(k,10)) = ch(k,11)$ 是 $10/11$，$P(ch(k,11)) = ch(k,12)$ 是 $11/12$，所以 $P(ch(k,10) = ch(k, 11))$ 是 $10/11 \times 11/12 = 10/11$，推广，如果 $n \ge m, P(ch(k,n) = ch(k,m)) = m / n$，因此对于任意 $i \gt b$,
