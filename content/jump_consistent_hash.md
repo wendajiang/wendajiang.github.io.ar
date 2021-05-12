@@ -16,7 +16,7 @@ mermaid example:
 </div>
 -->
 
-[原文](https://arxiv.org/pdf/1406.2294.pdf
+[原文](https://arxiv.org/pdf/1406.2294.pdf)
 
 # 建议参考
 [更丰富的解释](https://zhuanlan.zhihu.com/p/104124045)
