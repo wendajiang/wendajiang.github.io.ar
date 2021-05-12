@@ -100,15 +100,10 @@ $$P(stay_until_j) = \frac{b+1}{b+2} \times \frac{b+2}{b+3} \times ... \times \fr
 > 原文翻译：
 >
 > 假设这个算法跟踪的是对于键 k 的桶序号的跳跃，假设 b 是最后一个 jump 的目标，表示 ch(k, b) != ch(k, b + 1)，并且 ch(k, b + 1) = b。现在，我们想要发现下一跳。最小的 j，使得 ch(k, j + 1) != ch(k, b + 1)，或者等效的，最大的 j 使得 ch(k, j) = ch(k, b + 1)。我们使用随机变量来分析 j。为了得到 j 的概率约束，注意到对于任意桶数量 i，我们有 j >= i，当且仅当一致性哈希值不随 i 变化，等效为当且仅当 ch(k, i) = ch(k, b + 1)，因此 j 的分布满足
->
 > $$P(j \ge i) = P(ch(k,i) = ch(k, b + 1))$$
->
 > 幸运的是，这个分布很容易计算。因为 $P(ch(k,10)) = ch(k,11)$ 是 $10/11$，$P(ch(k,11)) = ch(k,12)$ 是 $11/12$，所以 $P(ch(k,10) = ch(k, 11))$ 是 $10/11 \times 11/12 = 10/11$，推广，如果 $n \ge m, P(ch(k,n) = ch(k,m)) = m / n$，因此对于任意 $i \gt b$,
->
 > $$P(j \ge i) = P(ch(k,i) = ch(k, b + 1)) = (b + 1)/i$$
->
 > 现在，我们生成一个伪随机数，$r$， (依赖 k 和 j)，归一化到 0 到 1 之间。因为我们想要 $P(j \ge i) = (b + 1)/i$，我们假设 $P(j \ge i) iff r \ge (b + 1)/i$。解决 $i$ 的不等式 $i / P(j \ge i) iff i \ge (b + 1)/r$，因为 $i \ge j$，那么 j 等于 最大的 i ， 因此最大的 i 满足 $i \ge (b+1)/r$，因此通过 floor 方法，$j = floor((b + 1)/r)。$
->
 > 使用这个公式，jump consistent hash 通过直到发现一个正数等于或者大于 num_buckets 来选择下一跳得到 ch(key, num_buckets)。然后我们知道上一跳就是结果
 
 改写 ch 函数：
