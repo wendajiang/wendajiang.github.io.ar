@@ -22,3 +22,6 @@ mermaid example:
 - [Rust modules confusion when there is main.rs and lib.rs](https://stackoverflow.com/questions/57756927/rust-modules-confusion-when-there-is-main-rs-and-lib-rs)
 - [Path clarity](https://doc.rust-lang.org/edition-guide/rust-2018/module-system/path-clarity.html)
 - [Mentally Modelling Modules](https://manishearth.github.io/blog/2017/05/14/mentally-modelling-modules/)
+
+## Link&lib
+- [Rust中的 bin, lib, rlib, a, so概念介绍](https://cloud.tencent.com/developer/article/1583081)
