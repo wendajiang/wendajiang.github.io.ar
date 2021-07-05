@@ -23,6 +23,10 @@ mermaid example:
 - [Path clarity](https://doc.rust-lang.org/edition-guide/rust-2018/module-system/path-clarity.html)
 - [Mentally Modelling Modules](https://manishearth.github.io/blog/2017/05/14/mentally-modelling-modules/)
 
-## Link&lib
+## Link&lib&compile
 - [Rust中的 bin, lib, rlib, a, so概念介绍](https://cloud.tencent.com/developer/article/1583081)
 - [Rust reference linkage](https://doc.rust-lang.org/reference/linkage.html)
+- [Overview of the Compiler](https://rustc-dev-guide.rust-lang.org/overview.html)
+
+## collection
+- [Why we need Cell](https://ibraheem.ca/writings/rust-interior-mutability-understanding-cell/)
