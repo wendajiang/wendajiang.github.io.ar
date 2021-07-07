@@ -27,6 +27,7 @@ mermaid example:
 - [Rust中的 bin, lib, rlib, a, so概念介绍](https://cloud.tencent.com/developer/article/1583081)
 - [Rust reference linkage](https://doc.rust-lang.org/reference/linkage.html)
 - [Overview of the Compiler](https://rustc-dev-guide.rust-lang.org/overview.html)
+- https://users.rust-lang.org/t/the-big-picture-of-compilation-in-rust/6380/3
 
 ## collection
 - [Why we need Cell](https://ibraheem.ca/writings/rust-interior-mutability-understanding-cell/)
