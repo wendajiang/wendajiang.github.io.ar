@@ -31,3 +31,9 @@ mermaid example:
 
 ## collection
 - [Why we need Cell](https://ibraheem.ca/writings/rust-interior-mutability-understanding-cell/)
+
+## random
+- https://rust-random.github.io/book/crates-gen.html?highlight=xoshiro#deterministic-generators
+- [chacha algorithm](https://cr.yp.to/chacha/chacha-20080128.pdf)
+- [xoroshiro](https://prng.di.unimi.it/)
+- [随机测试](https://en.wikipedia.org/wiki/TestU01)
