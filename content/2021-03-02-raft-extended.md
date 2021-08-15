@@ -5,6 +5,9 @@ title = "raft-extended"
 [taxonomies]
 tags=["awesomepaper", "translate"]
 
+[extra]
+mermaid = true
+usemathjax = true
 +++
 
 # 摘要
