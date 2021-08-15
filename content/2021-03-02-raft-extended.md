@@ -1,6 +1,6 @@
 +++
 template = "page.html"
-date = "2021-08-15 23:30"
+date = "2021-08-15 23:30:00"
 title = "raft-extended"
 [taxonomies]
 tags=["awesomepaper", "translate"]
