@@ -67,10 +67,12 @@ mermaid example:
 
 ## 务实的方法
   
-### ETC(eary to change)
+### ETC(easy to change)
 核心指导思想
 
 - DRY (Don't Repeat Yourself)
   
-- 
+- 正交性
+  良好设计中，数据库相关代码应该和用户界面保持正交
+  当系统的组件相互之间高度依赖时，就没有局部修理这回事
   
