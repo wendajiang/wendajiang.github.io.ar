@@ -140,9 +140,63 @@ leader 决定是时候将 log entry 应用到状态机时，这样的 entry 被�
 - 如果不同的 log 【译者注：不同服务器/服务进程上的log】的两条 entry有相同的 index 和 term，命令也是一样的
 - 如果不同的 log 的两条 entry 有相同的 index 和 term，则前面所有的 log entry都是相同的
 
-第一条性质保证了
+第一条性质基于这样一个事实，leader 在给定的 term 的给定 log index 最多创建一条 log entry，然后 log entry 不会更改位置。第二条性质由 AppendEntries 进行一致性检查得到保证。当发送 AppendEntries RPC， leader 将 entry 的 index 和 term 信息带上。如果 follower 没有在相同的 term 和 index 找到这条 entry，就会拒绝新的 entry。一致性检查的步骤为：空的log 状态机满足 Log Matching Property， 一致性检查维护了 Log Matching Property。结果就是，**leader 的 AppendEntries 返回成功，表示follower 的log在这条 log entry 之前跟自己是保持一致的。**
 
+![image-20210816105214650](https://wendajiang.github.io/pics/2021-03-02-raft-extended/image-20210816105214650.png)
 
+整个正常操作期间，leader 的 log 和 follower 的保持一致，所以 AppendEntries 一致性检查一般不会失败。但是如果 leader 宕机就会丢失 log 一致性（老 leader 可能没有将自己的全部 entry 复制出去）。这种不一致性会导致 leader 和 follower 的一系列问题。图7表明了 follower 的 log 可能与新 leader 的不同。follower 可能会丢失一些 leader 的信息，也可能有一些 log leader 不知道，或者同时存在这两种情况。**miss 或者 extraneous entry 可能横跨多个 term**
+
+在 Raft 中，leader 通过强制 follower 使用自己的来处理不一致问题。这意味着，follower 与 leader 不一致的 log 要被 leader 的覆盖。5.4 节会说明，加上一个限制之后这是安全的
+
+为了使 follower 的 log 与自己的保持一致，leader 必须找到两个 log 的最近交汇点，然后将自己之后的发送给 follower 用来覆盖。通过 AppendEntries 的一致性检查来执行这些操作。 leader 建立起每个 follower 的 *nextIndex* 的认识，这表示 leader 发送给 follower 的下一个 index。当 leader 初始化时，nextIndex 就是自己 log 的最后一个 index（图7中是11）。如果一个 follower 的 log 与 leader 不一致，AppendEntries RPC 的一致性检查会失败，然后 leader 会将 nextIndex 减 1然后重新发起请求，直到 leader 和 follower 的 nextIndex 匹配上，然后 AppendEntries 成功，会移除 follower 该匹配点之后的所有 log ，然后使用 leader 的来覆盖。
+
+如果可以，这里多次 RPC 回退 index 的方式可以优化，比如 follower 可以直接回退到 term 的最开始位置。总之就是加速匹配过程。但是实际上我们怀疑这个优化是不是必要，因为实际情况中这种场景应该很小。
+
+通过这种机制，leader 不需要执行任何特殊操作就可以保持与 follower 的一致性。leader 也不会覆盖自己或者删除自己（图3中的 Leader Append-Only Property）
+
+log 复制机制表现出第2节中描述的理想共识属性：Raft 可以接受，复制，应用新的 log entry；正常情况下，log 复制通过一次 RPC 时间就可以达成；一个慢服务器不会影响性能
+
+### 5.4 Safety
+
+前面的小结描述了 Raft 如何选举 leader ，如何复制 log entry。但**是都没有提到状态机是否按照相同的顺序执行相同的命令。**比如，当 leader 提交几条 log entry 时，一个 follower 不可用了，然后他自己被选举成了 leader， 然后使用新的 entry 覆盖了本该执行的命令，这时不同机器的状态机就执行了不同的命令
+
+**本节通过加入哪些服务器可以参与选举leader的约束来完成 Raft 算法**。这个约束确保 leader 在给定的 term 包含了所有被提交的 log entry（图3中的 Leader Completeness Property）。给出选举约束之后，提交规则更清晰了。最后，我们给出了 Leader Completeness Property 的证明。
+
+#### 5.4.1 选举约束
+
+任何基于 leader 的共识算法中，leader 必须存储了所有被提交的 log entry。有些共识算法没有这个要求，但是这些算法存储了额外的信息，确保新 leader 可以补齐或者丢弃一些 log entry。不幸的是，这会需要算法引入额外的机制和复杂度。Raft 使用更简单的方法来保证所有被提交的 entry 都被 leader 知道，而不想引入额外的转换机制。这意味着 log entry 只需要保证一个流动方向，就是从 leader 到 follower，leader 不需要覆盖写已有的 log
+
+Raft 在投票过程中拒绝没有包含所有被提交 log entry 的票来实现这一点。candidate 必须联系集群中的多数服务器来获得投片，意味着提交的 entry 至少存在与集群中的一台机器上。如果 candidate 的 log 在多数机器上是 up-to-date （**Raft 对比两个 log 的最新 log entry 的 index 和 term 来定义 up-to-date，如果最新 log-entry 有不同的 term，term 大的更加 up-to-date， 相同 term，更大的 index 更加 up-to-date）的，表示持有所有被提交的 entry。RequestVote RPC 这样实现：RPC 中包含 candidate log 的信息，投票者对比这些信息与自己的，如果自己的更 up-to-date 就拒绝这个投票**
+
+#### 5.4.2 在先前的 term 提交 entry 【译者注：这里实际没太看懂，需要查看博士的原论文。】
+
+5.3节提到过，leader 知道当前 term 已经被提交 entry 已经被多数服务器接受。如果 leader 在提交这条 entry 之前宕机，新的 leader 会试图完成这次复制。但是，leader 不能直接得出结论如果一条 entry 是上一个 term 提交的，图8表明了这个场景，老的 log entry 被存储在了多数服务器上，但是可能被以后的 leader 覆盖。
+
+![image-20210816130259281](https://wendajiang.github.io/pics/2021-03-02-raft-extended/image-20210816130259281.png)
+
+这个问题的避免，Raft 规定计算复制时，绝对不提交先前 term 的 entry。只有 leader 当前 term 的 log entry 可以被提交，一旦当前 term 的 entry提交，所有先前的 log entry 不能再被修改。有些场景可能 leader 可以安全得出哪些老的 log entry 被提交的结论，但是 Raft 使用保守的策略。
+
+Raft 接受这种提交规则的复杂性，因为当 leader 从上一个 term 复制 log entry， 会保存他们原始的 term 数字。在其他共识算法中，如果一个新 leader 复制先前 term 的 log entry，必须使用新的 term 来做。Raft 使其变得简单，因为在 log 保持相同的 term。此外 Raft 的新 leader 会比其他共识算法发送更少的先前 term 的 log entry（其他算法发送冗余 log entry 必须重新计算它们）
+
+#### 5.4.3 Safety 论证（略）
+
+### 5.5 Follower 和 candidate 宕机
+
+到此为止，我们专注于 leader 失败的情况。Follower 或者 candidate 宕机的处理比 leader 更容易，而且处理方式相同。如果 follower 或者 candidate 宕机，将要到来的 RequestVote ， AppendEntries RPC 会失败。Raft 直接无限重试；如果宕机的服务器重启了，RPC 重试成功。如果服务器在接受了请求但是没有发出响应之间宕机，就会收到重复请求。Raft RPC 是可重入的，所以这没有什么问题。
+
+### 5.6 时间和可用性
+
+Raft 安全的一个要求是不依赖时间：系统不能因为某些事件发生的快些或者慢些就返回错误结果。但是，可用性（系统能够连续提供服务的能力）不可避免要依赖时间。比如，如果消息交换消耗比服务器宕机间隔还长，candidate 不能赢得选举，没有稳定 leader ，整个机制就挂了
+
+Leader 选举是 Raft 中时间起着至关重要的一个方面。Raft 需要满足这个时间条件才能平稳运行：
+
+$$broadcastTime \ll electionTimeout \ll MTBF(average time between failures for a single server)$$
+
+前面的不等式中 $broadcastTime$ 表示并行 RPC 到集群中每个server的平均时间。$electionTimeout$ 前面描述过，$MTBF$ 表示单台server 的宕机间隔【译者注：一般是月计】。
+
+前一个不等号保证了 leader 可以成功发送心跳消息，并且不会使集群发生分裂；第二个不等号是系统平稳运行保证。
+
+$broadcastTime$ 和 $MTBF$ 是底层问题，我们无法控制，但是 $electionTimeout$ 是我们可选的。Raft 一般用于持久化存储的场景，所以可以假定 $broardcastTime$ 在 0.5ms 到 20ms 之间，取决于存储使用的技术。这么看，$electionTimeout$ 应该在 10ms 和 500ms 之间。
 
 ## 6. 集群成员变化
 
@@ -150,7 +204,9 @@ leader 决定是时候将 log entry 应用到状态机时，这样的 entry 被�
 
 之前所有的讨论都是一个集群的配置是固定的。在实际系统中，不可避免会更改配置，比如替换机器。最简单的就是停机，然后更改配置，然后重启集群。这回导致集群有一个不可用时间段。并且如果有操作失误，不可用时间段会更长。为了避免这个问题，决定将配置变更合并到 Raft 共识算法中
 
-为了使配置变更也安全，在配置迁移过程中不能有点的变化，这可能导致同一个 term 被选举出两个 leader。不幸的是，任何直接切换机器配置的方法都不能避免这个问题。不能直接切换，那么就需要搞个两阶段。
+为了使配置变更也安全，在配置迁移过程中不能有点的变化，这可能导致同一个 term 被选举出两个 leader。不幸的是，任何直接切换机器配置的方法都不能避免这个问题。不能直接切换，那么就需要搞个两阶段。直接切换会引起分裂问题，如图10所示
+
+![image-20210816124806914](https://wendajiang.github.io/pics/2021-03-02-raft-extended/image-20210816124806914.png)
 
 为了保证安全性，**配置变更是一个两阶段方法**。有多种手段实现两阶段方法。比如有些系统使用第一个阶段来关闭老的配置，这时候不能处理客户端请求；然后第二阶段切换到新配置。【译者注：这只是将上面停机该配置自动化处理了。还是存在不能提供服务的问题】。Raft 中集群首先切换到联合配置，称为 ***join consensus***，一旦 joint sonsensus 被提交，系统就可以继续切换到新配置。Joint consunsus 既包含了就配置，也包含了新配置：
 
