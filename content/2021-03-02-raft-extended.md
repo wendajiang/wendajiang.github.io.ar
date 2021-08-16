@@ -172,9 +172,9 @@ Raft 在投票过程中拒绝没有包含所有被提交 log entry 的票来实�
 
 #### 5.4.2 在先前的 term 提交 entry 【译者注：这里实际没太看懂，需要查看博士的原论文。】
 
-5.3节提到过，leader 知道当前 term 已经被提交 entry 已经被多数服务器接受。如果 leader 在提交这条 entry 之前宕机，新的 leader 会试图完成这次复制。但是，leader 不能直接得出结论如果一条 entry 是上一个 term 提交的，图8表明了这个场景，老的 log entry 被存储在了多数服务器上，但是可能被以后的 leader 覆盖。
+5.3节提到过，leader 知道当前 term 已经被提交 entry 已经被多数服务器接受。如果 leader 在提交这条 entry 之前宕机，新的 leader 会试图完成这次复制。但是，leader 不能直接得出结论如果一条 entry 是上一个 term 提交的，图3.7【译者注：这里从 Phd 的原论文中截图，比论文中的画法更容易理解】表明了这个场景，老的 log entry 被存储在了多数服务器上，但是可能被以后的 leader 覆盖。
 
-![image-20210816130259281](https://wendajiang.github.io/pics/2021-03-02-raft-extended/image-20210816130259281.png)
+![image-20210816154629358](https://wendajiang.github.io/raft-extended//pics/2021-03-02-raft-extended/image-20210816154629358.png)
 
 这个问题的避免，Raft 规定计算复制时，绝对不提交先前 term 的 entry。只有 leader 当前 term 的 log entry 可以被提交，一旦当前 term 的 entry提交，所有先前的 log entry 不能再被修改。有些场景可能 leader 可以安全得出哪些老的 log entry 被提交的结论，但是 Raft 使用保守的策略。
 
