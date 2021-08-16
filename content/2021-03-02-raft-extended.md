@@ -10,6 +10,8 @@ mermaid = true
 usemathjax = true
 +++
 
+![Raft-extend](https://wendajiang.github.io/pics/2021-03-02-raft-extended/Raft-extend.png)
+
 # 摘要
 
 Raft是管理复制日志的共识算法。它产生相当于Paxos的结果，并且和Paxos效率相当，但是结果与Paxos不同，使得Raft比Paxos更容易理解，提供了对于构建实用系统更好的基础。为了加强可理解性，Raft分离了共识算法的关键要素，比如领导者选举，日志复制和安全性，并且它强调强共识以减少必须考虑的状态数量。一项用户调研显示Raft对于学生来说比Paxos更容易学习。Raft还包括了一个更改集群成员的新机制，该机制用重叠的多数来保证安全性。
