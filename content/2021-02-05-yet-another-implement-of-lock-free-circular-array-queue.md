@@ -34,6 +34,7 @@ SMP机器在过去很昂贵，只有极力推崇这种软件（译者注：大�
 
 ## 2. How synchronizing threads can reduce the overall performance 
 <a name="no1">
+
 ### 2.1 Cache trashing
 
 Threads are (from Wikipedia): "the smallest unit of processing that can be scheduled by an operating system".每个系统有自己的线程实现，但是基本是一个进程内的指令集合加上一些进程内的local内存。线程执行一些指令，但是共享进程的内存空间。在Linux中（本文中写的queue优先在这个系统上执行），一个线程就是“执行的上下文（context of execution）”，没有线程概念。Linux 将线程实现为标准进程。Linux 内核没有提供任何关于线程特殊的调度语义或者数据结构。线程仅仅是与其他进程共享某些资源的进程。
@@ -231,6 +232,7 @@ queue_dequeue(Queue *q)
 ABA 问题可以对每个节点加上引用计数解决。在假定CAS操作正确之前必须检查引用计数以避免 ABA 问题。不过好消息是，本文提到的 queue 不会受 ABA 问题影响，因为不使用动态内存分配。
 
 <a name="no3">
+
 ### 2.3 Dynamic memory allocation
 
 在多线程系统中，必须慎重考虑内存分配。** 标准内存分配机制在为一个任务在堆上分配内存时会阻塞所有共享内存空间的任务**（进程内的所有线程）。这种方式简单正确，不会出现两个线程分配相同的地址，因为不会同时分配内存。但是当存在很多内存分配操作时就会导致性能很差（**必须提到的是类似标准库中 queue 或者 map 的插入操作就会在堆上分配内存**）
