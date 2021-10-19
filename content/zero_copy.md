@@ -29,7 +29,7 @@ write(socket, tmp_buf, len);
 
 看起来简单，你可能觉得两次系统调用也不是多大的开销。实际上，远比你想象中的大。这两次系统调用之下，**数据拷贝了四次**，并且还有内核态和用户态之间的上下文切换（实际上这个进程更复杂，但是先保持这种程度的简化）。为了更好地了解这个进程的调用，看下图
 
-![image-20211019174214718](https://wendjiang.github.io/pics/zero_copy/image-20211019174214718.png)
+![image-20211019174214718](https://wendajiang.github.io/pics/zero_copy/image-20211019174214718.png)
 
 第一步：read 系统调用发生了用户态到内核态的切换。第一次拷贝由DMA执行，从 disk 读取文件内容到内核空间的 buffer
 
@@ -50,7 +50,7 @@ write(socket, tmp_buf, len);
 
 为了更好地理解这个过程，看下图
 
-![image-20211019192834679](https://wendjiang.github.io/pics/zero_copy/image-20211019192834679.png)
+![image-20211019192834679](https://wendajiang.github.io/pics/zero_copy/image-20211019192834679.png)
 
 第一步：mmap 系统调用使得文件内容通过 DMA 从disk 拷贝到内核空间的buffer，这个buffer可以直接在用户空间访问，不需要拷贝到用户空间
 
@@ -86,7 +86,7 @@ sendfile(socket, file, len);
 
 为了更好地理解底层过程，如下图
 
-![image-20211019194434427](https://wendjiang.github.io/pics/zero_copy/image-20211019194434427.png)
+![image-20211019194434427](https://wendajiang.github.io/pics/zero_copy/image-20211019194434427.png)
 
 第一步：sendfile 系统调用使得文件内容通过 DMA 拷贝到内核buffer，然后数据被内核拷贝到 socket buffer
 
@@ -104,7 +104,7 @@ sendfile(socket, file, len);
 
 底层流程如下图
 
-![image-20211019200216564](https://wendjiang.github.io/pics/zero_copy/image-20211019200216564.png)
+![image-20211019200216564](https://wendajiang.github.io/pics/zero_copy/image-20211019200216564.png)
 
 第一步：sendfile 系统调用可以将文件内容通过 DMA 拷贝到内核 buffer
 
