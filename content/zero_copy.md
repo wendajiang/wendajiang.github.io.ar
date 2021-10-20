@@ -41,6 +41,8 @@ write(socket, tmp_buf, len);
 
 正如你所看到的，很多数据拷贝实际本不必要发生。有些拷贝可以规避掉来减少开销提升程序性能。对一个驱动开发者，硬件实际有很多增强功能。有些硬件支持 bypass 主存，直接从将数据传输到其他设备。这个特性可以减少系统存储中的拷贝，但并不是所有硬件都支持。还有一个问题就是从disk得到数据需要为了网络重新封装，这带来了复杂性。为了减少开销，我们可以从减少内核空间和用户空间之间的拷贝开始。
 
+### mmap
+
 一个方法就是避免使用read，而使用 mmap
 
 ```cpp
@@ -78,6 +80,8 @@ if (fcntl(fd, F_SETLEASE, l_type)) {
 
 你应该在 mmap file之前获取租约，然后完成写入后主动放弃租约。通过调用 fcntl(F_SETLEASE, F_UNLCK) 
 
+### Sendfile
+
 在内核2.1版本，sendfile 系统调用简化了将数据从文件传输到socket的方法，不仅减少了数据拷贝，还减少了内核与用户空间的上下文切换
 
 ```cpp
@@ -95,6 +99,8 @@ sendfile(socket, file, len);
 你可能想知道如果另一个进程截断了这个文件，sendfile会发生什么。如果没有注册信号处理函数，sendfile 调用会返回已经传输的字节，errno被设置为成功
 
 如果 sendfile 之前获取了文件租约，行为相同。同时sendfile return前会有 RT_SIGNAL_LEASE 信号
+
+### sendfile + gather(hardware)
 
 如此说来，我们已经避免了内核进行多次拷贝，但是还有一次拷贝，可以也避免吗？当然，但是需要硬件的支持。为了消除内核的所有拷贝，需要网卡支持 gather 操作。内核2.4版本引入了socket对这种操作的支持，这种方法不需要内核态切换，也不需要处理器进行数据拷贝。同时用户代码不变
 
@@ -115,4 +121,8 @@ sendfile(socket, file, len);
 现在我们知道了什么是零拷贝，练习些代码吧。你可以下载[完整代码]([www.xalien.org/articles/source/sfl-src.tgz](http://www.xalien.org/articles/source/sfl-src.tgz))。
 
 [论文](https://www.uidaho.edu/-/media/UIdaho-Responsive/Files/engr/research/csds/publications/2012/Performance-Review-of-Zero-Copy-Techniques-2012.pdf?la=en&hash=B5F37435875AAD15C55C7DFC1FDA53DBF242C0E3)
+
+### splice
+
+sendfile 只适用于将数据从文件拷贝到socket（依赖于具体实现，linux系统可以从文件到文件），而且使用 gather 需要硬件的支持。Linux 在2.6.17版本中实现了 splice 系统调用
 
