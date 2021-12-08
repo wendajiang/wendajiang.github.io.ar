@@ -1,4 +1,6 @@
 _site
+**/logseq
+**/pages
 .sass-cache
 .jekyll-cache
 .jekyll-metadata
