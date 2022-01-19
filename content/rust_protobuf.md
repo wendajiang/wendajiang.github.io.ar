@@ -114,7 +114,7 @@ pub mod foo {
 }
 ```
 ### Services
-`prost-build` 支持自定义处理 `service` 定义，根绝项目需要生成 `trait`
+`prost-build` 支持自定义处理 `service` 定义，根据项目需要生成 `trait`
 
 ### Example
 ```proto
@@ -229,6 +229,7 @@ pub enum Gender {
 
 
 # [rust-protobuf](https://github.com/stepancheg/rust-protobuf)
+[doc](https://docs.rs/protobuf/latest/protobuf/index.html)
 [rust codegen doc](https://docs.rs/protobuf-codegen-pure/2.25.2/protobuf_codegen_pure/)
 优势：
 - 生成的代码有运行时库 ？（prost 可以 no_std 支持），支持 reflection
