@@ -135,13 +135,15 @@ message SomeOtherMessage {
   optional SearchResponse.Result result = 1;
 }
 ```
-## Group 
+### Groups
 不要用这个特性，同样 required 最好也不要用，这两个特性 PB3 中移除了
 
-## 类型更新
-这里请看原文，使用频率不高
+## 更新 Message
+
+这里请看[原文](https://developers.google.com/protocol-buffers/docs/proto#updating)，这是更新一个 message 尽可能遵守的原则
 
 ## Extensions
+
 extensions 可以让你在 message 声明一些 field numbers 给第三方 extensions 使用。extensions 是占位符，field number 没有在本 .proto 文件中定义。允许其他 .proto 文件定义这些 field number，看个例子：
 
 ```protobuf 
@@ -359,7 +361,140 @@ int main() {
 ```
 
 如果不想实现你自己的 RPC 系统，可以直接使用 gRPC。
+## Options
+
+`.proto`文件可以通过 *options* 来 annotate，会影响处理的上下文。所有的 *options* 定义在 `google.protobuf/descriptor.proto`
+
+- file-level options 
+- Message-level options
+- filed-level options
+
+比如：
+
+- java_package (file option) 
+
+  ```protobuf
+  option java_package = "com.example.foo";
+  ```
+
+  生成的 java 代码 package 
+
+- optimize_for (file option) SPEED(default), CODE_SIZE, LITE_RUNTIME
+  会影响 C++ 和 Java 代码的生成
+
+- message_set_wire_format (message option) 对于C++代码开启 arena allocation 
+
+  ```protobuf
+  message Foo {
+  	option message_set_wire_format = true;
+  	extensions 4 to max;
+  }
+  ```
+
+  只是例子，Google 之外的开发者不需要这个
+
+- packed (field option)：如果在 repeated numeric type 上开启，encode 更加紧凑，这个 option 没有坏处，pb3 默认开启
+
+  ```protobuf
+  repeated int32 samples = 4 [packed = true];
+  ```
+
+- deprecated (filed option): 开启表明这个 filed 废弃，Java 中会加上 @Deprecated 注解
+
+### custom options
+
+还可以自定义 options
+
+example: 
+
+```protobuf
+import "google/protobuf/descriptor.proto"
+
+extend google.protobuf.MessageOptions {
+	optional string my_option = 51234;
+}
+
+message MyMessage {
+	optional (my_option) = "Hello world!";
+}
+
+// 这样我们定义了 message-level option
+```
+
+然后 C++ 中可以这样使用
+
+```cpp
+string value = MyMessage::descriptor()->options().GetExtension(my_option);
+```
+
+```protobuf
+import "google/protobuf/descriptor.proto"
+
+extend google.protobuf.FileOptions {
+	optional string my_file_option = 50000;
+}
+extend google.protobuf.MessageOptions {
+  optional int32 my_message_option = 50001;
+}
+extend google.protobuf.FieldOptions {
+  optional float my_field_option = 50002;
+}
+extend google.protobuf.OneofOptions {
+  optional int64 my_oneof_option = 50003;
+}
+extend google.protobuf.EnumOptions {
+  optional bool my_enum_option = 50004;
+}
+extend google.protobuf.EnumValueOptions {
+  optional uint32 my_enum_value_option = 50005;
+}
+extend google.protobuf.ServiceOptions {
+  optional MyEnum my_service_option = 50006;
+}
+extend google.protobuf.MethodOptions {
+  optional MyMessage my_method_option = 50007;
+}
+
+option (my_file_option) = "Hello world!";
+
+message MyMessage {
+  option (my_message_option) = 1234;
+
+  optional int32 foo = 1 [(my_field_option) = 4.5];
+  optional string bar = 2;
+  oneof qux {
+    option (my_oneof_option) = 42;
+
+    string quux = 3;
+  }
+}
+
+enum MyEnum {
+  option (my_enum_option) = true;
+
+  FOO = 1 [(my_enum_value_option) = 321];
+  BAR = 2;
+}
+
+message RequestType {}
+message ResponseType {}
+
+service MyService {
+  option (my_service_option) = FOO;
+
+  rpc MyMethod(RequestType) returns(ResponseType) {
+    // Note:  my_method_option has type MyMessage.  We can set each field
+    //   within it using a separate "option" line.
+    option (my_method_option).foo = 567;
+    option (my_method_option).bar = "Some string";
+  }
+}
+```
+
+
+
 # protobuf3 语言
+
 [原文](https://developers.google.com/protocol-buffers/docs/proto3)
 
 ```protobuf
@@ -376,6 +511,24 @@ message SearchRequest {
 同 PB2 一样，tag number 范围 $1 到 2^{29} - 1$，并且不能使用 19000 到 19999
 
 PB3 默认是 optional，没有 required 关键字，还有 repeated，并且 repeated 默认使用 packed 特性编码
+
+## define a message type
+
+```protobuf
+syntax = "proto3";
+
+message SearchRequest {
+	string query = 1;
+	int32 page_number = 2;
+	int32 result_per_page = 3;
+}
+
+// 默认是 optional , repeated 才需要声明
+```
+
+###  Reverse field
+
+同 pb2 中的内容
 
 ## Scalar Value Types
 

@@ -3,7 +3,7 @@ template = "page.html"
 date = "2022-01-19 14:38:11"
 title = "Rust Protobuf 对比分析(prost vs rust-protobuf)"
 [taxonomies]
-tags = []
+tags = ["protobuf", "rust"]
 
 [extra]
 mermaid = true
@@ -28,7 +28,7 @@ mermaid example:
 
 ## generated code
 prost 可以根据 `.proto` 文件生成 rust 代码
-### Packages
+## Packages
 `package foo.bar` -> `foo::bar` module
 ### Messages
 message <-> Rust struct
@@ -231,6 +231,7 @@ pub enum Gender {
 # [rust-protobuf](https://github.com/stepancheg/rust-protobuf)
 [doc](https://docs.rs/protobuf/latest/protobuf/index.html)
 [rust codegen doc](https://docs.rs/protobuf-codegen-pure/2.25.2/protobuf_codegen_pure/)
+
 优势：
 - 生成的代码有运行时库 ？（prost 可以 no_std 支持），支持 reflection
 - 更像 cpp protobuf 版本的生成文件（不好说是优势还是劣势）
