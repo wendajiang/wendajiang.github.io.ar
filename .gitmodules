@@ -1,6 +1,0 @@
-[submodule "content/ddia"]
-	path = content/ddia
-	url = https://github.com/wendajiang/DesigningDataIntensiveApplications
-[submodule "content/http2ia"]
-	path = content/http2ia
-	url = https://github.com/wendajiang/http2ia
