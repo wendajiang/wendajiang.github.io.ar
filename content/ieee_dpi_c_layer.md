@@ -35,7 +35,7 @@ DPI 在 SV 数据类型表征上加入了如下约束：
 
 - unpakced 的 SV 类型和不包含 packed 元素的类型兼容 C 表征
 - 基本整数和实数类型在[这里](#basic-types)定义
-- packed 类型，包括 time ，整数和用户定义类型，使用[这里](#mapping-between-sv-ranges-and-c-rangs) 定义的规范形式
+- packed 类型，包括 time ，整数和用户定义类型，使用[这里](#mapping-between-sv-ranges-and-c-ranges) 定义的规范形式
 - ![image-20220913185228713](https://wendajiang.github.io/pics/ieee_dpi_c_layer/image-20220913185228713.png)
 - 嵌入 structure 的 unpacked array 与 C 的 layout 兼容。类似的标准 array 作为实参传递给定长形参也是可以的
 - ![image-20220913185517604](https://wendajiang.github.io/pics/ieee_dpi_c_layer/image-20220913185517604.png)
