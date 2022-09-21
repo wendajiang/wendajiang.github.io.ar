@@ -1,20 +1,19 @@
-+++
-template = "page.html"
-date = "2021-09-16 16:34:22"
-title = "第一篇购房参考"
-[taxonomies]
-tags = ["house"]
+---
+template: page.html
+date: 2022-09-20 20:49:31
+title: 第一篇购房参考
+typora-copy-images-to: ../static/pics/${filename}
+taxonomies:
+  tags: ["house"]
+extra:
+  mermaid: true
+  usemathjax: true
 
-[extra]
-mermaid = true
-usemathjax = true
-+++
-<!--
-mermaid example:
-<div class="mermaid">
-    mermaid program
-</div>
--->
+# mermaid example: 
+# <div class="mermaid">
+#     mermaid program
+# </div>
+---
 
 [知乎链接](https://zhuanlan.zhihu.com/p/409188617)
 
@@ -120,9 +119,10 @@ mermaid example:
 - 公司5km以内
 - 位于公司方向，从上到下优先级从高到低，从左到右优先级从高到低
     - 南（天府新区）华阳 四河 南湖
-    - 西（天府新区，高新西）大源
+    - ~~西（天府新区，高新西）大源~~
     - 东（高新区）远大 中和
-    - 北（高新区）新会展
+    - ~~北（高新区）新会展~~
+    - 桐梓林（15年），火车南站
 - 10年以内，15年以内，20年以内楼龄，优先级从高到低
 - 带电梯，无电梯需4层以下
 - 中楼层，高楼层非顶，低楼层2层以上不遮光无商铺
