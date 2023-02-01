@@ -16,7 +16,7 @@ body {
     box-sizing: border-box;
     background-color: #FFF;
     border-radius: 5px;
-    width: 60%;
+    width: 70%;
     margin: 20px;
     padding-top: 40px;
     padding-bottom: 40px;
@@ -230,6 +230,10 @@ nav {
     max-width:100em;
     width:90%;
     margin:0 auto
+}
+
+article {
+    padding-right: 10px;
 }
 
 .section-nav li.active>a
