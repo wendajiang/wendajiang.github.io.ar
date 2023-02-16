@@ -217,46 +217,76 @@ h1, h2, h3, h4, h5, h6, h7, h8, h9, h10 {
 }
 
 nav {
-    position:sticky;
-    top:2rem;
-    align-self:start
+    position: sticky;
+    top: 2rem;
+    align-self: start
 }
 
-.overlay-top{background-color:#fff;box-shadow:0 0 5px #fff}
+a:hover {
+    cursor: pointer;
+    border-bottom-width: 5px
+}
 
-.article-nav {
-    display:grid;
-    grid-template-columns:100% 50%;
-    max-width:100em;
-    width:90%;
-    margin:0 auto
+.overlay-top {
+    padding-top: .5em;
+    margin-top: -7em;
+    background-color: #fff;
+    box-shadow: 0 0 5px #fff
+}
+
+@media(max-width: 568px) {
+    .overlay-top {
+        margin-top:0
+    }
+}
+
+
+@media only screen and (min-width: 1025px) {
+    .article-nav {
+        display: grid;
+        grid-template-columns: 1fr 15em;
+        max-width: 100em;
+        width: 90%;
+        margin: 0 auto
+}
 }
 
 article {
     padding-right: 10px;
 }
 
-.section-nav li.active>a
-{color:purple;font-weight:600}
-
-.section-nav{
-    font-size:smaller;
-    padding-left:0;
-    border-left:2px 
-    solid #efefef
+.section-nav li.active>a {
+    color: purple;
+    font-weight: 600
 }
 
-.section-nav a{
-    text-decoration:none;
-    border-bottom:none;
-    display:block;
-    padding:.125rem 0;
-    color:#ccc;
-    transition:all 50ms ease-in-out
+.section-nav {
+    font-size: smaller;
+    padding-left: 0;
+    border-left: 2px solid #efefef
 }
 
-.section-nav a:hover,
-.section-nav a:focus{color:#666;font-weight:600}
+.section-nav a {
+    text-decoration: none;
+    border-bottom: none;
+    display: block;
+    padding: .125rem 0;
+    color: #ccc;
+    transition: all 50ms ease-in-out
+}
 
-nav>ul,ol{list-style:none;margin:1rem;padding:0}
-nav>li{margin-left:1rem}
+.section-nav a:hover,.section-nav a:focus {
+    color: #666;
+    font-weight: 600
+}
+
+nav>ul,ol {
+    list-style: none;
+    margin: 1rem;
+    padding: 0
+}
+
+nav>li {
+    margin-left: 1rem
+}
+
