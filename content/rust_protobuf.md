@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2022-01-19 14:38:11"
 title = "Rust Protobuf 对比分析(prost vs rust-protobuf)"
 [taxonomies]

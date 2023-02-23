@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2022-02-16 09:20:44"
 title = "【翻译】async what is blocking"
 [taxonomies]

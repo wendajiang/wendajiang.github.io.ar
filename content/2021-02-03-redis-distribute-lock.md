@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 title =  "Redis 分布式锁 [翻译]"
 date =   "2021-02-03 01:26:18"
 [taxonomies]

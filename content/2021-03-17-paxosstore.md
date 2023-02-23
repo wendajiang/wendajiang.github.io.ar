@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-03-17"
 title = "PaxosStore: High-availability Storage Made Practical in WeChat"
 [taxonomies]

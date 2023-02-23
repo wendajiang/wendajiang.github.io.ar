@@ -1,5 +1,5 @@
 ---
-template: page.html
+template: blog/page.html
 date: 2023-02-09 16:22:43
 title: Testing Framework
 typora-copy-images-to: ../static/pics/${filename}
@@ -8,6 +8,7 @@ taxonomies:
 extra:
   mermaid: true
   usemathjax: true
+  toc: true
 
 # mermaid example: 
 # <div class="mermaid">
@@ -50,7 +51,7 @@ And there is the DOCTEST_CONFIG_DISABLE config to remove all tests from the libr
 - REQUIRE : will immediately quit the test case if the assert fails and will mark the test case as failed
 - CHECK : will mark the test case as failed if the assert fails but will continue with the test case
 - WARN : will only print a message if the assert fails but will not mark the test case as failed
-- <LEVEL>_THOWS : except a throw
+- \<LEVEL\>_THOWS : except a throw
 
 ## Test cases
 
@@ -64,9 +65,8 @@ And there is the DOCTEST_CONFIG_DISABLE config to remove all tests from the libr
 ### Test suites
 Test cases can be grouped into test suites.
 
-- TEST_SUITE(<suite name>) {}
-
-- TEST_SUITE_BEGIN(<suite name>)
+- TEST_SUITE(\<suite name\>) {}
+- TEST_SUITE_BEGIN(\<suite name\>)
 - TEST_SUITE_END()
 
 ### Decorators

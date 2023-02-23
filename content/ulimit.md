@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-04-02 14:39:37"
 title = "Linux ulimit"
 [taxonomies]

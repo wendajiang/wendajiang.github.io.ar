@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-10-18 21:14:37"
 title = "【翻译】零拷贝的意义"
 [taxonomies]

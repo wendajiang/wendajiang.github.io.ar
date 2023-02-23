@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date =  "2021-03-07 14:15:27"
 title = "The Chubby lock service for loosely-coupled distributed systems"
 [taxonomies]

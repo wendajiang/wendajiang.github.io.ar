@@ -1,5 +1,5 @@
 ---
-template: page.html
+template: blog/page.html
 date: 2022-09-14 20:49:31
 title: DPI C Layer
 typora-copy-images-to: ../static/pics/${filename}
@@ -8,6 +8,7 @@ taxonomies:
 extra:
   mermaid: true
   usemathjax: true
+  toc: true
 
 # mermaid example: 
 # <div class="mermaid">

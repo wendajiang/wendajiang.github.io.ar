@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-04-06 21:13:52"
 title = "时间，时间同步"
 [taxonomies]

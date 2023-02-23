@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-05-08 11:56:06"
 title = "Memory Faq(landley.net)"
 [taxonomies]

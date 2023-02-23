@@ -1,128 +1,57 @@
-<!DOCTYPE html>
-    
-<html>
-    <head>
-        {% include "header.html" %}
-        <title>
-            {{ page.title }}
-        </title>
+{# Default page.html template #}
 
-        <link rel="stylesheet" href="{{ get_url(path="css/font.css") }}">
-        <link rel="stylesheet" media="screen and (min-width: 600px)" href="{{ get_url(path="css/page.css") }}">
-        <link rel="stylesheet" media="screen and (max-width: 600px)" href="{{ get_url(path="css/page_mobile.css") }}">
-        <link rel="stylesheet" media="screen and (min-width: 600px)" href="{{ get_url(path="css/navigatebar.css") }}">
-        <link rel="stylesheet" media="screen and (max-width: 600px)" href="{{ get_url(path="css/navigatebar_mobile.css") }}">
-        <link rel="stylesheet" href="{{ get_url(path="css/highlight.css") }}">
+{% extends "base.html" %}
 
-        {% if page.extra.mermaid %}
-        <script>
-        function initMermaid() {
-          var config = {
-            startOnLoad: true,
-            theme: "forest",
-            flowchart:{
-              useMaxWidth: true,
-              htmlLabels: true
-            }
-          };
-          mermaid.initialize(config);
-          window.mermaid.init(undefined, document.querySelectorAll('.mermaid'));
-        }
-        </script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/mermaid/8.9.1/mermaid.min.js"
-          async
-          onload="initMermaid()">
-        </script>
-        {% endif %}
-
-        {% if page.extra.usemathjax %}
-        <!-- Math rendering -->
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
-        <script type="text/x-mathjax-config">
-            MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-        </script>
-        {% endif %}
-    </head>
-    <body>
-        {% include "navigatebar.html" %}
-
-        <div class="content-area">
-            <div class="title">
-                {{ page.title }}
-            </div>
-            {% if page.taxonomies.tags %}
-            <div class="category-area">
-                「{% for tag in page.taxonomies.tags %}
-                <a href="{{ get_url(path="@/_index.md") }}tags/{{tag}}">
-                    <div class="category">
-                        {{ tag }}
-                    </div>
-                </a>
-                {% endfor %}」
-            </div>
-            {% endif %}
-            <div class="char-counter">
-                字数{{ page.content | safe | striptags | trim | length }} {{ page.date }}
-            </div>
-                <div class="article-nav" id="article-nav-id">
-                    <article class="overlay-top">
-                        {{ page.content | safe }}
-                    </article>
-                    {% if page.toc %}
-                    <nav class="section-nav">
-                        <ul>
-                            {% for h1 in page.toc %}
-                            <li>
-                                <a href="{{h1.permalink | safe}}">{{ h1.title }}</a>
-                                {% if h1.children %}
-                                <ul>
-                                    {% for h2 in h1.children %}
-                                    <li>
-                                        <a href="{{h2.permalink | safe}}">{{ h2.title }}</a>
-                                        {% if h2.children %}
-                                        <ul>
-                                            {% for h3 in h2.children %}
-                                            <li>
-                                                <a href="{{h3.permalink | safe}}">{{ h3.title }}</a>
-                                                {% if h3.children %}
-                                                <ul>
-                                                    {% for h4 in h3.children %} 
-                                                    <a href="{{ h4.permalink | safe }}">{{ h4.title }}</a>
-                                                    {% endfor %}
-                                                </ul>
-                                                {% endif %}
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                        {% endif %}
-                                    </li>
-                                    {% endfor %}
-                                </ul>
-                                {% endif %}
-                            </li>
-                            {% endfor %}
-                            </ul>
-                    </nav>
-                    {% endif %}
-                
-            </div>
-        </div>
-    </body>
+{% block seo %}
+  {{ super() }}
+  {% set title_addition = "" %}
+  {% if page.title and config.title %}
+    {% set title = page.title %}
+    {% set title_addition = title_separator ~ config.title %}
+  {% elif page.title %}
+    {% set title = page.title %}
+  {% else %}
+    {% set title = config.title %}
+  {% endif %}
   
-    <div id="gitalk-container"></div>
-    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
-    <script>
-        var gitalk = new Gitalk({
-            id: '{{ page.title | truncate(length=48) }}',
-            clientID: '{{ config.extra.gitalk.ClientId  }}',
-            clientSecret: '{{ config.extra.gitalk.ClientSecret  }}',
-            repo: '{{ config.extra.gitalk.Repo }}',
-            owner: '{{ config.extra.gitalk.Owner }}',
-            admin: ['{{ config.extra.gitalk.Owner }}'],
-            perPage: 50,
+  {% if page.description %}
+    {% set description = page.description %}
+  {% else %}
+    {% set description = config.description %}
+  {% endif %}
+  {% set created_time = page.date %}
+  {% set updated_time = page.updated %}
+  {% if current_section %}
+    {% set page_section = current_section %}
+  {% else %}
+    {% set page_section = "" %}
+  {% endif %}
+  
+  {{ macros_head::seo(title=title, title_addition=title_addition, description=description, type="article", is_page=true, created_time=created_time, updated_time=updated_time, page_section=page_section) }}
+{% endblock seo %}
+  
+{% block body %}
+  {% if section.extra.class %}
+    {% set page_class = page.extra.class %}
+  {% else %}
+    {% set page_class = "page single" %}
+  {% endif %}
+{% endblock body %}
 
-        })
-        gitalk.render('gitalk-container')
-    </script>
-</html>
+{% block content %}
+<div class="wrap container" role="document">
+  <div class="content">
+    <div class="row justify-content-center">
+      <div class="col-md-12 col-lg-10 col-xxl-8">
+        <article>
+          <div class="page-header">
+            <h1>{{ page.title }}</h1>
+          </div>
+          {% if page.extra.lead %}<p class="lead">{{ page.extra.lead }}</p>{% endif %}
+          {{ page.content | safe }}
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-10-20 17:39:41"
 title = "【翻译】为什么协议栈在内核中实现"
 [taxonomies]

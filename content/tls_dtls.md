@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-09-10 15:27:04"
 title = "tls vs dtls"
 [taxonomies]

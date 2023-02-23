@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-08-20 17:30:55"
 title = "everyone should know time latency"
 [taxonomies]

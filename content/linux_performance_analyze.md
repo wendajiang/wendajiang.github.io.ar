@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-11-15 16:02:06"
 title = "linux性能工具与分析"
 [taxonomies]

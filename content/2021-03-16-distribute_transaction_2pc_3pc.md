@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-03-16 15:32:32"
 title = "分布式事务:两阶段提交与三阶段提交"
 [taxonomies]

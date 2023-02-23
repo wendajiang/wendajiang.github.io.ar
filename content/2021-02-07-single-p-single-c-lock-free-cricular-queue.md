@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-02-07"
 title = "Lock-Free Single-Producer - Single Consumer Circular Queue[翻译]"
 [taxonomies]

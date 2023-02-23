@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2022-01-20 17:26:39"
 title = "protobuffer etc."
 [taxonomies]

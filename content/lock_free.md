@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-04-03 11:46:30"
 title = "无锁算法"
 [taxonomies]

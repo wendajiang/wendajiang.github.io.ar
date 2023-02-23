@@ -1,25 +1,21 @@
-<!-- inspire
-https://github.com/manateelazycat/manateelazycat.github.io
--->
+{% extends "section.html" %}
 
-<!DOCTYPE html>
+{% block body %}
+  {% set page_class = "blog list" %}
+{% endblock body %}
 
-<html>
-    <head>
-        {% include "header.html" %}
+{% block header %}
+  {# This value is matched by the config.extra.menu.main->section #}
+  {% set current_section = "blog" %}
+  {{ macros_header::header(current_section=current_section)}}
+{% endblock header %}
 
-        <link rel="stylesheet" href="{{ get_url(path="css/font.css") }}">
-        <link rel="stylesheet" media="screen and (min-width: 600px)" href="{{ get_url(path="css/home.css") }}">
-        <link rel="stylesheet" media="screen and (max-width: 600px)" href="{{ get_url(path="css/home_mobile.css") }}">
-        <link rel="stylesheet" href="{{ get_url(path="single.css") }}">
-    </head>
-    <body>
-        <div class="content">
-            {% include "topbar.html" %}
-            
-            <div class="slogan">
-                「靡不有初，鲜克有终」
-            </div>
+{% block content %}
+<div class="wrap container" role="document">
+  <div class="content">
+    <div class="row justify-content-center">
+      <div class="col-md-12 col-lg-10 col-xxl-8">
+        <article>
             {% set home = get_section(path="_index.md") %}
             <div class="archive-group">
                 <a name="Home"><div class="category-head">「Home」</div></a>
@@ -43,10 +39,9 @@ https://github.com/manateelazycat/manateelazycat.github.io
                 {% endfor %}
                 <p></p>
             </div>
-            
             {% for section_path in home.subsections %}
             {% set section = get_section(path=section_path) %}
-            {% if section.title != "ddia" and section.title != "About" %}
+            {% if section.title != "Archive" %}
             <div class="archive-group">
                 <a name="Q&A"><div class="category-head">「{{ section.title }}」</div></a>
                 <p></p>
@@ -71,10 +66,12 @@ https://github.com/manateelazycat/manateelazycat.github.io
             </div>
             {% endif %}
             {% endfor %}
- 
-        </div>
-        
-    </body>
-</html>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
 
 

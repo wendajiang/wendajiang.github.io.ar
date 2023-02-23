@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2022-06-18 20:31:22"
 title = "【译】server design"
 [taxonomies]

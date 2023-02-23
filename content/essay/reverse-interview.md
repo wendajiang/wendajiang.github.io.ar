@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-10-14 10:44:47"
 title = "反向面试"
 [taxonomies]

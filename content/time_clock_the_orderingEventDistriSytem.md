@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-04-06 21:31:59"
 title = "【考古】【必读】分布式理论奠基 paper"
 [taxonomies]

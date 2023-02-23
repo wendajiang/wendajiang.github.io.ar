@@ -1,5 +1,5 @@
 ---
-template: page.html
+template: blog/page.html
 date: 2022-11-28 10:20:07
 title: pimpl
 typora-copy-images-to: ../static/pics/${filename}
@@ -8,6 +8,7 @@ taxonomies:
 extra:
   mermaid: true
   usemathjax: true
+  toc: true
 
 # mermaid example: 
 # <div class="mermaid">

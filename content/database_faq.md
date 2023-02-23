@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-08-13 15:47:48"
 title = "DataBase Faq"
 [taxonomies]

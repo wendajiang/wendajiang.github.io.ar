@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 title =  "lock-free circular array queue[翻译]"
 date =   "2021-02-05 17:26:18"
 [taxonomies]

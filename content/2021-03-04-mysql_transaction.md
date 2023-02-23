@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-03-04 12:23:02"
 title = "mysql_transaction"
 

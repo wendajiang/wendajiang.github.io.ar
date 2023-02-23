@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-04-20 16:44:55"
 title = "GNU gcc 工具集整理, GNU Binutils"
 [taxonomies]

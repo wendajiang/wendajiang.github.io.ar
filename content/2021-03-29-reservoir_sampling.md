@@ -1,5 +1,5 @@
 +++
-template = "page.html"
+template = "blog/page.html"
 date = "2021-03-29 12:50:38"
 title = "蓄水池采样"
 

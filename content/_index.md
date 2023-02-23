@@ -1,7 +1,7 @@
 +++
-title = "index"
-template = "index.html"
+title = "Blog"
+template = "blog/section.html"
 sort_by = "date"
-paginate_by = 100
+paginate_by = 50
 insert_anchor_links = "heading"
 +++
