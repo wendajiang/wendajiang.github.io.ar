@@ -27,13 +27,6 @@
   {{ macros_head::seo(title=title, title_addition=title_addition, description=description) }}
 {% endblock seo %}
 
-{% block body %}
-  {% if section.extra.class %}
-    {% set page_class = section.extra.class %}
-  {% else %}
-    {% set page_class = "contributors list" %}
-  {% endif %}
-{% endblock body %}
 
 {% block content %}
 <div class="wrap container" role="document">

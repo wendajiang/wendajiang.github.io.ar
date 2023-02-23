@@ -92,7 +92,12 @@ a.btn:focus {
   margin-bottom: 100px;
 }
 
+
 body {
+  padding-top: 3.5625rem;
+}
+
+body.blog.list {
   background: linear-gradient(rgba(255,255,255,.15), rgba(255,255,255,1)), url("https://wendajiang.github.io/pics/home/langke.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
