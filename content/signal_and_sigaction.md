@@ -1,5 +1,5 @@
 ---
-template: page.html
+template: blog/page.html
 date: 2022-12-16 09:43:00
 title: Signal and sigaction
 typora-copy-images-to: ../static/pics/${filename}

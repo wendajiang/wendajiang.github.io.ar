@@ -1,5 +1,5 @@
 ---
-template: page.html
+template: blog/page.html
 date: 2022-12-22 16:39:52
 title: Cpp Iterator
 typora-copy-images-to: ../static/pics/${filename}

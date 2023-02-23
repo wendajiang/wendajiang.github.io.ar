@@ -1,5 +1,5 @@
 ---
-template: page.html
+template: blog/page.html
 date: 2022-09-20 20:49:31
 title: 第一篇购房参考
 typora-copy-images-to: ../static/pics/${filename}

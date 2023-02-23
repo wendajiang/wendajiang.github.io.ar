@@ -1,5 +1,5 @@
 ---
-template: page.html
+template: blog/page.html
 date: 2023-01-11 15:43:29
 title: One dynamic library problem
 typora-copy-images-to: ../static/pics/${filename}

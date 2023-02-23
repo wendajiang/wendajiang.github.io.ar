@@ -1,5 +1,5 @@
 ---
-template: page.html
+template: blog/page.html
 date: 2023-01-03 13:33:19
 title: Static object initialization and deinitialization
 typora-copy-images-to: ../static/pics/${filename}

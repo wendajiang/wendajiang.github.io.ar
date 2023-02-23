@@ -1,5 +1,5 @@
 ---
-template: page.html
+template: blog/page.html
 date: 2022-12-15 18:07:49
 title: gcc/g++ compile options
 typora-copy-images-to: ../static/pics/${filename}
