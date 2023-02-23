@@ -23,6 +23,11 @@ body.dark {
   color: $body-color-dark;
 }
 
+body.blog.list.dark {
+  background: $body-bg-dark;
+  color: $body-color-dark;
+}
+
 body.dark a {
   color: $link-color-dark;
 }
