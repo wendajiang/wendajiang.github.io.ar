@@ -4,7 +4,6 @@ _site
 .sass-cache
 .jekyll-cache
 .jekyll-metadata
-vendor
 .MWebMetaData
 genmd_rust/target
 public
