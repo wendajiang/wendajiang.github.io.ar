@@ -1,19 +1,22 @@
 ---
 template: blog/page.html
-date: 2022-09-20 20:49:31
-title: 第一篇购房参考
+date: 2021-09-20 20:49:31
+updated: 2022-09-20 20:49:31
+title: "第一篇购房参考"
 typora-copy-images-to: ../static/pics/${filename}
 taxonomies:
   tags: ["house"]
 extra:
   mermaid: true
   usemathjax: true
+  lead: "some record of buying house"
 
 # mermaid example: 
 # <div class="mermaid">
 #     mermaid program
 # </div>
 ---
+
 
 [知乎链接](https://zhuanlan.zhihu.com/p/409188617)
 
