@@ -82,6 +82,7 @@ int main() {
 ### 使用到的 research 工具
 ```shell
 nm -C -g liba.so
+readelf -a liba.so | rg RPATH
 chrpath liba.so -r <new path> 
   or use patchelf, but do not this time
 readelf -a liba.so | rg -i RPATH
