@@ -8,6 +8,7 @@ taxonomies:
 extra:
   mermaid: true
   usemathjax: true
+  lead: library link, export symbol control
 
 # mermaid example: 
 # <div class="mermaid">
@@ -81,7 +82,8 @@ int main() {
 ### 使用到的 research 工具
 ```shell
 nm -C -g liba.so
-chrpath liba.so -r <new path> /patchelf
+chrpath liba.so -r <new path> 
+  or use patchelf, but do not this time
 readelf -a liba.so | rg -i RPATH
 ```
 
