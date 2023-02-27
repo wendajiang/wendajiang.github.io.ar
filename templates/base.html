@@ -26,6 +26,7 @@
 {% endblock seo %}
 
 {{ macros_head::favicons() }}
+{% block rss %} {{ macros_head::rss() }}{% endblock rss %}
 {% block math %}{{ macros_math::math() }}{% endblock math %}
 {% block mermaid %}{{ macros_mermaid::mermaid() }}{% endblock mermaid %}
 </head>

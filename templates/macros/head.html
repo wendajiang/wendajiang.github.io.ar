@@ -19,6 +19,10 @@
   {% endif %}
 {% endmacro %}
 
+{% macro rss() %}
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ get_url(path="rss.xml", trailing_slash=false) }}">
+{% endmacro %}
+
 
 {# type:          website or article, generally setting article for blog articles #}
 {# page_images:   using for the blog single template page #}
