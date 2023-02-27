@@ -112,8 +112,8 @@ body.dark .showcase-meta a:focus {
   color: $link-color-dark;
 }
 
-body.dark .docs-link:hover,
-body.dark .docs-link.active,
+body.dark .books-link:hover,
+body.dark .books-link.active,
 body.dark .page-links a:hover {
   text-decoration: none;
   color: $link-color-dark;
@@ -123,7 +123,7 @@ body.dark .navbar-light .navbar-text a {
   color: $navbar-dark-active-color;
 }
 
-body.dark .docs-links h3.sidebar-link a,
+body.dark .books-links h3.sidebar-link a,
 body.dark .page-links h3.sidebar-link a {
   color: $body-color-dark;
 }
@@ -182,13 +182,13 @@ body.dark .border-top {
 }
 
 @include media-breakpoint-up(lg) {
-  body.dark .docs-sidebar {
+  body.dark .books-sidebar {
     order: 0;
     border-right: 1px solid $border-dark;
   }
 }
 
-body.dark .docs-navigation {
+body.dark .books-navigation {
   border-top: 1px solid $border-dark;
 }
 
@@ -218,48 +218,48 @@ body.dark .footer {
   border-top: 1px solid $border-dark;
 }
 
-body.dark .docs-links,
-body.dark .docs-toc {
+body.dark .books-links,
+body.dark .books-toc {
   scrollbar-width: thin;
   scrollbar-color: $body-bg-dark $body-bg-dark;
 }
 
-body.dark .docs-links::-webkit-scrollbar,
-body.dark .docs-toc::-webkit-scrollbar {
+body.dark .books-links::-webkit-scrollbar,
+body.dark .books-toc::-webkit-scrollbar {
   width: 5px;
 }
 
-body.dark .docs-links::-webkit-scrollbar-track,
-body.dark .docs-toc::-webkit-scrollbar-track {
+body.dark .books-links::-webkit-scrollbar-track,
+body.dark .books-toc::-webkit-scrollbar-track {
   background: $body-bg-dark;
 }
 
-body.dark .docs-links::-webkit-scrollbar-thumb,
-body.dark .docs-toc::-webkit-scrollbar-thumb {
+body.dark .books-links::-webkit-scrollbar-thumb,
+body.dark .books-toc::-webkit-scrollbar-thumb {
   background: $body-bg-dark;
 }
 
-body.dark .docs-links:hover,
-body.dark .docs-toc:hover {
+body.dark .books-links:hover,
+body.dark .books-toc:hover {
   scrollbar-width: thin;
   scrollbar-color: $border-dark $body-bg-dark;
 }
 
-body.dark .docs-links:hover::-webkit-scrollbar-thumb,
-body.dark .docs-toc:hover::-webkit-scrollbar-thumb {
+body.dark .books-links:hover::-webkit-scrollbar-thumb,
+body.dark .books-toc:hover::-webkit-scrollbar-thumb {
   background: $border-dark;
 }
 
-body.dark .docs-links::-webkit-scrollbar-thumb:hover,
-body.dark .docs-toc::-webkit-scrollbar-thumb:hover {
+body.dark .books-links::-webkit-scrollbar-thumb:hover,
+body.dark .books-toc::-webkit-scrollbar-thumb:hover {
   background: $border-dark;
 }
 
-body.dark .docs-links h3:not(:first-child) {
+body.dark .books-links h3:not(:first-child) {
   border-top: 1px solid $border-dark;
 }
 
-body.dark a.docs-link {
+body.dark a.books-link {
   color: $body-color-dark;
 }
 

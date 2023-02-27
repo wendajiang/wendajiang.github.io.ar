@@ -2,7 +2,7 @@
 .blog .content,
 .page .content,
 .error404 .content,
-.docs.list .content,
+.books.list .content,
 .tutorial.list .content,
 .showcase.list .content {
   padding-top: 1rem;
@@ -105,18 +105,18 @@ body.blog.list {
   padding-top: 3.5625rem;
 }
 
-.docs-sidebar {
+.books-sidebar {
   order: 2;
 }
 
 @include media-breakpoint-up(lg) {
-  .docs-sidebar {
+  .books-sidebar {
     order: 0;
     border-right: 1px solid $gray-200;
   }
 
   @supports ((position:-webkit-sticky) or (position:sticky)) {
-    .docs-sidebar {
+    .books-sidebar {
       position: -webkit-sticky;
       position: sticky;
       top: 4rem;
@@ -127,18 +127,18 @@ body.blog.list {
 }
 
 @include media-breakpoint-up(xl) {
-  .docs-sidebar {
+  .books-sidebar {
     flex: 0 1 320px;
   }
 }
 
-.docs-links {
+.books-links {
   padding-bottom: 5rem;
 }
 
 @include media-breakpoint-up(lg) {
   @supports ((position: -webkit-sticky) or (position: sticky)) {
-    .docs-links {
+    .books-links {
       max-height: calc(100vh - 4rem);
       overflow-y: scroll;
     }
@@ -146,7 +146,7 @@ body.blog.list {
 }
 
 @include media-breakpoint-up(lg) {
-  .docs-links {
+  .books-links {
     display: block;
     width: auto;
     margin-right: -1.5rem;
@@ -154,12 +154,12 @@ body.blog.list {
   }
 }
 
-.docs-toc {
+.books-toc {
   order: 2;
 }
 
 @supports ((position:-webkit-sticky) or (position:sticky)) {
-  .docs-toc {
+  .books-toc {
     position: -webkit-sticky;
     position: sticky;
     top: 4rem;
@@ -168,12 +168,12 @@ body.blog.list {
   }
 }
 
-.docs-content {
+.books-content {
   padding-bottom: 3rem;
   order: 1;
 }
 
-.docs-navigation, .blog-navigation {
+.books-navigation, .blog-navigation {
   margin-top: 2rem;
   margin-bottom: 0;
   padding-top: 2rem;
@@ -183,12 +183,12 @@ body.blog.list {
   }
 }
 
-.docs-navigation {
+.books-navigation {
   border-top: 1px solid $gray-200;
 }
 
 @include media-breakpoint-up(lg) {
-  .docs-navigation, .blog-navigation {
+  .books-navigation, .blog-navigation {
     margin-bottom: -1rem;
 
     a {

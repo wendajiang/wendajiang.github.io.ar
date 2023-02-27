@@ -1,7 +1,7 @@
 {% extends "page.html" %}
 
 {% block body %}
-  {% set page_class = "docs single" %}
+  {% set page_class = "books single" %}
 {% endblock body %}
 
 {% block header %}
@@ -14,13 +14,13 @@
 <div class="wrap container" role="document">
   <div class="content">
     <div class="row flex-xl-nowrap">
-	  {{ macros_sidebar::docs_sidebar(current_section=current_section) }}
+	  {{ macros_sidebar::books_sidebar(current_section=current_section) }}
 	  {{ macros_toc::page_toc(page=page) }}
-      <main class="docs-content col-lg-11 col-xl-9">
+      <main class="books-content col-lg-11 col-xl-9">
         <h1>{{ page.title }}</h1>
         {% if page.extra.lead %}<p class="lead">{{ page.extra.lead | safe }}</p>{% endif %}
         {{ page.content | safe }}
-        {{ macros_navigation::docs_navigation(page=page, current_section=current_section) }}
+        {{ macros_navigation::books_navigation(page=page, current_section=current_section) }}
       </main>
     </div>
   </div>
