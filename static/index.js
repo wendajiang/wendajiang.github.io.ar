@@ -82,8 +82,8 @@ Source:
     },
   });
 
-  var docs = [
-    {{ range $index, $page := (where .Site.Pages "Section" "docs") -}}
+  var books = [
+    {{ range $index, $page := (where .Site.Pages "Section" "books") -}}
       {
         id: {{ $index }},
         href: "{{ .RelPermalink | relURL }}",
@@ -94,7 +94,7 @@ Source:
     {{ end -}}
   ];
 
-  index.add(docs);
+  index.add(books);
 
   userinput.addEventListener('input', show_results, true);
   suggestions.addEventListener('click', accept_suggestion, true);
