@@ -87,7 +87,7 @@ Repo = 'wendajiang.github.io'
 ## JSON-LD
 [extra.schema]
 type = "Organization"
-logo = "logo-doks.png"
+logo = "david.png"
 github = "https://github.com/wendajiang"
 section = "blog" # see config.extra.main~url
 ## Sitelinks Search Box
