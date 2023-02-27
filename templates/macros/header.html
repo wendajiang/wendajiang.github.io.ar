@@ -30,22 +30,40 @@
 					{% set rootsectionpath = "_index." ~ lang ~ ".md" %}
 				{% endif %}
 				{% set mainsec = get_section(path=rootsectionpath) %}
+				{% set_global menumain = [] %}
 				{% if mainsec.extra.menu.main %}
 					{% for val in mainsec.extra.menu.main %}
 						<li class="nav-item{% if current_section == val.section %} {{ current_section }} active{% endif %}">
 							<a class="nav-link" href="{{ get_url(path=val.url, trailing_slash=true) | safe }}">{{ val.name }}</a>
 						</li>
+						{% set_global menumain = [menumain, val.name] %}
 					{% endfor %}
+					{% set index = get_section(path="_index.md") %}
+    				{% for s in index.subsections %}
+    				    {% set subsection = get_section(path=s) %}
+						{% if subsection.title != "Archive" and subsection.title not in menumain %}
+    				    <li class="nav-item">
+    				        <a class="nav-link" href="{{ subsection.permalink }}">{{ subsection.title }}</a>
+						</li>
+						{% endif %}
+    				{% endfor %}
 				{% elif config.extra.menu.main %}
 					{% for val in config.extra.menu.main %}
 						<li class="nav-item{% if current_section == val.section %} {{ current_section }} active{% endif %}">
 							<a class="nav-link" href="{{ get_url(path=val.url, trailing_slash=true) | safe }}">{{ val.name }}</a>
 						</li>
+						{% set_global menumain = [menumain, val.name] %}
 					{% endfor %}
+					{% set index = get_section(path="_index.md") %}
+    				{% for s in index.subsections %}
+    				    {% set subsection = get_section(path=s) %}
+						{% if subsection.title != "Archive" and subsection.title not in menumain %}
+    				    <li class="nav-item">
+    				        <a class="nav-link" href="{{ subsection.permalink }}">{{ subsection.title }}</a>
+						</li>
+						{% endif %}
+    				{% endfor %}
 				{% else %}
-				<li class="nav-item">
-    			    <a class="nav-link" href = "{{ config.base_url }}/tags">Tags</a>
-				</li>
 				{% set index = get_section(path="_index.md") %}
     			{% for s in index.subsections %}
     			    {% set subsection = get_section(path=s) %}
@@ -55,13 +73,16 @@
 					</li>
 					{% endif %}
     			{% endfor %}
-    			<li class="nav-item">
-    			    <a class="nav-link" href = "{{ config.base_url }}/archive">Archive</a>
-				</li>
 				<!-- <li class="nav-item">
 					<a class="nav-link" href="{{ get_url(path="blog", trailing_slash=true) | safe }}">Blog</a>
 				</li> -->
 				{% endif %}
+				<li class="nav-item">
+					<a class="nav-link" href = "{{ config.base_url }}/tags">Tags</a>
+				</li>
+				<li class="nav-item">
+    			    <a class="nav-link" href = "{{ config.base_url }}/archive">Archive</a>
+				</li>
 			</ul>
 			<div class="break order-6 d-md-none"></div>
 			{% if config.build_search_index %}

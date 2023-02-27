@@ -1,10 +1,14 @@
-+++
-title = "Books"
-template = "section.html"
-sort_by = "date"
-paginate_by = 1000
-+++
+---
+title: "Books"
+template: "books/section.html"
+sort_by: "weight"
+description: "David books"
+date: 2023-05-01T08:00:00+00:00
+updated: 2023-05-01T08:00:00+00:00
+---
 
+
+<!-- todo refactor books -->
 
 - [高效利用现代C++](https://cntransgroup.github.io/EffectiveModernCppChinese/)
 - [数据密集型应用设计](https://wendajiang.github.io/DesigningDataIntensiveApplications/)
@@ -18,3 +22,5 @@ paginate_by = 1000
 - Degital Design: Principle and Practices [school book]
 - FPGA 原理与结构
     FPGA 入门书
+
+
