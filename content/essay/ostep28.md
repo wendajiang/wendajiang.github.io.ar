@@ -14,7 +14,7 @@ extra:
 ---
 
 
-## Basic Idea
+# Basic Idea
 
 We would like to execute a series of instructions atomically, but due to the presence of interrupts on a single processor (or multiple threads executing on multiple processors concurrently), we couldn't. So we need the lock. Programmers annotate source code with locks, putting them around critical sections, and thus ensure that any such critical section executes as if it were a single atomic instruction.
 
@@ -26,11 +26,11 @@ balance = balance + 1;
 unlock(&mutex);
 ```
 
-## How to build a Spin lock
+# How to build a Spin lock
 
 By now, you should have some understanding of how a lock works, from the perspective of a programmer. But how should we build a lock? What hardware support is needed? What OS support? 
 
-### Evaluating Locks
+## Evaluating Locks
 
 - The first is whether the lock does its basic task, which is to provide **mutual exclusion**. 
 - The second is **fairness**. Does each thread contending for the lock get a fair shot at acquiring it once it is free? 
@@ -39,7 +39,7 @@ By now, you should have some understanding of how a lock works, from the perspec
   - multiple threads are contending for the lock on a single CPU
   - how does the lock perform when there are multiple CPUs involved, and threads on each contending for the lock?
 
-### Controlling Interrputs
+## Controlling Interrputs
 
 The earliest solutions used to provide mutual exclusion was to disable interrupts for critical sections. *This solution was invented for single-processor systems.*
 
@@ -65,7 +65,7 @@ Negatives:
 
 So this approach is not fact. Turning off interrupts is only used in limited contexts as a mutual-exclusion primitive.
 
-### A failed attempt: Just using loads/stores
+## A failed attempt: Just using loads/stores
 
 ```cpp
 typedef struct ___lock_t { int flag; } lock_t;
@@ -89,7 +89,7 @@ The idea is simple: use a simple variable to indicate whether some thread has po
 
 But it's wrong. As you can see the above pic, both threads set the flag to 1 and both threads are thus bale to enter the critical secion.
 
-### Building working spin locks with test-and-set
+## Building working spin locks with test-and-set
 
 As disabling interrupts does not work on multiple processors, and because simple approaches using loads and stores (as shown above) don't work, system designers started to invent hardware support for locking.
 
@@ -124,7 +124,7 @@ Rethinking last section's problem, as the test-and-set is atomically operation, 
 
 It's the simplest type of lock to build, and simply spins, using CPU cycles, until the lock becomes available. To work correctly on single processor, it requires a **preemptive scheduler**(i.e., one that will interrupt a thread via a timer, in order to run a different thread, from time to time).
 
-### Evaluating Spin Locks
+## Evaluating Spin Locks
 
 - Correctness. ✅
 - Fairness? ❌, spin locks don't provide any fairness guarantees.
@@ -132,7 +132,7 @@ It's the simplest type of lock to build, and simply spins, using CPU cycles, unt
   - single processor: waste of CPU cycles
   - multiple CPUs, work reasonably well (if the number of threads roughly equals the number os CPUs).  The critical section is short, and spin thread soon require the lock, avoid the thread context swap
 
-### Compare-and-swap
+## Compare-and-swap
 
 Another hardware primitive that some systems provide is known as the **compare-and-swap** instruction.(or **compare-and-exchange**). The C pseudocode is below:
 
@@ -152,7 +152,7 @@ void lock(lock_t *lock) {
 
 Although, compare-and-swap is more powerful instruction than test-and-set in the situation of **lock-free synchronization**. However, if we just build a simple spin lock with it, its behavior is identical to the spin lock we analyzed above.
 
-### Load-linked and Store-conditional
+## Load-linked and Store-conditional
 
 MIPS architecture, for example, the **load-linked** and **store-conditional** instructions can be used in tandem to build locks and other concurrent structures. The C pseudocode for these instructions is as below. Alpha, PowerPC, and ARM provide similar instructions.
 
@@ -189,7 +189,7 @@ void lock(lock_t *lock) {
 }
 ```
 
-### Fetch-and-add
+## Fetch-and-add
 
 One final hardware primitive is the **fetch-and-add** instruction, which atomically increments a value while returning the old value at a particular address. The C pseudocode look like this:
 
@@ -223,9 +223,9 @@ void unlock(lock_t *lock) {
 
 Note one important difference with this solution versus our previous attempts: it ensures progress for all threads. Once a thread is assigned its ticket value, it will be scheduled at some point in the future(once those in front of it have passed through the critical section and released the lock).
 
-## How to avoid spinning
+# How to avoid spinning
 
-### Simple approach: just yield
+## Simple approach: just yield
 
 Our first try is simple and friendly approach: when you are going to spin, instead give up the CPU to another thread.
 
@@ -246,7 +246,7 @@ Yield is simply a system call that moves the caller from the **running** state t
 
 But, we have not tackled the starvation problem at all.
 
-### Using queues: sleeping instead of spinning
+## Using queues: sleeping instead of spinning
 
 The real problem with our previous approaches is that they leave too much to change. The scheduler determines which thread runs next; if the scheduler makes a bad choice, a thread runs that must either spin waiting for the lock (our first approach), or yield the CPU immediately (our second approach). Either way, there is potential for waste and no prevention of starvation.
 
@@ -282,7 +282,7 @@ void mutex_unlock(int *mutex) {
 }
 ```
 
-#### Two-phase locks
+### Two-phase locks
 
 One final note: the Linux approach has the flavor the an old approach , and is now referred to as a **two-phase lock**. A two-phase lock realizes that spinning can be useful, particularly if the lock is about to be released. So in the first phase, the lock spins for a while, hoping that is can acquire the lock.
 

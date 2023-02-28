@@ -74,6 +74,20 @@ a.books-link {
   padding-top: 0.125rem;
 }
 
+.page-links ul ul ul li {
+  border-top: none;
+  padding-left: 2rem;
+  margin-top: 0.125rem;
+  padding-top: 0.125rem;
+}
+
+.page-links ul ul ul ul li {
+  border-top: none;
+  padding-left: 3rem;
+  margin-top: 0.125rem;
+  padding-top: 0.125rem;
+}
+
 .page-links li:not(:first-child) {
   border-top: 1px dashed $gray-200;
 }
