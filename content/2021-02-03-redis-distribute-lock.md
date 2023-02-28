@@ -40,7 +40,7 @@ http://zhangtielei.com/posts/blog-redlock-reasoning-part2.html
 
 首先，Redis 客户端为了**获取锁**，向 Redis 节点发送如下命令：
 
-```shell
+```bash
 SET resource_name my_random_value NX PX 30000
 ```
 
@@ -70,7 +70,7 @@ end
 
 第二个问题，第一步**获取锁**的操作，网上不少文章把它实现成了两个 Redis 命令：
 
-```shell
+```bash
 SETNX resource_name my_random_value
 EXPIRE resource_name 30
 ```

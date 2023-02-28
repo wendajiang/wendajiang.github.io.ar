@@ -46,6 +46,8 @@ highlight_code = true
 highlight_theme = "dracula"
 render_emoji = true
 
+extra_syntaxes_and_themes = ["syntaxes"]
+
 [extra]
 # Put all your custom variables here
 author = "David"

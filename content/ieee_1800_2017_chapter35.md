@@ -82,7 +82,7 @@ SV 编译器或者模拟器应该使用外部语言使用的函数调用协议�
 
 每个 imported 的 subroutine 都应该对应一个全局符号。类似的，每个 exported 定义了一个全局符号。因此 SV 的 imported 和 exported 的函数和任务都自己的全局命名空间在链接中，不同于编译单元的 scope 命名空间。全局符号命名应该是唯一的，并且与 C 语言的命名保持一致（ABI 兼容）；尤其是，名字应该以字母或者下划线开头，后面可以是数字或者字母或者下划线。但是 exported 和 imported 的任务和函数应该可以使用 local 的 SV 命名声明，它们允许用户指定一个全局名字。如果与 SV 的关键字和保留字冲突，应该使用 escaped identifier 形式。`\` 反斜线符号和结尾空白应该被 SV 工具忽略。最后的链接符号应该符合 C 标准。如果全局命名没有被显式指定，就等于 SV 的 subroutine 命名。比如：
 
-```systemverilog
+```sv
 export "DPI-C" f_plus = function \f+; // "f+" exported as "f_plus"
 export "DPI-C" function f; // "f" exported under its own name
 import "DPI-C" init_1 = function void \init[1] (); // "init_1" is a linkage name

@@ -603,7 +603,7 @@ inline uint32_t ArrayLockFreeQueue<ELEM_T>::size()
 
    - GNU make 程序
 
-     ```shell
+     ```bash
      make N_PRODUCERS=1 N_CONSUMERS=1 N_ITERATIONS=10000000 QUEUE_SIZE=1000
      ```
 

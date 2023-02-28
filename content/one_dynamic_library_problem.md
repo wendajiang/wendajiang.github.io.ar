@@ -45,7 +45,7 @@ ld 中有 `--exclude-libs` 这个选项，可以 man 查看详情，会移除 ar
 
 ### 3. ld version-script
 最强控制 export，参考 [script 写法](https://sourceware.org/binutils/docs/ld/VERSION.html)，甚至支持 C++ mangle 前的写法
-```shell
+```bash
 {
   global:
    extern "C++" {
@@ -80,7 +80,7 @@ int main() {
 
 ## reference
 ### 使用到的 research 工具
-```shell
+```bash
 nm -C -g liba.so
 readelf -a liba.so | rg RPATH
 chrpath liba.so -r <new path> 

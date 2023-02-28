@@ -559,7 +559,7 @@ cat /proc/sys/fs/file-max
 
 ### 7. stat the openning file from the kenerl point of view
 
-```shell
+```bash
 cat /proc/sys/fs/file-nr 
 864     0       3274116
 have 864 out of max 3274116 open files

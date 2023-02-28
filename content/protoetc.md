@@ -27,14 +27,14 @@ mermaid example:
 
 历史原因，`repeated` 类型不能高效编码，[packed=true] 新代码可以使用这个选项使得编码更高效
 
-```protobuf
+```proto
 repeated int32 samples = 4 [packed=true];
 repeated ProtoEnum results = 5 [packed=true];
 ```
 ### reserved field
 如果删除了 field 或者注释掉，未来可能会重用，这很危险，所以使用 `reserved` 来避免这个问题
 
-```protobuf
+```proto
 message Foo {
   reserved 2, 15, 9 to 11;
   reserved "foo", "bar";
@@ -66,13 +66,13 @@ A scalar message field can have one of the following types – the table shows t
 ## Optional Fields and Default Values
 如果 optional field 没有被设置，序列化会被设置一个默认值，默认值可以定义时写好
 
-```protobuf
+```proto
 optional int32 result_per_page = 3 [default = 10];
 ```
 如果没有设置：对于 string，默认是空串。对于 bytes，默认也是空。对于 bools， 默认是 false。对于整型，默认是 0。对于 enums，默认是第一个。
 
 ## Enumerations
-```protobuf
+```proto
 message SearchRequest {
   required string query = 1;
   optional int32 page_number = 2;
@@ -91,7 +91,7 @@ message SearchRequest {
 ```
 可以对于不同的 enum 定义相同的值，但是要声明 `allow_alias = true`,如果没有声明，protoc 就会报错
 
-```protobuf
+```proto
 enum EnumAllowingAlias {
   option allow_alias = true;
   UNKNOWN = 0;
@@ -110,7 +110,7 @@ enum 内容必须是**32位整数**。因为 enum 类型使用 varint encoding�
 ### Reserved Values
 如果你要删除一些 enum value 或者注释，也要使用 reverved 声明保留，以免后人重用引发问题
 
-```protobuf
+```proto
 enum Foo {
   reserved 2, 15, 9 to 11, 40 to max;
   reserved "FOO", "BAR";
@@ -121,7 +121,7 @@ enum Foo {
 将 PB3 的 message import 到 PB2 的文件中使用是可行的，反之亦然。但是 PB2 的 enum 不能用在 PB3 中
 
 ## 类型嵌套
-```protobuf
+```proto
 message SearchResponse {
   message Result {
     required string url = 1;
@@ -146,7 +146,7 @@ message SomeOtherMessage {
 
 extensions 可以让你在 message 声明一些 field numbers 给第三方 extensions 使用。extensions 是占位符，field number 没有在本 .proto 文件中定义。允许其他 .proto 文件定义这些 field number，看个例子：
 
-```protobuf 
+```proto 
 message Foo {
   // ...
   extensions 100 to 199;
@@ -154,7 +154,7 @@ message Foo {
 ```
 这表明 [100,199] 保留给 extensions 使用。其他用户可以通过 import 这个文件定义 Foo 的 field number，比如
 
-```protobuf
+```proto
 extend Foo {
   optional int32 bar = 126;
 }
@@ -169,7 +169,7 @@ foo.SetExtension(bar, 15);
 Extensions 可以是已经提到任意类型，不能是后面提到的 oneof 或者 map
 
 ### 嵌套
-```protobuf
+```proto
 message Baz {
   extend Foo {
     optional int32 bar = 126;
@@ -185,7 +185,7 @@ foo.SetExtensino(Baz::bar, 15);
 ```
 影响就是 Foo 的扩展定义位于 message 的 scope，C++ 就是名字空间加了限制
 
-```protobuf
+```proto
 message Baz {
   ...
 }
@@ -198,7 +198,7 @@ extend Foo {
 这样的写法可能更清晰
 
 ### 选择扩展数字
-```protobuf
+```proto
 message Foo {
   extensions 1000 to max;
 }
@@ -211,7 +211,7 @@ max 是 $2^{29} - 1$，或者 536,870,911
 如果你的 message 中有很多 optional 的字段，并且同时最多只有一个 optional 的字段会被 set，那么可以使用 oneof 特性来提升编码效率，进一步压缩空间。类似 CPP 中 UNION
 
 ### 使用 Oneof
-```protobuf
+```proto
 message SampleMessage {
   oneof test_oneof {
     string name = 4;
@@ -258,7 +258,7 @@ oneof 中定义的字段不能使用 required, optional, repeated 标识关键�
 所以 ！！！ 就认为 oneof 没有兼容性
 
 ## Maps
-```protobuf
+```proto
 map<key_type, value_type> map_field = N;
 ```
 **key_type 任意整数类型或者字符串类型。注意 enum 不能作为 key_type。value_type 可以是出了 map 之外的任何类型**
@@ -275,7 +275,7 @@ map API 现在支持所有 PB2 的语言
 ### 兼容
 map 只是一个语法糖，实际上与下面的定义相等，所以即使 PB 实现不支持 map，也可以处理数据
 
-```protobuf
+```proto
 message MapFieldEntry {
   optional key_type key = 1;
   optional value_type value = 2;
@@ -285,7 +285,7 @@ repeated MapFieldEntry map_field = N;
 ```
 
 ## 定义服务
-```protobuf
+```proto
 service SearchService {
   rpc Search(SearchRequest) returns (SearchResponse);
 }
@@ -373,7 +373,7 @@ int main() {
 
 - java_package (file option) 
 
-  ```protobuf
+  ```proto
   option java_package = "com.example.foo";
   ```
 
@@ -384,7 +384,7 @@ int main() {
 
 - message_set_wire_format (message option) 对于C++代码开启 arena allocation 
 
-  ```protobuf
+  ```proto
   message Foo {
   	option message_set_wire_format = true;
   	extensions 4 to max;
@@ -395,7 +395,7 @@ int main() {
 
 - packed (field option)：如果在 repeated numeric type 上开启，encode 更加紧凑，这个 option 没有坏处，pb3 默认开启
 
-  ```protobuf
+  ```proto
   repeated int32 samples = 4 [packed = true];
   ```
 
@@ -407,7 +407,7 @@ int main() {
 
 example: 
 
-```protobuf
+```proto
 import "google/protobuf/descriptor.proto"
 
 extend google.protobuf.MessageOptions {
@@ -427,7 +427,7 @@ message MyMessage {
 string value = MyMessage::descriptor()->options().GetExtension(my_option);
 ```
 
-```protobuf
+```proto
 import "google/protobuf/descriptor.proto"
 
 extend google.protobuf.FileOptions {
@@ -497,7 +497,7 @@ service MyService {
 
 [原文](https://developers.google.com/protocol-buffers/docs/proto3)
 
-```protobuf
+```proto
 syntax = "proto3";
 message SearchRequest {
   string query = 1;
@@ -514,7 +514,7 @@ PB3 默认是 optional，没有 required 关键字，还有 repeated，并且 re
 
 ## define a message type
 
-```protobuf
+```proto
 syntax = "proto3";
 
 message SearchRequest {
@@ -623,7 +623,7 @@ Packages 名称应该小写，还应该匹配文件层级。比如如果文件�
 ## Message 和 field names
 使用 CamelCase 命名 message -- 比如，`SongServerRequest`，使用 underscore_separated_names 命名 field name，比如 `song_name`
 
-```protobuf
+```proto
 message SongServerRequest {
   optional string song_name = 1;
 }
@@ -647,7 +647,7 @@ public Builder setSongName(String v) {...}
 ## Repeated fields
 使用复数命名这种 field
 
-```protobuf
+```proto
 repeated string keys = 1;
 ...
 repeated MyMessage accounts = 17;
@@ -656,7 +656,7 @@ repeated MyMessage accounts = 17;
 ## Enums
 使用 CamelCase 命名 enum type name，使用 CPPITALS_WITH_UNDERSOCRES 命名 value name
 
-```protobuf
+```proto
 enum FooBar {
   FOO_BAR_UNSPECIFIED = 0;
   FOO_BAR_FIRST_VALUE = 1;
@@ -668,7 +668,7 @@ enum FooBar {
 ## Services
 如果你的 .proto 文件定义 RPC 服务，应该使用 CamelCase 风格，同时应用于服务名和任何RPC方法名
 
-```protobuf
+```proto
 service FooService {
   rpc GetSomething(FooRequest) returns (FooResponse);
 }
@@ -686,7 +686,7 @@ service FooService {
 
 来看下这个简单的 message 定义：
 
-```protobuf
+```proto
 message Test1 {
 	optional int32 a = 1;
 }
@@ -694,7 +694,7 @@ message Test1 {
 
 应用中，你可以创建 `Test1` message 然后 `set a ` 为 150，然后序列化这个 message 作为输出流。如果打印这个流，你可以看到三个字节的内容：
 
-```shell
+```bash
 08 96 01
 ```
 
@@ -708,19 +708,19 @@ message Test1 {
 
 比如，这有一个数字 1，简单一个字节：
 
-```shell
+```bash
 0000 0001 # 1
 ```
 
 300 就要复杂一些：
 
-```shell
+```bash
 1010 1100 0000 0010 # 300
 ```
 
 你如何认出这是 300 呢，首先丢掉每个字节的最高有效位（只是表示是不是最后一个字节）
 
-```shell
+```bash
 1010 1100 0000 0010
 ->
  010 1100  000 0010
@@ -728,7 +728,7 @@ message Test1 {
 
 然后以 7 位一组反向整个二进制序列，就像前面所述，varints 保存数字式，**最小有效组在前**，然后你可以按照补码的正常计算方式来计算数字（正数的补码就是直接转化的二进制）
 
-```shell
+```bash
 000 0010  010 1100
 →  000 0010 ++ 010 1100
 →  100101100
@@ -756,13 +756,13 @@ message Test1 {
 
 现在，让我们再次看那个简单的例子。你已经知道第一个第一个数字总是 varint key，这里就是`08`，或者丢掉最高标志位：
 
-```shell
+```bash
 000 1000
 ```
 
 你可以通过获取最后三位得到声明的类型（0），然后右移三位获得域号（1）。现在你知道了域号是 1，接下来的字节还是 varint。使用前面知道的解码知识，你可以看到后面两个字节存储了 150 这个值
 
-```shell
+```bash
 96 01 = 1001 0110  0000 0001
        → 000 0001  ++  001 0110 (drop the msb and reverse the groups of 7 bits)
        → 10010110
@@ -787,7 +787,7 @@ ZigZag 编码将有符号整数映射为无符号整数，使得具有较小绝�
 
 换句话说，n 会这样编码：
 
-```shell
+```bash
 (n << 1) ^ (n >> 31)   # for sint32
 (n << 1) ^ (n >> 63)   # for sint64
 ```
@@ -804,7 +804,7 @@ ZigZag 编码将有符号整数映射为无符号整数，使得具有较小绝�
 
 域类型 2（长度受限）表示该值是 varint 编码的长度，后面跟着指定长度的字节。
 
-```protobuf
+```proto
 message Test2 {
 	optional string b = 2;
 }
@@ -812,13 +812,13 @@ message Test2 {
 
 设置值为"testing"编码为：（TLV）
 
-```shell
+```bash
 12 07 74 65 73 74 69 6e 67
 ```
 
 这是"testing"的 UTF-8。key 是 0x12 ->
 
-```shell
+```bash
 0001 0010 
 -> 00010 010
 ```
@@ -829,7 +829,7 @@ message Test2 {
 
 有一个 message 定义中包含了之前的 Test1：
 
-```protobuf
+```proto
 message Test3 {
 	optional Test1 c = 3;
 }
@@ -837,7 +837,7 @@ message Test3 {
 
 这是将 Test1 的 a 设置为 150 的编码版本：
 
-```shell
+```bash
 1a 03 08 96 01
 ```
 
@@ -872,7 +872,7 @@ message.MergeFrom(message2);
 
 比如说，假设有一个 message type：
 
-```protobuf
+```proto
 message Test4 {	
   repeated int32 d = 4 [packed = true];
 }
@@ -938,7 +938,7 @@ protobuf2 中修饰符：
 
 ## protobuf 的使用
 
-```shell
+```bash
 protoc -I=SRC_DIR --cpp_out=DST_DIR person.proto
 ```
 
@@ -946,7 +946,7 @@ protoc -I=SRC_DIR --cpp_out=DST_DIR person.proto
 
 protobuf 中的 message 中有很多字段，每个字段的格式：
 
-```protobuf
+```proto
 修饰符 字段类型 字段名 = 域号；
 ```
 
