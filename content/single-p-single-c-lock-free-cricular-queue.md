@@ -1,10 +1,10 @@
 +++
-template = "blog/page.html"
-date = "2021-02-07"
-updated = 2023-02-38
 title = "Lock-Free Single-Producer - Single Consumer Circular Queue[翻译]"
+template = "blog/page.html"
+date = "2021-02-07 10:36:06"
+updated = "2023-02-28 10:36:06"
 [taxonomies]
-tags= ["translate", "queue", "lock-free"]
+tags = ["translate", "queue", "lock-free"]
 
 +++
 
