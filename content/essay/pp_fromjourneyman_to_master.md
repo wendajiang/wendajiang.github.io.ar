@@ -3,7 +3,7 @@ template = "blog/page.html"
 date = "2021-08-04 13:17:25"
 title = "读《程序员修炼之道(2)》"
 [taxonomies]
-tags = ["读后感", "笔记"]
+tags = ["读书笔记"]
 
 [extra]
 mermaid = true

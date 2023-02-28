@@ -1,6 +1,7 @@
 +++
 template = "blog/page.html"
 date = "2021-02-07"
+updated = 2023-02-38
 title = "Lock-Free Single-Producer - Single Consumer Circular Queue[翻译]"
 [taxonomies]
 tags= ["translate", "queue", "lock-free"]
