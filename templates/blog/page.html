@@ -29,7 +29,7 @@
             {% if page.taxonomies.tags %}
               <div class="category-area">
                   「{% for tag in page.taxonomies.tags %}
-                  <a href="{{ get_url(path="@/_index.md") }}tags/{{tag}}">
+                  <a href="{{ get_url(path="@/_index.md") }}tags/{{ tag }}">
                       <div class="category">
                           {{ tag }}
                       </div>

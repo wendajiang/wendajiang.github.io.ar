@@ -22,7 +22,7 @@ minify_html = true
 build_search_index = true
 
 taxonomies = [
-    {name = "tags"},
+    {name = "tags", feed = true},
 ]
 
 
@@ -37,6 +37,9 @@ include_title = true
 include_description = false
 # Whether to include the rendered content of the page/section in the index
 include_content = true
+
+[slugify]
+taxonomies = "off"
 
 
 [markdown]
