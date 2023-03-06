@@ -4,7 +4,7 @@ date: "2022-09-08 10:54:17"
 title: "IEEE Std 1800-2017 DPI"
 typora-copy-images-to: ../static/pics/${filename}
 taxonomies:
-    tags: ["Verilog", "System Verilog", "Verification", "C"]
+    tags: ["Verilog", "System Verilog", "C"]
 
 extra:
     mermaid: true

@@ -3,7 +3,7 @@ template = "blog/page.html"
 date = "2021-06-10 16:09:18"
 title = "错误模型/处理"
 [taxonomies]
-tags = ["error handle", "error model", "translate"]
+tags = ["error model", "translate"]
 
 [extra]
 mermaid = true

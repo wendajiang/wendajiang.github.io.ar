@@ -3,7 +3,7 @@ template = "blog/page.html"
 date = "2021-05-11 19:30:38"
 title = "A Fast Minimal Memory, Consistent Hash Algorithm"
 [taxonomies]
-tags = ["awesomepaper", "algorithm", "translate"]
+tags = ["awesomepaper", "alg", "translate"]
 
 [extra]
 mermaid = true

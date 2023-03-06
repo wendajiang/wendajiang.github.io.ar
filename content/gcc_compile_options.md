@@ -4,7 +4,7 @@ date: 2022-12-15 18:07:49
 title: gcc/g++ compile options
 typora-copy-images-to: ../static/pics/${filename}
 taxonomies:
-  tags: ["gcc", "g++"]
+  tags: ["gcc"]
 extra:
   mermaid: true
   usemathjax: true
