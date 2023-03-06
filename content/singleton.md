@@ -3,7 +3,7 @@ template = "blog/page.html"
 date = "2021-05-07 12:12:17"
 title = "线程安全单例"
 [taxonomies]
-tags = ["singleton", "单例", "thread safe"]
+tags = ["singleton", "thread safe"]
 
 [extra]
 mermaid = true

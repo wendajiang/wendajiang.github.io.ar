@@ -3,7 +3,7 @@ template = "blog/page.html"
 date = "2021-04-25 22:45:06"
 title = "Clean C++ 读书笔记1"
 [taxonomies]
-tags = ["读书笔记"]
+tags = ["book note"]
 
 [extra]
 mermaid = true

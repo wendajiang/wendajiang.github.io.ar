@@ -3,7 +3,7 @@ template = "blog/page.html"
 title =  "Redis 分布式锁 [翻译]"
 date =   "2021-02-03 01:26:18"
 [taxonomies]
-tags = ["translate", "redis", "转载"]
+tags = ["translate", "redis", "reprint"]
 +++
 
 # 翻译

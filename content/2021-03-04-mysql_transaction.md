@@ -4,7 +4,7 @@ date = "2021-03-04 12:23:02"
 title = "mysql_transaction"
 
 [taxonomies]
-tags = ["转载"]
+tags = ["reprint"]
 [extra]
 mermaid = true
 +++
