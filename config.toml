@@ -22,7 +22,7 @@ minify_html = true
 build_search_index = true
 
 taxonomies = [
-    {name = "tags", feed = true},
+    {name = "tags", feed = true, paginate_by = 10},
 ]
 
 
