@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout main
-        uses: actions/checkout@v3.0.0
+        uses: actions/checkout@v3.3.0
       - name: build and deploy
         uses: shalzz/zola-deploy-action@master
         env:
