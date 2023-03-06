@@ -1,4 +1,4 @@
-{% extends "page.html" %}
+{% extends "section.html" %}
 
 {% block seo %}
   {% set author_name_in_url = term.permalink | trim_end_matches(pat="/") | split(pat="/") | last %}
@@ -35,6 +35,10 @@
   {{ macros_head::seo(title=title, title_addition=title_addition, description=description) }}
 {% endblock seo %}
 
+{% block body %}
+  {% set page_class = "blog list" %}
+{% endblock body %}
+
 
 {% block content %}
 <div class="wrap container" role="document">
@@ -47,7 +51,7 @@
             {% for page in term.pages %}
 					    <div class="card">
 						    <div class="card-body">
-							    <h2 class="h3"><a class="stretched-link text-body" href="{{ page.permalink }}">{{ page.title }}</a></h2>
+							    <h2 class="h3"><a class="stretched-link" href="{{ page.permalink }}">{{ page.title }}</a></h2>
 								    {% if page.extra.lead %}<p>{{ page.extra.lead | safe }}</p>{% elif page.description %}<p>{{ page.description | safe }}</p>{% endif %}
                     {{ macros_publish::page_publish_metadata(page=page) }}
 					    	</div>

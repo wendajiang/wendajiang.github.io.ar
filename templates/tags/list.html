@@ -36,7 +36,7 @@
         <article>
           <div class="card-list">
 				    {% for term in terms %}
-                <h2 class="h3"><a class="stretched-link text-body" href="{{ term.permalink | safe }}">{{ term.name }} [{{ term.pages | length }}]</a></h2>
+                <h2 class="h3"><a href="{{ term.permalink | safe }}">{{ term.name }} [{{ term.pages | length }}]</a></h2>
             {% for page in term.pages %}
                     <article class="archive-item">
                         <a href="{{ page.permalink }}">{{ page.title }}</a>
