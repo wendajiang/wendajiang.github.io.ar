@@ -85,5 +85,5 @@ And, the main executable \[NEEDED\] section will be the libfoo.so name rather th
   export LD_DEBUG=files
   command_to_run
   ```
-  displays the processing of files and libraries when handling libraries, telling you what dependencies are detected and which SOs are loaded in what order. Setting LD_DEBUG to ``bindings'' displays information about symbol binding, setting it to ``libs'' displays the library search paths, and setting ti to ``versions'' displays the version depdendencies.
-  Setting LD_DEBUG to ``help'' and then trying to run a program will list the possible options. Again, LD_DEBUG isn't intended for normal use, but it can be handy when debugging and testing.
+  displays the processing of files and libraries when handling libraries, telling you what dependencies are detected and which SOs are loaded in what order. Setting LD_DEBUG to `bindings` displays information about symbol binding, setting it to `libs` displays the library search paths, and setting it to `versions` displays the version depdendencies.
+  Setting LD_DEBUG to `help` and then trying to run a program will list the possible options. Again, LD_DEBUG isn't intended for normal use, but it can be handy when debugging and testing.
