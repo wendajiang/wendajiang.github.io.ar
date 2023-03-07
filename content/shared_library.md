@@ -3,7 +3,7 @@ title: shared library
 description: ''
 template: blog/page.html
 date: 2023-03-04 09:07:19
-updated: 2023-03-04 09:07:19
+updated: 2023-03-07 11:01:19
 typora-copy-images-to: ../static/pics/${filename}
 taxonomies:
   tags: ["so", "link"]
@@ -42,7 +42,7 @@ In the ELF execute file format, the dynamic library record the \[NEEDED\] sectio
 
 But if the \[NEEDED\] section has / slash, the execute do not search by above rules, and directly use the path dynamic library.
 
-# How to solute it?
+# How to resolve it?
 
 ## First should find why it happended that the section write absulote path
 
@@ -72,6 +72,57 @@ So, I can create the foo.so by
 ```
 And, the main executable \[NEEDED\] section will be the libfoo.so name rather than the absolute path.
 
+-----------------
+
+# Continuation
+## -Bsymbolic linker option
+After learning the soname, I read the `Bsymbolic` linker option in the tlpi book 41.12\[Run-Time Symbol Resolution\].
+
+```cpp
+// prog
+void xyz() {
+  printf("main-xyz\n");
+}
+
+void main() {
+  func();
+}
+
+// libfoo.so
+void xyz() {
+  printf("foo-xyz\n");
+}
+
+void func() {
+  xyz();
+}
+```
+
+What's happened? It print `main-xzy`. 
+
+- A definition of a global symbol in the main program overrides a definition in a library.
+- If a global symbol is defined in multiple libraries, then a reference to that symbol is bound to the first definition found by scanning libraries in the left-to-right order in which they were listed on the static link command line.
+
+These semantics make the transition from static to shared libraries relatively strightforward. But the most significant problem is that these semantics conflict with the model of a shared library as implementing a self-contained subsystem. By default, a shared library can't guarantee that a reference to one of its own glboal symbols will actually be bound to the library's definition of that symbol.
+
+In the above scenario, if we wanted to ensure that the invocation of `xyz()` in the shared library actually called the version of the function defined within the library, then we could use the `-Bsymbolic` linker option when building the shared library.
+
+```bash
+man ld
+```
+> -Bsymbolic 
+> 
+> When creating a shared library, bind references to global symbols to the definition within the shared library, if any. Normmally, it is possible for a program linked against a shared library to override the definition within the shared library. This option can also be used with the --export-dynamic option, when creating a position independent executable, to bind references to global symbols to the definition within the executable. This option is only meaningful on ELF paltforms which support shared libraries and position independent executables.
+
+
+## But, the Bsymbolic maybe cause ugly problem
+
+Oppus, I learn it first, and want to using it for my shared library. And the option conflict with [doctest](@/testing_framework.md) using. 
+
+I deep learn it and find if using singleton, it's expected behavior is if main and shared-library using the one single instance, the `-Bsymbolic` option destroy it.
+
+So the `-Bsymbolic` using scenoria is the shared-library is self-contained model.
+
 # reference
 - https://tldp.org/HOWTO/Program-Library-HOWTO/shared-libraries.html
 - ```bash
@@ -87,3 +138,4 @@ And, the main executable \[NEEDED\] section will be the libfoo.so name rather th
   ```
   displays the processing of files and libraries when handling libraries, telling you what dependencies are detected and which SOs are loaded in what order. Setting LD_DEBUG to `bindings` displays information about symbol binding, setting it to `libs` displays the library search paths, and setting it to `versions` displays the version depdendencies.
   Setting LD_DEBUG to `help` and then trying to run a program will list the possible options. Again, LD_DEBUG isn't intended for normal use, but it can be handy when debugging and testing.
+- https://zerol.me/2021/06/13/Linker-Symbol-Conflict/
