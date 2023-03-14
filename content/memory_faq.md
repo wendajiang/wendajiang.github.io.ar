@@ -3,7 +3,7 @@ template = "blog/page.html"
 date = "2021-05-08 11:56:06"
 title = "Memory Faq(landley.net)"
 [taxonomies]
-tags = ["memory", "translate", "linux kernel"]
+tags = ["memory", "reprint", "linux kernel"]
 
 [extra]
 mermaid = true
@@ -18,8 +18,6 @@ mermaid example:
 
 [landley.net/writing/memory-faq.txt](https://landley.net/writing/memory-faq.txt)
 
-**翻译**  
-@todo
 
 ## What is some existing documentation on Linux memory management?
 

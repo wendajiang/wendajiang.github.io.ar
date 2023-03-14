@@ -12,10 +12,6 @@ tags = ["translate", "redis", "reprint"]
 
 [martin kleppmann 对于 redlock 的评论](http://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html)
 
-@TODO
-
-
-
 # 整体讨论[转载]
 
 http://zhangtielei.com/posts/blog-redlock-reasoning.html
