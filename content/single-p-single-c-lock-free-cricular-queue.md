@@ -158,7 +158,7 @@ size_t increment(size_t idx) const
 
 略
 
-# Part II（@todo, ccia）
+# Part II
 
 ## Making It Work
 
@@ -180,18 +180,5 @@ There are **three different memory-ordering models** in C++11 and with them six 
 3. relaxed model
    - `memory_order_relaxed`
 
-## Sequential Consistent
-### Rules for Sequential Consistent Memory Model and Operations
-### Sequential Consistent Atmic Code
-### Caveats with the Sequential Memory Model
-### Simplified Atomic Sequential operations
-## Refined Memory Order
-## Relaxed-Memory Model
-### Rules for the Relaxed Memory Model and Operations
-## Acquire-Release Memory model
-### Rules for the Acquire-Release Memory Model and Operations
-## Code Explained: Acquire-Release/Relaxed Circularfifo
-## x86-x64 Comparison: Sequential vs Refined Memory Order
-## Conclusion
-## History
-## References
+
+Please refer to [atomic and memory order](@atomic_and_memory_order.md)
