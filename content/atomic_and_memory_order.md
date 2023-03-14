@@ -181,7 +181,7 @@ for (auto& t : vt) {
 std::cout << "current counter:" << counter << std::endl;
 ```
 
-## Rlease/consumption model
+## ~~Rlease/consumption model~~
 In this model, we begin to limit the order of operations between processes. If a thread needs to modify a value, but another thread will have a dependency on that opertion of the value, that is, the latter depends on the former. Specifically, thread A has completed three writes to x, and thread B relies only on the third x wrtie operation, regardless of the first two write behaviors of x, then A when active x.release()(ie using `std::memory_order_release`), the option `std::memory_order_consume` ensures that B observes A when calling x.load().
 
 ```cpp
@@ -254,3 +254,4 @@ This example is essentially the same as the first loose model example. Just chan
 # further reading
 - ccia
 - https://en.cppreference.com/w/cpp/thread
+- https://blog.the-pans.com/cpp-memory-model-as-a-distributed-system/
