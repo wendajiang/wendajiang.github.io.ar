@@ -78,3 +78,7 @@ The [solution](https://web.eecs.umich.edu/~mosharaf/Readings/Fibers-Coop-Tasks.p
 - implicit blcking. Event though the server has been structured to avoid explicit blocking, page faults is hard to avoid.
 - hard to manager over time
 - asynchronous disk I/O is never quite integrates with asynchronous network I/O in as simple and uniform a manaer. you maybe need some combination of select() for networking and the AIO calls for disk I/O
+
+
+# reference
+[staged event-based concurrency](http://www.sosp.org/2001/papers/welsh.pdf)
