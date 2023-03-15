@@ -252,6 +252,6 @@ std::cout << "current counter:" << counter << std::endl;
 This example is essentially the same as the first loose model example. Just change the memory order of the atomic operation to `memory_order_seq_cst`.
 
 # further reading
-- ccia
+- c++ concurrency in action(2nd)
 - https://en.cppreference.com/w/cpp/thread
 - https://blog.the-pans.com/cpp-memory-model-as-a-distributed-system/
