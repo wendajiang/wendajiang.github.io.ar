@@ -4,7 +4,7 @@ date: 2023-01-03 13:33:19
 title: Static object initialization and deinitialization
 typora-copy-images-to: ../static/pics/${filename}
 taxonomies:
-  tags: ["cpp", "fap"]
+  tags: ["cpp", "fap", "singleton"]
 extra:
   mermaid: true
   usemathjax: true
@@ -48,16 +48,16 @@ Barney::Barney() {
 这就意味着 leak 了一个 Fred 对象，如果 Fred 对象析构函数必须被调用，可以使用 v2 版本的 *Construct On First Use Idiom*
 
 ```cpp
-// 为什么不使用一个 local scope static object ，而不是使用指针
+// 为什么不使用一个 local scope static object 来代替指针
 Fred& x() {
   static Fred ans;
   return ans;
 }
 ```
 
-实际呢这里引入了另一个微妙的问题，就是我遇到的。本来这些技术是为了什么呢？
+实际呢这里引入了另一个微妙我遇到的问题。让我们来回顾一下，这些技术是为了达到什么目的？
 
-- (a)第一个次使用 static 对象肯定是已经构造完成的。
+- (a)第一次使用 static 对象肯定是已经构造完成的。
 - (b)直到最后一次使用才析构
 
 显然如果在第一次使用前没有构造，或者最后一次使用前已经析构都是问题所在。意味着我们要考虑头和尾。现在 v2 版本的方案已经解决了使用前一定构造的问题，并且没有造成对象的 leak【实际呢，如果是一个会退出的程序，这种泄漏也可以接受，毕竟在进程退出后，系统会回收内存，并没有很大影响】
@@ -365,4 +365,4 @@ pthread_once_t Singleton<T>::once_control_ = PTHREAD_ONCE_INIT;
 
 > The storage for objects with static storage duration (basic.stc.static) shall be zero-initialized (dcl.init) before any other initialization takes place. Zero-initialization and initialization with a constant expression are collectively called static initialization; all other initialization is dynamic initialization. Objects of POD types (basic.types) with static storage duration initialized with constant expressions (expr.const) shall be initialized before any dynamic initialization takes place. Objects with static storage duration defined in namespace scope in the same translation unit and dynamically initialized shall be initialized in the order in which their definition appears in the translation unit.
 
-我们看到在同一个 tranlation uint 中，初始化顺序与定义顺序相同。不同 translation unit 之间的顺序无定义，就需要第二节说的各种方式来规避
+我们看到在同一个 tranlation uint 中，初始化顺序与定义顺序相同。不同 translation unit 之间的顺序无定义，就需要第二节说的各种方式来规避可能出现的问题
