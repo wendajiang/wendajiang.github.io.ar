@@ -29,7 +29,7 @@ After strip the shared library, compile success, and run it correctly.
 
 So why the shared library (the .symtab section removed) can run correctly?
 
-# Shared library
+# (Shared library)[@/shared_library.md]
 Even stripped libraries still must retain the symbols necessary for dynamic linking. There are usually placed in a section named `.dynsym` and are also pointed to by the entries in the dynamic secion.
 
 I can see that event though the stripped library miss the `.symtab` section, the `.dymsym` is still present. In fact, the section table can be removed as well(.e.g with sstrip) and the file will still work. This is because the dynamic linker only uses the program headers(aka the segment table), the `DYNAMIC` segment corresponds to the `.dynamic` section and contains information for the dynamic linker.
@@ -48,6 +48,7 @@ You can see that is contains both `UND`(undefined) symbols - those required by t
 # reference
 - https://reverseengineering.stackexchange.com/questions/2038/how-are-stripped-shared-libraries-linked-against
 - http://wen00072.github.io/blog/2015/11/16/tan-tan-strip/
+- https://www.internalpointers.com/post/journey-across-static-dynamic-libraries
 
 # futher read
 - https://tldp.org/HOWTO/Program-Library-HOWTO/index.html
