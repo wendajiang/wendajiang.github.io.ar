@@ -13,7 +13,6 @@ extra:
   lead: ''
 ---
 
-
 # real-world scenario
 
 When we release our products, that is cpp project, we `strip` all files, then we can't not compile. The problem is the cpp project's dependencies have static library and striped static library can not be linked.
@@ -23,7 +22,7 @@ So I google the strip
 ## strip execute binary
 no problem when execute
 ## strip object file
-After strip the object file, and compile it into binary, link error happen.
+After strip the object file, and compile it into binary, **link error happen**.
 ## strip shared library
 After strip the shared library, compile success, and run it correctly.
 
