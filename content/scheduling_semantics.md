@@ -39,12 +39,14 @@ process 对于 update event 是敏感的。当 update event 发出，所有相�
 
 evaluation event 也包括 PLI callback
 
-为了完整支持清晰可预测的交互，一个 time slot 被分为多个区域从而 event 可以被调度为特定顺序执行。这样也可以 properties 和 checkers 让 dut 在一个稳定状态采样。property expression 可以安全计算，tb 也可以没有延时执行，所有这些在可预测的行为中。这个机制也可以支持设计中的非零延时，clock propagation
+为了完整支持清晰可预测的交互，一个 time slot 被分为多个区域从而 event 可以被调度为特定顺序执行。这样也可以 properties 和 checkers 让 dut 在一个稳定状态采样。property expression 可以安全计算，tb 也可以没有延时执行，所有这些在可预测的行为中。这个机制也可以支持设计中的非零延时，clock propagation，以及 cyclu-accurate descriptions 的响应。
 
 # 4.4 Stratified event scheduler
-遵守标准的仿真器应该构建随时可动态调度，执行，删除的一系列结构。数据结构通常使用时间排序的链表实现，可以实现行为良好的两次划分。
+遵守标准的仿真器应该构建随时可动态调度，执行，删除的一系列数据结构。数据结构通常使用时间排序的链表实现，这种数据结构也容易实现二次划分。
 
-第一次划分是根据时间。每个事件有且仅有一个仿真执行时间，一个 time slot 分为
+第一次划分是根据时间。每个事件有且仅有一个仿真执行时间。所有可调度的 event 在特定时间都处于一个 time slot。仿真将本 time slot 的 event 执行或者清理完毕后才移动到下一个 time slot。这个过程保证了仿真器时间上不会回退。
+
+一个 time slot 分为，**划分的目的是在 design 和 testbench code 之间提供可预测的交互**
 
 - preponed
 - pre-active
@@ -66,7 +68,7 @@ evaluation event 也包括 PLI callback
 
 可以分为 active region set 和 reactive region set。也可以分为 simulation region 和 PLI region。
 
-NBA (nonblocking assignment update) 
+PS. *NBA (nonblocking assignment update)*
 
 ![image-20230411163845834](https://wendajiang.github.io/pics/scheduling_semantics/image-20230411163845834.png)
 
