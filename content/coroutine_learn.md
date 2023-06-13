@@ -80,5 +80,5 @@ The 'coroutine frame' holds part of the coroutine's activation frame that **pers
 
 
 # reference
-- https://devblogs.microsoft.com/oldnewthing/20210504-01/?p=105178#comments
+- https://devblogs.microsoft.com/oldnewthing/20210504-01/?p=105178
 - https://lewissbaker.github.io/
