@@ -78,8 +78,8 @@ sequenceDiagram;
 <center>
 {% mermaid() %}
 stateDiagram-v2
-    S --> WAIT: vote request;
-    WAIT --> ROLLBACK: some fail;
+    S --> WAIT: vote request
+    WAIT --> ROLLBACK: some fail
     WAIT --> COMMIT: all success
     ROLLBACK --> E
     COMMIT --> E
@@ -89,9 +89,9 @@ stateDiagram-v2
 <center>
 {% mermaid() %}
 stateDiagram-v2
-    S --> READY: vote response;
-    S --> ROLLBACK: timeout;
-    READY --> ROLLBACK: do rollback;
+    S --> READY: vote response
+    S --> ROLLBACK: timeout
+    READY --> ROLLBACK: do rollback
     READY --> COMMIT: do commit
     ROLLBACK --> E
     COMMIT --> E
@@ -183,7 +183,7 @@ sequenceDiagram;
   协调者 ->> 参与者集群:4. 向各个参与者发送提交通知;
   参与者集群 ->> 参与者集群:4.1 收到提交通知，提交事务;
   协调者 ->> 参与者集群:4.2 返回事务提交结果;
-</div>
+{% end %}
 
 针对第 2 和 3 种情况，协调者认为事务无法成功执行，于是向各个参与者发送事务回滚请求，具体步骤如下:
 
@@ -192,16 +192,16 @@ sequenceDiagram;
 3. 参与者向协调者反馈事务回滚操作
 
 {% mermaid() %}
-sequenceDiagram;
-  协调者 ->> 参与者集群:1. 向各个参与者发送 can_commit 请求，询问是否可以执行事务;
-  参与者集群 ->> 协调者:1.1 各个参与者都能执行事务，返回确定信息;
-  协调者 ->> 参与者集群:2. 向各个参与者发送 pre_commit 请求;
-  参与者集群 ->> 参与者集群:2.1 执行事务操作，但不提交;
-  参与者集群 ->> 协调者:2.2 返回事务执行结果;
-  协调者 ->> 协调者:3. 如果存在一个或者多个事务不能正常执行，或者等待超时;
-  协调者 ->> 参与者集群:4. 向各个参与者发送回滚通知;
-  参与者集群 ->> 参与者集群:4.1 收到回滚通知，执行回滚操作;
-  协调者 ->> 参与者集群:4.2 返回事务回滚结果;
+sequenceDiagram
+  协调者 ->> 参与者集群:1. 向各个参与者发送 can_commit 请求，询问是否可以执行事务
+  参与者集群 ->> 协调者:1.1 各个参与者都能执行事务，返回确定信息
+  协调者 ->> 参与者集群:2. 向各个参与者发送 pre_commit 请求
+  参与者集群 ->> 参与者集群:2.1 执行事务操作，但不提交
+  参与者集群 ->> 协调者:2.2 返回事务执行结果
+  协调者 ->> 协调者:3. 如果存在一个或者多个事务不能正常执行，或者等待超时
+  协调者 ->> 参与者集群:4. 向各个参与者发送回滚通知
+  参与者集群 ->> 参与者集群:4.1 收到回滚通知，执行回滚操作
+  协调者 ->> 参与者集群:4.2 返回事务回滚结果
 {% end %}
 
 在本阶段如果协调者或者网络问题，导致参与者迟迟不能收到来自协调者的 commit 或者 rollback 请求，那么参与者将不会如两阶段提交中那样陷入阻塞，而是等待超时后继续 commit，相对于两阶段提交虽然降低了同步阻塞，但是还是无法完全避免数据的不一致
