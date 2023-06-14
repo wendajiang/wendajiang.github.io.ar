@@ -11,12 +11,6 @@ mermaid = true
 
 这篇文章属于转载，原链接 https://draveness.me/mysql-transaction/
 原链接作者如要求删除，请联系 wendajiang1993@gmail.com
-<!--
-mermaid example:
-<div class="mermaid"
-    mermaid program
-</div>
--->
 
 在关系型数据库中，事务的重要性不言而喻，只要对数据库稍有了解的人都知道事务具有 ACID 四个基本属性。
 
@@ -33,7 +27,7 @@ ACID
 
 要保证事务的原子性，就需要在异常发生时，对已经执行的操作进行回滚，而在 MySQL 中，恢复机制是通过回滚日志（undo log）实现的，所有事务进行的修改都会记录到这个回滚日志中，然后在对应数据库中进行写入。
 
-<div class="mermaid">
+{% mermaid() %}
 graph LR
 	subgraph SQL1
 	A(Undo Log) -.-> B(Update Record) 
@@ -41,17 +35,17 @@ graph LR
 	subgraph SQL2
 	B --> C(Undo Log) -.-> D(Update Record)
 	end
-</div>
+{% end %}
 
 回滚日志除了能够在发生错误或者用户执行 `ROLLBACK` 时提供回滚相关的信息，它还能够在整个系统发生崩溃、数据库进程直接被杀死后，当用户再次启动数据库进程时，还能够立刻通过查询回滚日志将之前未完成的事务进行回滚，这也就需要回滚日志必须先于数据持久化到磁盘上，是我们需要先写日志后写数据库的主要原因。
 
 回滚日志并不能将数据库物理地恢复到执行语句或者事务之前的样子；它是逻辑日志，当回滚日志被使用时，它只会按照日志**逻辑地**将数据库中的修改撤销掉，可以**理解**为，我们在事务中使用的每一条 `INSERT` 都对应了一条 `DELETE`，每一条 `UPDATE` 也都对应一条相反的 `UPDATE` 语句。
 
-<div class="mermaid">
+{% mermaid() %}
 flowchart LR
-	A("INSERT INTO users (id, name) VALUES (1, 'draven')") <--> B("DELETE FROM users where id = 1")
-	C("UPDATE users SET name='dravenss' WHERE id = 1") <--> D("UPDATE users SET name='draven' WHERE id = 1")
-</div>
+	A("INSERT INTO users (id, name) VALUES (1, 'draven')") --> B("DELETE FROM users where id = 1")
+	C("UPDATE users SET name='dravenss' WHERE id = 1") --> D("UPDATE users SET name='draven' WHERE id = 1")
+{% end %}
 
 在这里，我们并不会介绍回滚日志的格式以及它是如何被管理的，本文重点关注在它到底是一个什么样的东西，究竟解决了、如何解决了什么样的问题，如果想要了解具体实现细节，需要进一步学习 @todo
 
@@ -59,27 +53,27 @@ flowchart LR
 
 因为事务具有原子性，是一个密不可分的整体，事物的状态也有三种 Active,Commited,Failed，事务要不在执行中，要不就是成功或者失败
 
-<div class="mermaid">
+{% mermaid() %}
 flowchart LR
 	B((Active)) --> A((Commited))
 	B --> C((Failed))
-</div>
+{% end %}
 
 但是放大来看，事务不在是原子的，其中包括了很多中间状态，比如部分提交，事务的状态图也变得越来越复杂。
 
-<div class="mermaid">
+{% mermaid() %}
 flowchart LR
 	A((Active))
 	B((Partially))
 	C((Failed))
-	D((Commited)) 
+	D((Commited))
 	E((Aborted))
-	A --> B
-	A --> C
-	B --> D
-	C --> E
-	B --> C
-</div>
+	A --> B;
+	A --> C;
+	B --> D;
+	C --> E;
+	B --> C;
+{% end %}
 
 - Active：事务的初始状态，表示事务正在执行；
 - Partially Commited：在最后一条语句执行之后；
@@ -89,8 +83,8 @@ flowchart LR
 
 虽然在发生错误时，整个数据库的状态可以恢复，但是如果我们在事务中执行了诸如：向标准输出打印日志、向外界发出邮件、没有通过数据库修改了磁盘上的内容甚至在事务执行期间发生了转账汇款，那么这些操作作为可见的外部输出都是没有办法回滚的；这些问题都是由应用开发者解决和负责的，在绝大多数情况下，我们都需要在整个事务提交后，再触发类似的无法回滚的操作。
 
-<div class="mermaid">
-graph LR 
+{% mermaid() %}
+graph LR
 	A((BEGIN))
 	B((SQLs))
 	C((COMMITED))
@@ -107,7 +101,7 @@ graph LR
 		A2 -.-> B2 -.-> C2 -.-> D2 -.-> E2
 	end
 	style D2 fill:#f9f,stroke:#333,stroke-width:4px
-</div>
+{% end %}
 
 以订票为例，哪怕我们在整个事务结束之后，才向第三方发起请求，由于向第三方请求并获取结果是一个需要较长时间的操作，如果在事务刚刚提交时，数据库或者服务器发生了崩溃，那么我们就非常有可能丢失发起请求这一过程，这就造成了非常严重的问题；而这一点就不是数据库所能保证的，开发者需要在适当的时候查看请求是否被发起、结果是成功还是失败。
 
@@ -158,10 +152,10 @@ graph LR
 
 事务的隔离性是数据库处理数据的几个基础之一，如果没有数据库事务之间的隔离性，就会发生上面提到的级联回滚的问题，造成性能上的巨大损失。如果所有事务的执行顺序都是线性的，那么对于事务的管理容易得多，但是允许事务的并行执行能够提升吞吐量和资源利用率，并且减少每个事务的等待时间。
 
-<div class="mermaid">
+{% mermaid() %}
 graph LR
 	A((Improve Throughput)) --- B((Improve Resource Utilization)) --- C((Reduced Wating Time))
-</div>
+{% end %}
 
 当多个事务同时并发执行时，事务的隔离性可能就会被违反，虽然单个事务的执行可能没有任何错误，但是从总体来看就会造成一些数据库的一致性出现问题，而串行执行能够允许开发者忽略并行造成的影响，能够很好的维护数据库的一致性，但是却会影响事务的并行执行。
 
@@ -176,10 +170,10 @@ graph LR
 
 以上所有级别的事务隔离级别都不允许脏写（Dirty Write），就是当前事务更新了另一个事务已经更新但是没有提交的数据，大部分数据库使用了 READ COMMITED 作为默认的事务隔离级别，但是 MySQL 使用了 ERPEATABLE READ 作为默认级别，从 RAED UNCOMMITED 到 SERIALIZABLE，随着事务隔离级别变得越来越严格，数据库对于并发执行事务的性能也逐渐下降
 
-<div class="mermaid">
+{% mermaid() %}
 graph LR
 	A["High Performance"] --- B1((READ UNCOMMITED)) --- B2((READ COMMITED)) --- B3((REPEATABLE READ)) --- B4((SERIALIZABLE)) --> C[Low Performance]
-</div>
+{% end %}
 
 展示各个隔离级别对于脏读，不可重复读，幻读的解决情况：
 
