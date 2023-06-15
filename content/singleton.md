@@ -1,31 +1,35 @@
-+++
-template = "blog/page.html"
-date = "2021-05-07 12:12:17"
-title = "线程安全单例"
-[taxonomies]
-tags = ["singleton", "thread safe"]
+---
+title: singleton
+description: ''
+template: blog/page.html
+date: 2021-05-07 12:12:17
+updated: 2023-06-15 14:24:10
+typora-copy-images-to: ../static/pics/${filename}
+taxonomies:
+  tags: ["singleton", "thread safe"]
+extra:
+  mermaid: true
+  usemathjax: true
+  lead: 'The singleton design pattern'
 
-[extra]
-mermaid = true
-usemathjax = true
-+++
-<!--
-mermaid example:
-<div class="mermaid">
-    mermaid program
-</div>
--->
+# mermaid example: 
+# {% mermaid() %}
+#     mermaid program
+# {% end %}
+---
 
-## 线程安全
+The singleton is a pattern that's used to restrict the number of class instantiations to exactly one.
+
+## thread-safety
 
 在拥有**共享数据**的多线程执行程序中，线程安全代码会通过同步机制保证各个线程正确执行，不会出现数据污染等情况
 
-## 如果保证线程安全
+## how to guarantee thread-safety
 
 1. 给**共享资源**加锁，保证每个资源变量至多被一个线程占用
 2. 线程 local 变量
 
-## 单例
+## singleton
 
 单例模式指在整个系统生命周期里，保证一个类只能产生一个实例，确保该类的**唯一性**。
 
@@ -250,7 +254,7 @@ SingleInstance::~SingleInstance()
 
 ```
 
-### 内部静态变量的懒汉单例（C++11 线程安全）
+### 内部静态变量的懒汉单例（C++11 线程安全）-- Meyer's Singleton
 
 ```cpp
 ///////////////////  内部静态变量的懒汉实现  //////////////////
@@ -299,9 +303,11 @@ Single::~Single()
 {
     std::cout << "析构函数" << std::endl;
 }
-///////////////////  内部静态变量的懒汉实现  //////////////////
 
 ```
+
+cpp standard 6.7 [stmt.dcl]
+> If control ents the declaration concurrently while the variable is being initialized, the concurrent execution shall wait for completion of the initialization.
 
 ### 饿汉单例（线程安全）
 
@@ -372,3 +378,6 @@ Singleton::~Singleton()
 
 - 懒汉式是以时间换空间，适应于访问量较**小**时；推荐使用**内部静态变量的懒汉单例**，代码量少
 - 饿汉式是以空间换时间，适应于访问量较**大**时，或者线程比较多的的情况
+
+## reference
+- Hands-on deisng patterns with C++, chapter 15
