@@ -3,7 +3,7 @@ title: shared library
 description: ''
 template: blog/page.html
 date: 2023-03-04 09:07:19
-updated: 2023-04-25 11:01:19
+updated: 2023-06-15 11:01:19
 typora-copy-images-to: ../static/pics/${filename}
 taxonomies:
   tags: ["so", "link"]
@@ -17,6 +17,8 @@ extra:
 #     mermaid program
 # </div>
 ---
+
+update at 2023-06-15
 
 # problem
 In one scenoria, I find this:
@@ -122,6 +124,9 @@ Oppus, I learn it first, and want to using it for my shared library. And the opt
 I deep learn it and find if using singleton, it's expected behavior is if main and shared-library using the one single instance, the `-Bsymbolic` option destroy it.
 
 So the `-Bsymbolic` using scenoria is the shared-library is self-contained model.
+
+the reference https://maskray.me/blog/2021-05-16-elf-interposition-and-bsymbolic explain the reason (pointer equality)
+and https://flameeyes.blog/2012/10/07/symbolism-and-elf-files-or-what-does-bsymbolic-do/
 
 # [Supplement](https://www.linuxjournal.com/article/6463) Linkers & Loaders
 *Linking* is the process of combining various pieces of code and data together to form a single executable that can be loader in memory. Linking can be done at compile time, at load time(by loaders) and also at run time (by application programs).
@@ -236,3 +241,5 @@ dlopen / dlsym / dlclose
   displays the processing of files and libraries when handling libraries, telling you what dependencies are detected and which SOs are loaded in what order. Setting LD_DEBUG to `bindings` displays information about symbol binding, setting it to `libs` displays the library search paths, and setting it to `versions` displays the version depdendencies.
   Setting LD_DEBUG to `help` and then trying to run a program will list the possible options. Again, LD_DEBUG isn't intended for normal use, but it can be handy when debugging and testing.
 - https://zerol.me/2021/06/13/Linker-Symbol-Conflict/
+- https://maskray.me/blog/2021-05-16-elf-interposition-and-bsymbolic
+- https://flameeyes.blog/2012/10/07/symbolism-and-elf-files-or-what-does-bsymbolic-do/
