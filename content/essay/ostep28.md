@@ -252,7 +252,11 @@ The real problem with our previous approaches is that they leave too much to cha
 
 Thus, we must explicitly exert some control over which thread next gets to acquire the lock after the current holder releases it. **A queue to keep track of which threads are waiting to acquire the lock**
 
-> ​	priority inversion.  --solution--> priority inheritance
+> ​spin lock maybe cause priority inversion.  
+> Assume T1, T2, and T1 has lower priority. T1 only runs when T2 is not able to do so(e.g. when T2 is blocked on I/O).
+> Now the problem. Assume T2 is blocked for some reason. So T1 runs, grabs a spin lock, and enters a critical section. T2 now become unblocked, and the CPU scheduler immediately schedules it. Now T2 tries to acquire the lock, and it can't, it just keeps spinning. Because the lock is a spin lock, T2 spins forever, and the system is hung.
+> 
+> solution is: priority inheritance, more generally, a higer-priority thread waiting for a lower-priority thread can temporarily boost the lower thread's priority, thus enabling it to run and overcoming the inversion.
 
 Linux provides a **futex** which is similar to the Solaris interface but provides more in-kernel functionality. Specifically, each futex has associated witch it a specific physical memory location, as well as a per-futex in-kernal queue. Callers can use futex call to sleep and wake as need be.
 
