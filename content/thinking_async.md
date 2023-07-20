@@ -40,7 +40,7 @@ PS. eager execution matters for performance
 - [asio async model](https://isocpp.org/files/papers/P2444R0.pdf)
 - https://www.reddit.com/r/cpp/comments/q6tgod/c_committee_polling_results_for_asynchronous/
 - [stdexec github repo](https://github.com/NVIDIA/stdexec)
-  - [eric niebler slides and presentation]()
+  - [eric niebler slides and presentation](https://www.youtube.com/watch?v=h-ExnuD6jms)
   - [eric niebler live codeing](https://www.youtube.com/watch?v=xiaqNvqRB2E)
   - [executors: A change of perspective](https://accu.org/journals/overload/29/165/teodorescu/)
 - [NetTS, ASIO and Sender Library Design Comparison](https://isocpp.org/files/papers/P2471R1)
@@ -52,7 +52,7 @@ PS. eager execution matters for performance
 
 # extra reference
 - [Sender/Receiver Interface For Networking](https://github.com/cplusplus/papers/issues/1447)
-  - https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2762r0.pdf    only an education presentation
+  - [only an education presentation](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2762r0.pdf)
 - [concurrencpp git repo](https://github.com/David-Haim/concurrencpp)
   - when_any
   - when_all
