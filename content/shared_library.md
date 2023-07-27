@@ -20,6 +20,8 @@ extra:
 
 update at 2023-06-15
 
+update at 2023-07-27
+
 # problem
 In one scenoria, I find this:
 
@@ -243,3 +245,4 @@ dlopen / dlsym / dlclose
 - https://zerol.me/2021/06/13/Linker-Symbol-Conflict/
 - https://maskray.me/blog/2021-05-16-elf-interposition-and-bsymbolic
 - https://flameeyes.blog/2012/10/07/symbolism-and-elf-files-or-what-does-bsymbolic-do/
+- [ldd and linker(ld) both use RPATH/RUNPATH to find the dependencies](https://stackoverflow.com/questions/49138195/whats-the-difference-between-rpath-link-and-l)
