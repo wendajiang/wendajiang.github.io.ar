@@ -15,15 +15,15 @@ extra:
 
 **黄缘龟，古代文人雅士深爱的风水宠物。好养耐看、聪明、互动好，能把大人小孩都逗乐的小龟龟。黄缘龟壳像红木紫檀的颜色：深棕且黑里透红，侧面是黄色，龟甲纹路细密，像雕刻的工艺品；极具中国特色美，美丽而内敛，贵气却不娇贵，是一种很受欢迎的名贵风水龟。**
 
-![img](../../static/pics/hy_turtle/88268a9eddbe4cb19d98d9d2190bdd8f.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/88268a9eddbe4cb19d98d9d2190bdd8f.jpeg)
 
 **一个表格**•**教你区分南、北种黄缘**
 
 以地区划分，黄缘有南缘和北缘之分，安徽黄缘和湖北黄缘这两种地处北方的黄缘统称为北缘，台湾黄缘则为南缘。南缘和北缘的主要特征有以下区别：
 
-![img](../../static/pics/hy_turtle/1c50f7a5f3e548c7ba1a8a729dc55c7e.png)
+![img](https://wendajiang.github.io/pics/hy_turtle/1c50f7a5f3e548c7ba1a8a729dc55c7e.png)
 
-![img](../../static/pics/hy_turtle/dbe85095e47d4f9ab1d431b327cd924d.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/dbe85095e47d4f9ab1d431b327cd924d.jpeg)
 
 黄缘龟好看、又萌萌哒、还会与人互动，自从人工繁殖成功后，现在已经越来越多的家庭饲养为宠物龟。本文从以下六个方面为您全面介绍这个正在流行的“新秀名宠”：
 
@@ -43,11 +43,11 @@ extra:
 
 黄缘龟，属于半水栖性龟(偏陆栖)，在自然界中，黄缘盒龟栖息于丘陵山区的林缘、杂草、灌木之中，在树根底下、石缝等比较安静的地方。黄缘盒龟属山龟，不能生活在深水域内。
 
-![img](../../static/pics/hy_turtle/6c95b7174c2f4e9a997559546d4242a9.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/6c95b7174c2f4e9a997559546d4242a9.jpeg)
 
 黄缘龟是一种很易驯化和饲养的龟，它们不怕生，生命力顽强。杂食性，雌龟个体重约450克左右时性成熟。同年龄的龟，雌性个体总是大于雄性个体。雌性个体重可达1000克以上，雄性个体重很少超过500克。黄缘盒龟较其他的淡水龟类胆大，不畏惧人，同类很少争斗。饲养2～4月的个体，在食物的引逗下可随主人爬动。
 
-![img](../../static/pics/hy_turtle/6c13414103b94886bc1a596d65168bc5.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/6c13414103b94886bc1a596d65168bc5.jpeg)
 
 黄缘的雌龟个体总是会大于同龄的雄龟个体，黄缘盒龟的性成熟期一般为5年，而且必须5年里每年都进行冬眠，因为只有冬眠才会促进黄缘的性腺发育，而非某些资料里说的雄龟个体重280g，雌龟个体重450g左右性成熟。如果从不进行冬眠那么无论黄缘长到多大的个体，它始终不会有生殖繁育的能力，这是至关重的。
 
@@ -55,7 +55,7 @@ extra:
 
 （1）雄性黄缘盒龟的背部拱起较高，顶部尖，腹甲后缘略尖，尾长，泄殖腔孔距尾基部较远；雌性龟的背部拱起较小，但顶部钝，腹甲后缘略呈半圆形，尾粗短，泄殖腔孔距尾基部较近。
 
-![img](../../static/pics/hy_turtle/4f0f432a8d6b4a3a8bef57a716e39f6c.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/4f0f432a8d6b4a3a8bef57a716e39f6c.jpeg)
 
 （2）将龟的腹部朝天，用手将龟的四肢、头顶触缩人壳内，将龟的尾部摆直，若是雄性龟，则可看到交接器从泄殖腔孔内翻出，呈黑色伞状。而雌性的泄殖腔孔内仅排出泡泡或稀粘液。
 
@@ -71,7 +71,7 @@ extra:
 
 由于环境气候的不同，龟的表现也会不同，市场也分为四种：安缘、大陆缘、台缘、杂交缘（最近几年才出现的杂交，主要是拿贵价钱的安缘公和价钱便宜的台缘母杂交，生出来品相好的按安缘卖、品相差的按大陆缘卖。所以买安缘一定要找有诚信的繁殖场）
 
-![img](../../static/pics/hy_turtle/8c1a140e27ec403fa7fd9ddebbd9449d.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/8c1a140e27ec403fa7fd9ddebbd9449d.jpeg)
 
 目前学术界还没有将它们进行“亚种级”区分（个人认为是早晚之事）。不同产地的黄缘，在品相上小有区别，各具特色，但外观大致相同，而且都是很聪明漂亮和生命力顽强的龟种，因此不必刻意去搞“种族歧视”，可以根据个人喜好和经济条件放心选择。
 
@@ -79,7 +79,7 @@ extra:
 
 首先，我们总结了“黄缘盒龟”具有如下八大优点，因此可称得上是宠物龟中的明星，这也是它一直颇受养龟爱好者的青睐的原因：
 
-![img](../../static/pics/hy_turtle/409a45a560e149d99efd086378afa3ee.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/409a45a560e149d99efd086378afa3ee.jpeg)
 
 1、最大的特点是聪明、活泼、胆大、易驯熟、亲近人，此龟和饲主有良好的互动性
 
@@ -97,7 +97,7 @@ extra:
 
 8、最后一点是价格适中且性价比高。既不象十几、几十元的品种那么低廉、易被放弃，又不象上万元的品种那样昂贵。从其品貌性状横向比较而言的确物有所值。
 
-![img](../../static/pics/hy_turtle/edb5f439d34a473da3384cc90e600885.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/edb5f439d34a473da3384cc90e600885.jpeg)
 
 世上有如此美妙好龟，问君欲养“黄缘盒”否？
 
@@ -105,7 +105,7 @@ extra:
 
 1、就不同产地的品相来看，个人认为总体上是安徽黄缘最美观，这些优势主要表现在外形、颜色、甲壳纹路等。
 
-![img](../../static/pics/hy_turtle/52ef2f1655fe479289bca771c1c9b1da.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/52ef2f1655fe479289bca771c1c9b1da.jpeg)
 
 2、就同一产地相同亚种的成体黄缘来说（暂时抛开外伤不谈，这些主要指甲壳撞划痕、趾甲缺失、肢体及皮肤损伤等），野生的要优于人工繁殖的。
 
@@ -115,7 +115,7 @@ extra:
 
 （2）品相端正、外观漂亮、耐看，这方面的要素主要包括：背甲为规整的椭圆型，前部略窄、后部稍宽，隆起较高，脊棱明显，中脊线较黄且贯通，背甲为深棕色且黑里透红、表面有光泽，腹甲为黑色、边缘清晰，背甲和腹甲均有清晰、细密、规整的同心年纹，缘盾为整齐、光洁的淡黄色；头大、头顶平滑橄榄色，头后的U型饰纹清晰、颜色鲜黄，安徽种一般因镶有细细的黑边而更加明显，鼓膜清晰，脸颊部和脖子泛出漂亮的橘红色；眼睛大小适中，炯炯有神，充满灵性；四肢外侧淡灰黑色，上覆鳞片整齐、光洁，内面及掌心泛出肉白色；趾（指）甲齐全、灰黑色，趾间具半蹼；尾长短适中，尖端无缺残，淡黄色夹杂灰色线条。
 
-![img](../../static/pics/hy_turtle/d3aa1375ae3b4adfaf947c405d2c7f3b.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/d3aa1375ae3b4adfaf947c405d2c7f3b.jpeg)
 
 （3）聪明胆大、性情活泼，爱活动，不怕人，与饲主有良好的互动性。
 
@@ -141,37 +141,37 @@ extra:
 
 （7）看上喙外观，安徽上喙略带鹰钩，台湾乃至大陆其他产地的黄缘上喙平切、一般无此特征。
 
-![img](../../static/pics/hy_turtle/ba29620e551d424a852ac0a73061198b.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/ba29620e551d424a852ac0a73061198b.jpeg)
 
 **四、饲养方法**
 
 （由于篇幅原因，本篇只讲家庭散养方法。）黄缘龟是森林附近水边栖息的陆生龟，特点是需要有水，但不能长时间泡水里；喜欢阴凉的地方、但又要每天有太阳晒到。家养最简单的方法是放家里任其爬行，饿的时候龟会自己出来找吃的（刚开始要抓出来喂几次，慢慢就学会了）。但要记得长备一个水盘在龟经常休息的地方。
 
-![img](../../static/pics/hy_turtle/bf8480c194284a1faa6a09e7f19fbdf9.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/bf8480c194284a1faa6a09e7f19fbdf9.jpeg)
 
-![img](../../static/pics/hy_turtle/86b5acacfe884d3c9f4cb33da8cada57.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/86b5acacfe884d3c9f4cb33da8cada57.jpeg)
 
 也可以用小型的栅栏给龟龟专门围出一个小地方，如果是放阳台或窗台还需要有一块地方是遮阳的，避免太阳曝晒整个小龟园~~
 
 当然，小的时候还是要用整理箱或玻璃缸养到龟龟有烟盒那么大再散养，龟太小满屋跑容易找不到，也容易缺水：
 
-![img](../../static/pics/hy_turtle/740646e87c2e4b0090f92b4e8b6d0123.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/740646e87c2e4b0090f92b4e8b6d0123.jpeg)
 
-![img](../../static/pics/hy_turtle/8bef8f8023b34b4688eaff071bdc9245.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/8bef8f8023b34b4688eaff071bdc9245.jpeg)
 
 根据多年的饲养经验发现，黄缘排泄物气味大小与其所进食的食物种类密切相关。总体来说是食素气味小，食荤气味大。我曾做过这样实验，将所养黄缘分为两组，第一组的食谱是（龟粮、香蕉、番茄、加少量虫类），第二组的食谱是（牛肉、鲜虾、虫类），这样连续喂养大约1个月后，第一组排泄物的气味变得微弱，与花龟、草龟等排泄物异味较小的龟类基本没有差别，而第二组排泄物气味则一直较强。
 
-![img](../../static/pics/hy_turtle/49aaa502859a45418ba7b016a675c867.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/49aaa502859a45418ba7b016a675c867.jpeg)
 
 此外，龟的排泄物遗留在陆地还是水中对周围空气的影响程度差别明显。排泄在水中能够在一段时间内有效隔离气味发散。因此给龟经常休息的旁边备一个1-2厘米水深的喂水盘很有必要，定期清理并更换新水也是克服气味问题的有效方法。目前我所饲养的黄缘均已养成了以进食营养均衡的优质龟粮为主的好习惯，只是偶尔才搭配一点水果和皮虫。每1-2天抓一把干粮投入盛有浅水的喂食盘中，几分钟便抢食物一空。
 
-![img](../../static/pics/hy_turtle/18bb616a628f4b588d5fd4f5dbe0b742.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/18bb616a628f4b588d5fd4f5dbe0b742.jpeg)
 
 多年来全部黄缘一直健康成长并保持着优美体形。因此，我不但省去了每日切肉、洗虾、养虫等烦琐之事，而且有效克服了气味问题，人龟同处一寓，始终维续着环境清雅、其乐融融的局面。。。
 
-![img](../../static/pics/hy_turtle/9a95f3fb11ad47eabeef0248708fc886.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/9a95f3fb11ad47eabeef0248708fc886.jpeg)
 
-![img](../../static/pics/hy_turtle/bda2a6df3b7c4c1b9997e8877ce3eb74.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/bda2a6df3b7c4c1b9997e8877ce3eb74.jpeg)
 
 我们不得不承认，养龟本身亦蕴涵着文化。本人养龟多年，藏龟多种，尤对黄缘这种靓丽、强壮、聪明且颇具人性化的龟种有着特殊的情素。
 
@@ -181,51 +181,51 @@ extra:
 
 刚刚出壳不久的大陆缘苗与台缘苗是非常好辨认的，非常明显的区别有两点，一是在于颈盾上面的2块背甲；二是背甲金线末尾处。咱先来说颈盾，如下图：
 
-![img](../../static/pics/hy_turtle/e662a0c6377d49879e5fcceafc7a7e47.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/e662a0c6377d49879e5fcceafc7a7e47.jpeg)
 
 大部分台湾黄缘苗颈盾画圈处，有2个浅色的小甲块。不少JS会忽悠人说：“看，这大陆缘还是轻微变异的！”往后要遇到这情况请掉头就走，竖不竖中指随你了。大陆缘的颈盾则不会有两块浅色甲片，如下图：纯安缘
 
-![img](../../static/pics/hy_turtle/1dd07c0481514a788e487f6def49877f.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/1dd07c0481514a788e487f6def49877f.jpeg)
 
 第二个明显的差异：是背甲金线末尾处。台湾黄缘金线末尾处是一个圆点收尾，忽然增大的圆点。
 
-![img](../../static/pics/hy_turtle/cd0824afe31d44c98a2304a01b0442f4.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/cd0824afe31d44c98a2304a01b0442f4.jpeg)
 
 大陆黄缘整条线都是差不多粗细的，金线末尾处不会有圆点。
 
 根据以上两点区别，就可以很轻松的区别出刚刚出壳的黄缘苗是台还是安。为了更好的巩固一下刚才的两点，再放上多只台缘和多只大陆缘的集体照片，让大家区别比较一下：
 
-![img](../../static/pics/hy_turtle/bfe41854859147119ebdcb30df8f4fd1.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/bfe41854859147119ebdcb30df8f4fd1.jpeg)
 
 不过养大一点，估计饲养个把月后，台湾黄缘苗的颈盾上两块浅颜色的小甲片颜色会慢慢变得和其他甲片一样。那这个时候咋区别捏？除了上述第二点金线末尾判断以外，还有两点：一是头部U线的颜色和形状；二是脖子皮肤与颈部皮肤颜色的区别。"缘龟正传"v号：makun44006279，欢迎来撩，只聊缘龟不撩妹^_^。
 
-![img](../../static/pics/hy_turtle/768ec4bf141547b1aa0d1bd9ad064ff4.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/768ec4bf141547b1aa0d1bd9ad064ff4.jpeg)
 
 左边台湾黄缘苗头部的U线是淡黄色或者黄白色，并且形状是两个对称三角形，从粗到细慢慢过渡。右边大陆黄缘苗头上的U线却不一样，颜色是橘黄色，U线底部和台湾黄缘苗一样粗，但是到了中部，忽然一下子就变细了，一直到眼角为此都一样细的。大伙多看看比较对比一下就一目了然了。
 
-![img](../../static/pics/hy_turtle/b0aa37ffd56940e2ac66fc8a86164509.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/b0aa37ffd56940e2ac66fc8a86164509.jpeg)
 
 第二就是脖子皮肤与颈部皮肤颜色的区别，先不说啥，发三张图上来大伙比较比较再说哈！
 
-![img](../../static/pics/hy_turtle/d075a0c946a3428cb05e681a12962924.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/d075a0c946a3428cb05e681a12962924.jpeg)
 
-![img](../../static/pics/hy_turtle/9e2be8534c594e4f8a2a78606452c2d5.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/9e2be8534c594e4f8a2a78606452c2d5.jpeg)
 
-![img](../../static/pics/hy_turtle/d9ff215694654a16809f3d4326a9dde1.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/d9ff215694654a16809f3d4326a9dde1.jpeg)
 
 看出来没？大陆黄缘苗的脖子白净的淡色，台湾黄缘苗的脖子是深色的。还有腿，大陆的是灰色带点红色，台湾的是全黑。以上是最明显的区别特征，当然还有更多的区别，只是不能很明显的区别，因为有个体差异。比如说侧脸：
 
-![img](../../static/pics/hy_turtle/64a2aa11877b4acda8677bc90443ffb8.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/64a2aa11877b4acda8677bc90443ffb8.jpeg)
 
 大陆缘侧脸是橘红色，特别是眼角处的侧脸部最红，有的越往脖子处越淡，有的一直红到脖子处。
 
-![img](../../static/pics/hy_turtle/b0d31d75588449288cb11c3bbcf427bc.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/b0d31d75588449288cb11c3bbcf427bc.jpeg)
 
 台湾黄缘苗侧脸颜色则是黄白色，淡淡的柠檬黄。
 
 如下图（请忽略它饥渴的吃相）前腿侧面的红线，只有大陆黄缘有，而台湾黄缘从来无见过有这条腿线。
 
-![img](../../static/pics/hy_turtle/5fcbc3d2d6ee4580bad9ecccd71a8474.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/5fcbc3d2d6ee4580bad9ecccd71a8474.jpeg)
 
 即使是纯安苗子生下来的时候脖子也不可能每只都是干净无杂色的，黄缘苗时候是不易区分安台杂的，而且安缘台缘杂缘都是黄缘，从生命的本质上没有高低贵贱之分，价格的高低也是人们根据市场需求和个人喜好给它定的标签，此文作为一篇学术性文章，并没有贬低台缘体貌特征的用意，我们也不应该加入人为的喜好去批判。
 
@@ -241,45 +241,45 @@ extra:
 
 脖子：台缘的脖子发黑，偏棕色，颜色很暗；安缘的脖子是橘红色的，颜色也很淡。安缘的极品种脖子是肉红色的，很漂亮很自然的粉红色。如果看到是粉红色的喉咙那肯定是安缘了，但这样的安缘价格很高。
 
-![img](../../static/pics/hy_turtle/e9ac62e44b2c45a582dbb9168a3b2410.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/e9ac62e44b2c45a582dbb9168a3b2410.jpeg)
 
 2、四肢颜色的区别（如下图）
 
-![img](../../static/pics/hy_turtle/322ba0b7e22947e487a43cd2881b63cc.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/322ba0b7e22947e487a43cd2881b63cc.jpeg)
 
 大陆缘前臂鳞片为红褐色，逐渐变成肉红色和颈部相连，过渡非常柔和。
 
 3、喙的区别：大陆缘有像鹰嘴一样向突起的喙尖，安缘的最明显，称为鹰钩嘴，台缘的喙尖几乎没有；
 
-![img](../../static/pics/hy_turtle/9c0ab742585847c9a1622a8636e6f8e4.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/9c0ab742585847c9a1622a8636e6f8e4.jpeg)
 
 4、眼线的区别：大陆缘的眼线比较淡，呈“一”字型，安缘的眼线几乎没有，台缘则有很浓的椭圆形型眼线，以下用典型的图示来说明其眼线的区别
 
-![img](../../static/pics/hy_turtle/648c282c52fe46a88b66da91e3c0186c.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/648c282c52fe46a88b66da91e3c0186c.jpeg)
 
 5. 头部：台缘的头部U线后部通常较粗，并且U线不够细腻。台缘头部黄色花纹呈浅黄色，且与整个头部颜色对比鲜明；安缘头部黄色花纹偏橘黄色，发红，整个头部 颜色对比不强烈。台缘的脸色发青发绿，铁青着一张脸像刚和谁吵过架似的，安缘的脸色较为红润，给人一种更为善意的感觉。
 
-![img](../../static/pics/hy_turtle/e9ac62e44b2c45a582dbb9168a3b2410.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/e9ac62e44b2c45a582dbb9168a3b2410.jpeg)
 
 6.背线的区别：大陆种（包括安缘）的背线普遍较为连贯，中间不断线。台种和日本种的背线普遍为不连贯。
 
-![img](../../static/pics/hy_turtle/dca990b976034ac88b82080189b7ec73.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/dca990b976034ac88b82080189b7ec73.jpeg)
 
 7.U线的区别：大陆缘U线大多数相连，台缘U线不连。大陆缘U线颜色偏浅黄，安缘偏橘黄，台缘颜色偏鲜黄。
 
-![img](../../static/pics/hy_turtle/bc31c7f3d8b1405ca3c70692c1af8e14.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/bc31c7f3d8b1405ca3c70692c1af8e14.jpeg)
 
 8 杂交黄缘龟
 
 杂交的缘（近几年才有的杂交苗）杂合了两者的特点，它不等同于非安大陆缘，而是基因比较混乱的人工产物，个人认为杂交缘的观赏性比纯的台缘更低。杂交缘均为低背，主要鉴别是颈部偏暗，头部黄色与颈部的深色过度不自然，且色彩分布不均匀，有明显的缺色、杂色，瞳孔散大，边际不清，有的甚至全黑，喙的特征也不明显。
 
-![img](../../static/pics/hy_turtle/1aa68a32aa3740d883a7eea0c1b5f5a8.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/1aa68a32aa3740d883a7eea0c1b5f5a8.jpeg)
 
 安与台杂交的缘则呈现出脸红脖子黑的特征，下颌和脖子交接的地方颜色分界线非常明显，黑眼珠也很大。但安缘和非安大陆缘杂交的缘由于仍属于大陆种，一 脉相承，品相介于安缘和非安大陆之间。而实际上现在很多不是很典型的“安缘”，多为和大陆缘杂交的产物。这里就不展开讨论了。
 
 生长环境、营养等原因对背甲的影响很大，区分大陆和台缘不必看背甲的高低和纹路，台缘也可以有高背细纹。（如下图就是一只很极品的台缘）
 
-![img](../../static/pics/hy_turtle/a91bd9e8b9e444d4adcb8b2a6aeca57d.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/a91bd9e8b9e444d4adcb8b2a6aeca57d.jpeg)
 
 安和非安大陆缘的区别
 
@@ -287,58 +287,58 @@ extra:
 
 非安大陆缘与安缘主要区别在脸上：安徽脸颊和颈脖较艳丽红，发橘红色；非安大陆缘则较平淡，呈橘黄色；安缘有明显的鹰钩嘴，非安大陆缘喙突较小；安缘几乎没有眼线，呈“圆瞳”，大陆缘有淡淡的眼线；大陆缘大多数U线基本相连，安缘U线完全相连。安缘典型的红脸、红颈。
 
-![img](../../static/pics/hy_turtle/6727606465c84ee1971604c24b75067e.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/6727606465c84ee1971604c24b75067e.jpeg)
 
 安缘典型的鹰钩嘴，由于年龄的原因喙尖稍有磨损，但可以看出其基底部很大，甚至向前方隆起。左边的安缘嘴型就很经典。
 
-![img](../../static/pics/hy_turtle/6ebe8b3bd55843a2b93ae8de8e67bbe2.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/6ebe8b3bd55843a2b93ae8de8e67bbe2.jpeg)
 
 安缘典型的无眼线（圆瞳），也叫杏仁眼，但也有少数安缘有淡淡的眼线的。
 
-![img](../../static/pics/hy_turtle/63442484e8a9412f807605a14bd83ba9.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/63442484e8a9412f807605a14bd83ba9.jpeg)
 
 非安大陆缘则以上特征减弱，脸偏橘黄，颈部土黄色，整体还是暖色的。
 
-![img](../../static/pics/hy_turtle/c248b64faa294fc787228515b774de3f.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/c248b64faa294fc787228515b774de3f.jpeg)
 
 非安大陆缘喙尖比较钝。
 
-![img](../../static/pics/hy_turtle/a0d3c7f155b74764beb4d6e40f0a1eb9.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/a0d3c7f155b74764beb4d6e40f0a1eb9.jpeg)
 
 非安大陆缘瞳孔还是很圆的，眼线平直，如“一”字穿过瞳孔。
 
-![img](../../static/pics/hy_turtle/6a1fa83e12874b0c9409b086b9acd850.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/6a1fa83e12874b0c9409b086b9acd850.jpeg)
 
 再回过头来看看台缘，差别就更大了，脸蜡黄，没有血色的感觉，特别是颈部和四肢的颜色晦暗、喙尖几乎没有突起，眼线宽大，和瞳孔一起形成椭圆形，就像墨水泼出来一样。
 
-![img](../../static/pics/hy_turtle/12881691d3aa447cb5d99a91f7b5fa58.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/12881691d3aa447cb5d99a91f7b5fa58.jpeg)
 
 在这步鉴定中，需要参考背甲。背甲上：非安大陆缘普遍扁平背，这个差别比较明显的，而且粗纹（水波纹）。
 
-![img](../../static/pics/hy_turtle/c58fb8c079154bb58fd5014ce179e96d.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/c58fb8c079154bb58fd5014ce179e96d.jpeg)
 
 而安缘普遍高背、细纹（刀刻纹），颈和四肢粗壮。但人工环境下的安缘背甲会比野生稍逊。
 
-![img](../../static/pics/hy_turtle/7b7f5c6d82ae452bb4765232410acaa2.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/7b7f5c6d82ae452bb4765232410acaa2.jpeg)
 
 非安大陆缘大多数背线较细，大部分不连续，颈和四肢较细。
 
-![img](../../static/pics/hy_turtle/10c79f7f71d94464b2e043531dd84c0a.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/10c79f7f71d94464b2e043531dd84c0a.jpeg)
 
 安缘大多数（皖北、皖南）背线连贯且粗，少数（皖西）可以不连贯。
 
-![img](../../static/pics/hy_turtle/0afdf21842714cc08303fefaf399e15b.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/0afdf21842714cc08303fefaf399e15b.jpeg)
 
 对于安缘进一步细分为皖北、皖西、皖南。皖北黄缘背较高，壳色深，红斑小，金线细，纹路细；皖西黄缘背也较高，金线较粗，但是多不连，壳色棕红，公龟多强壮型；皖南黄缘背中等，龟壳色较鲜艳，较红，体型较为圆润。
 
 皖北高背、线连、色深。
 
-![img](../../static/pics/hy_turtle/6727606465c84ee1971604c24b75067e.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/6727606465c84ee1971604c24b75067e.jpeg)
 
 皖西高背、线不连、色浅。
 
-![img](../../static/pics/hy_turtle/f3e5372917ed44de96bb182638fa4b57.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/f3e5372917ed44de96bb182638fa4b57.jpeg)
 
 皖南中背、线连、色浅（编者按：此缘是否安缘值得斟酌）
 
-![img](../../static/pics/hy_turtle/6ea18de486e64be38bf293602bf944d3.jpeg)
+![img](https://wendajiang.github.io/pics/hy_turtle/6ea18de486e64be38bf293602bf944d3.jpeg)
