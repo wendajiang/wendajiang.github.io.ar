@@ -17,15 +17,15 @@ extra:
 
 -- 2023-12-9 -- 四只冬眠前体重记录
 
- ![合照](https://wendajiang.github.io/pics/winter_sleep_record/IMG_5589.jpeg) 
+ ![合照](https://wendajiang.github.io/pics/winter_sleep_record/IMG_5589.jpg)
 
- ![IMG_5588.HEIC](https://wendajiang.github.io/pics/winter_sleep_record/IMG_5588.jpeg)  
+ ![IMG_5588.HEIC](https://wendajiang.github.io/pics/winter_sleep_record/IMG_5588.jpg)
 
-![IMG_5587.HEIC](https://wendajiang.github.io/pics/winter_sleep_record/IMG_5587.jpeg)  
+![IMG_5587.HEIC](https://wendajiang.github.io/pics/winter_sleep_record/IMG_5587.jpg)
 
-![IMG_5586.HEIC](https://wendajiang.github.io/pics/winter_sleep_record/IMG_5586.jpeg)  
+![IMG_5586.HEIC](https://wendajiang.github.io/pics/winter_sleep_record/IMG_5586.jpg)
 
-![IMG_5585.HEIC](https://wendajiang.github.io/pics/winter_sleep_record/IMG_5585.jpeg) 
+![IMG_5585.HEIC](https://wendajiang.github.io/pics/winter_sleep_record/IMG_5585.jpg)
 
 
 
