@@ -128,3 +128,4 @@ The output shows that the *flock* command is holding a WRITE lock on the entire 
 - [File locking.hpp](https://github.com/jeandiogo/locker)
 - man 2 flock
 - man 2 readlink
+- [file hard link](https://en.wikipedia.org/wiki/Hard_link)
