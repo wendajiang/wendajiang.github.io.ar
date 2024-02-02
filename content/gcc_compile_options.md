@@ -17,9 +17,6 @@ extra:
 
 onenote 迁移文
 
-先来给个链接，-Wl,-rpath=some/path
-[Why LD_LIBRARY_PATH is bad](http://xahlee.info/UnixResource_dir/_/ldpath.html)
-
 
 
 | option                  | 解释                                                         |

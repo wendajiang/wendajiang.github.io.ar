@@ -3,7 +3,7 @@ title: shared library
 description: ''
 template: blog/page.html
 date: 2023-03-04 09:07:19
-updated: 2023-06-15 11:01:19
+updated: 2024-02-02 11:01:19
 typora-copy-images-to: ../static/pics/${filename}
 taxonomies:
   tags: ["so", "link"]
@@ -45,6 +45,10 @@ In the ELF execute file format, the dynamic library record the \[NEEDED\] sectio
 - /lib or /usr/lib
 
 But if the \[NEEDED\] section has / slash, the execute do not search by above rules, and directly use the path dynamic library.
+
+We should note, -Wl,-rpath=some/path
+[Why LD_LIBRARY_PATH is bad](http://xahlee.info/UnixResource_dir/_/ldpath.html)
+
 
 # How to resolve it?
 
@@ -246,3 +250,4 @@ dlopen / dlsym / dlclose
 - https://maskray.me/blog/2021-05-16-elf-interposition-and-bsymbolic
 - https://flameeyes.blog/2012/10/07/symbolism-and-elf-files-or-what-does-bsymbolic-do/
 - [ldd and linker(ld) both use RPATH/RUNPATH to find the dependencies](https://stackoverflow.com/questions/49138195/whats-the-difference-between-rpath-link-and-l)
+- [rpath and runpath order and exploration](https://medium.com/obscure-system/rpath-vs-runpath-883029b17c45)
