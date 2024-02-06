@@ -374,10 +374,17 @@ Singleton::~Singleton()
 
 ```
 
-## 特点与选择
+### 特点与选择
 
 - 懒汉式是以时间换空间，适应于访问量较**小**时；推荐使用**内部静态变量的懒汉单例**，代码量少
 - 饿汉式是以空间换时间，适应于访问量较**大**时，或者线程比较多的的情况
 
+--- update: 2024-01-13 ----
+
+## singleton and shared library
+@todo 
+
 ## reference
 - Hands-on deisng patterns with C++, chapter 15
+- [singleton , dlopen and shared library](https://stackoverflow.com/questions/8623657/multiple-instances-of-singleton-across-shared-libraries-on-linux)
+- [singleton is dangerous(static variable ctor/dtor order)](https://yanqiyu.info/2023/11/11/singleton/)
