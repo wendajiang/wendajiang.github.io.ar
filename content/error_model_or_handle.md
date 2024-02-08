@@ -129,3 +129,4 @@ If you need an error handling framework which has predictable sad path overhead 
 - [std::expected proposal](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p0323r12.html#cool-story)
 - [how std::expected interacts with boost.outcome](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2017/p0762r0.pdf)
 - [what is vocabulary type?](https://open-std.org/JTC1/SC22/WG21/docs/papers/2020/p2125r0.pdf)
+- [What is a monad?](https://builtin.com/software-engineering-perspectives/monads)
