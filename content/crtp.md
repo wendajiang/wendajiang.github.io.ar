@@ -81,7 +81,7 @@ class Amount {
 
 class Constant42: public Amount<Constant42> {
   public:
-    double get_valiue() const {return 42;}
+    double get_value() const {return 42;}
 };
 class Variable: public Amount<Variable> {
   public:
