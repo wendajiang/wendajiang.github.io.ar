@@ -81,4 +81,4 @@ The [solution](https://web.eecs.umich.edu/~mosharaf/Readings/Fibers-Coop-Tasks.p
 
 
 # reference
-[staged event-based concurrency](http://www.sosp.org/2001/papers/welsh.pdf)
+- [staged event-based concurrency](http://www.sosp.org/2001/papers/welsh.pdf)
