@@ -3,7 +3,7 @@ title: shared library
 description: ''
 template: blog/page.html
 date: 2023-03-04 09:07:19
-updated: 2024-02-02 11:01:19
+updated: 2024-04-25 11:01:19
 typora-copy-images-to: ../static/pics/${filename}
 taxonomies:
   tags: ["so", "link"]
@@ -229,6 +229,11 @@ dlopen / dlsym / dlclose
 - nm: lists the symbols defined in the symbol table of an object file
 - ldd: lists the shared libraries on which the object binary is dependent
 - strip: deletes the symbol table information
+
+# executable shared-library
+This [blog](http://www.rkoucha.fr/tech_corner/executable_lib.html) describe in detail.
+
+[stackoverflow](https://stackoverflow.com/questions/1449987/building-a-so-that-is-also-an-executable/1451482#1451482) introduct a more realistic example [pcap](https://git.kernel.org/pub/scm/libs/libcap/libcap.git/tree/libcap/execable.h).
 
 
 # reference
