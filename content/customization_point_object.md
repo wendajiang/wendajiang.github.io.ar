@@ -139,3 +139,4 @@ auto g = std::ranges::copy;
 - [why tag_invoke is not the solution I want](https://brevzin.github.io/c++/2020/12/01/tag-invoke/)
 - [CPF: proposal replacement of the ADL](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p1292r0.html)
 - [Customization Point Design in C++11 and Beyond](http://ericniebler.com/2014/10/21/customization-point-design-in-c11-and-beyond/)
+- [what is ADL](https://stackoverflow.com/questions/8111677/what-is-argument-dependent-lookup-aka-adl-or-koenig-lookup)
