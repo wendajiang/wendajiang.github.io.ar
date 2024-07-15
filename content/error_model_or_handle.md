@@ -41,7 +41,7 @@ Dispite theis simplicity, return codes do some with some baggage; in summary:
 But we need fail-fast -> exception
 
 ## Exception
-[cpp deprecate exception specifications](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3051.html), so `noexcept` is also bad.
+[cpp deprecate exception specifications](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3051.html), so `noexcept` is also bad. [cpp exception](@/cpp_exception.md)
 
 ## recap
 |  | the good | the bad | the ugly |

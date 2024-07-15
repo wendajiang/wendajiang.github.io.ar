@@ -21,12 +21,15 @@ extra:
 # introduction
 Zero-overhead is not zero cost, Hutter proposal one determintic-exception, but Bjarne Stroutrup is negative about it.
 
+The origins of exception handling lie in the problems experienced managing a variety of error-handling approaches, such as **C’s errno, error-states, callbacks, return codes, and return objects**. In addition, it was observed that there were no really good approaches to reporting errors detected in constructors and in operators.
+
 # overview
 1. SjLj(setjump-longjump)
    It is simpler to implement but has more runtime overhead, and now is deprecated in modern compiler.
 2. table-based (zero-overhead)
    - .eh_frame
    - .gcc_except_table
+
 
 # reference
 - https://www.quora.com/How-does-gcc-implement-C++-exception-handling
@@ -39,3 +42,4 @@ Zero-overhead is not zero cost, Hutter proposal one determintic-exception, but B
 - [Compiler Internals: Exceptions and RTTI. 2012. windows and Unix-like system](https://wendajiang.github.io/pdf/Compiler-Internals-exception.pdf)
 - [C++ Exception Handling for IA-64](https://wendajiang.github.io/pdf/exception.pdf)
 - [C++ exceptions and alternatives.Bjarne Stroustrup](https://wendajiang.github.io/pdf/p1947r0exception.pdf)
+- a tour of c++, 3rd edition chapter 4.
