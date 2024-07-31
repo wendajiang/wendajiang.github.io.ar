@@ -53,6 +53,8 @@ extra:
 4. LTO on your code
 5. -ftime-trace
 
+[bloaty](https://github.com/google/bloaty) a size profiler for binaries
+
 ## change the code
 
 1. split one large file into many small file , so that is benefit from parallel compiling
@@ -62,3 +64,4 @@ extra:
 # reference
 
 - [youtube](https://www.youtube.com/watch?v=X4pyOtawqjg)
+- [cmake3.16 introduce and something](https://onqtam.com/programming/2019-12-20-pch-unity-cmake-3-16/)
