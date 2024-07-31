@@ -18,29 +18,33 @@ extra:
 - gcc -ftime-report would output the phase time and percent
 
 # speed up
+
 ## do not change the code
 1. faster linker 
-    lld faster than gnu bsd linker
+   lld faster than gnu bsd linker
 2. PCH(pre-compiled header)
-    `target_precompile_headers(<target> PUBLIC <headers>)`
+   `target_precompile_headers(<target> PUBLIC <headers>)`
 3. cache compile result
    - ccache
    - sccache(cache shareing)
 4. unity builds
-    `cmake -DCMAKE_UNITY_BUILD=ON` when cmake 3.16+
+   `cmake -DCMAKE_UNITY_BUILD=ON` when cmake 3.16+
 5. LTO (link time optimization)
-    `cmake -DLLVM_ENABLE_LTO=Thin` for clang
+   `cmake -DLLVM_ENABLE_LTO=Thin` for clang
 6. PGO(profile guided optimization)
-   1. build clang with cmake -DLLVM_BUILD_INSTRUMENTED=IR
-   2. use this to train the compiler
-      1. we build some application
-      2. generate a profraw file
-   3. merge all profraw files with llvm-prodata
-   4. feed output to clang cmake with -DLLVM_PROFDATA_FILE=<path>
-   5. combine with LTO for best results
-7. Post link optimization
-   LLVM-BOLT
-   LLVM-Propeller
+   ```markdown
+   build clang with cmake -DLLVM_BUILD_INSTRUMENTED=IR
+   use this to train the compiler
+     - we build some application
+     - generate a profraw file
+   merge all profraw files with llvm-prodata
+   feed output to clang cmake with -DLLVM_PROFDATA_FILE=<path>
+   combine with LTO for best results
+   ```
+1. Post link optimization
+   - LLVM-BOLT
+   - LLVM-Propeller
+
 
 ## Grab bag
 1. -fvisibility=hidden
@@ -50,9 +54,11 @@ extra:
 5. -ftime-trace
 
 ## change the code
+
 1. split one large file into many small file , so that is benefit from parallel compiling
 2. PIMPL
 3. fwd class instead of include header
 
 # reference
+
 - [youtube](https://www.youtube.com/watch?v=X4pyOtawqjg)

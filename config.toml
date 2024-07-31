@@ -11,7 +11,8 @@ default_language = "en"
 compile_sass = true
 
 # whether to generate a feed file for the site
-generate_feed = true
+generate_feeds = true
+feed_filenames = ["atom.xml"]
 
 # when set to "true", the generated html files are minified
 minify_html = true
