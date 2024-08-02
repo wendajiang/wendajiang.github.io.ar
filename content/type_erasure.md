@@ -6,7 +6,7 @@ date: 2024-02-20 08:58:12
 updated: 2024-02-20 08:58:12
 typora-copy-images-to: ../static/pics/${filename}
 taxonomies:
-  tags: ["design pattern", "cpp", "GoF"]
+  tags: ["design pattern", "cpp", "GoF", "llvm"]
 extra:
   mermaid: true
   usemathjax: true
@@ -234,6 +234,23 @@ class smartptr_te_vtable {
   T* operator->() {return p_;}
   const T* operator->() const {return p_;}
 }
+```
+
+# Example in real world
+
+LLVM new `PassManager` manage new pass (`PassInfoMixin` template pass) by type erase( concepts and model)
+
+The code location is at 
+```markdown
+llvm-project
+ └─llvm
+    └─include
+       └─llvm
+          └─IR
+             ├─PassManager.h
+             ├─PassManagerInternal.h(passconcept and passmodel)
+             └─PassManagerImpl.h (run or addPass)
+
 ```
 
 
