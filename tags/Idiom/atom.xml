@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - Idiom</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/Idiom/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-01-05T10:20:00+00:00</updated>
+    <id>https://wendajiang.github.io/tags/Idiom/atom.xml</id>
+    <entry xml:lang="en">
+        <title>pimpl</title>
+        <published>2022-11-28T10:20:07+00:00</published>
+        <updated>2024-01-05T10:20:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/pimpl/" type="text/html"/>
+        <id>https://wendajiang.github.io/pimpl/</id>
+        <content type="html">&lt;p&gt;from &lt;a href=&quot;https:&#x2F;&#x2F;herbsutter.com&#x2F;gotw&#x2F;_100&#x2F;&quot;&gt;GotW100&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;1-what-is-the-pimpl-idiom-and-why-is-it-useful&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#1-what-is-the-pimpl-idiom-and-why-is-it-useful&quot; aria-label=&quot;Anchor link for: 1-what-is-the-pimpl-idiom-and-why-is-it-useful&quot;&gt;1. What is the Pimpl Idiom, and why is it useful ?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;C++ 中，头文件中类定义的改变会导致所有用到这个类的地方重新编译--即使修改只涉及到私有成员。这是因为 C++ 的编译模型基于文本包含，以及 C++ 假设调用者知道有关类的两个主要信息，这些信息可能会受到私有成员的影响：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;尺寸和布局：调用代码必须知道类的尺寸和布局，包含私有数据成员。这种总是能看到的约束增加了调用者和被调者的耦合成本，但是这是 C++ 对象模型和哲学的核心，因为编译器默认可以直接访问对象是时 C++ 可以实现高度优化效率的保证&lt;&#x2F;li&gt;
+&lt;li&gt;函数：调用者必须可以 resolve 到类的成员函数，包括被非私有函数重载的不可访问的私有函数--如果私有函数匹配度更高，调用代码会编译失败（C++ 采用了慎重的设计决策由于安全原因在访问性检查之前执行重载解决。比如，将函数的属性从私有改为公有不能改变调用代码的合法性）&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;为了减少这些编译依赖，常用的方法就是使用一个 opaque 指针来隐藏这些实现细节：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; Pimpl idiom - basic idea
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;widget &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; :::
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;private&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;impl;
+&lt;&#x2F;span&gt;&lt;span&gt;  impl&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt; pimpl_;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这种 idiom 的一个好处就是打破了编译时间的依赖。首先，系统构建能运行的更快。其次，可以将代码修改的影响局部化，pimpl 可以自由修改--成员可以自由增加或者删除--不需要重新编译使用端代码。因为对于消除编译级联影响如此有用，所以也经常被称为 compilation firewall.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;2-what-is-the-best-way-to-express-the-basic-pimpl-idiom-in-c-11&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#2-what-is-the-best-way-to-express-the-basic-pimpl-idiom-in-c-11&quot; aria-label=&quot;Anchor link for: 2-what-is-the-best-way-to-express-the-basic-pimpl-idiom-in-c-11&quot;&gt;2. What is the best way to express the basic Pimpl Idiom in C++11?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;避免使用原始指针以及显式的 delete。pimpl 使用 &lt;em&gt;unique_ptr&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; .h
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;widget &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;widget&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;~widget&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;private&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;impl&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  unique_ptr&amp;lt;impl&amp;gt; pimpl;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; .cc
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span&gt;widget&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;impl &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;widget&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;widget&lt;&#x2F;span&gt;&lt;span&gt;()&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;pimpl&lt;&#x2F;span&gt;&lt;span&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;new &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;impl&lt;&#x2F;span&gt;&lt;span&gt;{}} &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{}
+&lt;&#x2F;span&gt;&lt;span&gt;widget&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;~widget&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这个模式有一些需要注意的：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;使用 unique_ptr 而不是 shared_ptr，可以正确表达 pimpl 对象不能被分享&lt;&#x2F;li&gt;
+&lt;li&gt;在实现的 cc 文件中定义和使用 pimpl 对象&lt;&#x2F;li&gt;
+&lt;li&gt;显式使用构造器，分配 pimpl 对象&lt;&#x2F;li&gt;
+&lt;li&gt;显式声明 destructor ，即使与编译器生成的一样。因为即使 unique_ptr 和 shared_ptr 都可以使用 incomplete type 实例，unique_ptr 析构需要 complete type 来调用 delete（不像 shared_ptr 在构造时可以获得更多信息）。通过在实现文件中显式定义，强制 impl 也定义了，可以成功避免编译器试图自动生成析构时 impl 没有定义&lt;&#x2F;li&gt;
+&lt;li&gt;以上的模式 class 没有默认的拷贝和移动语义，因为 C++ 倾向于不默认生成拷贝和移动语义。因为我们显示声明了析构，所以拷贝和移动被关闭了，如果需要有，你需要自己添加定义。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Pimpl 在 C++11 中又了新的优势，就是使用更方便了。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;3-what-parts-of-the-class-should-go-into-the-impl-object-some-potential-options-include&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#3-what-parts-of-the-class-should-go-into-the-impl-object-some-potential-options-include&quot; aria-label=&quot;Anchor link for: 3-what-parts-of-the-class-should-go-into-the-impl-object-some-potential-options-include&quot;&gt;3. What parts of the class should go into the &lt;em&gt;impl&lt;&#x2F;em&gt; object? Some potential options include:&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;put all private data(but not functions) into impl;&lt;&#x2F;p&gt;
+&lt;p&gt;需要把 function 也加入&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;put all private members into impl;&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;不能在 pimpl 中隐藏 virtual member function，即使 virtual function 是私有的。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;put all private and protected members into impl; ❌&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;put all private non virtual members into impl; ✅&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;put everything into impl, and write the public class itself as only the public interface, each implemented as a simple forwarding function(a handle&#x2F;body variant)&lt;&#x2F;p&gt;
+&lt;p&gt;有些情况可以这样用，避免了 back pointer。主要的缺点是要求一个额外的 wrapper function&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;关键信息是，在任何 OO 语言中有三个部分：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;interface for callers = public members. 外部可以访问&lt;&#x2F;li&gt;
+&lt;li&gt;interface for derivers = protected or virtual members. 派生类可以看到&lt;&#x2F;li&gt;
+&lt;li&gt;everything else = private and nonvirtual members. &lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;第三个部分可以放到 pimpl 中隐藏。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;4-does-the-impl-require-a-back-pointer-to-the-public-object-if-yes-what-is-the-best-way-to-provide-it-if-not-why-not&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#4-does-the-impl-require-a-back-pointer-to-the-public-object-if-yes-what-is-the-best-way-to-provide-it-if-not-why-not&quot; aria-label=&quot;Anchor link for: 4-does-the-impl-require-a-back-pointer-to-the-public-object-if-yes-what-is-the-best-way-to-provide-it-if-not-why-not&quot;&gt;4. Does the impl require a back pointer to the public object? If yes, what is the best way to provide it? If not, why not?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ol&gt;
+&lt;li&gt;在 impl 中存储 back pointer&lt;&#x2F;li&gt;
+&lt;li&gt;建议：pass &lt;em&gt;this&lt;&#x2F;em&gt; 作为参数给 pimpl function。这只会增加栈的消耗&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;hr &#x2F;&gt;
+&lt;p&gt;2024-1-5 更新&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;5-guan-yu-xian-shi-ding-yi-deconstrctor-de-bu-chong-shuo-ming&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#5-guan-yu-xian-shi-ding-yi-deconstrctor-de-bu-chong-shuo-ming&quot; aria-label=&quot;Anchor link for: 5-guan-yu-xian-shi-ding-yi-deconstrctor-de-bu-chong-shuo-ming&quot;&gt;5. 关于显式定义 deconstrctor 的补充说明&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;default-shi-bu-ke-yi-de&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#default-shi-bu-ke-yi-de&quot; aria-label=&quot;Anchor link for: default-shi-bu-ke-yi-de&quot;&gt;default 是不可以的&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;通过声明 &lt;code&gt;~T() = default&lt;&#x2F;code&gt; 在 pimpl 惯用法中是不可行的，会出现编译报错 &lt;code&gt;incomplete type&lt;&#x2F;code&gt; &lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zai-desconstructor-zhong-xian-shi-diao-yong-impl-t-fei-fa&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#zai-desconstructor-zhong-xian-shi-diao-yong-impl-t-fei-fa&quot; aria-label=&quot;Anchor link for: zai-desconstructor-zhong-xian-shi-diao-yong-impl-t-fei-fa&quot;&gt;在 desconstructor 中显式调用 &lt;code&gt;impl_-&amp;gt;~T()&lt;&#x2F;code&gt; 非法&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;这样会出现两次调用 deconstructor，如果有指针操作就可能会出现 double free&lt;&#x2F;p&gt;
+&lt;p&gt;Destructor is meant to be called when an object goes out of scope if the object is in the stack as in this case or called when it is explicitly destructed with delete when the object is created on the heap with new operator at the first place.&lt;&#x2F;p&gt;
+&lt;p&gt;There is no way for the compiler or the run time system to keep track whether the destructor is called by you manually or not. Also it is a very bad practice to make a call to the destructor. Except, the &lt;em&gt;placement new&lt;&#x2F;em&gt;, when it should be invoked manually.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;reference&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#reference&quot; aria-label=&quot;Anchor link for: reference&quot;&gt;reference&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;isocpp.org&#x2F;wiki&#x2F;faq&#x2F;dtors&quot;&gt;dtors-faq&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;stackoverflow.com&#x2F;a&#x2F;14188066&#x2F;6885532&quot;&gt;explicit calling dtor&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;copyprogramming.com&#x2F;howto&#x2F;how-to-call-destructor-in-c-manually&quot;&gt;Manually invoking the dtor in C++: A guide&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+</feed>

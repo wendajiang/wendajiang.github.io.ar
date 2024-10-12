@@ -1,0 +1,367 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>singleton | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/singleton/ rel=canonical><meta content=singleton property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/singleton/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta content=2023-06-15T14:24:10 property=og:updated_time><meta content=singleton property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/singleton/"
+      },
+      "headline": "singleton",
+      "image": ,
+      "datePublished": "2021-05-07T12:12:17",
+      "dateModified": "2023-06-15T14:24:10",
+      "author": {
+        "@type": "Organization",
+        "name": "singleton"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "singleton",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Singleton",
+            "item": "https://wendajiang.github.io/singleton/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><script>function initMermaid(){var a={startOnLoad:true,theme:"neutral",flowchart:{useMaxWidth:true,htmlLabels:true}};mermaid.initialize(a);window.mermaid.init(undefined,document.querySelectorAll('.mermaid'))}</script><script async onload=initMermaid() src=https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/singleton/#thread-safety>thread-safety</a><li><a href=https://wendajiang.github.io/singleton/#how-to-guarantee-thread-safety>how to guarantee thread-safety</a><li><a href=https://wendajiang.github.io/singleton/#singleton>singleton</a></li><ul><li><a href=https://wendajiang.github.io/singleton/#dan-li-mo-shi-fen-lei>单例模式分类</a><li><a href=https://wendajiang.github.io/singleton/#dan-li-lei-te-dian>单例类特点</a><li><a href=https://wendajiang.github.io/singleton/#pu-tong-lan-yi-dan-li-xian-cheng-bu-an-quan>普通懒汉单例（线程不安全）</a><li><a href=https://wendajiang.github.io/singleton/#jia-suo-de-lan-yi-dan-li-xian-cheng-an-quan>加锁的懒汉单例（线程安全）</a><li><a href=https://wendajiang.github.io/singleton/#nei-bu-jing-tai-bian-liang-de-lan-yi-dan-li-c-11-xian-cheng-an-quan-meyer-s-singleton>内部静态变量的懒汉单例（C++11 线程安全）-- Meyer's Singleton</a><li><a href=https://wendajiang.github.io/singleton/#e-yi-dan-li-xian-cheng-an-quan>饿汉单例（线程安全）</a><li><a href=https://wendajiang.github.io/singleton/#te-dian-yu-xuan-ze>特点与选择</a></ul><li><a href=https://wendajiang.github.io/singleton/#singleton-and-shared-library>singleton and shared library</a><li><a href=https://wendajiang.github.io/singleton/#reference>reference</a></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>singleton</h1><p><small>Posted 2021-05-07 12:12:17 ‐ <strong>9 min read</strong></small><p><div class=category-area>「 <a href=https://wendajiang.github.io/tags/singleton> <div class=category>singleton</div> </a><a href="https://wendajiang.github.io/tags/thread safe"> <div class=category>thread safe</div> </a> 」</div></div><p>The singleton is a pattern that's used to restrict the number of class instantiations to exactly one.<h2 id=thread-safety><a aria-label="Anchor link for: thread-safety" class=zola-anchor href=#thread-safety>thread-safety</a></h2><p>在拥有<strong>共享数据</strong>的多线程执行程序中，线程安全代码会通过同步机制保证各个线程正确执行，不会出现数据污染等情况<h2 id=how-to-guarantee-thread-safety><a aria-label="Anchor link for: how-to-guarantee-thread-safety" class=zola-anchor href=#how-to-guarantee-thread-safety>how to guarantee thread-safety</a></h2><ol><li>给<strong>共享资源</strong>加锁，保证每个资源变量至多被一个线程占用<li>线程 local 变量</ol><h2 id=singleton><a aria-label="Anchor link for: singleton" class=zola-anchor href=#singleton>singleton</a></h2><p>单例模式指在整个系统生命周期里，保证一个类只能产生一个实例，确保该类的<strong>唯一性</strong>。<h3 id=dan-li-mo-shi-fen-lei><a aria-label="Anchor link for: dan-li-mo-shi-fen-lei" class=zola-anchor href=#dan-li-mo-shi-fen-lei>单例模式分类</a></h3><p>单例模式可以分为<strong>懒汉式</strong>和<strong>饿汉式</strong>，两者之间的区别在于<strong>创建实例的时间不同</strong>：<ul><li><strong>懒汉式</strong>：指系统运行中，实例并不存在，只有当需要使用该实例时，才会去创建并使用实例。<strong>（这种方式要考虑线程安全）</strong><li><strong>饿汉式</strong>：指系统一运行，就初始化创建实例，当需要时，直接调用即可。<strong>（本身就线程安全，没有多线程的问题）</strong></ul><h3 id=dan-li-lei-te-dian><a aria-label="Anchor link for: dan-li-lei-te-dian" class=zola-anchor href=#dan-li-lei-te-dian>单例类特点</a></h3><ul><li>构造函数和析构函数为** private <strong>类型，目的</strong>禁止**外部构造和析构<li>拷贝构造和赋值构造函数为** private <strong>类型，目的是</strong>禁止**外部拷贝和赋值，确保实例的唯一性<li>类里有个获取实例的<strong>静态函数</strong>，可以全局访问</ul><h3 id=pu-tong-lan-yi-dan-li-xian-cheng-bu-an-quan><a aria-label="Anchor link for: pu-tong-lan-yi-dan-li-xian-cheng-bu-an-quan" class=zola-anchor href=#pu-tong-lan-yi-dan-li-xian-cheng-bu-an-quan>普通懒汉单例（线程不安全）</a></h3><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=color:#6272a4>///////////////////  普通懒汉式实现 -- 线程不安全 //////////////////
+</span><span style=color:#ff79c6>#include </span><span style=color:#f1fa8c>&LTiostream> </span><span style=color:#6272a4>// std::cout
+</span><span style=color:#ff79c6>#include </span><span style=color:#f1fa8c>&LTmutex>    </span><span style=color:#6272a4>// std::mutex
+</span><span style=color:#ff79c6>#include </span><span style=color:#f1fa8c>&LTpthread.h> </span><span style=color:#6272a4>// pthread_create
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>SingleInstance
+</span><span style=color:#fff>{
+</span><span>
+</span><span style=color:#ff79c6>public</span><span>:
+</span><span>    </span><span style=color:#6272a4>// 获取单例对象
+</span><span>    </span><span style=color:#ff79c6>static</span><span> SingleInstance </span><span style=color:#ff79c6>*</span><span style=color:#50fa7b>GetInstance</span><span>();
+</span><span>
+</span><span>    </span><span style=color:#6272a4>// 释放单例，进程退出时调用
+</span><span>    </span><span style=color:#ff79c6>static </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>deleteInstance</span><span>();
+</span><span>	
+</span><span>	</span><span style=color:#6272a4>// 打印单例地址
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>Print</span><span>();
+</span><span>
+</span><span style=color:#ff79c6>private</span><span>:
+</span><span>	</span><span style=color:#6272a4>// 将其构造和析构成为私有的，禁止外部构造和析构
+</span><span>    </span><span style=color:#50fa7b>SingleInstance</span><span>();
+</span><span>    </span><span style=color:#50fa7b>~SingleInstance</span><span>();
+</span><span>
+</span><span>    </span><span style=color:#6272a4>// 将其拷贝构造和赋值构造成为私有函数，禁止外部拷贝和赋值
+</span><span>    </span><span style=color:#50fa7b>SingleInstance</span><span>(</span><span style=color:#ff79c6>const</span><span> SingleInstance </span><span style=color:#ff79c6>&</span><span style=font-style:italic;color:#ffb86c>signal</span><span>);
+</span><span>    </span><span style=color:#ff79c6>const</span><span> SingleInstance </span><span style=color:#ff79c6>&</span><span style=color:#50fa7b>operator=</span><span>(</span><span style=color:#ff79c6>const</span><span> SingleInstance </span><span style=color:#ff79c6>&</span><span style=font-style:italic;color:#ffb86c>signal</span><span>);
+</span><span>
+</span><span style=color:#ff79c6>private</span><span>:
+</span><span>    </span><span style=color:#6272a4>// 唯一单例对象指针
+</span><span>    </span><span style=color:#ff79c6>static</span><span> SingleInstance </span><span style=color:#ff79c6>*</span><span style=color:#fff>m_SingleInstance</span><span>;
+</span><span style=color:#fff>}</span><span>;
+</span><span>
+</span><span style=color:#6272a4>//初始化静态成员变量
+</span><span>SingleInstance </span><span style=color:#ff79c6>*</span><span>SingleInstance</span><span style=color:#ff79c6>::</span><span>m_SingleInstance </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>NULL</span><span>;
+</span><span>
+</span><span>SingleInstance</span><span style=color:#ff79c6>* </span><span>SingleInstance</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>GetInstance</span><span>()
+</span><span style=color:#fff>{
+</span><span>
+</span><span>	</span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#fff>m_SingleInstance </span><span style=color:#ff79c6>== </span><span style=color:#bd93f9>NULL</span><span>)
+</span><span>	</span><span style=color:#fff>{
+</span><span>	    </span><span style=color:#fff>m_SingleInstance </span><span style=color:#ff79c6>= new </span><span>(std</span><span style=color:#ff79c6>::</span><span>nothrow) SingleInstance;  </span><span style=color:#6272a4>// 没有加锁是线程不安全的，当线程并发时会创建多个实例
+</span><span>	</span><span style=color:#fff>}
+</span><span>
+</span><span>    </span><span style=color:#ff79c6>return </span><span style=color:#fff>m_SingleInstance</span><span>;
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span>SingleInstance</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>deleteInstance</span><span>()
+</span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#fff>m_SingleInstance</span><span>)
+</span><span>    </span><span style=color:#fff>{
+</span><span>        </span><span style=color:#ff79c6>delete </span><span style=color:#fff>m_SingleInstance</span><span>;
+</span><span>        </span><span style=color:#fff>m_SingleInstance </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>NULL</span><span>;
+</span><span>    </span><span style=color:#fff>}
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span>SingleInstance</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>Print</span><span>()
+</span><span style=color:#fff>{
+</span><span>	std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"我的实例内存地址是：" </span><span style=color:#ff79c6><< </span><span style=color:#bd93f9>this </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span style=color:#fff>}
+</span><span>
+</span><span>SingleInstance</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>SingleInstance</span><span>()
+</span><span style=color:#fff>{
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"构造函数" </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span style=color:#fff>}
+</span><span>
+</span><span>SingleInstance</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>~SingleInstance</span><span>()
+</span><span style=color:#fff>{
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"析构函数" </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span style=color:#fff>}
+</span><span style=color:#6272a4>///////////////////  普通懒汉式实现 -- 线程不安全  //////////////////
+</span><span>
+</span><span style=color:#6272a4>// 线程函数
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#ff79c6>*</span><span style=color:#50fa7b>PrintHello</span><span>(</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>threadid</span><span>)
+</span><span style=color:#fff>{
+</span><span>    </span><span style=color:#6272a4>// 主线程与子线程分离，两者相互不干涉，子线程结束同时子线程的资源自动回收
+</span><span>    </span><span style=color:#50fa7b>pthread_detach</span><span>(</span><span style=color:#50fa7b>pthread_self</span><span>());
+</span><span>
+</span><span>    </span><span style=color:#6272a4>// 对传入的参数进行强制类型转换，由无类型指针变为整形数指针，然后再读取
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>int</span><span> tid </span><span style=color:#ff79c6>= *</span><span>((</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#ff79c6>*</span><span>)threadid);
+</span><span>
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"Hi, 我是线程 ID:[" </span><span style=color:#ff79c6><<</span><span> tid </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"]" </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span>
+</span><span>    </span><span style=color:#6272a4>// 打印实例地址
+</span><span>    SingleInstance</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>GetInstance</span><span>()</span><span style=color:#ff79c6>-></span><span style=color:#50fa7b>Print</span><span>();
+</span><span>
+</span><span>    </span><span style=color:#50fa7b>pthread_exit</span><span>(</span><span style=color:#bd93f9>NULL</span><span>);
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=color:#ff79c6>#define </span><span>NUM_THREADS </span><span style=color:#bd93f9>5 </span><span style=color:#6272a4>// 线程个数
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#50fa7b>main</span><span>(</span><span style=font-style:italic;color:#8be9fd>void</span><span>)
+</span><span style=color:#fff>{
+</span><span>    </span><span style=font-style:italic;color:#66d9ef>pthread_t</span><span> threads[NUM_THREADS] </span><span style=color:#ff79c6>= </span><span style=color:#fff>{</span><span style=color:#bd93f9>0</span><span style=color:#fff>}</span><span>;
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>int</span><span> indexes[NUM_THREADS] </span><span style=color:#ff79c6>= </span><span style=color:#fff>{</span><span style=color:#bd93f9>0</span><span style=color:#fff>}</span><span>; </span><span style=color:#6272a4>// 用数组来保存 i 的值
+</span><span>
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>int</span><span> ret </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>int</span><span> i </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span>
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"main() : 开始 ... " </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span>
+</span><span>    </span><span style=color:#ff79c6>for </span><span>(i </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>; i </span><span style=color:#ff79c6><</span><span> NUM_THREADS; i</span><span style=color:#ff79c6>++</span><span>)
+</span><span>    </span><span style=color:#fff>{
+</span><span>        std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"main() : 创建线程：[" </span><span style=color:#ff79c6><<</span><span> i </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"]" </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span>        
+</span><span>        indexes[i] </span><span style=color:#ff79c6>=</span><span> i; </span><span style=color:#6272a4>//先保存 i 的值
+</span><span>		
+</span><span>        </span><span style=color:#6272a4>// 传入的时候必须强制转换为 void* 类型，即无类型指针
+</span><span>        ret </span><span style=color:#ff79c6>= </span><span style=color:#50fa7b>pthread_create</span><span>(</span><span style=color:#ff79c6>&</span><span>threads[i], </span><span style=color:#bd93f9>NULL</span><span>, PrintHello, (</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#ff79c6>*</span><span>)</span><span style=color:#ff79c6>&</span><span>(indexes[i]));
+</span><span>        </span><span style=color:#ff79c6>if </span><span>(ret)
+</span><span>        </span><span style=color:#fff>{
+</span><span>            std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"Error: 无法创建线程，" </span><span style=color:#ff79c6><<</span><span> ret </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span>            </span><span style=color:#8be9fd>exit</span><span>(</span><span style=color:#ff79c6>-</span><span style=color:#bd93f9>1</span><span>);
+</span><span>        </span><span style=color:#fff>}
+</span><span>    </span><span style=color:#fff>}
+</span><span>
+</span><span>    </span><span style=color:#6272a4>// 手动释放单实例的资源
+</span><span>    SingleInstance</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>deleteInstance</span><span>();
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"main() : 结束！" </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span>	
+</span><span>    </span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>0</span><span>;
+</span><span style=color:#fff>}
+</span><span>
+</span></code></pre><h3 id=jia-suo-de-lan-yi-dan-li-xian-cheng-an-quan><a aria-label="Anchor link for: jia-suo-de-lan-yi-dan-li-xian-cheng-an-quan" class=zola-anchor href=#jia-suo-de-lan-yi-dan-li-xian-cheng-an-quan>加锁的懒汉单例（线程安全）</a></h3><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=color:#6272a4>///////////////////  加锁的懒汉式实现  //////////////////
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>SingleInstance
+</span><span style=color:#fff>{
+</span><span>
+</span><span style=color:#ff79c6>public</span><span>:
+</span><span>    </span><span style=color:#6272a4>// 获取单实例对象
+</span><span>    </span><span style=color:#ff79c6>static</span><span> SingleInstance </span><span style=color:#ff79c6>*&</span><span style=color:#50fa7b>GetInstance</span><span>();
+</span><span>
+</span><span>    </span><span style=color:#6272a4>//释放单实例，进程退出时调用
+</span><span>    </span><span style=color:#ff79c6>static </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>deleteInstance</span><span>();
+</span><span>	
+</span><span>    </span><span style=color:#6272a4>// 打印实例地址
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>Print</span><span>();
+</span><span>
+</span><span style=color:#ff79c6>private</span><span>:
+</span><span>    </span><span style=color:#6272a4>// 将其构造和析构成为私有的，禁止外部构造和析构
+</span><span>    </span><span style=color:#50fa7b>SingleInstance</span><span>();
+</span><span>    </span><span style=color:#50fa7b>~SingleInstance</span><span>();
+</span><span>
+</span><span>    </span><span style=color:#6272a4>// 将其拷贝构造和赋值构造成为私有函数，禁止外部拷贝和赋值
+</span><span>    </span><span style=color:#50fa7b>SingleInstance</span><span>(</span><span style=color:#ff79c6>const</span><span> SingleInstance </span><span style=color:#ff79c6>&</span><span style=font-style:italic;color:#ffb86c>signal</span><span>);
+</span><span>    </span><span style=color:#ff79c6>const</span><span> SingleInstance </span><span style=color:#ff79c6>&</span><span style=color:#50fa7b>operator=</span><span>(</span><span style=color:#ff79c6>const</span><span> SingleInstance </span><span style=color:#ff79c6>&</span><span style=font-style:italic;color:#ffb86c>signal</span><span>);
+</span><span>
+</span><span style=color:#ff79c6>private</span><span>:
+</span><span>    </span><span style=color:#6272a4>// 唯一单实例对象指针
+</span><span>    </span><span style=color:#ff79c6>static</span><span> SingleInstance </span><span style=color:#ff79c6>*</span><span style=color:#fff>m_SingleInstance</span><span>;
+</span><span>    </span><span style=color:#ff79c6>static</span><span> std</span><span style=color:#ff79c6>::</span><span>mutex </span><span style=color:#fff>m_Mutex</span><span>;
+</span><span style=color:#fff>}</span><span>;
+</span><span>
+</span><span style=color:#6272a4>//初始化静态成员变量
+</span><span>SingleInstance </span><span style=color:#ff79c6>*</span><span>SingleInstance</span><span style=color:#ff79c6>::</span><span>m_SingleInstance </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>NULL</span><span>;
+</span><span>std</span><span style=color:#ff79c6>::</span><span>mutex SingleInstance</span><span style=color:#ff79c6>::</span><span style=color:#fff>m_Mutex</span><span>;
+</span><span>
+</span><span>SingleInstance </span><span style=color:#ff79c6>*&</span><span>SingleInstance</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>GetInstance</span><span>()
+</span><span style=color:#fff>{
+</span><span>
+</span><span>    </span><span style=color:#6272a4>//  这里使用了两个 if 判断语句的技术称为双检锁；好处是，只有判断指针为空的时候才加锁，
+</span><span>    </span><span style=color:#6272a4>//  避免每次调用 GetInstance 的方法都加锁，锁的开销毕竟还是有点大的。
+</span><span>    </span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#fff>m_SingleInstance </span><span style=color:#ff79c6>== </span><span style=color:#bd93f9>NULL</span><span>) 
+</span><span>    </span><span style=color:#fff>{
+</span><span>        std</span><span style=color:#ff79c6>::</span><span>unique_lock&LTstd</span><span style=color:#ff79c6>::</span><span>mutex> </span><span style=color:#50fa7b>lock</span><span>(</span><span style=color:#fff>m_Mutex</span><span>); </span><span style=color:#6272a4>// 加锁
+</span><span>        </span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#fff>m_SingleInstance </span><span style=color:#ff79c6>== </span><span style=color:#bd93f9>NULL</span><span>)
+</span><span>        </span><span style=color:#fff>{
+</span><span>            </span><span style=color:#fff>m_SingleInstance </span><span style=color:#ff79c6>= new </span><span>(std</span><span style=color:#ff79c6>::</span><span>nothrow) SingleInstance;
+</span><span>        </span><span style=color:#fff>}
+</span><span>    </span><span style=color:#fff>}
+</span><span>
+</span><span>    </span><span style=color:#ff79c6>return </span><span style=color:#fff>m_SingleInstance</span><span>;
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span>SingleInstance</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>deleteInstance</span><span>()
+</span><span style=color:#fff>{
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>unique_lock&LTstd</span><span style=color:#ff79c6>::</span><span>mutex> </span><span style=color:#50fa7b>lock</span><span>(</span><span style=color:#fff>m_Mutex</span><span>); </span><span style=color:#6272a4>// 加锁
+</span><span>    </span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#fff>m_SingleInstance</span><span>)
+</span><span>    </span><span style=color:#fff>{
+</span><span>        </span><span style=color:#ff79c6>delete </span><span style=color:#fff>m_SingleInstance</span><span>;
+</span><span>        </span><span style=color:#fff>m_SingleInstance </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>NULL</span><span>;
+</span><span>    </span><span style=color:#fff>}
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span>SingleInstance</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>Print</span><span>()
+</span><span style=color:#fff>{
+</span><span>	std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"我的实例内存地址是：" </span><span style=color:#ff79c6><< </span><span style=color:#bd93f9>this </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span style=color:#fff>}
+</span><span>
+</span><span>SingleInstance</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>SingleInstance</span><span>()
+</span><span style=color:#fff>{
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"构造函数" </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span style=color:#fff>}
+</span><span>
+</span><span>SingleInstance</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>~SingleInstance</span><span>()
+</span><span style=color:#fff>{
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"析构函数" </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span style=color:#fff>}
+</span><span style=color:#6272a4>///////////////////  加锁的懒汉式实现  //////////////////
+</span><span>
+</span></code></pre><h3 id=nei-bu-jing-tai-bian-liang-de-lan-yi-dan-li-c-11-xian-cheng-an-quan-meyer-s-singleton><a aria-label="Anchor link for: nei-bu-jing-tai-bian-liang-de-lan-yi-dan-li-c-11-xian-cheng-an-quan-meyer-s-singleton" class=zola-anchor href=#nei-bu-jing-tai-bian-liang-de-lan-yi-dan-li-c-11-xian-cheng-an-quan-meyer-s-singleton>内部静态变量的懒汉单例（C++11 线程安全）-- Meyer's Singleton</a></h3><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=color:#6272a4>///////////////////  内部静态变量的懒汉实现  //////////////////
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Single
+</span><span style=color:#fff>{
+</span><span>
+</span><span style=color:#ff79c6>public</span><span>:
+</span><span>    </span><span style=color:#6272a4>// 获取单实例对象
+</span><span>    </span><span style=color:#ff79c6>static</span><span> Single </span><span style=color:#ff79c6>&</span><span style=color:#50fa7b>GetInstance</span><span>();
+</span><span>	
+</span><span>	</span><span style=color:#6272a4>// 打印实例地址
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>Print</span><span>();
+</span><span>
+</span><span style=color:#ff79c6>private</span><span>:
+</span><span>    </span><span style=color:#6272a4>// 禁止外部构造
+</span><span>    </span><span style=color:#50fa7b>Single</span><span>();
+</span><span>
+</span><span>    </span><span style=color:#6272a4>// 禁止外部析构
+</span><span>    </span><span style=color:#50fa7b>~Single</span><span>();
+</span><span>
+</span><span>    </span><span style=color:#6272a4>// 禁止外部复制构造
+</span><span>    </span><span style=color:#50fa7b>Single</span><span>(</span><span style=color:#ff79c6>const</span><span> Single </span><span style=color:#ff79c6>&</span><span style=font-style:italic;color:#ffb86c>signal</span><span>);
+</span><span>
+</span><span>    </span><span style=color:#6272a4>// 禁止外部赋值操作
+</span><span>    </span><span style=color:#ff79c6>const</span><span> Single </span><span style=color:#ff79c6>&</span><span style=color:#50fa7b>operator=</span><span>(</span><span style=color:#ff79c6>const</span><span> Single </span><span style=color:#ff79c6>&</span><span style=font-style:italic;color:#ffb86c>signal</span><span>);
+</span><span style=color:#fff>}</span><span>;
+</span><span>
+</span><span>Single </span><span style=color:#ff79c6>&</span><span>Single</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>GetInstance</span><span>()
+</span><span style=color:#fff>{
+</span><span>    </span><span style=color:#6272a4>// 局部静态特性的方式实现单实例
+</span><span>    </span><span style=color:#ff79c6>static</span><span> Single signal;
+</span><span>    </span><span style=color:#ff79c6>return</span><span> signal;
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span>Single</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>Print</span><span>()
+</span><span style=color:#fff>{
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"我的实例内存地址是：" </span><span style=color:#ff79c6><< </span><span style=color:#bd93f9>this </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span style=color:#fff>}
+</span><span>
+</span><span>Single</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>Single</span><span>()
+</span><span style=color:#fff>{
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"构造函数" </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span style=color:#fff>}
+</span><span>
+</span><span>Single</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>~Single</span><span>()
+</span><span style=color:#fff>{
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"析构函数" </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span style=color:#fff>}
+</span><span>
+</span></code></pre><p>cpp standard 6.7 [stmt.dcl]<blockquote><p>If control ents the declaration concurrently while the variable is being initialized, the concurrent execution shall wait for completion of the initialization.</blockquote><h3 id=e-yi-dan-li-xian-cheng-an-quan><a aria-label="Anchor link for: e-yi-dan-li-xian-cheng-an-quan" class=zola-anchor href=#e-yi-dan-li-xian-cheng-an-quan>饿汉单例（线程安全）</a></h3><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=color:#6272a4>////////////////////////// 饿汉实现 /////////////////////
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Singleton
+</span><span style=color:#fff>{
+</span><span style=color:#ff79c6>public</span><span>:
+</span><span>    </span><span style=color:#6272a4>// 获取单实例
+</span><span>    </span><span style=color:#ff79c6>static</span><span> Singleton</span><span style=color:#ff79c6>* </span><span style=color:#50fa7b>GetInstance</span><span>();
+</span><span>
+</span><span>    </span><span style=color:#6272a4>// 释放单实例，进程退出时调用
+</span><span>    </span><span style=color:#ff79c6>static </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>deleteInstance</span><span>();
+</span><span>    
+</span><span>    </span><span style=color:#6272a4>// 打印实例地址
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>Print</span><span>();
+</span><span>
+</span><span style=color:#ff79c6>private</span><span>:
+</span><span>    </span><span style=color:#6272a4>// 将其构造和析构成为私有的，禁止外部构造和析构
+</span><span>    </span><span style=color:#50fa7b>Singleton</span><span>();
+</span><span>    </span><span style=color:#50fa7b>~Singleton</span><span>();
+</span><span>
+</span><span>    </span><span style=color:#6272a4>// 将其拷贝构造和赋值构造成为私有函数，禁止外部拷贝和赋值
+</span><span>    </span><span style=color:#50fa7b>Singleton</span><span>(</span><span style=color:#ff79c6>const</span><span> Singleton </span><span style=color:#ff79c6>&</span><span style=font-style:italic;color:#ffb86c>signal</span><span>);
+</span><span>    </span><span style=color:#ff79c6>const</span><span> Singleton </span><span style=color:#ff79c6>&</span><span style=color:#50fa7b>operator=</span><span>(</span><span style=color:#ff79c6>const</span><span> Singleton </span><span style=color:#ff79c6>&</span><span style=font-style:italic;color:#ffb86c>signal</span><span>);
+</span><span>
+</span><span style=color:#ff79c6>private</span><span>:
+</span><span>    </span><span style=color:#6272a4>// 唯一单实例对象指针
+</span><span>    </span><span style=color:#ff79c6>static</span><span> Singleton </span><span style=color:#ff79c6>*</span><span>g_pSingleton;
+</span><span style=color:#fff>}</span><span>;
+</span><span>
+</span><span style=color:#6272a4>// 代码一运行就初始化创建实例 ，本身就线程安全
+</span><span>Singleton</span><span style=color:#ff79c6>*</span><span> Singleton</span><span style=color:#ff79c6>::</span><span>g_pSingleton </span><span style=color:#ff79c6>= new </span><span>(std</span><span style=color:#ff79c6>::</span><span>nothrow) Singleton;
+</span><span>
+</span><span>Singleton</span><span style=color:#ff79c6>* </span><span>Singleton</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>GetInstance</span><span>()
+</span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>return</span><span> g_pSingleton;
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span>Singleton</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>deleteInstance</span><span>()
+</span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>if </span><span>(g_pSingleton)
+</span><span>    </span><span style=color:#fff>{
+</span><span>        </span><span style=color:#ff79c6>delete</span><span> g_pSingleton;
+</span><span>        g_pSingleton </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>NULL</span><span>;
+</span><span>    </span><span style=color:#fff>}
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span>Singleton</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>Print</span><span>()
+</span><span style=color:#fff>{
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"我的实例内存地址是：" </span><span style=color:#ff79c6><< </span><span style=color:#bd93f9>this </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span style=color:#fff>}
+</span><span>
+</span><span>Singleton</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>Singleton</span><span>()
+</span><span style=color:#fff>{
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"构造函数" </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span style=color:#fff>}
+</span><span>
+</span><span>Singleton</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>~Singleton</span><span>()
+</span><span style=color:#fff>{
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"析构函数" </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span style=color:#fff>}
+</span><span style=color:#6272a4>////////////////////////// 饿汉实现 /////////////////////
+</span><span>
+</span></code></pre><h3 id=te-dian-yu-xuan-ze><a aria-label="Anchor link for: te-dian-yu-xuan-ze" class=zola-anchor href=#te-dian-yu-xuan-ze>特点与选择</a></h3><ul><li>懒汉式是以时间换空间，适应于访问量较<strong>小</strong>时；推荐使用<strong>内部静态变量的懒汉单例</strong>，代码量少<li>饿汉式是以空间换时间，适应于访问量较<strong>大</strong>时，或者线程比较多的的情况</ul><p>--- update: 2024-01-13 ----<h2 id=singleton-and-shared-library><a aria-label="Anchor link for: singleton-and-shared-library" class=zola-anchor href=#singleton-and-shared-library>singleton and shared library</a></h2><p>@todo<h2 id=reference><a aria-label="Anchor link for: reference" class=zola-anchor href=#reference>reference</a></h2><ul><li>Hands-on deisng patterns with C++, chapter 15<li><a href=https://stackoverflow.com/questions/8623657/multiple-instances-of-singleton-across-shared-libraries-on-linux>singleton , dlopen and shared library</a><li><a href=https://yanqiyu.info/2023/11/11/singleton/>singleton is dangerous(static variable ctor/dtor order)</a></ul></article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'singleton',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - profile</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/profile/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2023-08-10T00:18:41+00:00</updated>
+    <id>https://wendajiang.github.io/tags/profile/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Profile (CPU or Memory)</title>
+        <published>2023-08-10T00:18:41+00:00</published>
+        <updated>2023-08-10T00:18:41+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/profile-cpu-or-memory/" type="text/html"/>
+        <id>https://wendajiang.github.io/profile-cpu-or-memory/</id>
+        <content type="html">&lt;h1 id=&quot;introduction&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#introduction&quot; aria-label=&quot;Anchor link for: introduction&quot;&gt;introduction&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;There alternative through to profile the memory usage:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;perf record -e syscalls:sys_enter_mmap&#x2F;brk -e page-faults &amp;amp;&amp;amp; perf script &amp;amp;&amp;amp; flamegraph git repo perl tools output the flamegraph.svg&lt;&#x2F;li&gt;
+&lt;li&gt;bpf tools recommand the linux kernel version is new&lt;&#x2F;li&gt;
+&lt;li&gt;using tcmalloc&amp;amp;jemalloc and enable profile feature, using jeprof&#x2F;pprof to show the heap malloc dump
+&lt;ul&gt;
+&lt;li&gt;tcmalloc must compile application with -ltcmalloc&lt;&#x2F;li&gt;
+&lt;li&gt;jemalloc maybe not, need test
+after test, jemalloc can be used without -ljemalloc, but the prof result is inaccurate, so should be compile with -ljemalloc&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;a)	perf record only can record the syscalls:sys_enter_mmap&#x2F;brk, can’t trace the malloc, and the perf data is huge
+b)	ebpf need newer linux kernel version, dev host can not support
+c)	Using jemalloc to compile with vcom, and jeprof tool to show the sample data, cause vcom various strange crash or hangs.
+d)	tcmalloc profiler too slow&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;references&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#references&quot; aria-label=&quot;Anchor link for: references&quot;&gt;references&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.brendangregg.com&#x2F;&quot;&gt;brendangregg website&lt;&#x2F;a&gt;
+&lt;ul&gt;
+&lt;li&gt;https:&#x2F;&#x2F;www.brendangregg.com&#x2F;blog&#x2F;2021-05-23&#x2F;what-is-observability.html&lt;&#x2F;li&gt;
+&lt;li&gt;https:&#x2F;&#x2F;www.brendangregg.com&#x2F;perf.html#Prerequisites&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;558677729&quot;&gt;jemalloc how to transfer flamegraph&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;jemalloc&#x2F;jemalloc&#x2F;wiki&#x2F;Use-Case%3A-Heap-Profiling&quot;&gt;jemalloc basic usage of heap profiling&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;http:&#x2F;&#x2F;jemalloc.net&#x2F;jemalloc.3.html#tuning&quot;&gt;jemalloc tune&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;jemalloc&#x2F;jemalloc&#x2F;issues&#x2F;1318&quot;&gt;jemalloc deadlock, and enable-debug to catch dange memory operation&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;http:&#x2F;&#x2F;ithare.com&#x2F;testing-memory-allocators-ptmalloc2-tcmalloc-hoard-jemalloc-while-trying-to-simulate-real-world-loads&#x2F;&lt;&#x2F;li&gt;
+&lt;li&gt;https:&#x2F;&#x2F;www.cyningsun.com&#x2F;07-07-2018&#x2F;memory-allocator-contrasts.html&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;google&#x2F;tcmalloc&#x2F;blob&#x2F;master&#x2F;docs&#x2F;gperftools.md&quot;&gt;tcmalloc-depecrated gperftools&lt;&#x2F;a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;gperftools.github.io&#x2F;gperftools&#x2F;heapprofile.html&quot;&gt;gperftools&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+</feed>

@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - so</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/so/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-04-25T11:01:19+00:00</updated>
+    <id>https://wendajiang.github.io/tags/so/atom.xml</id>
+    <entry xml:lang="en">
+        <title>strip</title>
+        <published>2023-06-08T00:07:57+00:00</published>
+        <updated>2023-06-08T00:07:57+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/strip/" type="text/html"/>
+        <id>https://wendajiang.github.io/strip/</id>
+        <content type="html">&lt;h1 id=&quot;real-world-scenario&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#real-world-scenario&quot; aria-label=&quot;Anchor link for: real-world-scenario&quot;&gt;real-world scenario&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;When we release our products, that is cpp project, we &lt;code&gt;strip&lt;&#x2F;code&gt; all files, then we can&#x27;t not compile. The problem is the cpp project&#x27;s dependencies have static library and striped static library can not be linked.&lt;&#x2F;p&gt;
+&lt;p&gt;So I google the strip&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;strip-execute-binary&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#strip-execute-binary&quot; aria-label=&quot;Anchor link for: strip-execute-binary&quot;&gt;strip execute binary&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;no problem when execute&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;strip-object-file&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#strip-object-file&quot; aria-label=&quot;Anchor link for: strip-object-file&quot;&gt;strip object file&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;After strip the object file, and compile it into binary, &lt;strong&gt;link error happen&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;strip-shared-library&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#strip-shared-library&quot; aria-label=&quot;Anchor link for: strip-shared-library&quot;&gt;strip shared library&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;After strip the shared library, compile success, and run it correctly.&lt;&#x2F;p&gt;
+&lt;p&gt;So why the shared library (the .symtab section removed) can run correctly?&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;shared-library&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#shared-library&quot; aria-label=&quot;Anchor link for: shared-library&quot;&gt;&lt;a href=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;shared-library&#x2F;&quot;&gt;Shared library&lt;&#x2F;a&gt;&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;Even stripped libraries still must retain the symbols necessary for dynamic linking. There are usually placed in a section named &lt;code&gt;.dynsym&lt;&#x2F;code&gt; and are also pointed to by the entries in the dynamic secion.&lt;&#x2F;p&gt;
+&lt;p&gt;I can see that event though the stripped library miss the &lt;code&gt;.symtab&lt;&#x2F;code&gt; section, the &lt;code&gt;.dymsym&lt;&#x2F;code&gt; is still present. In fact, the section table can be removed as well(.e.g with sstrip) and the file will still work. This is because the dynamic linker only uses the program headers(aka the segment table), the &lt;code&gt;DYNAMIC&lt;&#x2F;code&gt; segment corresponds to the &lt;code&gt;.dynamic&lt;&#x2F;code&gt; section and contains information for the dynamic linker.&lt;&#x2F;p&gt;
+&lt;p&gt;In the &lt;code&gt;.dynamic&lt;&#x2F;code&gt; section, &lt;code&gt;STRTAB&lt;&#x2F;code&gt; and &lt;code&gt;SYMTAB&lt;&#x2F;code&gt; the two entries are necessary for symbol resolution. The together make up the dynamic symbol table:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;Symbol&lt;&#x2F;span&gt;&lt;span&gt; table &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;#39;.dynsym&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt; contains 91 entries:
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;Num:&lt;&#x2F;span&gt;&lt;span&gt; Value   Size Type     Bind  Vis      Ndx   Name
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;0:&lt;&#x2F;span&gt;&lt;span&gt; 0000000    0  NOTYPE  LOCAL  DEFAULT UND
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;6:&lt;&#x2F;span&gt;&lt;span&gt; 0000000    0  FUNC    GLOBAL  DEFAULT UND  clock_gettime
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;7:&lt;&#x2F;span&gt;&lt;span&gt; 000026e1   88 FUNC    GLOBAL  DEFAULT 7    ifc_init
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You can see that is contains both &lt;code&gt;UND&lt;&#x2F;code&gt;(undefined) symbols - those required by the library and imported from other .so, and the &#x27;normal&#x27; global symbols which are exported by the library for its users. The exported symbols have their addresses inside the library listed in the Value column.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;reference&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#reference&quot; aria-label=&quot;Anchor link for: reference&quot;&gt;reference&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;https:&#x2F;&#x2F;reverseengineering.stackexchange.com&#x2F;questions&#x2F;2038&#x2F;how-are-stripped-shared-libraries-linked-against&lt;&#x2F;li&gt;
+&lt;li&gt;http:&#x2F;&#x2F;wen00072.github.io&#x2F;blog&#x2F;2015&#x2F;11&#x2F;16&#x2F;tan-tan-strip&#x2F;&lt;&#x2F;li&gt;
+&lt;li&gt;https:&#x2F;&#x2F;www.internalpointers.com&#x2F;post&#x2F;journey-across-static-dynamic-libraries&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h1 id=&quot;futher-read&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#futher-read&quot; aria-label=&quot;Anchor link for: futher-read&quot;&gt;futher read&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;https:&#x2F;&#x2F;tldp.org&#x2F;HOWTO&#x2F;Program-Library-HOWTO&#x2F;index.html&lt;&#x2F;li&gt;
+&lt;li&gt;how to write shared library [Ulrich Drepper]&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>shared library</title>
+        <published>2023-03-04T09:07:19+00:00</published>
+        <updated>2024-04-25T11:01:19+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/shared-library/" type="text/html"/>
+        <id>https://wendajiang.github.io/shared-library/</id>
+        <content type="html">&lt;p&gt;update at 2023-06-15&lt;&#x2F;p&gt;
+&lt;p&gt;update at 2023-07-27&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;problem&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#problem&quot; aria-label=&quot;Anchor link for: problem&quot;&gt;problem&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;In one scenoria, I find this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; ldd &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;main
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;    libstdc++.so.6 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;lib64&#x2F;libstdc++.so.6 (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;0x00007ffff7828000&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;     &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;span&gt;     &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;&#x2F;home&#x2F;david&#x2F;foo.so&lt;&#x2F;span&gt;&lt;span&gt; (0xxxxx)
+&lt;&#x2F;span&gt;&lt;span&gt;     &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;&#x2F;lib64&#x2F;ld-linux-x86-64.so.2&lt;&#x2F;span&gt;&lt;span&gt; (0x00007ffff7dd4000)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And if the &#x2F;home&#x2F;david&#x2F;foo.so do not exist, I try to set LD_LIBRARY_PATH, change the rpath, and all not work. Why?&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-is-mean&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-is-mean&quot; aria-label=&quot;Anchor link for: what-is-mean&quot;&gt;What is mean?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;In the ELF execute file format, the dynamic library record the [NEEDED] section, and when [NEEDED] secion has no &lt;code&gt;&#x2F;&lt;&#x2F;code&gt; slash, the library directory resolve at run-time, and the rules order is&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;rpath&lt;&#x2F;li&gt;
+&lt;li&gt;LD_LIBRARY_PATH environment&lt;&#x2F;li&gt;
+&lt;li&gt;runpath&lt;&#x2F;li&gt;
+&lt;li&gt;&#x2F;etc&#x2F;ld.so.cache checked to see if it contains an entry for the library&lt;&#x2F;li&gt;
+&lt;li&gt;&#x2F;lib or &#x2F;usr&#x2F;lib&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;But if the [NEEDED] section has &#x2F; slash, the execute do not search by above rules, and directly use the path dynamic library.&lt;&#x2F;p&gt;
+&lt;p&gt;We should note, -Wl,-rpath=some&#x2F;path
+&lt;a href=&quot;http:&#x2F;&#x2F;xahlee.info&#x2F;UnixResource_dir&#x2F;_&#x2F;ldpath.html&quot;&gt;Why LD_LIBRARY_PATH is bad&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;how-to-resolve-it&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#how-to-resolve-it&quot; aria-label=&quot;Anchor link for: how-to-resolve-it&quot;&gt;How to resolve it?&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;first-should-find-why-it-happended-that-the-section-write-absulote-path&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#first-should-find-why-it-happended-that-the-section-write-absulote-path&quot; aria-label=&quot;Anchor link for: first-should-find-why-it-happended-that-the-section-write-absulote-path&quot;&gt;First should find why it happended that the section write absulote path&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; gcc &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;-o&lt;&#x2F;span&gt;&lt;span&gt; main &#x2F;home&#x2F;david&#x2F;foo.so
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This command cause it. However, I try this&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; gcc &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;-o&lt;&#x2F;span&gt;&lt;span&gt; main &#x2F;home&#x2F;david&#x2F;foo.so &#x2F;lib64&#x2F;libstdc++.so.6
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The libstdc++.so.6 is still the name and need to be searched at runtime, Why? &lt;&#x2F;p&gt;
+&lt;h2 id=&quot;the-underhood&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#the-underhood&quot; aria-label=&quot;Anchor link for: the-underhood&quot;&gt;The underhood&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; man &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;ld
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;I find the -soname option, it&#x27;s decribed as below:&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;When creating and ELF shared object, set the internal DT_SONAME field to the specified name. When an executable is linked with a shared object which has a DT_SONAME field, then when the executable is run the dynamic linker will attempt to load hte shared object specified by the DT_SOMANE field rather than the using the file name given to the linker.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;solution&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#solution&quot; aria-label=&quot;Anchor link for: solution&quot;&gt;Solution&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;So, I can create the foo.so by&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; gcc &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;-shared&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -Wl&lt;&#x2F;span&gt;&lt;span&gt;,-soname,libfoo.so foo.cc&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -o&lt;&#x2F;span&gt;&lt;span&gt; libfoo.so
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And, the main executable [NEEDED] section will be the libfoo.so name rather than the absolute path.&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h1 id=&quot;continuation&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#continuation&quot; aria-label=&quot;Anchor link for: continuation&quot;&gt;Continuation&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;bsymbolic-linker-option&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#bsymbolic-linker-option&quot; aria-label=&quot;Anchor link for: bsymbolic-linker-option&quot;&gt;-Bsymbolic linker option&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;After learning the soname, I read the &lt;code&gt;Bsymbolic&lt;&#x2F;code&gt; linker option in the tlpi book 41.12[Run-Time Symbol Resolution].&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; prog
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;xyz&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;main-xyz&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;func&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; libfoo.so
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;xyz&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;foo-xyz&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;func&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;xyz&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;What&#x27;s happened? It print &lt;code&gt;main-xzy&lt;&#x2F;code&gt;. &lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;A definition of a global symbol in the main program overrides a definition in a library.&lt;&#x2F;li&gt;
+&lt;li&gt;If a global symbol is defined in multiple libraries, then a reference to that symbol is bound to the first definition found by scanning libraries in the left-to-right order in which they were listed on the static link command line.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;These semantics make the transition from static to shared libraries relatively strightforward. But the most significant problem is that these semantics conflict with the model of a shared library as implementing a self-contained subsystem. By default, a shared library can&#x27;t guarantee that a reference to one of its own glboal symbols will actually be bound to the library&#x27;s definition of that symbol.&lt;&#x2F;p&gt;
+&lt;p&gt;In the above scenario, if we wanted to ensure that the invocation of &lt;code&gt;xyz()&lt;&#x2F;code&gt; in the shared library actually called the version of the function defined within the library, then we could use the &lt;code&gt;-Bsymbolic&lt;&#x2F;code&gt; linker option when building the shared library.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;man&lt;&#x2F;span&gt;&lt;span&gt; ld
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;-Bsymbolic &lt;&#x2F;p&gt;
+&lt;p&gt;When creating a shared library, bind references to global symbols to the definition within the shared library, if any. Normmally, it is possible for a program linked against a shared library to override the definition within the shared library. This option can also be used with the --export-dynamic option, when creating a position independent executable, to bind references to global symbols to the definition within the executable. This option is only meaningful on ELF paltforms which support shared libraries and position independent executables.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;but-the-bsymbolic-maybe-cause-ugly-problem&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#but-the-bsymbolic-maybe-cause-ugly-problem&quot; aria-label=&quot;Anchor link for: but-the-bsymbolic-maybe-cause-ugly-problem&quot;&gt;But, the Bsymbolic maybe cause ugly problem&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Oppus, I learn it first, and want to using it for my shared library. And the option conflict with &lt;a href=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;testing-framework&#x2F;&quot;&gt;doctest&lt;&#x2F;a&gt; using. &lt;&#x2F;p&gt;
+&lt;p&gt;I deep learn it and find if using singleton, it&#x27;s expected behavior is if main and shared-library using the one single instance, the &lt;code&gt;-Bsymbolic&lt;&#x2F;code&gt; option destroy it.&lt;&#x2F;p&gt;
+&lt;p&gt;So the &lt;code&gt;-Bsymbolic&lt;&#x2F;code&gt; using scenoria is the shared-library is self-contained model.&lt;&#x2F;p&gt;
+&lt;p&gt;the reference https:&#x2F;&#x2F;maskray.me&#x2F;blog&#x2F;2021-05-16-elf-interposition-and-bsymbolic explain the reason (pointer equality)
+and https:&#x2F;&#x2F;flameeyes.blog&#x2F;2012&#x2F;10&#x2F;07&#x2F;symbolism-and-elf-files-or-what-does-bsymbolic-do&#x2F;&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;supplement-linkers-loaders&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#supplement-linkers-loaders&quot; aria-label=&quot;Anchor link for: supplement-linkers-loaders&quot;&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.linuxjournal.com&#x2F;article&#x2F;6463&quot;&gt;Supplement&lt;&#x2F;a&gt; Linkers &amp;amp; Loaders&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;em&gt;Linking&lt;&#x2F;em&gt; is the process of combining various pieces of code and data together to form a single executable that can be loader in memory. Linking can be done at compile time, at load time(by loaders) and also at run time (by application programs).&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;compiler-linker-and-loader-in-action&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#compiler-linker-and-loader-in-action&quot; aria-label=&quot;Anchor link for: compiler-linker-and-loader-in-action&quot;&gt;Compiler, Linker and Loader in Action&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;cpp&lt;&#x2F;span&gt;&lt;span&gt; other-command-line-options a.c &#x2F;tmp&#x2F;a.i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;# preprocessor
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;cc1&lt;&#x2F;span&gt;&lt;span&gt; other-command-line-options &#x2F;tmp&#x2F;a.i&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -o&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;tmp&#x2F;a.s &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;# compiler proper
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;as&lt;&#x2F;span&gt;&lt;span&gt; other-command-line-options &#x2F;tmp&#x2F;a.s&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -o&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;tmp&#x2F;a.o &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;# assembler
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;# repeat for file b.c
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;ld&lt;&#x2F;span&gt;&lt;span&gt; other-command-line-options &#x2F;tmp&#x2F;a.o &#x2F;tmp&#x2F;b.o&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -o&lt;&#x2F;span&gt;&lt;span&gt; a.out
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;linkers-vs-loaders&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#linkers-vs-loaders&quot; aria-label=&quot;Anchor link for: linkers-vs-loaders&quot;&gt;Linkers vs Loaders&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Program Loading. This refers to copying a program image from hard disk to the main memory in order to put the program in ready-to-run state. In some cases, program loading also might invole allocating storage space or mapping virtual addresses to disk pages.&lt;&#x2F;li&gt;
+&lt;li&gt;Relocation. Compilers and assemblers generate the object code for each input module with a starting address of zero. Relocation is the process of assigning load addresses to different parts of the program by merging all sections of the same type into one section. The code and data section also are adjusted so they point to the correct runtime addresses.&lt;&#x2F;li&gt;
+&lt;li&gt;Symbol Resolution. A program is made up of multiple subprograms; reference of one subprogram to another is made through symbols. A linker&#x27;s job to resolve the reference by noting the symbol&#x27;s location and patching the caller&#x27;s object code.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;So a condiderable overlap exists between the functions of linkers and loaders. One way of think of them is: the loader does the program loading; the linker does the symbol resolution; and either of them can do the relocation.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;object-files&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#object-files&quot; aria-label=&quot;Anchor link for: object-files&quot;&gt;Object Files&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Relocatable object file, which contains binary code and data in a form that can be combined with other relocatable object files at compile time to create an executable object file.&lt;&#x2F;li&gt;
+&lt;li&gt;Executable object file, which contains binary code and data in a form that can be directly loader into memory and executed.&lt;&#x2F;li&gt;
+&lt;li&gt;Shared object file, which is a special type of relocatable object files that can be loaded into memory and linker dynamically, either at load time or at run time.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;ELF:&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;ELF Header&lt;&#x2F;th&gt;&lt;th&gt;starts with a 4-byte magic string \177ELF&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;.text&lt;&#x2F;td&gt;&lt;td&gt;the machine code of the compiled program&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;.rodata&lt;&#x2F;td&gt;&lt;td&gt;Read-only data, such as the format strings in printf stmt&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;.data&lt;&#x2F;td&gt;&lt;td&gt;initialized global variables&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;.bss&lt;&#x2F;td&gt;&lt;td&gt;uninitialized global varitables. BSS stands for block storage start, and this section actually occupies no space in the object file; it is merely a placer holder&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;.symtab&lt;&#x2F;td&gt;&lt;td&gt;a symbol table with information about functions and global variables defined and referenced in the program. This table does not contain any entries for local variables; those are maintained on the stack&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;.rel.text&lt;&#x2F;td&gt;&lt;td&gt;a list of locations in the .text section that need to be modified when the linker combines this object file with other object files&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;.rel.data&lt;&#x2F;td&gt;&lt;td&gt;relocation information for global variables referenced but not defined in the current module&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;.debug&lt;&#x2F;td&gt;&lt;td&gt;a debugging symbol table with entries for local and global variables. This section is present only if the compiler is invoked with -g option&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;.line&lt;&#x2F;td&gt;&lt;td&gt;a mapping between line numbers in the original C source program and machine code instructions in the .text section. This information is required by debugger programs&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;.strtab&lt;&#x2F;td&gt;&lt;td&gt;a string table for the symbol tables in the .symtab and .debug sections&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h2 id=&quot;symbols-and-symbol-resolution&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#symbols-and-symbol-resolution&quot; aria-label=&quot;Anchor link for: symbols-and-symbol-resolution&quot;&gt;Symbols and symbol resolution&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Every relocatable object file has a symbol table and associated symbols. In the context of a linker, the following kins of symbols are present:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Global symbols defined by the module and referenced by other modules. All non-static functions and global varitables fall in this category&lt;&#x2F;li&gt;
+&lt;li&gt;Global symbols referenced by the input module but defined elsewhere. All functions and variables with extern declaration fall in this category&lt;&#x2F;li&gt;
+&lt;li&gt;Local symbols defined and referenced exlusively by the input module. All static functions and static variables fall here.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;&lt;strong&gt;At compile time, the compilers exports each global symbol as either strong or weak. Functions and initialzed global variables get strong weight, while global uninitialized varaibles are weak.&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;linking-with-static-libraries&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#linking-with-static-libraries&quot; aria-label=&quot;Anchor link for: linking-with-static-libraries&quot;&gt;Linking with static libraries&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;During the process of symbol resolution using static libraries, linkers scans the relocatable object files and archives from left to right as input on the command line. During this scan, linker maintains a set of O, relocatable object files that go into the executable; a set U, unresolved symbols; and a set of D, symbols defined in previous input modules. Initially, all three sets are empty.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;for each input argument on the command line, linkers determintes if input is an object files or an archive. If input is relocatable object file, linkers adds it to set O, updates U and D and proceeds to next input file.&lt;&#x2F;li&gt;
+&lt;li&gt;if input is an archive, it scans through the list of member modules that constitute the archive to match any unresolved symbols present in U. If some archive member defines any unresolved symbol that archive member is added to the list O, and U and D are updated per symbols found in the archive member. This process is iterated for all member object files.&lt;&#x2F;li&gt;
+&lt;li&gt;After all the input arguments are processed through the above two steps, if U is found be not empty, linker prints an error report and terminates. Otherwise, it merges and relocated the object files in O to build the ouput executable file.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;This also explains why static libraries are placed at the end of the linker command. &lt;strong&gt;Special care must be taken in cases of cyclic dependencies libraries.&lt;&#x2F;strong&gt; Input libraries must be ordered so each symbol is referenced by a member of an archive and at least one definition of a symbol is followed by a reference to it on the command line. Also, if an unresolved symbol is defined in more than one static library moduels, the definition is picked from the first library found in the command line.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;relocation&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#relocation&quot; aria-label=&quot;Anchor link for: relocation&quot;&gt;Relocation&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Once the linker has resolved all the symbols, each symbol reference has exactly one definition. At this point, linker starts the process of relocation, which involves the following two steps:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Relocaing sections and symbol definitions. Linker merges all the sections of the same type into a new single section. The linker then assigns runtime memory addresses to new aggregate sections, to each section defined by the input module and also to each symbol. After the completion of this step, every instruction and global variable in the program has a unique loadtime address&lt;&#x2F;li&gt;
+&lt;li&gt;Relocating symbolo reference within sections. In this step, linker modifies every symbol reference in the code and data sections so they point to the correct loadtime addresses.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Whenever assembler encounters an unresolved symbol, it generates a relocation entry for that object and places it in the .relo.text&#x2F;.relo.data sections. A relocation entry contains information about how to resolve the reference. A typical ELF relocation entry contains the following members:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Offset, a section offset of the reference that needs to be relocated. For a relocatable file, this value is the byte offset from the beginning of the section to the storage unit affected by relocation.&lt;&#x2F;li&gt;
+&lt;li&gt;Symbol, a symbol the modified reference should point to. It is the symbol table index with respect to which the relocation must be made.&lt;&#x2F;li&gt;
+&lt;li&gt;Type, the relocation type, normally R_386_PC32, that signifies PC-relative addressing. R_386_32 signifies absolute addressing.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;The linker iterates over all the relocation entries present in the relocatable object modules and relocates the unresolved symbols depending on the type. For R_386_PC32, the relocating address is calculated as S + A - P; for R_386_32 type, the address is calculated as S + A. In these calculations, S denotes the value of the symbol from the relocation entry, P denotes the section offset or address of the storage unit being relocated (computed using the value of offset from relocation entry) and A is the address needed to compute the value of the relocatable field.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;dynamic-linking-shared-libraries&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#dynamic-linking-shared-libraries&quot; aria-label=&quot;Anchor link for: dynamic-linking-shared-libraries&quot;&gt;Dynamic linking: Shared libraries&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;A shared library is an object module that can be loaded at run time at an arbitrary memory address, and it can be linked to by a program in memory.&lt;&#x2F;p&gt;
+&lt;p&gt;-fPIC option tells the compiler to generate position independent code (PIC)&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;gcc&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -shared -fPIC -o&lt;&#x2F;span&gt;&lt;span&gt; libfoo.so a.o b.o
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;gcc&lt;&#x2F;span&gt;&lt;span&gt; bar.o .&#x2F;libfoo.so
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The executable simply contains some relocation and symbol table information that allow references to code and data in libfoo.so to be resolved at run time. Thus, a.out here is a partially executable file that still has its dependency in libfoo.so. The executable also contains a .interp section that contains the name of the dynamic linker, which itself is a shared object on Linux systems (ld-linux.so). So, when the executable is loaded into memory, the loader passes control to the dynamic linker. The dynamic linker contains some start-up code that maps the shared libraries to the program&#x27;s address space. It then does the following:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;relocates the text and data of libfoo.so into memory segment; and&lt;&#x2F;li&gt;
+&lt;li&gt;relocateds any references in a.out to symbols defined by libfoo.so&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Finaly, the dynamic linker passes control to the application. From this point on, location of shared object is fixed in the memory.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;loading-shared-libraries-from-applications&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#loading-shared-libraries-from-applications&quot; aria-label=&quot;Anchor link for: loading-shared-libraries-from-applications&quot;&gt;Loading shared libraries from applications&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;dlopen &#x2F; dlsym &#x2F; dlclose&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;tools-for-manipulating-object-files&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#tools-for-manipulating-object-files&quot; aria-label=&quot;Anchor link for: tools-for-manipulating-object-files&quot;&gt;Tools for manipulating object files&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;ar: creates static libraries&lt;&#x2F;li&gt;
+&lt;li&gt;objdump: this is the most important binary tool; it can be used to display all the information in an object binary file&lt;&#x2F;li&gt;
+&lt;li&gt;strings: list all the printable strings in binary file&lt;&#x2F;li&gt;
+&lt;li&gt;nm: lists the symbols defined in the symbol table of an object file&lt;&#x2F;li&gt;
+&lt;li&gt;ldd: lists the shared libraries on which the object binary is dependent&lt;&#x2F;li&gt;
+&lt;li&gt;strip: deletes the symbol table information&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h1 id=&quot;executable-shared-library&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#executable-shared-library&quot; aria-label=&quot;Anchor link for: executable-shared-library&quot;&gt;executable shared-library&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;This &lt;a href=&quot;http:&#x2F;&#x2F;www.rkoucha.fr&#x2F;tech_corner&#x2F;executable_lib.html&quot;&gt;blog&lt;&#x2F;a&gt; describe in detail.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;1449987&#x2F;building-a-so-that-is-also-an-executable&#x2F;1451482#1451482&quot;&gt;stackoverflow&lt;&#x2F;a&gt; introduct a more realistic example &lt;a href=&quot;https:&#x2F;&#x2F;git.kernel.org&#x2F;pub&#x2F;scm&#x2F;libs&#x2F;libcap&#x2F;libcap.git&#x2F;tree&#x2F;libcap&#x2F;execable.h&quot;&gt;pcap&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;reference&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#reference&quot; aria-label=&quot;Anchor link for: reference&quot;&gt;reference&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;https:&#x2F;&#x2F;tldp.org&#x2F;HOWTO&#x2F;Program-Library-HOWTO&#x2F;shared-libraries.html&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;nm&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -g&lt;&#x2F;span&gt;&lt;span&gt; main &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;rg&lt;&#x2F;span&gt;&lt;span&gt; rpath
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;readelf&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -p&lt;&#x2F;span&gt;&lt;span&gt; man &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;rg&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -i&lt;&#x2F;span&gt;&lt;span&gt; needed
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;objdump&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -p&lt;&#x2F;span&gt;&lt;span&gt; main &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;rg&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -i&lt;&#x2F;span&gt;&lt;span&gt; needed
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;the rules order of runtime search dynamic library is tlpi book section 41.11&lt;&#x2F;li&gt;
+&lt;li&gt;Another useful environment variable in the GNU C loader is LD_DEBUG. This triggers the dl* functions so that they give quite verbose  information on what they are doing. For example:&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;export &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;LD_DEBUG&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;files
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;command_to_run
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+displays the processing of files and libraries when handling libraries, telling you what dependencies are detected and which SOs are loaded in what order. Setting LD_DEBUG to &lt;code&gt;bindings&lt;&#x2F;code&gt; displays information about symbol binding, setting it to &lt;code&gt;libs&lt;&#x2F;code&gt; displays the library search paths, and setting it to &lt;code&gt;versions&lt;&#x2F;code&gt; displays the version depdendencies.
+Setting LD_DEBUG to &lt;code&gt;help&lt;&#x2F;code&gt; and then trying to run a program will list the possible options. Again, LD_DEBUG isn&#x27;t intended for normal use, but it can be handy when debugging and testing.&lt;&#x2F;li&gt;
+&lt;li&gt;https:&#x2F;&#x2F;zerol.me&#x2F;2021&#x2F;06&#x2F;13&#x2F;Linker-Symbol-Conflict&#x2F;&lt;&#x2F;li&gt;
+&lt;li&gt;https:&#x2F;&#x2F;maskray.me&#x2F;blog&#x2F;2021-05-16-elf-interposition-and-bsymbolic&lt;&#x2F;li&gt;
+&lt;li&gt;https:&#x2F;&#x2F;flameeyes.blog&#x2F;2012&#x2F;10&#x2F;07&#x2F;symbolism-and-elf-files-or-what-does-bsymbolic-do&#x2F;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;49138195&#x2F;whats-the-difference-between-rpath-link-and-l&quot;&gt;ldd and linker(ld) both use RPATH&#x2F;RUNPATH to find the dependencies&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;medium.com&#x2F;obscure-system&#x2F;rpath-vs-runpath-883029b17c45&quot;&gt;rpath and runpath order and exploration&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>One dynamic library problem</title>
+        <published>2023-01-11T15:43:29+00:00</published>
+        <updated>2023-01-11T15:43:29+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/one-dynamic-library-problem/" type="text/html"/>
+        <id>https://wendajiang.github.io/one-dynamic-library-problem/</id>
+        <content type="html">&lt;p&gt;记一次库连接的问题。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;wen-ti&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#wen-ti&quot; aria-label=&quot;Anchor link for: wen-ti&quot;&gt;问题&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;场景是这样的&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;1. liba.so link the grpc++.a
+&lt;&#x2F;span&gt;&lt;span&gt;2. binary b link the liba.so and the grpc++.a
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;因为 link 顺序的导致 binary b 优先使用 liba.so 中有的 grpc++.a symbol，liba.so 中没有的才去 link grpc++.a，这导致一些比较微妙的运行时问题，而且是偶现的&lt;&#x2F;p&gt;
+&lt;p&gt;所以还是对于写动态库没有经验，这个问题说明要控制动态库 visibility 的 symbol&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;kong-zhi-symbol-visibility-de-fang-fa&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#kong-zhi-symbol-visibility-de-fang-fa&quot; aria-label=&quot;Anchor link for: kong-zhi-symbol-visibility-de-fang-fa&quot;&gt;控制 symbol visibility 的方法&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;1-fvisibility-hidden&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#1-fvisibility-hidden&quot; aria-label=&quot;Anchor link for: 1-fvisibility-hidden&quot;&gt;1. -fvisibility=hidden&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;在代码中加入 &lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;__attribute&lt;&#x2F;span&gt;&lt;span&gt;((&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;visibility&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;default&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)))__ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;foo&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;然后编译时使用 &lt;code&gt;-fvisibility=hidden&lt;&#x2F;code&gt; 选项就可以只暴露 foo 这种 API&lt;&#x2F;p&gt;
+&lt;p&gt;但是这个方法不适合开始介绍的问题，因为 grpc++.a 中的 symbol visibility 不受我们的代码控制&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;2-wl-exclude-libs&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#2-wl-exclude-libs&quot; aria-label=&quot;Anchor link for: 2-wl-exclude-libs&quot;&gt;2. -Wl,--exclude-libs,...&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;ld 中有 &lt;code&gt;--exclude-libs&lt;&#x2F;code&gt; 这个选项，可以 man 查看详情，会移除 archive 中 automatic export 的符号，经实验，使用前 grpc 相关的符号有 4000，使用后 grpc 相关的符号 300，还是很有用&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;3-ld-version-script&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#3-ld-version-script&quot; aria-label=&quot;Anchor link for: 3-ld-version-script&quot;&gt;3. ld version-script&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;最强控制 export，参考 &lt;a href=&quot;https:&#x2F;&#x2F;sourceware.org&#x2F;binutils&#x2F;docs&#x2F;ld&#x2F;VERSION.html&quot;&gt;script 写法&lt;&#x2F;a&gt;，甚至支持 C++ mangle 前的写法&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;global:
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;extern &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;C++&amp;quot; &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    foo::zoo::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;   }&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;moo&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;liba.so 只会暴露 script 指定的 symbol，grpc public 的只剩下两个&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;one_dynamic_library_problem&#x2F;image-20230111174331686.png&quot; alt=&quot;image-20230111174331686&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;fan-wai&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#fan-wai&quot; aria-label=&quot;Anchor link for: fan-wai&quot;&gt;番外&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;foo&lt;&#x2F;span&gt;&lt;span&gt;(std&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;p&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  std&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;cout &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;lt;&amp;lt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;foo:&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;lt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt; p &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;lt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt; std&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;endl;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;foo&lt;&#x2F;span&gt;&lt;span&gt;(std&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;p&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;asm&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;rename&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;extern &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;C&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;rename&lt;&#x2F;span&gt;&lt;span&gt;(std&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;p&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;rename&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;test&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;会发生什么？调用到了 foo 函数！&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;reference&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#reference&quot; aria-label=&quot;Anchor link for: reference&quot;&gt;reference&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;shi-yong-dao-de-research-gong-ju&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#shi-yong-dao-de-research-gong-ju&quot; aria-label=&quot;Anchor link for: shi-yong-dao-de-research-gong-ju&quot;&gt;使用到的 research 工具&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;nm&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -C -g&lt;&#x2F;span&gt;&lt;span&gt; liba.so
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;readelf&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -a&lt;&#x2F;span&gt;&lt;span&gt; liba.so &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;rg&lt;&#x2F;span&gt;&lt;span&gt; RPATH
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;chrpath&lt;&#x2F;span&gt;&lt;span&gt; liba.so&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -r &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt;new path&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;gt; 
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;or&lt;&#x2F;span&gt;&lt;span&gt; use patchelf, but do not this time
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;readelf&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -a&lt;&#x2F;span&gt;&lt;span&gt; liba.so &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;rg&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -i&lt;&#x2F;span&gt;&lt;span&gt; RPATH
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;link&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#link&quot; aria-label=&quot;Anchor link for: link&quot;&gt;link&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;https:&#x2F;&#x2F;blog.csdn.net&#x2F;found&#x2F;article&#x2F;details&#x2F;105263450&lt;&#x2F;li&gt;
+&lt;li&gt;https:&#x2F;&#x2F;holtstrom.com&#x2F;michael&#x2F;blog&#x2F;post&#x2F;437&#x2F;Shared-Library-Symbol-Conflicts-%28on-Linux%29.html&lt;&#x2F;li&gt;
+&lt;li&gt;https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;8432431&#x2F;ld-script-for-symbol-hidding-in-c&lt;&#x2F;li&gt;
+&lt;li&gt;https:&#x2F;&#x2F;www.akkadia.org&#x2F;drepper&#x2F;dsohowto.pdf&lt;&#x2F;li&gt;
+&lt;li&gt;https:&#x2F;&#x2F;jdhao.github.io&#x2F;2020&#x2F;02&#x2F;16&#x2F;ripgrep_cheat_sheet&#x2F;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+</feed>

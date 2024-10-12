@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - interview</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/interview/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2021-10-14T10:44:47+00:00</updated>
+    <id>https://wendajiang.github.io/tags/interview/atom.xml</id>
+    <entry xml:lang="en">
+        <title>反向面试</title>
+        <published>2021-10-14T10:44:47+00:00</published>
+        <updated>2021-10-14T10:44:47+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/essay/reverse-interview/" type="text/html"/>
+        <id>https://wendajiang.github.io/essay/reverse-interview/</id>
+        <content type="html">&lt;!--
+mermaid example:
+&lt;div class=&quot;mermaid&quot;&gt;
+    mermaid program
+&lt;&#x2F;div&gt;
+--&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;yifeikong&#x2F;reverse-interview-zh&quot;&gt;github连接&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;zhi-ze&quot;&gt;职责&lt;&#x2F;h2&gt;
+&lt;h2 id=&quot;ji-zhu&quot;&gt;技术&lt;&#x2F;h2&gt;
+&lt;h2 id=&quot;tuan-dui&quot;&gt;团队&lt;&#x2F;h2&gt;
+&lt;h2 id=&quot;qian-zai-tong-shi-lei-xing&quot;&gt;潜在同事类型&lt;&#x2F;h2&gt;
+&lt;h2 id=&quot;gong-si&quot;&gt;公司&lt;&#x2F;h2&gt;
+&lt;h2 id=&quot;she-hui-wen-ti-guo-nei-bu-tai-xu-yao&quot;&gt;社会问题（国内不太需要？）&lt;&#x2F;h2&gt;
+&lt;h2 id=&quot;chong-tu&quot;&gt;冲突&lt;&#x2F;h2&gt;
+&lt;h2 id=&quot;shang-ye-hua&quot;&gt;商业化&lt;&#x2F;h2&gt;
+&lt;h2 id=&quot;remote-work&quot;&gt;remote work&lt;&#x2F;h2&gt;
+&lt;h2 id=&quot;ban-gong-shi-bu-ju&quot;&gt;办公室布局&lt;&#x2F;h2&gt;
+&lt;h2 id=&quot;dai-yu&quot;&gt;待遇&lt;&#x2F;h2&gt;
+&lt;h2 id=&quot;xiu-jia&quot;&gt;休假&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;带薪休假时间有多久？&lt;&#x2F;li&gt;
+&lt;li&gt;病假和事假是分开的还是一起算？&lt;&#x2F;li&gt;
+&lt;li&gt;我可以提前使用假期时间吗？也就是说应休假期是负的？&lt;&#x2F;li&gt;
+&lt;li&gt;假期的更新策略是什么样的？也就是说未休的假期能否滚入下一周期&lt;&#x2F;li&gt;
+&lt;li&gt;照顾小孩的政策如何？&lt;&#x2F;li&gt;
+&lt;li&gt;无薪休假政策是什么样的？&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;!-- - 学术性休假政策是怎么样的？ --&gt;
+&lt;h2 id=&quot;zhong-ji-wen-ti-ban-song-ming&quot;&gt;终极问题（半送命）&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;该职位为何会空缺？&lt;&#x2F;li&gt;
+&lt;li&gt;公司如何保证人才不流失？&lt;&#x2F;li&gt;
+&lt;li&gt;这份工作 &#x2F; 团队 &#x2F; 公司最好和最坏的方面是？&lt;&#x2F;li&gt;
+&lt;li&gt;你最开始为什么选择了这家公司？&lt;&#x2F;li&gt;
+&lt;li&gt;你为什么留在这家公司？&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+</feed>

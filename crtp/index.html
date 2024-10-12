@@ -1,0 +1,135 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>CRTP | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/crtp/ rel=canonical><meta content=CRTP property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/crtp/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta content=2023-06-08T15:45:06 property=og:updated_time><meta content=CRTP property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/crtp/"
+      },
+      "headline": "CRTP",
+      "image": ,
+      "datePublished": "2023-06-08T15:45:06",
+      "dateModified": "2023-06-08T15:45:06",
+      "author": {
+        "@type": "Organization",
+        "name": "CRTP"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "CRTP",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Crtp",
+            "item": "https://wendajiang.github.io/crtp/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><script>function initMermaid(){var a={startOnLoad:true,theme:"neutral",flowchart:{useMaxWidth:true,htmlLabels:true}};mermaid.initialize(a);window.mermaid.init(undefined,document.querySelectorAll('.mermaid'))}</script><script async onload=initMermaid() src=https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/crtp/#what-crtp-is>What CRTP is</a></li><ul><li><a href=https://wendajiang.github.io/crtp/#what-could-go-wrong>What could go wrong</a></ul><li><a href=https://wendajiang.github.io/crtp/#what-the-crtp-can-bring-to-your-code>What the CRTP can bring to your code.</a></li><ul><li><a href=https://wendajiang.github.io/crtp/#static-compile-time-polymorphism-vs-dynamic-polymorphism>static(compile-time) polymorphism (vs dynamic polymorphism)</a><li><a href=https://wendajiang.github.io/crtp/#crtp-as-a-delegation-pattern-static-interface>CRTP as a delegation pattern(static interface)</a></ul><li><a href=https://wendajiang.github.io/crtp/#ref>ref</a></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>CRTP</h1><p><small>Posted 2023-06-08 15:45:06 ‐ <strong>3 min read</strong></small><p><div class=category-area>「 <a href=https://wendajiang.github.io/tags/templates> <div class=category>templates</div> </a><a href=https://wendajiang.github.io/tags/cpp> <div class=category>cpp</div> </a> 」</div></div><h1 id=what-crtp-is><a aria-label="Anchor link for: what-crtp-is" class=zola-anchor href=#what-crtp-is>What CRTP is</a></h1><p>The CRTP consists in:<ul><li>inheriting from a template class<li>use the derived class itself as a template parameter of the base class</ul><p>This is what it looks like in code:<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>template </span><span>&LTtypnema T>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Base </span><span style=color:#fff>{
+</span><span>  
+</span><span style=color:#fff>}</span><span>;
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Derived</span><span>: </span><span style=color:#ff79c6>public </span><span style=text-decoration:underline;font-style:italic;color:#8be9fd>Base</span><span>&LTDerived> </span><span style=color:#fff>{
+</span><span>
+</span><span style=color:#fff>}</span><span>;
+</span></code></pre><p>The purpose of doing this is using the derived class in the base class. From the perspective of the base object, the derived object is itself, but downcasted. Therefore the base class can access the derived class by <code>static_casting</code> itself into the derived class.<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>template</span><span>&LTtypnename T>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Base </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>do_something</span><span>() </span><span style=color:#fff>{
+</span><span>      T </span><span style=color:#ff79c6>&</span><span>derived </span><span style=color:#ff79c6>= static_cast</span><span>&LTT</span><span style=color:#ff79c6>&</span><span>>(</span><span style=color:#ff79c6>*</span><span style=color:#bd93f9>this</span><span>);
+</span><span>      use derived</span><span style=color:#ff79c6>...
+</span><span>    </span><span style=color:#fff>}
+</span><span style=color:#fff>}</span><span>;
+</span></code></pre><h2 id=what-could-go-wrong><a aria-label="Anchor link for: what-could-go-wrong" class=zola-anchor href=#what-could-go-wrong>What could go wrong</a></h2><p>If two classes happen to derive from the same CRTP base class we likely get to undefined behaviour when the CRTP will try to use the wrong class:<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Derived1</span><span>: </span><span style=color:#ff79c6>public </span><span style=text-decoration:underline;font-style:italic;color:#8be9fd>Base</span><span>&LTDerived1> </span><span style=color:#fff>{}
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Derived2</span><span>: </span><span style=color:#ff79c6>public </span><span style=text-decoration:underline;font-style:italic;color:#8be9fd>Base</span><span>&LTDerived1> </span><span style=color:#fff>{} </span><span style=color:#6272a4>// bug in this line of code
+</span></code></pre><p>There is solution to prevent this, that has been proposed by <a href=https://www.fluentcpp.com/2017/05/12/curiously-recurring-template-pattern/>fluentcpp comment</a>. It consists in adding a private constructor in the base class, and making the base class friend with the templated class.<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Base </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>    </span><span style=color:#6272a4>//
+</span><span>  </span><span style=color:#ff79c6>private</span><span>:
+</span><span>    </span><span style=color:#50fa7b>Base</span><span>() </span><span style=color:#fff>{}
+</span><span>    </span><span style=color:#ff79c6>friend</span><span> T;
+</span><span style=color:#fff>}</span><span>;
+</span></code></pre><p>Indeed, the constructors of the derived class have to call the constructor of the base class. Since the ctor in the base class is private, no one can access it except the friend classes. And the only friend class is ... the template class! So if the derived class is different from the template class, The code doesn't compile.<h1 id=what-the-crtp-can-bring-to-your-code><a aria-label="Anchor link for: what-the-crtp-can-bring-to-your-code" class=zola-anchor href=#what-the-crtp-can-bring-to-your-code>What the CRTP can bring to your code.</a></h1><h2 id=static-compile-time-polymorphism-vs-dynamic-polymorphism><a aria-label="Anchor link for: static-compile-time-polymorphism-vs-dynamic-polymorphism" class=zola-anchor href=#static-compile-time-polymorphism-vs-dynamic-polymorphism>static(compile-time) polymorphism (vs dynamic polymorphism)</a></h2><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Amount </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>double </span><span style=color:#50fa7b>get_value</span><span>() </span><span style=color:#ff79c6>const </span><span style=color:#fff>{
+</span><span>      </span><span style=color:#ff79c6>return static_cast</span><span>&LTT </span><span style=color:#ff79c6>const&</span><span>>(</span><span style=color:#ff79c6>*</span><span style=color:#bd93f9>this</span><span>)</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>get_value</span><span>();
+</span><span>    </span><span style=color:#fff>}
+</span><span style=color:#fff>}</span><span>;
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Constant42</span><span>: </span><span style=color:#ff79c6>public </span><span style=text-decoration:underline;font-style:italic;color:#8be9fd>Amount</span><span>&LTConstant42> </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>double </span><span style=color:#50fa7b>get_value</span><span>() </span><span style=color:#ff79c6>const </span><span style=color:#fff>{</span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>42</span><span>;</span><span style=color:#fff>}
+</span><span style=color:#fff>}</span><span>;
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Variable</span><span>: </span><span style=color:#ff79c6>public </span><span style=text-decoration:underline;font-style:italic;color:#8be9fd>Amount</span><span>&LTVariable> </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>    </span><span style=color:#ff79c6>explicit </span><span style=color:#50fa7b>Variable</span><span>(</span><span style=font-style:italic;color:#8be9fd>int </span><span style=font-style:italic;color:#ffb86c>v</span><span>) :</span><span style=color:#fff>_value</span><span>(v) </span><span style=color:#fff>{}
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>double </span><span style=color:#50fa7b>get_value</span><span>() </span><span style=color:#ff79c6>const </span><span style=color:#fff>{ </span><span style=color:#ff79c6>return</span><span> _value; </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>private</span><span>:
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>int</span><span> _value;
+</span><span style=color:#fff>}</span><span>;
+</span><span>
+</span><span style=color:#6272a4>// client
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>print</span><span>(Amount&LTT> </span><span style=color:#ff79c6>const& </span><span style=font-style:italic;color:#ffb86c>amout</span><span>) </span><span style=color:#fff>{
+</span><span>  std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><<</span><span> amount</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>get_value</span><span>() </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>;
+</span><span style=color:#fff>}
+</span><span>
+</span><span>Constant42 c42;
+</span><span style=color:#50fa7b>print</span><span>(c42);
+</span><span>Variable </span><span style=color:#50fa7b>v</span><span>(</span><span style=color:#bd93f9>43</span><span>);
+</span><span style=color:#50fa7b>print</span><span>(v);
+</span><span style=color:#6272a4>// 42
+</span><span style=color:#6272a4>// 43
+</span></code></pre><h2 id=crtp-as-a-delegation-pattern-static-interface><a aria-label="Anchor link for: crtp-as-a-delegation-pattern-static-interface" class=zola-anchor href=#crtp-as-a-delegation-pattern-static-interface>CRTP as a delegation pattern(static interface)</a></h2><p>For example, auto generate the != operator<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> D> </span><span style=font-style:italic;color:#8be9fd>struct </span><span>not_euqal </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>friend </span><span style=font-style:italic;color:#8be9fd>bool </span><span style=color:#50fa7b>operator!=</span><span>(</span><span style=color:#ff79c6>const</span><span> D</span><span style=color:#ff79c6>& </span><span style=font-style:italic;color:#ffb86c>lhs</span><span>, </span><span style=color:#ff79c6>const</span><span> D</span><span style=color:#ff79c6>& </span><span style=font-style:italic;color:#ffb86c>rhs</span><span>) </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>return !</span><span>(lhs </span><span style=color:#ff79c6>==</span><span> rhs);
+</span><span>  </span><span style=color:#fff>}
+</span><span style=color:#fff>}</span><span>;
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>C</span><span>: </span><span style=color:#ff79c6>public </span><span style=text-decoration:underline;font-style:italic;color:#8be9fd>not_euqal</span><span>&LTC> </span><span style=color:#fff>{
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>int</span><span> _i;
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>    </span><span style=color:#50fa7b>C</span><span>(</span><span style=font-style:italic;color:#8be9fd>int </span><span style=font-style:italic;color:#ffb86c>i</span><span>) :</span><span style=color:#fff>_i</span><span>(i) </span><span style=color:#fff>{}
+</span><span>    </span><span style=color:#ff79c6>friend </span><span style=font-style:italic;color:#8be9fd>bool </span><span style=color:#50fa7b>operator==</span><span>(</span><span style=color:#ff79c6>const</span><span> C</span><span style=color:#ff79c6>& </span><span style=font-style:italic;color:#ffb86c>lhs</span><span>, </span><span style=color:#ff79c6>const</span><span> C</span><span style=color:#ff79c6>& </span><span style=font-style:italic;color:#ffb86c>rhs</span><span>) </span><span style=color:#fff>{
+</span><span>      </span><span style=color:#ff79c6>return</span><span> lhs</span><span style=color:#ff79c6>.</span><span style=color:#fff>_i </span><span style=color:#ff79c6>==</span><span> rhs</span><span style=color:#ff79c6>.</span><span style=color:#fff>_i</span><span>;
+</span><span>    </span><span style=color:#fff>}
+</span><span style=color:#fff>}</span><span>;
+</span></code></pre><h1 id=ref><a aria-label="Anchor link for: ref" class=zola-anchor href=#ref>ref</a></h1><ul><li><a href=https://www.fluentcpp.com/2017/05/16/what-the-crtp-brings-to-code/>fluentcpp</a><li>Hands-on Design Patterns with C++ Chapter 8</ul></article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'CRTP',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

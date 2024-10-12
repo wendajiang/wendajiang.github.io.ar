@@ -1,0 +1,68 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>GNU gcc 工具集整理, GNU Binutils | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/gnu-binutils-md/ rel=canonical><meta content="GNU gcc 工具集整理, GNU Binutils" property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/gnu-binutils-md/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta property=og:updated_time><meta content="GNU gcc 工具集整理, GNU Binutils" property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/gnu-binutils-md/"
+      },
+      "headline": "GNU gcc 工具集整理, GNU Binutils",
+      "image": ,
+      "datePublished": "2021-04-20T16:44:55",
+      "dateModified": "",
+      "author": {
+        "@type": "Organization",
+        "name": "GNU gcc 工具集整理, GNU Binutils"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "GNU gcc 工具集整理, GNU Binutils",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Gnu Binutils Md",
+            "item": "https://wendajiang.github.io/gnu-binutils-md/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><script>function initMermaid(){var a={startOnLoad:true,theme:"neutral",flowchart:{useMaxWidth:true,htmlLabels:true}};mermaid.initialize(a);window.mermaid.init(undefined,document.querySelectorAll('.mermaid'))}</script><script async onload=initMermaid() src=https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/gnu-binutils-md/#gnu-binutils>GNU Binutils</a><li><a href=https://wendajiang.github.io/gnu-binutils-md/#can-kao>参考</a><li><a href=https://wendajiang.github.io/gnu-binutils-md/#fu-lu>附录</a></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>GNU gcc 工具集整理, GNU Binutils</h1><p><small>Posted 2021-04-20 16:44:55 ‐ <strong>2 min read</strong></small><p><div class=category-area>「 <a href=https://wendajiang.github.io/tags/gcc> <div class=category>gcc</div> </a><a href=https://wendajiang.github.io/tags/tool> <div class=category>tool</div> </a> 」</div></div><p><a href=https://www.gnu.org/software/binutils/>GNU Binutils</a><h3 id=gnu-binutils><a aria-label="Anchor link for: gnu-binutils" class=zola-anchor href=#gnu-binutils>GNU Binutils</a></h3><p>GNU Binutils 是一套二进制工具集，主要由：<ul><li><strong>ld</strong> -- 链接器<li><strong>as</strong> -- 汇编器</ul><p>还包括<ul><li><p><strong>addr2line</strong> - Converts addresses into filenames and line numbers. backtrace/backtrace_symbol 输出的地址可以使用addr2line转化为</p><li><p><strong>ar</strong> - A utility for creating, modifying and extracting from archives. ar，Linux系统的一个备份压缩命令，用于创建、修改备存文件（archive），或从备存文件中提取成员文件。ar命令最常见的用法是将目标文件打包为静态链接库。</p><li><p><strong>c++filt</strong> - Filter to demangle encoded C++ symbols. 将符号转为代码,比如 c++filt _Z6myfunci -> myfunc(int) (centos 系统示例)</p><li><p><strong>gold</strong> - A new, faster, ELF only linker, still in beta test. 暂时忽略</p><li><p><strong>gprof</strong> - Displays profiling information.</p><li><p><strong>nlmconv</strong> - Converts object code into an NLM.</p><li><p><strong>nm</strong> - Lists symbols from object files.</p><li><p><strong>objcopy</strong> - Copies and translates object files.</p><li><p><strong>objdump</strong> - Displays information from object files.</p><li><p><strong>ranlib</strong> - Generates an index to the contents of an archive.</p><li><p><strong>readelf</strong> - Displays information from any ELF format object file.</p><li><p><strong>size</strong> - Lists the section sizes of an object or archive file. 例子： size bt_test text data bss dec hex filename 2553 672 16 3241 ca9 bt_test</p><li><p><strong>strings</strong> - Lists printable strings from files.</p><li><p><strong>strip</strong> - Discards symbols. "脱裤"，将文件中的符号表脱掉，"脱裤"后的文件无法使用addr2line来转化代码位置</p></ul><p>windows？暂时不管<ul><li><strong>dlltool</strong> - Creates files for building and using DLLs.<li><strong>windmc</strong> - A Windows compatible message compiler.<li><strong>windres</strong> - A compiler for Windows resource files.</ul><p>大多数程序使用 BFD(Binary File Descriptor library)来做 manipulation。其中很多还是用 opcodes 库来汇编和反汇编机器指令<h3 id=can-kao><a aria-label="Anchor link for: can-kao" class=zola-anchor href=#can-kao>参考</a></h3><p><a href=https://www.jianshu.com/p/2ec7ee43e3a1>ar,nm,ranlib使用详解</a><h3 id=fu-lu><a aria-label="Anchor link for: fu-lu" class=zola-anchor href=#fu-lu>附录</a></h3><p>nl -- 列出文件以及行数</article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'GNU gcc 工具集整理, GNU Binutils',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

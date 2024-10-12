@@ -1,0 +1,220 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>atomic and memory order in c++11 | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/atomic-and-memory-order/ rel=canonical><meta content="atomic and memory order in c++11" property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/atomic-and-memory-order/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta content=2023-03-14T20:58:47 property=og:updated_time><meta content="atomic and memory order in c++11" property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/atomic-and-memory-order/"
+      },
+      "headline": "atomic and memory order in c++11",
+      "image": ,
+      "datePublished": "2023-03-14T20:58:47",
+      "dateModified": "2023-03-14T20:58:47",
+      "author": {
+        "@type": "Organization",
+        "name": "atomic and memory order in c++11"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "atomic and memory order in c++11",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Atomic And Memory Order",
+            "item": "https://wendajiang.github.io/atomic-and-memory-order/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><script>function initMermaid(){var a={startOnLoad:true,theme:"neutral",flowchart:{useMaxWidth:true,htmlLabels:true}};mermaid.initialize(a);window.mermaid.init(undefined,document.querySelectorAll('.mermaid'))}</script><script async onload=initMermaid() src=https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/atomic-and-memory-order/#problem>Problem</a><li><a href=https://wendajiang.github.io/atomic-and-memory-order/#atomic-operation>Atomic operation</a><li><a href=https://wendajiang.github.io/atomic-and-memory-order/#consistency-model>Consistency model</a></li><ul><li><a href=https://wendajiang.github.io/atomic-and-memory-order/#linear-consistency>Linear consistency</a></li><ul><li><a href=https://wendajiang.github.io/atomic-and-memory-order/#sequential-consistency>Sequential consistency</a></ul><li><a href=https://wendajiang.github.io/atomic-and-memory-order/#causal-consistency>Causal consistency</a><li><a href=https://wendajiang.github.io/atomic-and-memory-order/#final-consistency>Final consistency</a></ul><li><a href=https://wendajiang.github.io/atomic-and-memory-order/#memory-order>Memory order</a></li><ul><li><a href=https://wendajiang.github.io/atomic-and-memory-order/#relaxed-model>Relaxed model</a><li><a href=https://wendajiang.github.io/atomic-and-memory-order/#rlease-consumption-model>Rlease/consumption model</a><li><a href=https://wendajiang.github.io/atomic-and-memory-order/#release-acquire-model>Release/acquire model</a><li><a href=https://wendajiang.github.io/atomic-and-memory-order/#sequential-consistent-model>Sequential consistent model</a></ul><li><a href=https://wendajiang.github.io/atomic-and-memory-order/#further-reading>further reading</a></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>atomic and memory order in c++11</h1><p><small>Posted 2023-03-14 20:58:47 ‐ <strong>9 min read</strong></small><p><div class=category-area>「 <a href=https://wendajiang.github.io/tags/atomic> <div class=category>atomic</div> </a><a href="https://wendajiang.github.io/tags/memory order"> <div class=category>memory order</div> </a> 」</div></div><p><a href=https://changkun.de/modern-cpp/en-us/07-thread/#7-5-Atomic-Operation-and-Memory-Model>reprint</a><h1 id=problem><a aria-label="Anchor link for: problem" class=zola-anchor href=#problem>Problem</a></h1><p>First, let's look at the code, and what is the output of the follow code ?<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=color:#ff79c6>#include </span><span style=color:#f1fa8c>&LTthread>
+</span><span style=color:#ff79c6>#include </span><span style=color:#f1fa8c>&LTiostream>
+</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#50fa7b>main</span><span>() </span><span style=color:#fff>{
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>int</span><span> a </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span>  </span><span style=color:#ff79c6>volatile </span><span style=font-style:italic;color:#8be9fd>int</span><span> flag </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span>  std</span><span style=color:#ff79c6>::</span><span>thread </span><span style=color:#50fa7b>t1</span><span>([</span><span style=color:#ff79c6>&</span><span>]() </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>while</span><span>(flag </span><span style=color:#ff79c6>!= </span><span style=color:#bd93f9>1</span><span>);
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>int</span><span> b </span><span style=color:#ff79c6>=</span><span> a;
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"b = " </span><span style=color:#ff79c6><<</span><span> b </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span>  </span><span style=color:#fff>}</span><span>);
+</span><span>  std</span><span style=color:#ff79c6>::</span><span>thread </span><span style=color:#50fa7b>t2</span><span>([</span><span style=color:#ff79c6>&</span><span>]() </span><span style=color:#fff>{
+</span><span>    a </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>5</span><span>;
+</span><span>    flag </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>1</span><span>;
+</span><span>  </span><span style=color:#fff>}</span><span>);
+</span><span>  t1</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>join</span><span>();
+</span><span>  t2</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>join</span><span>();
+</span><span>  </span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>0</span><span>;
+</span><span style=color:#fff>}
+</span></code></pre><p>Intuitively, it seems that <code>a=5</code>, in <code>t2</code> always executes before <code>flag = 1</code>, and <code>while(flag != 1)</code> in <code>t1</code>. It looks like there is a guarantee the line <code>std::cout << "b = " << b << std::endl;</code> will not be executed before the mark is changed. Logically, the value of <code>b</code> is 5. <strong>But the code behavior is undefined.</strong> Out-of-order execution of the CPU and the impact of the compiler on the rearrangement of instructions. Cause <code>a = 5</code> to occur after <code>flag = 1</code>. Thus <code>b</code> maybe output <code>0</code>.<h1 id=atomic-operation><a aria-label="Anchor link for: atomic-operation" class=zola-anchor href=#atomic-operation>Atomic operation</a></h1><p><code>std::mutex</code> can solve the problem of concurrent read and write, but the mutext is an operating system-level function. This is because the implementation of a mutex usually contains two basic principles:<ul><li>provide automatic state transition between threads, that is , "lock" state<li>Ensure that the memory of the manipulated variable is isolated from the critical section during the mutex operation.</ul><p>This is a very strong set of synchronization conditions, in other words when it is finally compiled into a CPU instruction, it will behave like a lot of instructions.<p>We should understand that under the modern CPU architecture, atomic operations at the CPU instruction level are provided. Therefore, int the C++11 multi-threaded shared variable reading and writing, the introduction of the <code>std::atomic</code> template, so that we instantiate an atomic type, will be an Atomic type read and write operations are minimized from a set of instructions to a single CPU instruction.<p>Of course, not all types provide atomic operations because the feasibility of atomic operations depends on the architecture of the CPU and whether the type structure being instantiated satisfies the memory alignment requirements of the architecture, so we can always pass <code>std::atomic&LTT>::is_lock_free</code> to check if the atom type needs to support atomic operations, for example:<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=color:#ff79c6>#include </span><span style=color:#f1fa8c>&LTatomic>
+</span><span style=color:#ff79c6>#include </span><span style=color:#f1fa8c>&LTiostream>
+</span><span style=font-style:italic;color:#8be9fd>struct </span><span>A </span><span style=color:#fff>{
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>float</span><span> x;
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>int</span><span> y;
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>long long</span><span> z;
+</span><span style=color:#fff>}
+</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#50fa7b>main</span><span>() </span><span style=color:#fff>{
+</span><span>  std</span><span style=color:#ff79c6>::</span><span>atomic&LTA> a;
+</span><span>  std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>boolalpha </span><span style=color:#ff79c6><<</span><span> a</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>is_lock_free</span><span>() </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span>  </span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>0</span><span>;
+</span><span style=color:#fff>}
+</span></code></pre><h1 id=consistency-model><a aria-label="Anchor link for: consistency-model" class=zola-anchor href=#consistency-model>Consistency model</a></h1><p>Mutliple threads executing in parallel, discussed at some macro level, can be roughly considered a distributed system. In a distributed system, any communication or even local operation takes a certain amount of time, and even unreliable communication occurs.<p>If we force the operation of a variable <code>v</code> between multiple threads to be atomic, that is, any thread after the operation of <code>v</code>, other threads can syncchronize to perceive changes in <code>v</code>, for the variable <code>v</code>, which appears as a sequential execution of the program, it does not have any efficiency gains due to the introduction of multithreading. Is there any way to accelerate this properly? The answer is to weaken the sychronization conditions between processes in atomic operations.<p>In principle, each thread can correspond to a cluster node, and the communication between threads is almost equivalent to communication between cluster node. Weakening the synchronization conditions between processes, usually we will consider four different consistency models:<h2 id=linear-consistency><a aria-label="Anchor link for: linear-consistency" class=zola-anchor href=#linear-consistency>Linear consistency</a></h2><p>Also known as strong consistency or atomic consistency. It requires that any read operation can read the most recent write of a certain data, the the order of operation of all threads is consistent with the order under the global clock.<pre class=language-bash data-lang=bash style=background:#282a36;color:#f8f8f2><code class=language-bash data-lang=bash><span>        </span><span style=color:#50fa7b>x.store</span><span>(1)      </span><span style=color:#50fa7b>x.load</span><span>()
+</span><span>T1 ---------+----------------+------>
+</span><span>
+</span><span>
+</span><span>T2 -------------------+------------->
+</span><span>                x.store(</span><span style=color:#50fa7b>2</span><span>)
+</span></code></pre><p>Thread T1 , T2 is twice atomic to x, and x.store(1) is strictly before x.store(2), x.store(2) strictly occurs before x.load(). It is worth mentioning that linear consistency requirements for global clocks are difficult to achieve, which is why people continue to study other consistent algorithms under this weaker consistency.<h3 id=sequential-consistency><a aria-label="Anchor link for: sequential-consistency" class=zola-anchor href=#sequential-consistency>Sequential consistency</a></h3><p>It is also required that any read operation can read the last data writen by the data, but it is not required to be consistent to be consistent with the order of the global clock.<pre class=language-bash data-lang=bash style=background:#282a36;color:#f8f8f2><code class=language-bash data-lang=bash><span>        </span><span style=color:#50fa7b>x.store</span><span>(1)  </span><span style=color:#50fa7b>x.store</span><span>(3)   </span><span style=color:#50fa7b>x.load</span><span>()
+</span><span>T1 ---------+-----------+----------+----->
+</span><span>
+</span><span>
+</span><span>T2 ---------------+---------------------->
+</span><span>              x.store(</span><span style=color:#50fa7b>2</span><span>)
+</span><span>
+</span><span style=color:#50fa7b>or
+</span><span>
+</span><span>        </span><span style=color:#50fa7b>x.store</span><span>(1)  </span><span style=color:#50fa7b>x.store</span><span>(3)   </span><span style=color:#50fa7b>x.load</span><span>()
+</span><span>T1 ---------+-----------+----------+----->
+</span><span>
+</span><span>
+</span><span>T2 ------+------------------------------->
+</span><span>      x.store(</span><span style=color:#50fa7b>2</span><span>)
+</span></code></pre><p>under the order consistency requirement, x.load() must read the last written data, so x.store(2) and x.store(1) do not have any guarantees, as long as x.store(2) of T2 occur before x.store(3).<h2 id=causal-consistency><a aria-label="Anchor link for: causal-consistency" class=zola-anchor href=#causal-consistency>Causal consistency</a></h2><p>It requirements are further reduced, only the sequence of causal operations is guaranteed, and the order of non-causal operations is not required.<pre class=language-bash data-lang=bash style=background:#282a36;color:#f8f8f2><code class=language-bash data-lang=bash><span>      </span><span style=color:#50fa7b>a</span><span> = 1      b = 2
+</span><span style=color:#50fa7b>T1</span><span> ----+-----------+----------------------------</span><span style=color:#ff79c6>>
+</span><span>
+</span><span>
+</span><span style=color:#50fa7b>T2</span><span> ------+--------------------+--------+--------</span><span style=color:#ff79c6>>
+</span><span>      </span><span style=color:#50fa7b>x.store</span><span>(3)         </span><span style=color:#50fa7b>c</span><span> = a + b    y.load()
+</span><span>
+</span><span style=color:#50fa7b>or
+</span><span>
+</span><span>      </span><span style=color:#50fa7b>a</span><span> = 1      b = 2
+</span><span style=color:#50fa7b>T1</span><span> ----+-----------+----------------------------</span><span style=color:#ff79c6>>
+</span><span>
+</span><span>
+</span><span style=color:#50fa7b>T2</span><span> ------+--------------------+--------+--------</span><span style=color:#ff79c6>>
+</span><span>      </span><span style=color:#50fa7b>x.store</span><span>(3)          </span><span style=color:#50fa7b>y.load</span><span>()   c = a + b
+</span><span>
+</span><span>or
+</span><span>
+</span><span>     b = 2       a = 1
+</span><span>T1 ----+-----------+---------------------------->
+</span><span>
+</span><span>
+</span><span>T2 ------+--------------------+--------+-------->
+</span><span>      y.load()            c = a + b  x.store(</span><span style=color:#50fa7b>3</span><span>)
+</span></code></pre><p>The three examples given above are all causal consistent as, in the whole process, only c has a dependency on a and b, and x and y are not related in this example.<h2 id=final-consistency><a aria-label="Anchor link for: final-consistency" class=zola-anchor href=#final-consistency>Final consistency</a></h2><p>It is the weakest consistency requirement. It only guarantees that an operation will be observed at a certain point in the future, but does not require the observed time. So we can strenthen this condition a bit, for example, to specify that the time observed for an operation is always bounded. Of course, this is no longer within our discussion.<pre class=language-bash data-lang=bash style=background:#282a36;color:#f8f8f2><code class=language-bash data-lang=bash><span>    </span><span style=color:#50fa7b>x.store</span><span>(3)  </span><span style=color:#50fa7b>x.store</span><span>(4)
+</span><span style=color:#50fa7b>T1</span><span> ----+-----------+--------------------------------------------</span><span style=color:#ff79c6>>
+</span><span>
+</span><span>
+</span><span style=color:#50fa7b>T2</span><span> ---------+------------+--------------------+--------+--------</span><span style=color:#ff79c6>>
+</span><span>         </span><span style=color:#50fa7b>x.read</span><span>()      x.read()           x.read()   x.read()
+</span></code></pre><p>In the above case, if we assume that the initial value of x is 0, then the four times x.read() in T2 maybe but not limited to the following:<pre class=language-bash data-lang=bash style=background:#282a36;color:#f8f8f2><code class=language-bash data-lang=bash><span style=color:#50fa7b>3</span><span> 4 4 4 // The write operation of x was quickly observed
+</span><span style=color:#50fa7b>0</span><span> 3 3 4 // There is a delay in the observed time of the x write operation
+</span><span style=color:#50fa7b>0</span><span> 0 0 4 // The last read read the final value of x, 
+</span><span>        </span><span style=color:#50fa7b>//</span><span> but the previous changes were not observed.
+</span><span style=color:#50fa7b>0</span><span> 0 0 0 // The write operation of x is not observed in the current time period, 
+</span><span>        </span><span style=color:#50fa7b>//</span><span> but the situation that x is 4 can be observed 
+</span><span>        </span><span style=color:#50fa7b>//</span><span> at some point in the future.
+</span></code></pre><h1 id=memory-order><a aria-label="Anchor link for: memory-order" class=zola-anchor href=#memory-order>Memory order</a></h1><p>To achieve the ultimate performance and achieve consistency of various strength requirements, C++11 defines six different memory sequences for atomic operations. The option <code>std::memory_order</code> expresses four synchronization models between multiple threads:<h2 id=relaxed-model><a aria-label="Anchor link for: relaxed-model" class=zola-anchor href=#relaxed-model>Relaxed model</a></h2><p>Under this model, atomic operations within a single thread are executed sequentially, and instruction recordering is not allowed, but the order of atomic operations between different threads is arbitrary. The type is specified by <code>std::memory_order_relaxed</code><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span>std</span><span style=color:#ff79c6>::</span><span>atomic<</span><span style=font-style:italic;color:#8be9fd>int</span><span>> counter </span><span style=color:#ff79c6>= </span><span style=color:#fff>{</span><span style=color:#bd93f9>0</span><span style=color:#fff>}</span><span>;
+</span><span>std</span><span style=color:#ff79c6>::</span><span>vector&LTstd</span><span style=color:#ff79c6>::</span><span>thread> vt;
+</span><span style=color:#ff79c6>for </span><span>(</span><span style=font-style:italic;color:#8be9fd>int</span><span> i </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>; i </span><span style=color:#ff79c6>< </span><span style=color:#bd93f9>100</span><span>; </span><span style=color:#ff79c6>++</span><span>i) </span><span style=color:#fff>{
+</span><span>    vt</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>emplace_back</span><span>([</span><span style=color:#ff79c6>&</span><span>]()</span><span style=color:#fff>{
+</span><span>        counter</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>fetch_add</span><span>(</span><span style=color:#bd93f9>1</span><span>, std</span><span style=color:#ff79c6>::</span><span>memory_order_relaxed);
+</span><span>    </span><span style=color:#fff>}</span><span>);
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=color:#ff79c6>for </span><span>(</span><span style=font-style:italic;color:#8be9fd>auto</span><span style=color:#ff79c6>&</span><span> t </span><span style=color:#ff79c6>:</span><span> vt) </span><span style=color:#fff>{
+</span><span>    t</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>join</span><span>();
+</span><span style=color:#fff>}
+</span><span>std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"current counter:" </span><span style=color:#ff79c6><<</span><span> counter </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span></code></pre><h2 id=rlease-consumption-model><a aria-label="Anchor link for: rlease-consumption-model" class=zola-anchor href=#rlease-consumption-model><del>Rlease/consumption model</del></a></h2><p>In this model, we begin to limit the order of operations between processes. If a thread needs to modify a value, but another thread will have a dependency on that opertion of the value, that is, the latter depends on the former. Specifically, thread A has completed three writes to x, and thread B relies only on the third x wrtie operation, regardless of the first two write behaviors of x, then A when active x.release()(ie using <code>std::memory_order_release</code>), the option <code>std::memory_order_consume</code> ensures that B observes A when calling x.load().<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=color:#6272a4>// initialize as nullptr to prevent consumer load a dangling pointer
+</span><span>std</span><span style=color:#ff79c6>::</span><span>atomic<</span><span style=font-style:italic;color:#8be9fd>int</span><span style=color:#ff79c6>*</span><span>> </span><span style=color:#50fa7b>ptr</span><span>(</span><span style=font-style:italic;color:#ffb86c>nullptr</span><span>);
+</span><span style=font-style:italic;color:#8be9fd>int</span><span> v;
+</span><span>std</span><span style=color:#ff79c6>::</span><span>thread </span><span style=color:#50fa7b>producer</span><span>([</span><span style=color:#ff79c6>&</span><span>]() </span><span style=color:#fff>{
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#ff79c6>*</span><span>p </span><span style=color:#ff79c6>= new </span><span style=font-style:italic;color:#8be9fd>int</span><span>(</span><span style=color:#bd93f9>42</span><span>);
+</span><span>  v </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>1024</span><span>;
+</span><span>  ptr</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>store</span><span>(p, std</span><span style=color:#ff79c6>::</span><span>memory_order_release);
+</span><span style=color:#fff>}</span><span>);
+</span><span>std</span><span style=color:#ff79c6>::</span><span>thread </span><span style=color:#50fa7b>consumer</span><span>([</span><span style=color:#ff79c6>&</span><span>]() </span><span style=color:#fff>{
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>int</span><span style=color:#ff79c6>*</span><span> p;
+</span><span>    </span><span style=color:#ff79c6>while</span><span>(</span><span style=color:#ff79c6>!</span><span>(p </span><span style=color:#ff79c6>=</span><span> ptr</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>load</span><span>(std</span><span style=color:#ff79c6>::</span><span>memory_order_consume)));
+</span><span>
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"p: " </span><span style=color:#ff79c6><< *</span><span>p </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"v: " </span><span style=color:#ff79c6><<</span><span> v </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span style=color:#fff>}</span><span>);
+</span><span>producer</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>join</span><span>();
+</span><span>consumer</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>join</span><span>();
+</span></code></pre><h2 id=release-acquire-model><a aria-label="Anchor link for: release-acquire-model" class=zola-anchor href=#release-acquire-model>Release/acquire model</a></h2><p>Under this model, we can further tighten the order of atomic operations between different threads, specifying the timing between releasing <code>std::memory_order_release</code> and getting <code>std::memory_order_acquire</code>. All write operations before the release operation is visible to any other thread, i.e., happends before.<p>As you can see, <code>std::memory_order_release</code> ensures that a write before a release does not occur after the release operation, which is <strong>backward barrier</strong>, and <code>std::memory_order_acquire</code> ensures that a subsequent read or write after a acquire does not occur before the acquire operation, which is <strong>forward barrier</strong>. For the <code>std::memory_order_acq_rel</code> option, combines the charateristics of the two barriers and determines a unique memory barrier, such that reads and writes of the current thread will not be rearranged across the barrier.<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span>std</span><span style=color:#ff79c6>::</span><span>vector<</span><span style=font-style:italic;color:#8be9fd>int</span><span>> v;
+</span><span>std</span><span style=color:#ff79c6>::</span><span>atomic<</span><span style=font-style:italic;color:#8be9fd>int</span><span>> flag </span><span style=color:#ff79c6>= </span><span style=color:#fff>{</span><span style=color:#bd93f9>0</span><span style=color:#fff>}</span><span>;
+</span><span>std</span><span style=color:#ff79c6>::</span><span>thread </span><span style=color:#50fa7b>release</span><span>([</span><span style=color:#ff79c6>&</span><span>]() </span><span style=color:#fff>{
+</span><span>    v</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>push_back</span><span>(</span><span style=color:#bd93f9>42</span><span>);
+</span><span>    flag</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>store</span><span>(</span><span style=color:#bd93f9>1</span><span>, std</span><span style=color:#ff79c6>::</span><span>memory_order_release);
+</span><span style=color:#fff>}</span><span>);
+</span><span>std</span><span style=color:#ff79c6>::</span><span>thread </span><span style=color:#50fa7b>acqrel</span><span>([</span><span style=color:#ff79c6>&</span><span>]() </span><span style=color:#fff>{
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>int</span><span> expected </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>1</span><span>; </span><span style=color:#6272a4>// must before compare_exchange_strong
+</span><span>    </span><span style=color:#ff79c6>while</span><span>(</span><span style=color:#ff79c6>!</span><span>flag</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>compare_exchange_strong</span><span>(expected, </span><span style=color:#bd93f9>2</span><span>, std</span><span style=color:#ff79c6>::</span><span>memory_order_acq_rel)) 
+</span><span>        expected </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>1</span><span>; </span><span style=color:#6272a4>// must after compare_exchange_strong
+</span><span>    </span><span style=color:#6272a4>// flag has changed to 2
+</span><span style=color:#fff>}</span><span>);
+</span><span>std</span><span style=color:#ff79c6>::</span><span>thread </span><span style=color:#50fa7b>acquire</span><span>([</span><span style=color:#ff79c6>&</span><span>]() </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>while</span><span>(flag</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>load</span><span>(std</span><span style=color:#ff79c6>::</span><span>memory_order_acquire) </span><span style=color:#ff79c6>< </span><span style=color:#bd93f9>2</span><span>);
+</span><span>
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><<</span><span> v</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>at</span><span>(</span><span style=color:#bd93f9>0</span><span>) </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl; </span><span style=color:#6272a4>// must be 42
+</span><span style=color:#fff>}</span><span>);
+</span><span>release</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>join</span><span>();
+</span><span>acqrel</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>join</span><span>();
+</span><span>acquire</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>join</span><span>();
+</span></code></pre><p>In this case, we used <code>compare_exchange_strong</code>, which is the Compare-and-swap primitive, which has a weaker version, <code>compare_exchange_weak</code>, which allows a failure to be returned even if the exchange is successful. The reason is due to a false failure on some platforms, specifically when the CPU performs a context switch, another threads loads the same address to produce an inconsistency. In addition, the performance of <code>compare_exchange_strong</code> maybe slightly worse than <code>compare_exchange_weak</code>. However, in mose cases, <code>compare_exchange_weak</code> is discouraged due to the complexity of its usage.<h2 id=sequential-consistent-model><a aria-label="Anchor link for: sequential-consistent-model" class=zola-anchor href=#sequential-consistent-model>Sequential consistent model</a></h2><p>Under this model, atomic operations satisfy sequence consistency, which in turn can cause performance loss. It can be specified explicityly by <code>std::memory_order_seq_cst</code>.<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span>std</span><span style=color:#ff79c6>::</span><span>atomic<</span><span style=font-style:italic;color:#8be9fd>int</span><span>> counter </span><span style=color:#ff79c6>= </span><span style=color:#fff>{</span><span style=color:#bd93f9>0</span><span style=color:#fff>}</span><span>;
+</span><span>std</span><span style=color:#ff79c6>::</span><span>vector&LTstd</span><span style=color:#ff79c6>::</span><span>thread> vt;
+</span><span style=color:#ff79c6>for </span><span>(</span><span style=font-style:italic;color:#8be9fd>int</span><span> i </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>; i </span><span style=color:#ff79c6>< </span><span style=color:#bd93f9>100</span><span>; </span><span style=color:#ff79c6>++</span><span>i) </span><span style=color:#fff>{
+</span><span>    vt</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>emplace_back</span><span>([</span><span style=color:#ff79c6>&</span><span>]()</span><span style=color:#fff>{
+</span><span>        counter</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>fetch_add</span><span>(</span><span style=color:#bd93f9>1</span><span>, std</span><span style=color:#ff79c6>::</span><span>memory_order_seq_cst);
+</span><span>    </span><span style=color:#fff>}</span><span>);
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=color:#ff79c6>for </span><span>(</span><span style=font-style:italic;color:#8be9fd>auto</span><span style=color:#ff79c6>&</span><span> t </span><span style=color:#ff79c6>:</span><span> vt) </span><span style=color:#fff>{
+</span><span>    t</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>join</span><span>();
+</span><span style=color:#fff>}
+</span><span>std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"current counter:" </span><span style=color:#ff79c6><<</span><span> counter </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span></code></pre><p>This example is essentially the same as the first loose model example. Just change the memory order of the atomic operation to <code>memory_order_seq_cst</code>.<h1 id=further-reading><a aria-label="Anchor link for: further-reading" class=zola-anchor href=#further-reading>further reading</a></h1><ul><li>c++ concurrency in action(2nd)<li>https://en.cppreference.com/w/cpp/thread<li>https://blog.the-pans.com/cpp-memory-model-as-a-distributed-system/</ul></article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'atomic and memory order in c++11',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

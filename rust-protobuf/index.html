@@ -1,0 +1,235 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>Rust Protobuf 对比分析(prost vs rust-protobuf) | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/rust-protobuf/ rel=canonical><meta content="Rust Protobuf 对比分析(prost vs rust-protobuf)" property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/rust-protobuf/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta property=og:updated_time><meta content="Rust Protobuf 对比分析(prost vs rust-protobuf)" property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/rust-protobuf/"
+      },
+      "headline": "Rust Protobuf 对比分析(prost vs rust-protobuf)",
+      "image": ,
+      "datePublished": "2022-01-19T14:38:11",
+      "dateModified": "",
+      "author": {
+        "@type": "Organization",
+        "name": "Rust Protobuf 对比分析(prost vs rust-protobuf)"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Rust Protobuf 对比分析(prost vs rust-protobuf)",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Rust Protobuf",
+            "item": "https://wendajiang.github.io/rust-protobuf/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><script>function initMermaid(){var a={startOnLoad:true,theme:"neutral",flowchart:{useMaxWidth:true,htmlLabels:true}};mermaid.initialize(a);window.mermaid.init(undefined,document.querySelectorAll('.mermaid'))}</script><script async onload=initMermaid() src=https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/rust-protobuf/#prost>prost</a></li><ul><li><a href=https://wendajiang.github.io/rust-protobuf/#generated-code>generated code</a><li><a href=https://wendajiang.github.io/rust-protobuf/#packages>Packages</a></li><ul><li><a href=https://wendajiang.github.io/rust-protobuf/#messages>Messages</a><li><a href=https://wendajiang.github.io/rust-protobuf/#fields>Fields</a> <ul><li><a href=https://wendajiang.github.io/rust-protobuf/#scalar-values>Scalar Values</a><li><a href=https://wendajiang.github.io/rust-protobuf/#enumerations>Enumerations</a><li><a href=https://wendajiang.github.io/rust-protobuf/#field-modifiers>Field Modifiers</a><li><a href=https://wendajiang.github.io/rust-protobuf/#map-fields>Map Fields</a><li><a href=https://wendajiang.github.io/rust-protobuf/#message-fields>Message Fields</a><li><a href=https://wendajiang.github.io/rust-protobuf/#oneof-fileds>Oneof Fileds</a></ul><li><a href=https://wendajiang.github.io/rust-protobuf/#services>Services</a><li><a href=https://wendajiang.github.io/rust-protobuf/#example>Example</a></ul><li><a href=https://wendajiang.github.io/rust-protobuf/#xu-lie-hua-yi-jing-cun-zai-de-lei-xing>序列化已经存在的类型</a></ul><li><a href=https://wendajiang.github.io/rust-protobuf/#rust-protobuf>rust-protobuf</a><li><a href=https://wendajiang.github.io/rust-protobuf/#dui-bi>对比</a></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>Rust Protobuf 对比分析(prost vs rust-protobuf)</h1><p><small>Posted 2022-01-19 14:38:11 ‐ <strong>5 min read</strong></small><p><div class=category-area>「 <a href=https://wendajiang.github.io/tags/protobuf> <div class=category>protobuf</div> </a><a href=https://wendajiang.github.io/tags/rust> <div class=category>rust</div> </a> 」</div></div><h1 id=prost><a aria-label="Anchor link for: prost" class=zola-anchor href=#prost><a href=https://github.com/tokio-rs/prost>prost</a></a></h1><p>优势：<ul><li>generates simple, idiomatic and readable Rust types<li>保留 proto 中的注释<li><strong>可以在已有的 Rust types 中增加 attributes 来转换为 Message</strong><li>使用 <code>bytes::{Buf, BufMut}</code> 来抽象而不是 <code>std::io::{Read, Write}</code><li>可以识别 package 自动转换为 Rust module</ul><p><em>不支持 reflection</em><h2 id=generated-code><a aria-label="Anchor link for: generated-code" class=zola-anchor href=#generated-code>generated code</a></h2><p>prost 可以根据 <code>.proto</code> 文件生成 rust 代码<h2 id=packages><a aria-label="Anchor link for: packages" class=zola-anchor href=#packages>Packages</a></h2><p><code>package foo.bar</code> -> <code>foo::bar</code> module<h3 id=messages><a aria-label="Anchor link for: messages" class=zola-anchor href=#messages>Messages</a></h3><p>message &LT-> Rust struct<pre style=background:#282a36;color:#f8f8f2><code><span>message Foo {
+</span><span>}
+</span><span>
+</span><span>// &LT->
+</span><span>
+</span><span>#[derive(Clone, Debug, PartialEq, Message)]
+</span><span>pub struct Foo {
+</span><span>}
+</span></code></pre><h3 id=fields><a aria-label="Anchor link for: fields" class=zola-anchor href=#fields>Fields</a></h3><p>protobuf message fields 对应 Rust struct pub fields<h4 id=scalar-values><a aria-label="Anchor link for: scalar-values" class=zola-anchor href=#scalar-values>Scalar Values</a></h4><table><thead><tr><th>protobuf type<th>rust type<tbody><tr><td>double<td>f64<tr><td>float<td>f32<tr><td>int32,sint32,sfixed32<td>i32<tr><td>int64,sint64,sfixed64<td>i64<tr><td>uint32, fixed32<td>u32<tr><td>uint64, fixed64<td>u64<tr><td>bool<td>bool<tr><td>string<td>String<tr><td>bytes<td>Vec<u8> <h4 id=enumerations><a aria-label="Anchor link for: enumerations" class=zola-anchor href=#enumerations>Enumerations</a></h4> <p><code>.proto</code> 枚举对应 Rust 的 <code>i32</code></p> <pre style=background:#282a36;color:#f8f8f2><code><span>enum PhoneType {
+</span><span>  MOBILE = 0;
+</span><span>  HOME = 1;
+</span><span>  WORK = 2;
+</span><span>}
+</span><span>
+</span><span>pub enum PhoneType {
+</span><span>  Mobile = 0,
+</span><span>  Home = 1,
+</span><span>  Work = 2,
+</span><span>}
+</span><span>
+</span><span>// PhoneType::Mobile as i32 可行
+</span><span>// #[derive(::prost::Enumeration)] 会给 `PhoneType` 增加方法
+</span><span>impl PhoneType {
+</span><span>  pub fn is_valid(value: i32) -> bool
+</span><span>  pub fn from_i32(value: i32) -> Option&LTPhoneType>
+</span><span>}
+</span></code></pre> <h4 id=field-modifiers><a aria-label="Anchor link for: field-modifiers" class=zola-anchor href=#field-modifiers>Field Modifiers</a></h4> <table><thead><tr><th><code>.proto</code> Version<th>modifier<th>Rust Type<tbody><tr><td>proto2<td>optional<td>Option<t> <tr><td>proto2<td>required<td>T</tr> <tr><td>proto3<td>default<td>T</tr> <tr><td>proto2/proto3<td>repeated<td>Vec<t> <h4 id=map-fields><a aria-label="Anchor link for: map-fields" class=zola-anchor href=#map-fields>Map Fields</a></h4> <p>Rust <code>HashMap</code></p> <h4 id=message-fields><a aria-label="Anchor link for: message-fields" class=zola-anchor href=#message-fields>Message Fields</a></h4> <p><code>proto3</code> 默认会生成 <code>Option&LTT></code></p> <p>message 会 Box 避免无限 size 的 struct</p> <h4 id=oneof-fileds><a aria-label="Anchor link for: oneof-fileds" class=zola-anchor href=#oneof-fileds>Oneof Fileds</a></h4> <p>Oneof 会转换成 enum</p> <pre style=background:#282a36;color:#f8f8f2><code><span>message Foo {
+</span><span>  oneof widget {
+</span><span>    int32 quux = 1;
+</span><span>    string bar = 2;
+</span><span>  }
+</span><span>}
+</span><span>
+</span><span>pub struct Foo {
+</span><span>  pub widget: Option&LTfoo::Widget>,
+</span><span>}
+</span><span>pub mod foo {
+</span><span>  pub enum Widget {
+</span><span>    Quux(i32),
+</span><span>    Bar(String),
+</span><span>  }
+</span><span>}
+</span></code></pre> <h3 id=services><a aria-label="Anchor link for: services" class=zola-anchor href=#services>Services</a></h3> <p><code>prost-build</code> 支持自定义处理 <code>service</code> 定义，根据项目需要生成 <code>trait</code></p> <h3 id=example><a aria-label="Anchor link for: example" class=zola-anchor href=#example>Example</a></h3> <pre class=language-proto data-lang=proto style=background:#282a36;color:#f8f8f2><code class=language-proto data-lang=proto><span style=color:#ff79c6>syntax = </span><span style=color:#f1fa8c>"proto3"</span><span>;
+</span><span style=color:#ff79c6>package </span><span>tutorial;
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>message </span><span style=text-decoration:underline;color:#8be9fd>Person </span><span>{
+</span><span>  </span><span style=font-style:italic;color:#66d9ef>string </span><span style=color:#fff>name </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>1</span><span>;
+</span><span>  </span><span style=font-style:italic;color:#66d9ef>int32 </span><span style=color:#fff>id </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>2</span><span>; </span><span style=color:#6272a4>// unique id number for this person
+</span><span>  </span><span style=font-style:italic;color:#66d9ef>string </span><span style=color:#fff>email </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>3</span><span>;
+</span><span>
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>enum </span><span>PhoneType {
+</span><span>    </span><span style=color:#bd93f9>MOBILE </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span>    </span><span style=color:#bd93f9>HOME </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>1</span><span>;
+</span><span>    </span><span style=color:#bd93f9>WORK </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>2</span><span>;
+</span><span>  }
+</span><span>
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>message </span><span style=text-decoration:underline;color:#8be9fd>PhoneNumber </span><span>{
+</span><span>    </span><span style=font-style:italic;color:#66d9ef>string </span><span style=color:#fff>number </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>1</span><span>;
+</span><span>    </span><span style=color:#8be9fd>PhoneNumber </span><span style=color:#fff>type </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>2</span><span>;
+</span><span>  }
+</span><span>  </span><span style=color:#ff79c6>repeated </span><span style=color:#8be9fd>PhoneNumber </span><span style=color:#fff>phones </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>4</span><span>;
+</span><span>}
+</span><span>
+</span><span style=color:#6272a4>// our address book file is just one of these
+</span><span style=font-style:italic;color:#8be9fd>message </span><span style=text-decoration:underline;color:#8be9fd>AddressBook </span><span>{
+</span><span>  </span><span style=color:#ff79c6>repeated </span><span style=color:#8be9fd>Person </span><span style=color:#fff>people </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>1</span><span>;
+</span><span>}
+</span></code></pre> <p>生成的代码</p> <pre class=language-rust data-lang=rust style=background:#282a36;color:#f8f8f2><code class=language-rust data-lang=rust><span>#[derive(Clone, PartialEq, ::prost::Message)]
+</span><span style=color:#ff79c6>pub </span><span style=font-style:italic;color:#8be9fd>struct </span><span>Person </span><span style=color:#fff>{
+</span><span>    #[prost(string, tag</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>"1"</span><span>)]
+</span><span>    </span><span style=color:#ff79c6>pub </span><span style=color:#fff>name</span><span>: ::</span><span style=text-decoration:underline;color:#66d9ef>prost</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>alloc</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>string</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>String,
+</span><span>    </span><span style=color:#6272a4>/// unique id number for this person
+</span><span>    #[prost(int32, tag</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>"2"</span><span>)]
+</span><span>    </span><span style=color:#ff79c6>pub </span><span style=color:#fff>id</span><span>: </span><span style=font-style:italic;color:#8be9fd>i32</span><span>,
+</span><span>    #[prost(string, tag</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>"3"</span><span>)]
+</span><span>    </span><span style=color:#ff79c6>pub </span><span style=color:#fff>email</span><span>: ::</span><span style=text-decoration:underline;color:#66d9ef>prost</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>alloc</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>string</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>String,
+</span><span>    #[prost(message, repeated, tag</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>"4"</span><span>)]
+</span><span>    </span><span style=color:#ff79c6>pub </span><span style=color:#fff>phones</span><span>: ::</span><span style=text-decoration:underline;color:#66d9ef>prost</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>alloc</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>vec</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=font-style:italic;color:#66d9ef>Vec</span><span><</span><span style=text-decoration:underline;color:#66d9ef>person</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>PhoneNumber>,
+</span><span style=color:#fff>}
+</span><span style=color:#6272a4>/// Nested message and enum types in `Person`.
+</span><span style=color:#ff79c6>pub </span><span style=font-style:italic;color:#8be9fd>mod </span><span>person </span><span style=color:#fff>{
+</span><span>    #[derive(Clone, PartialEq, ::prost::Message)]
+</span><span>    </span><span style=color:#ff79c6>pub </span><span style=font-style:italic;color:#8be9fd>struct </span><span>PhoneNumber </span><span style=color:#fff>{
+</span><span>        #[prost(string, tag</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>"1"</span><span>)]
+</span><span>        </span><span style=color:#ff79c6>pub </span><span style=color:#fff>number</span><span>: ::</span><span style=text-decoration:underline;color:#66d9ef>prost</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>alloc</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>string</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>String,
+</span><span>        #[prost(message, optional, boxed, tag</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>"2"</span><span>)]
+</span><span>        </span><span style=color:#ff79c6>pub</span><span> r#</span><span style=color:#fff>type</span><span>: ::</span><span style=text-decoration:underline;color:#66d9ef>core</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>option</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=font-style:italic;color:#66d9ef>Option</span><span><</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>prost</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>alloc</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>boxed</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=font-style:italic;color:#66d9ef>Box</span><span>&LTPhoneNumber>>,
+</span><span>    </span><span style=color:#fff>}
+</span><span>    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+</span><span>    #[repr(i32)]
+</span><span>    </span><span style=color:#ff79c6>pub </span><span style=font-style:italic;color:#8be9fd>enum </span><span>PhoneType </span><span style=color:#fff>{
+</span><span>        Mobile </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>,
+</span><span>        Home </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>1</span><span>,
+</span><span>        Work </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>2</span><span>,
+</span><span>    </span><span style=color:#fff>}
+</span><span style=color:#fff>}
+</span><span style=color:#6272a4>/// our address book file is just one of these
+</span><span>#[derive(Clone, PartialEq, ::prost::Message)]
+</span><span style=color:#ff79c6>pub </span><span style=font-style:italic;color:#8be9fd>struct </span><span>AddressBook </span><span style=color:#fff>{
+</span><span>    #[prost(message, repeated, tag</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>"1"</span><span>)]
+</span><span>    </span><span style=color:#ff79c6>pub </span><span style=color:#fff>people</span><span>: ::</span><span style=text-decoration:underline;color:#66d9ef>prost</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>alloc</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>vec</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=font-style:italic;color:#66d9ef>Vec</span><span>&LTPerson>,
+</span><span style=color:#fff>}
+</span><span>
+</span></code></pre> <h2 id=xu-lie-hua-yi-jing-cun-zai-de-lei-xing><a aria-label="Anchor link for: xu-lie-hua-yi-jing-cun-zai-de-lei-xing" class=zola-anchor href=#xu-lie-hua-yi-jing-cun-zai-de-lei-xing>序列化已经存在的类型</a></h2> <p>Prost 会根据声明的顺序自动推断 struct 中 field 的 tag，加上合适的 derive and field annotation 就能实现序列化/反序列化已有的类型</p> <pre class=language-rust data-lang=rust style=background:#282a36;color:#f8f8f2><code class=language-rust data-lang=rust><span style=color:#ff79c6>use</span><span> prost;
+</span><span style=color:#ff79c6>use </span><span style=text-decoration:underline;color:#66d9ef>prost</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=color:#fff>{</span><span>Enumeration, Message</span><span style=color:#fff>}</span><span>;
+</span><span>
+</span><span>#[derive(Clone, PartialEq, Message)]
+</span><span style=font-style:italic;color:#8be9fd>struct </span><span>Person </span><span style=color:#fff>{
+</span><span>    #[prost(string, tag </span><span style=color:#ff79c6>= </span><span style=color:#f1fa8c>"1"</span><span>)]
+</span><span>    </span><span style=color:#ff79c6>pub </span><span style=color:#fff>id</span><span>: String, </span><span style=color:#6272a4>// tag=1
+</span><span>    </span><span style=color:#6272a4>// NOTE: Old "name" field has been removed
+</span><span>    </span><span style=color:#6272a4>// pub name: String, // tag=2 (Removed)
+</span><span>    #[prost(string, tag </span><span style=color:#ff79c6>= </span><span style=color:#f1fa8c>"6"</span><span>)]
+</span><span>    </span><span style=color:#ff79c6>pub </span><span style=color:#fff>given_name</span><span>: String, </span><span style=color:#6272a4>// tag=6
+</span><span>    #[prost(string)]
+</span><span>    </span><span style=color:#ff79c6>pub </span><span style=color:#fff>family_name</span><span>: String, </span><span style=color:#6272a4>// tag=7
+</span><span>    #[prost(string)]
+</span><span>    </span><span style=color:#ff79c6>pub </span><span style=color:#fff>formatted_name</span><span>: String, </span><span style=color:#6272a4>// tag=8
+</span><span>    #[prost(uint32, tag </span><span style=color:#ff79c6>= </span><span style=color:#f1fa8c>"3"</span><span>)]
+</span><span>    </span><span style=color:#ff79c6>pub </span><span style=color:#fff>age</span><span>: </span><span style=font-style:italic;color:#8be9fd>u32</span><span>, </span><span style=color:#6272a4>// tag=3
+</span><span>    #[prost(uint32)]
+</span><span>    </span><span style=color:#ff79c6>pub </span><span style=color:#fff>height</span><span>: </span><span style=font-style:italic;color:#8be9fd>u32</span><span>, </span><span style=color:#6272a4>// tag=4
+</span><span>    #[prost(enumeration </span><span style=color:#ff79c6>= </span><span style=color:#f1fa8c>"Gender"</span><span>)]
+</span><span>    </span><span style=color:#ff79c6>pub </span><span style=color:#fff>gender</span><span>: </span><span style=font-style:italic;color:#8be9fd>i32</span><span>, </span><span style=color:#6272a4>// tag=5
+</span><span>    </span><span style=color:#6272a4>// NOTE: Skip to less commonly occurring fields
+</span><span>    #[prost(string, tag </span><span style=color:#ff79c6>= </span><span style=color:#f1fa8c>"16"</span><span>)]
+</span><span>    </span><span style=color:#ff79c6>pub </span><span style=color:#fff>name_prefix</span><span>: String, </span><span style=color:#6272a4>// tag=16  (eg. mr/mrs/ms)
+</span><span>    #[prost(string)]
+</span><span>    </span><span style=color:#ff79c6>pub </span><span style=color:#fff>name_suffix</span><span>: String, </span><span style=color:#6272a4>// tag=17  (eg. jr/esq)
+</span><span>    #[prost(string)]
+</span><span>    </span><span style=color:#ff79c6>pub </span><span style=color:#fff>maiden_name</span><span>: String, </span><span style=color:#6272a4>// tag=18
+</span><span style=color:#fff>}
+</span><span>
+</span><span>#[derive(Clone, Copy, Debug, PartialEq, Eq, Enumeration)]
+</span><span style=color:#ff79c6>pub </span><span style=font-style:italic;color:#8be9fd>enum </span><span>Gender </span><span style=color:#fff>{
+</span><span>    Unknown </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>,
+</span><span>    Female </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>1</span><span>,
+</span><span>    Male </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>2</span><span>,
+</span><span style=color:#fff>}
+</span></code></pre> <h1 id=rust-protobuf><a aria-label="Anchor link for: rust-protobuf" class=zola-anchor href=#rust-protobuf><a href=https://github.com/stepancheg/rust-protobuf>rust-protobuf</a></a></h1> <p><a href=https://docs.rs/protobuf/latest/protobuf/index.html>doc</a> <a href=https://docs.rs/protobuf-codegen-pure/2.25.2/protobuf_codegen_pure/>rust codegen doc</a></p> <p>优势：</p> <ul><li>生成的代码有运行时库 ？（prost 可以 no_std 支持），支持 reflection<li>更像 cpp protobuf 版本的生成文件（不好说是优势还是劣势）</ul> <p>劣势：</p> <ul><li>文档较少，比如类型之间的对应关系</ul> <h1 id=dui-bi><a aria-label="Anchor link for: dui-bi" class=zola-anchor href=#dui-bi>对比</a></h1> <p>生成的代码行数 rust-protobuf 是 prost 的十倍， prost 生成的 <code>.rs</code> 几乎与 <code>.proto</code> 行数一致</p> <hr> <p>PS. <a href=https://doc.rust-lang.org/cargo/reference/build-scripts.html>cargo build script doc</a> cargo build 在编译之前会先编译 build.rs 文件并执行，The script may communicate with Cargo by printing specially formatted commands prefixed with <code>cargo:</code> to stdout，比如 <code>println!("cargo:rerun-if-changed={}", file_name);</code>，默认 package 文件任何一个变更都会重新执行</p> <pre class=language-rust data-lang=rust style=background:#282a36;color:#f8f8f2><code class=language-rust data-lang=rust><span style=color:#6272a4>// build.rs
+</span><span style=color:#ff79c6>use </span><span style=text-decoration:underline;color:#66d9ef>anyhow</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>Result;
+</span><span>
+</span><span>#[rustfmt::skip]
+</span><span style=font-style:italic;color:#8be9fd>const </span><span style=color:#bd93f9>PROTOBUF_FILES</span><span>: </span><span style=color:#ff79c6>&</span><span>[(</span><span style=color:#ff79c6>&</span><span style=font-style:italic;color:#8be9fd>str</span><span>, </span><span style=color:#ff79c6>&</span><span style=font-style:italic;color:#8be9fd>str</span><span>)] </span><span style=color:#ff79c6>= &</span><span>[
+</span><span>    (</span><span style=color:#f1fa8c>"a"</span><span>, </span><span style=color:#f1fa8c>"a.proto"</span><span>),
+</span><span>    (</span><span style=color:#f1fa8c>"b"</span><span>, </span><span style=color:#f1fa8c>"b.proto"</span><span>),
+</span><span>    (</span><span style=color:#f1fa8c>"c"</span><span>, </span><span style=color:#f1fa8c>"c.proto"</span><span>),
+</span><span>];
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>fn </span><span style=color:#50fa7b>main</span><span>() </span><span style=color:#ff79c6>-> </span><span style=font-style:italic;color:#66d9ef>Result</span><span style=color:#ff79c6><()> </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>for </span><span>(dir, file) </span><span style=color:#ff79c6>in </span><span style=color:#bd93f9>PROTOBUF_FILES </span><span style=color:#fff>{
+</span><span>        </span><span style=font-style:italic;color:#8be9fd>let</span><span> file_path </span><span style=color:#ff79c6>= </span><span>format!(</span><span style=color:#f1fa8c>"</span><span style=color:#bd93f9>{}</span><span style=color:#f1fa8c>/</span><span style=color:#bd93f9>{}</span><span style=color:#f1fa8c>"</span><span>, dir, file);
+</span><span>        println!(</span><span style=color:#f1fa8c>"cargo:rerun-if-changed=</span><span style=color:#bd93f9>{}</span><span style=color:#f1fa8c>"</span><span>, file_path);
+</span><span>        </span><span style=color:#6272a4>// prost
+</span><span>        </span><span style=text-decoration:underline;color:#66d9ef>prost_build</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>Config</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>new()
+</span><span>            </span><span style=color:#ff79c6>.</span><span style=color:#8be9fd>out_dir</span><span>(dir)
+</span><span>            </span><span style=color:#ff79c6>.</span><span style=color:#8be9fd>compile_protos</span><span>(</span><span style=color:#ff79c6>&</span><span>[</span><span style=color:#ff79c6>&</span><span>file_path], </span><span style=color:#ff79c6>&</span><span>[dir])</span><span style=color:#ff79c6>?</span><span>;
+</span><span>
+</span><span>        </span><span style=color:#6272a4>// rust-protobuf
+</span><span>        </span><span style=text-decoration:underline;color:#66d9ef>protobuf_codegen_pure</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>Codegen</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>new()
+</span><span>            </span><span style=color:#ff79c6>.</span><span style=color:#8be9fd>out_dir</span><span>(</span><span style=color:#f1fa8c>"src/protos"</span><span>)
+</span><span>            </span><span style=color:#ff79c6>.</span><span style=color:#8be9fd>input</span><span>(</span><span style=color:#ff79c6>&</span><span>file_path)
+</span><span>            </span><span style=color:#ff79c6>.</span><span style=color:#8be9fd>include</span><span>(dir)
+</span><span>            </span><span style=color:#ff79c6>.</span><span style=color:#8be9fd>run</span><span>()
+</span><span>            </span><span style=color:#ff79c6>.</span><span style=color:#8be9fd>expect</span><span>(</span><span style=color:#f1fa8c>"Codegen failed"</span><span>);
+</span><span>    </span><span style=color:#fff>}
+</span><span>
+</span><span>    </span><span style=font-style:italic;color:#66d9ef>Ok</span><span>(())
+</span><span style=color:#fff>}
+</span><span>
+</span></code></pre> <div id=gitalk-container></div> <link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet> <script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script> <script>var gitalk=new Gitalk({id:'Rust Protobuf 对比分析(prost vs rust-protobuf)',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script> <script defer src=https://wendajiang.github.io/js/main.js></script> <script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script> <script defer src=https://wendajiang.github.io/search_index.en.js></script> <script defer src=https://wendajiang.github.io/js/search.js></script> 

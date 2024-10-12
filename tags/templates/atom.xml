@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - templates</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/templates/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2023-06-08T15:45:06+00:00</updated>
+    <id>https://wendajiang.github.io/tags/templates/atom.xml</id>
+    <entry xml:lang="en">
+        <title>CRTP</title>
+        <published>2023-06-08T15:45:06+00:00</published>
+        <updated>2023-06-08T15:45:06+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/crtp/" type="text/html"/>
+        <id>https://wendajiang.github.io/crtp/</id>
+        <content type="html">&lt;h1 id=&quot;what-crtp-is&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-crtp-is&quot; aria-label=&quot;Anchor link for: what-crtp-is&quot;&gt;What CRTP is&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;The CRTP consists in:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;inheriting from a template class&lt;&#x2F;li&gt;
+&lt;li&gt;use the derived class itself as a template parameter of the base class&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;This is what it looks like in code:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;template &lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;typnema T&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Base &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Derived&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;font-style:italic;color:#8be9fd;&quot;&gt;Base&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;Derived&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The purpose of doing this is using the derived class in the base class. From the perspective of the base object, the derived object is itself, but downcasted. Therefore the base class can access the derived class by &lt;code&gt;static_casting&lt;&#x2F;code&gt; itself into the derived class.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;template&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;typnename T&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Base &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;do_something&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;      T &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;derived &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= static_cast&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;      use derived&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;what-could-go-wrong&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-could-go-wrong&quot; aria-label=&quot;Anchor link for: what-could-go-wrong&quot;&gt;What could go wrong&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;If two classes happen to derive from the same CRTP base class we likely get to undefined behaviour when the CRTP will try to use the wrong class:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Derived1&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;font-style:italic;color:#8be9fd;&quot;&gt;Base&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;Derived1&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{}
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Derived2&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;font-style:italic;color:#8be9fd;&quot;&gt;Base&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;Derived1&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{} &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; bug in this line of code
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;There is solution to prevent this, that has been proposed by &lt;a href=&quot;https:&#x2F;&#x2F;www.fluentcpp.com&#x2F;2017&#x2F;05&#x2F;12&#x2F;curiously-recurring-template-pattern&#x2F;&quot;&gt;fluentcpp comment&lt;&#x2F;a&gt;. It consists in adding a private constructor in the base class, and making the base class friend with the templated class.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;template&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typename&lt;&#x2F;span&gt;&lt;span&gt; T&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Base &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;private&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;Base&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{}
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;friend&lt;&#x2F;span&gt;&lt;span&gt; T;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Indeed, the constructors of the derived class have to call the constructor of the base class. Since the ctor in the base class is private, no one can access it except the friend classes. And the only friend class is ... the template class! So if the derived class is different from the template class, The code doesn&#x27;t compile.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;what-the-crtp-can-bring-to-your-code&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-the-crtp-can-bring-to-your-code&quot; aria-label=&quot;Anchor link for: what-the-crtp-can-bring-to-your-code&quot;&gt;What the CRTP can bring to your code.&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;static-compile-time-polymorphism-vs-dynamic-polymorphism&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#static-compile-time-polymorphism-vs-dynamic-polymorphism&quot; aria-label=&quot;Anchor link for: static-compile-time-polymorphism-vs-dynamic-polymorphism&quot;&gt;static(compile-time) polymorphism (vs dynamic polymorphism)&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;template&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typename&lt;&#x2F;span&gt;&lt;span&gt; T&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Amount &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;double &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;get_value&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return static_cast&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;T &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;get_value&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Constant42&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;font-style:italic;color:#8be9fd;&quot;&gt;Amount&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;Constant42&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;double &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;get_value&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;42&lt;&#x2F;span&gt;&lt;span&gt;;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Variable&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;font-style:italic;color:#8be9fd;&quot;&gt;Amount&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;Variable&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;explicit &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;Variable&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;v&lt;&#x2F;span&gt;&lt;span&gt;) :&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;_value&lt;&#x2F;span&gt;&lt;span&gt;(v) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{}
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;double &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;get_value&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return&lt;&#x2F;span&gt;&lt;span&gt; _value; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;private&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; _value;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; client
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;template&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typename&lt;&#x2F;span&gt;&lt;span&gt; T&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;print&lt;&#x2F;span&gt;&lt;span&gt;(Amount&amp;lt;T&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const&amp;amp; &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;amout&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  std&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;cout &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;lt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt; amount&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;get_value&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;lt;&amp;lt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;Constant42 c42;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;print&lt;&#x2F;span&gt;&lt;span&gt;(c42);
+&lt;&#x2F;span&gt;&lt;span&gt;Variable &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;v&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;43&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;print&lt;&#x2F;span&gt;&lt;span&gt;(v);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; 42
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; 43
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;crtp-as-a-delegation-pattern-static-interface&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#crtp-as-a-delegation-pattern-static-interface&quot; aria-label=&quot;Anchor link for: crtp-as-a-delegation-pattern-static-interface&quot;&gt;CRTP as a delegation pattern(static interface)&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;For example, auto generate the != operator&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;template&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typename&lt;&#x2F;span&gt;&lt;span&gt; D&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;not_euqal &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;friend &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;bool &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;operator!=&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const&lt;&#x2F;span&gt;&lt;span&gt; D&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp; &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;lhs&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const&lt;&#x2F;span&gt;&lt;span&gt; D&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp; &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;rhs&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return !&lt;&#x2F;span&gt;&lt;span&gt;(lhs &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;==&lt;&#x2F;span&gt;&lt;span&gt; rhs);
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;C&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;font-style:italic;color:#8be9fd;&quot;&gt;not_euqal&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;C&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; _i;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;C&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;i&lt;&#x2F;span&gt;&lt;span&gt;) :&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;_i&lt;&#x2F;span&gt;&lt;span&gt;(i) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{}
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;friend &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;bool &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;operator==&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const&lt;&#x2F;span&gt;&lt;span&gt; C&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp; &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;lhs&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const&lt;&#x2F;span&gt;&lt;span&gt; C&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp; &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;rhs&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return&lt;&#x2F;span&gt;&lt;span&gt; lhs&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;_i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;==&lt;&#x2F;span&gt;&lt;span&gt; rhs&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;_i&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h1 id=&quot;ref&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#ref&quot; aria-label=&quot;Anchor link for: ref&quot;&gt;ref&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.fluentcpp.com&#x2F;2017&#x2F;05&#x2F;16&#x2F;what-the-crtp-brings-to-code&#x2F;&quot;&gt;fluentcpp&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;Hands-on Design Patterns with C++ Chapter 8&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+</feed>

@@ -1,0 +1,1460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - reprint</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/reprint/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-01-05T11:25:24+00:00</updated>
+    <id>https://wendajiang.github.io/tags/reprint/atom.xml</id>
+    <entry xml:lang="en">
+        <title>parallel patterns</title>
+        <published>2024-01-05T11:25:24+00:00</published>
+        <updated>2023-01-05T11:25:24+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/parallel-patterns/" type="text/html"/>
+        <id>https://wendajiang.github.io/parallel-patterns/</id>
+        <content type="html">&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;parallel_patterns&#x2F;parallel_patterns.drawio.png&quot; alt=&quot;parallel_patterns.drawio&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;reference&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#reference&quot; aria-label=&quot;Anchor link for: reference&quot;&gt;reference&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;patterns.eecs.berkeley.edu&#x2F;&quot;&gt;Our Pattern Language&lt;&#x2F;a&gt; Kurt Keutzer (EECS UC Berkeley) and Tim Mattson (Intel) 合著&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;kernel.googlesource.com&#x2F;pub&#x2F;scm&#x2F;linux&#x2F;kernel&#x2F;git&#x2F;paulmck&#x2F;perfbook&#x2F;&quot;&gt;perfbook&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>How C++ resolves a function call</title>
+        <published>2023-05-05T18:21:42+00:00</published>
+        <updated>2023-05-05T18:21:42+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/how-cpp-resolves-a-function-call/" type="text/html"/>
+        <id>https://wendajiang.github.io/how-cpp-resolves-a-function-call/</id>
+        <content type="html">&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;preshing.com&#x2F;20210315&#x2F;how-cpp-resolves-a-function-call&#x2F;&quot;&gt;src&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;how_cpp_resolves_a_function_call&#x2F;function_call.png&quot; alt=&quot;function_call&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;This is how the compiler, given a function call expression, figures out exactly which function to call. These steps are enshrined in the C++ standard. Every C++ compiler must follow them, and the whole thing happens at compile time for every function call expression evaluated by the program. &lt;&#x2F;p&gt;
+&lt;p&gt;I imagine the overall intent of the algorithm is to &amp;quot;do what the programmer expects&amp;quot;, and to some extent, it&#x27;s successful at that. You can get pretty far ignoring the algorithm altogether.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;name-lookup&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#name-lookup&quot; aria-label=&quot;Anchor link for: name-lookup&quot;&gt;Name Lookup&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;namespace &lt;&#x2F;span&gt;&lt;span&gt;galaxy &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;Asteroid &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;float&lt;&#x2F;span&gt;&lt;span&gt; radius &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;12&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;blast&lt;&#x2F;span&gt;&lt;span&gt;(Asteroid&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;ast&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;float &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;force&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;Target &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  galaxy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Asteroid&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt; ast;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;Target&lt;&#x2F;span&gt;&lt;span&gt;(galaxy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Asteroid&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;ast&lt;&#x2F;span&gt;&lt;span&gt;): &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;ast&lt;&#x2F;span&gt;&lt;span&gt;{ast} &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{}
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;operator&lt;&#x2F;span&gt;&lt;span&gt; galaxy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Asteroid&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return&lt;&#x2F;span&gt;&lt;span&gt; ast;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;bool &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;blast&lt;&#x2F;span&gt;&lt;span&gt;(Target &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;target&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;template&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typename&lt;&#x2F;span&gt;&lt;span&gt; T&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;blast&lt;&#x2F;span&gt;&lt;span&gt;(T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;obj&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;float &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;force&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;play&lt;&#x2F;span&gt;&lt;span&gt;(galaxy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Asteroid&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;ast&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;blast&lt;&#x2F;span&gt;&lt;span&gt;(ast, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;100&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;There are three main types of name lookup:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Member name lookup occurs when a name is to the right of a &lt;code&gt;a&lt;&#x2F;code&gt; or &lt;code&gt;-&amp;gt;&lt;&#x2F;code&gt; token, as in &lt;code&gt;foo-&amp;gt;bar&lt;&#x2F;code&gt;. This type of lookup is used to locate class members&lt;&#x2F;li&gt;
+&lt;li&gt;Qualified name lookup occurs when a name has a &lt;code&gt;::&lt;&#x2F;code&gt; token in it, like &lt;code&gt;std::sort&lt;&#x2F;code&gt;. This type of name is explicit. The part to the right of the &lt;code&gt;::&lt;&#x2F;code&gt; token is only looked up in the scope identified by the left part.&lt;&#x2F;li&gt;
+&lt;li&gt;Unqualified name lookup is neither of those. When the compiler sees an unqualified name, like &lt;code&gt;blast&lt;&#x2F;code&gt;, it looks for matching declarations in various scopes depending on the context. There&#x27;s a detailed set of rules that determine exactly where the compiler should look.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;In our case, we have an unqualified name. Now when name lookup is performed for a function call expression, the compiler may find multiple declarations. Let&#x27;s call these declarations &lt;strong&gt;candidates&lt;&#x2F;strong&gt;. In the example above, the compiler finds three candidates:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span&gt;galaxy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;blast&lt;&#x2F;span&gt;&lt;span&gt;(galaxy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Asteroid&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;ast&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;float &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;force&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;bool &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;blast&lt;&#x2F;span&gt;&lt;span&gt;(Target &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;target&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;template&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typename&lt;&#x2F;span&gt;&lt;span&gt; T&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;blast&lt;&#x2F;span&gt;&lt;span&gt;(T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;obj&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;float &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;force&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The first candidate, deserves extra attention because is demenstrates a feature of C++ that&#x27;s easy to overlook: argument-dependent lookup, or &lt;strong&gt;ADL&lt;&#x2F;strong&gt; for short. Here’s a quick summary in case you’re in the same boat. Normally, you wouldn’t expect this function to be a candidate for this particular call, since it was declared inside the &lt;code&gt;galaxy&lt;&#x2F;code&gt; namespace and the call comes from &lt;em&gt;outside&lt;&#x2F;em&gt; the &lt;code&gt;galaxy&lt;&#x2F;code&gt; namespace. There’s no &lt;code&gt;using namespace galaxy&lt;&#x2F;code&gt; directive in the code to make this function visible, either. So why is this function a candidate?&lt;&#x2F;p&gt;
+&lt;p&gt;The reason is because any time you use an unqualified name in a function call – and the name doesn’t refer to a class member, among other things – ADL kicks in, and name lookup becomes more greedy. Specifically, in addition to the usual places, the compiler looks for candidate functions &lt;em&gt;in the namespaces of the argument types&lt;&#x2F;em&gt; – hence the name “argument-dependent lookup”.&lt;&#x2F;p&gt;
+&lt;p&gt;The &lt;a href=&quot;https:&#x2F;&#x2F;en.cppreference.com&#x2F;w&#x2F;cpp&#x2F;language&#x2F;adl&quot;&gt;complete set of rules governing ADL&lt;&#x2F;a&gt; is more nuanced than what I’ve described here, but the key thing is that ADL only works with unqualified names. For qualified names, which are looked up in a single scope, there’s no point. ADL also works when overloading built-in operators like &lt;code&gt;+&lt;&#x2F;code&gt; and &lt;code&gt;==&lt;&#x2F;code&gt;, which lets you take advantage of it when writing, say, a math library.&lt;&#x2F;p&gt;
+&lt;p&gt;Interestingly, there are cases where member name lookup can find candidates that unqualified name lookup can’t. See &lt;a href=&quot;https:&#x2F;&#x2F;eli.thegreenplace.net&#x2F;2012&#x2F;02&#x2F;06&#x2F;dependent-name-lookup-for-c-templates&quot;&gt;this post by Eli Bendersky&lt;&#x2F;a&gt; for details about that.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;special-handling-of-function-template&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#special-handling-of-function-template&quot; aria-label=&quot;Anchor link for: special-handling-of-function-template&quot;&gt;Special handling of function template&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;Some of the candidates found by name lookup are functions; others are function &lt;em&gt;templates&lt;&#x2F;em&gt;. There’s just one problem with function templates: You can’t call them. You can only call functions. Therefore, after name lookup, the compiler goes through the list of candidates and tries to turn each function template into a function.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;overload-resolution&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#overload-resolution&quot; aria-label=&quot;Anchor link for: overload-resolution&quot;&gt;Overload resolution&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;At this stage, all of the function templates found during name lookup are gone, and we’re left with a nice, tidy set of &lt;strong&gt;candidate functions&lt;&#x2F;strong&gt;. This is also referred to as the &lt;strong&gt;overload set&lt;&#x2F;strong&gt;. Here’s the updated list of candidate functions for our example:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span&gt;galaxy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;blast&lt;&#x2F;span&gt;&lt;span&gt;(galaxy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Asteroid&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;ast&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;float &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;force&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;bool &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;blast&lt;&#x2F;span&gt;&lt;span&gt;(Target &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;target&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;blast&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;galaxy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Asteroid&amp;gt;(galaxy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Asteroid&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;obj&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;float &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;force&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The next two steps narrow down this list even further by determining which of the candidate functions are &lt;strong&gt;viable&lt;&#x2F;strong&gt; – in other words, which ones &lt;em&gt;could&lt;&#x2F;em&gt; handle the function call.&lt;&#x2F;p&gt;
+&lt;p&gt;After using the caller’s arguments to filter out incompatible candidates, the compiler proceeds to check whether each function’s &lt;a href=&quot;https:&#x2F;&#x2F;en.cppreference.com&#x2F;w&#x2F;cpp&#x2F;language&#x2F;constraints#Constraints&quot;&gt;&lt;strong&gt;constraints&lt;&#x2F;strong&gt;&lt;&#x2F;a&gt; are satisfied, if there are any. Constraints are a new feature in C++20. They let you use custom logic to eliminate candidate functions (coming from a class template or function template) without having to resort to SFINAE. They’re also supposed to give you better error messages. Our example doesn’t use constraints, so we can skip this step. (Technically, the standard says that constraints are also checked earlier, during &lt;a href=&quot;https:&#x2F;&#x2F;eel.is&#x2F;c++draft&#x2F;temp.deduct#general-5&quot;&gt;template argument deduction&lt;&#x2F;a&gt;, but I skipped over that detail. Checking in both places helps ensure the best possible error message is shown.)&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;tiebreakers&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#tiebreakers&quot; aria-label=&quot;Anchor link for: tiebreakers&quot;&gt;Tiebreakers&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;At this point in out example, we&#x27;re down to two viable functions. Either of them could handle the original function call just fine:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span&gt;galaxy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;blast&lt;&#x2F;span&gt;&lt;span&gt;(galaxy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Asteroid&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;ast&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;float &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;force&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;blast&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;galaxy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Asteroid&amp;gt;(galaxy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Asteroid&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;obj&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;float &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;force&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Indeed, if either of the above functions was the only viable one, it &lt;em&gt;would&lt;&#x2F;em&gt; be the one that handles the function call. But because there are two, the compiler must now do what it always does when there are multiple viable functions: It must determine which one is the &lt;strong&gt;best viable function&lt;&#x2F;strong&gt;. To be the best viable function, one of them must “win” against every other viable function as decided by a &lt;a href=&quot;https:&#x2F;&#x2F;en.cppreference.com&#x2F;w&#x2F;cpp&#x2F;language&#x2F;overload_resolution#Best_viable_function&quot;&gt;sequence of tiebreaker rules&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;First tiebreaker: Better-matching parameters wins&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;the two method are identical parameter types. So neither is better than the other.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Second tiebreaker: Non-template function wins&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;So the first method wins.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Third tiebreaker: More specialized template wins&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;If it wasn&#x27;t found, we would move on to the third tiebreaker.&lt;&#x2F;p&gt;
+&lt;p&gt;There are &lt;a href=&quot;https:&#x2F;&#x2F;en.cppreference.com&#x2F;w&#x2F;cpp&#x2F;language&#x2F;overload_resolution#Best_viable_function&quot;&gt;several more tiebreakers&lt;&#x2F;a&gt; in addition to the ones listed here. For example, if both the &lt;a href=&quot;https:&#x2F;&#x2F;devblogs.microsoft.com&#x2F;cppblog&#x2F;simplify-your-code-with-rocket-science-c20s-spaceship-operator&#x2F;&quot;&gt;spaceship &lt;code&gt;&amp;lt;=&amp;gt;&lt;&#x2F;code&gt; operator&lt;&#x2F;a&gt; and an overloaded comparison operator such as &lt;code&gt;&amp;gt;&lt;&#x2F;code&gt; are viable, C++ prefers the comparison operator. And if the candidates are user-defined conversion functions, there are other rules that take higher priority than the ones I’ve shown. Nonetheless, I believe the three tiebreakers I’ve shown are the most important to remember.&lt;&#x2F;p&gt;
+&lt;p&gt;Needless to say, if the compiler checks every tiebreaker and doesn’t find a single, unambiguous winner, compilation fails with an error message similar to the one shown near the beginning of this post.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;after-the-function-call-is-resolved&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#after-the-function-call-is-resolved&quot; aria-label=&quot;Anchor link for: after-the-function-call-is-resolved&quot;&gt;After the function call is resolved&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;We’ve reached the end of our journey. The compiler now knows exactly which function should be called by the expression &lt;code&gt;blast(ast, 100)&lt;&#x2F;code&gt;. In many cases, though, the compiler has more work to do after resolving a function call:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;If the function being called is a class member, the compiler must check that member’s &lt;a href=&quot;https:&#x2F;&#x2F;en.cppreference.com&#x2F;w&#x2F;cpp&#x2F;language&#x2F;access&quot;&gt;access specifiers&lt;&#x2F;a&gt; to see if it’s accessible to the caller.&lt;&#x2F;li&gt;
+&lt;li&gt;If the function being called is a template function, the compiler attempts to &lt;a href=&quot;https:&#x2F;&#x2F;en.cppreference.com&#x2F;w&#x2F;cpp&#x2F;language&#x2F;function_template#Implicit_instantiation&quot;&gt;instantiate&lt;&#x2F;a&gt; that template function, provided its definition is visible.&lt;&#x2F;li&gt;
+&lt;li&gt;If the function being called is a &lt;a href=&quot;https:&#x2F;&#x2F;en.cppreference.com&#x2F;w&#x2F;cpp&#x2F;language&#x2F;virtual&quot;&gt;virtual function&lt;&#x2F;a&gt;, the compiler generates special machine instructions so that the correct override will be called at runtime.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>Memory Faq(landley.net)</title>
+        <published>2021-05-08T11:56:06+00:00</published>
+        <updated>2021-05-08T11:56:06+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/memory-faq/" type="text/html"/>
+        <id>https://wendajiang.github.io/memory-faq/</id>
+        <content type="html">&lt;!--
+mermaid example:
+&lt;div class=&quot;mermaid&quot;&gt;
+    mermaid program
+&lt;&#x2F;div&gt;
+--&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;landley.net&#x2F;writing&#x2F;memory-faq.txt&quot;&gt;landley.net&#x2F;writing&#x2F;memory-faq.txt&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-is-some-existing-documentation-on-linux-memory-management&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-is-some-existing-documentation-on-linux-memory-management&quot; aria-label=&quot;Anchor link for: what-is-some-existing-documentation-on-linux-memory-management&quot;&gt;What is some existing documentation on Linux memory management?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Ulrich Drepper (the ex-glibc maintainer) wrote an article series called
+&amp;quot;What every programmer should know about memory&amp;quot;:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;Part 1: http:&#x2F;&#x2F;lwn.net&#x2F;Articles&#x2F;250967&#x2F;  (Introduction)
+&lt;&#x2F;span&gt;&lt;span&gt;Part 2: http:&#x2F;&#x2F;lwn.net&#x2F;Articles&#x2F;252125&#x2F;  (CPU Cache)
+&lt;&#x2F;span&gt;&lt;span&gt;Part 3: http:&#x2F;&#x2F;lwn.net&#x2F;Articles&#x2F;253361&#x2F;  (Virtual memory)
+&lt;&#x2F;span&gt;&lt;span&gt;Part 4: http:&#x2F;&#x2F;lwn.net&#x2F;Articles&#x2F;254445&#x2F;  (NUMA systems)
+&lt;&#x2F;span&gt;&lt;span&gt;Part 5: http:&#x2F;&#x2F;lwn.net&#x2F;Articles&#x2F;255364&#x2F;  (What programmers can do -- cache optimization)
+&lt;&#x2F;span&gt;&lt;span&gt;Part 6: http:&#x2F;&#x2F;lwn.net&#x2F;Articles&#x2F;256433&#x2F;  (What programmers can do -- multi-threaded optimizations)
+&lt;&#x2F;span&gt;&lt;span&gt;Part 7: http:&#x2F;&#x2F;lwn.net&#x2F;Articles&#x2F;257209&#x2F;  (Memory performance tools)
+&lt;&#x2F;span&gt;&lt;span&gt;Part 8: http:&#x2F;&#x2F;lwn.net&#x2F;Articles&#x2F;258154&#x2F;  (Future technologies)
+&lt;&#x2F;span&gt;&lt;span&gt;Part 9: http:&#x2F;&#x2F;lwn.net&#x2F;Articles&#x2F;258188&#x2F;  (Appendices and bibiography)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Mel Gorman&#x27;s book &amp;quot;Understanding the Linux Virtual Memory Manager&amp;quot; is
+available online:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;http:&#x2F;&#x2F;kernel.org&#x2F;doc&#x2F;gorman&#x2F;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;what-is-virtual-memory&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-is-virtual-memory&quot; aria-label=&quot;Anchor link for: what-is-virtual-memory&quot;&gt;What is virtual memory?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Virtual memory provides a software-controlled set of memory addresses,
+allowing each process to have its own unique view of a computer&#x27;s memory.&lt;&#x2F;p&gt;
+&lt;p&gt;Virtual addresses only make sense within a given context, such as a
+specific process.  The same virtual address can simultaneously mean
+different things in different contexts.&lt;&#x2F;p&gt;
+&lt;p&gt;Virtual addresses are the size of a CPU register.  On 32 bit systems each
+process has 4 gigabytes of virtual address space all to itself, which is
+often more memory than the system actually has.&lt;&#x2F;p&gt;
+&lt;p&gt;Virtual addresses are interpreted by a processor&#x27;s Memory Management Unit
+(mmu), using data structures called page tables which map virtual address
+ranges to associated content.&lt;&#x2F;p&gt;
+&lt;p&gt;Virtual memory is used to implement lazy allocation, swapping, file mapping,
+copy on write shared memory, defragmentation, and more.&lt;&#x2F;p&gt;
+&lt;p&gt;For details, see Ulrich Drepper&#x27;s &amp;quot;What every programmer should know
+about memory, Part 3: Virtual Memory&amp;quot;:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;http:&#x2F;&#x2F;lwn.net&#x2F;Articles&#x2F;253361&#x2F;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;what-is-physical-memory&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-is-physical-memory&quot; aria-label=&quot;Anchor link for: what-is-physical-memory&quot;&gt;What is physical memory?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Physical memory is storage hardware that records data with low latency and
+small granularity.  Physical memory addresses are numbers sent across a
+memory bus to identify the specific memory cell within a piece of
+storage hardware associated with a given read or write operation.&lt;&#x2F;p&gt;
+&lt;p&gt;Examples of storage hardware providing physical memory are DIMMs (DRAM),
+SD memory cards (flash), video cards (frame buffers and texture memory),
+network cards (I&#x2F;O buffers), and so on.&lt;&#x2F;p&gt;
+&lt;p&gt;Only the kernel uses physical memory addresses directly.  Userspace
+programs exclusively use virtual addresses.&lt;&#x2F;p&gt;
+&lt;p&gt;For details, see the ARS Technica DRAM Guide:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;  http:&#x2F;&#x2F;arstechnica.com&#x2F;paedia&#x2F;r&#x2F;ram_guide&#x2F;ram_guide.part1-1.html
+&lt;&#x2F;span&gt;&lt;span&gt;  http:&#x2F;&#x2F;arstechnica.com&#x2F;paedia&#x2F;r&#x2F;ram_guide&#x2F;ram_guide.part2-1.html
+&lt;&#x2F;span&gt;&lt;span&gt;  http:&#x2F;&#x2F;arstechnica.com&#x2F;paedia&#x2F;r&#x2F;ram_guide&#x2F;ram_guide.part3-1.html
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And Ulrich Drepper&#x27;s &amp;quot;What every programmer should know about memory,
+Part 1&amp;quot;:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;  http:&#x2F;&#x2F;lwn.net&#x2F;Articles&#x2F;250967&#x2F;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;what-is-a-memory-management-unit-mmu&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-is-a-memory-management-unit-mmu&quot; aria-label=&quot;Anchor link for: what-is-a-memory-management-unit-mmu&quot;&gt;What is a Memory Management Unit (MMU)?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;The memory management unit is the part of the CPU that interprets virtual
+addresses.  Attempts to read, write, or execute memory at virtual addresses
+are either translated to corresponding physical addresses, or else
+generate an interrupt (page fault) to allow software to respond to the
+attempted access.&lt;&#x2F;p&gt;
+&lt;p&gt;This gives each process its own virtual memory address range, which is
+limited only by address space (4 gigabytes on most 32-bit system), while
+physical memory is limited by the amount of available storage hardware.&lt;&#x2F;p&gt;
+&lt;p&gt;Physical memory addresses are unique in the system, virtual memory addresses
+are unique per-process.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-are-page-tables&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-are-page-tables&quot; aria-label=&quot;Anchor link for: what-are-page-tables&quot;&gt;What are page tables?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Page tables are data structures which containing a process&#x27;s list of memory
+mappings and track associated resources.  Each process has its own
+set of page tables, and the kernel also has a few page table entries for
+things like disk cache.&lt;&#x2F;p&gt;
+&lt;p&gt;32-bit Linux systems use three-level tree structures to record page tables.
+The levels are the Page Upper Directory (PUD), Page Middle Directory (PMD),
+and Page Table Entry (PTE).  (64-bit Linux can use 4-level page tables.)&lt;&#x2F;p&gt;
+&lt;p&gt;For details, see:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;  http:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Page_table
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;what-are-memory-mappings&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-are-memory-mappings&quot; aria-label=&quot;Anchor link for: what-are-memory-mappings&quot;&gt;What are memory mappings?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;A memory mapping is a set of page table entries describing the properties
+of a consecutive virtual address range.  Each memory mapping has a
+start address and length, permissions (such as whether the program can
+read, write, or execute from that memory), and associated resources (such
+as physical pages, swap pages, file contents, and so on).&lt;&#x2F;p&gt;
+&lt;p&gt;Creating new memory mappings allocates virtual memory, but not physical
+memory (except for a small amount of physical memory needed to store the
+page table itself).  Physical pages are attached to memory mappings later,
+in response to page faults.  Physical memory is allocated on-demand by the
+page fault handler as necessary to resolve page faults.&lt;&#x2F;p&gt;
+&lt;p&gt;A page table can be thought of as a description of a set of memory
+mappings.  Each memory mapping can be anonymous, file backed, device backed,
+shared, or copy on write.&lt;&#x2F;p&gt;
+&lt;p&gt;The mmap() system call adds a new memory mapping to the current process&#x27;s
+page tables.  The munmap() system call discards an existing mapping.&lt;&#x2F;p&gt;
+&lt;p&gt;Memory mappings cannot overlap.  The mmap() call returns an error if asked
+to create overlapping memory mappings.&lt;&#x2F;p&gt;
+&lt;p&gt;Virtual address ranges for which there is no current memory mapping are said
+to be &amp;quot;unmapped&amp;quot;, and attempts to access them generate a page fault which
+cannot be handled.  The page fault handler sends a Segmentation
+Violation signal (SIGSEGV) to the program on any access to unmapped
+addresses.  This is generally the result of following a &amp;quot;wild pointer&amp;quot;.&lt;&#x2F;p&gt;
+&lt;p&gt;Note that by default, Linux intentionally leaves the first few kilobytes
+(or even megabytes) of each process&#x27;s virtual address space unmapped, so
+that attempts to dereference null pointers generate an unhandled page
+fault resulting in an immediate SIGSEGV, killing the process.&lt;&#x2F;p&gt;
+&lt;p&gt;For details, see the Single Unix Specification version 4 entry for the
+mmap() system call:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;http:&#x2F;&#x2F;www.opengroup.org&#x2F;onlinepubs&#x2F;9699919799&#x2F;functions&#x2F;mmap.html
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;And the glibc mmap() documentation:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;http:&#x2F;&#x2F;www.gnu.org&#x2F;s&#x2F;libc&#x2F;manual&#x2F;html_node&#x2F;Memory_002dmapped-I_002fO.html
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;what-are-shared-pages&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-are-shared-pages&quot; aria-label=&quot;Anchor link for: what-are-shared-pages&quot;&gt;What are shared pages?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Multiple Page Table Entries can map the same physical page.  Access through
+these virtual addresses (often in different processes) all show the same
+contents, and changes to it are immediately visible to all users.  (Shared
+writable mappings are a common high-performance inter-process communication
+mechanism.)&lt;&#x2F;p&gt;
+&lt;p&gt;The number of PTEs mapping each physical page is tracked, and when the
+reference count falls to zero the page is moved to the free memory list.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-is-an-anonymous-mapping&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-is-an-anonymous-mapping&quot; aria-label=&quot;Anchor link for: what-is-an-anonymous-mapping&quot;&gt;What is an anonymous mapping?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Anonymous memory is a memory mapping with no file or device backing it.
+This is how programs allocate memory from the operating system for use
+by things like the stack and heap.&lt;&#x2F;p&gt;
+&lt;p&gt;Initially, an anonymous mapping only allocates virtual memory.  The new
+mapping starts with a redundant copy on write mapping of the zero page.
+(The zero page is a single page of physical memory filled with zeroes,
+maintained by the operating system.)  Every virtual page of the anonymous
+mapping is attached to this existing prezeroed page, so attempts to read
+from anywhere in the mapping return zeroed memory even though no new
+physical memory has been allocated to it yet.&lt;&#x2F;p&gt;
+&lt;p&gt;Attempts to write to the page trigger the normal copy-on-write mechanism in
+the page fault handler, allocating fresh memory only when needed to allow
+the write to proceed.  (Note, prezeroing optimizations change the
+implementation details here, but the theory&#x27;s the same.)  Thus &amp;quot;dirtying&amp;quot;
+anonymous pages allocates physical memory, the actual allocation call only
+allocates virtual memory.&lt;&#x2F;p&gt;
+&lt;p&gt;Dirty anonymous pages can be written to swap space, but in the absence of
+swap they remain &amp;quot;pinned&amp;quot; in physical memory.&lt;&#x2F;p&gt;
+&lt;p&gt;Anonymous mappings may be created by passing the MAP_ANONYMOUS flag to
+mmap().&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-is-a-file-backed-mapping&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-is-a-file-backed-mapping&quot; aria-label=&quot;Anchor link for: what-is-a-file-backed-mapping&quot;&gt;What is a file backed mapping?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;File backed mappings mirror the contents of an existing file.  The mapping
+has some administrative data noting which file to map from, and at which
+offset, as well as permission bits indicating whether the pages may be read,
+written, or executed.&lt;&#x2F;p&gt;
+&lt;p&gt;When page faults attach new physical pages to such a mapping, the contents of
+those pages is initialized by reading the contents of the file being mapped,
+at the appropriate offset for that page.&lt;&#x2F;p&gt;
+&lt;p&gt;These physical pages are usually shared with the page cache, the kernel&#x27;s
+disk cache of file contents.  The kernel caches the contents of files
+when the page is read, so sharing those cache pages with the process reduces
+the total number of physical pages required by the system.&lt;&#x2F;p&gt;
+&lt;p&gt;Writes to file mappings created with the MAP_SHARED flag update the page
+cache pages, making the updated file contents immediately visible to other
+processes using the file, and eventually the cache pages will be flushed
+to disk updating the on-disk copy of the file.&lt;&#x2F;p&gt;
+&lt;p&gt;Writes to file mappings created with the MAP_PRIVATE flag perform a
+copy on write, allocating a new local copy of the page to store the
+changes.  These changes are not made visible to other processes, and do
+not update the on-disk copy of the file.&lt;&#x2F;p&gt;
+&lt;p&gt;Note that this means writes to MAP_SHARED pages do not allocate additonal
+physical pages (the page was already faulted into the page cache by the
+read, and the data can be flushed back to the file if the physical page
+is needed elsewhere), but writes to MAP_PRIVATE pages do (the copy in
+the page cache and the local copy the program needs diverge, so two pages
+are needed to store them, and flushing the page cache copy back to disk
+won&#x27;t free up the local copy of the changed contents).&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-is-the-page-cache&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-is-the-page-cache&quot; aria-label=&quot;Anchor link for: what-is-the-page-cache&quot;&gt;What is the page cache?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;The page cache is the kernel&#x27; cache of file contents.  It&#x27;s the main
+user of virtual memory that doesn&#x27;t belong to a specific process.&lt;&#x2F;p&gt;
+&lt;p&gt;See &amp;quot;What is a file backed mapping&amp;quot; and &amp;quot;What is free memory&amp;quot; for more info.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-is-cpu-cache&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-is-cpu-cache&quot; aria-label=&quot;Anchor link for: what-is-cpu-cache&quot;&gt;What is CPU cache?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;The CPU cache is a very small amount of very fast memory built into a
+processor, containing temporary copies of data to reduce processing latency.&lt;&#x2F;p&gt;
+&lt;p&gt;The L1 cache is a tiny amount of memory (generally between 1k and 64k)
+wired directly into the processor that can be accessed in a single clock
+cycle.  The L2 cache is a larger amount of memory (up to several
+megabytes) adjacent to the processor, which can be accessed in a small
+number of clock cycles.  Access to uncached memory (across the memory bus)
+can take dozens, hundreds, or even thousands of clock cycles.&lt;&#x2F;p&gt;
+&lt;p&gt;(Note that latency is the issue CPU cache addresses, not throughput.  The
+memory bus can provide a constant stream of memory, but takes a while to
+start doing so.)&lt;&#x2F;p&gt;
+&lt;p&gt;For details, see Ulrich Drepper&#x27;s &amp;quot;What every programmer should know
+about memory, Part 2&amp;quot;:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;  http:&#x2F;&#x2F;lwn.net&#x2F;Articles&#x2F;252125&#x2F;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;what-is-a-translation-lookaside-buffer-tlb&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-is-a-translation-lookaside-buffer-tlb&quot; aria-label=&quot;Anchor link for: what-is-a-translation-lookaside-buffer-tlb&quot;&gt;What is a Translation Lookaside Buffer (TLB)?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;The TLB is a cache for the MMU.  All memory in the CPU&#x27;s L1 cache must
+have an associated TLB entry, and invalidating a TLB entry flushes the
+associated cache line(s).&lt;&#x2F;p&gt;
+&lt;p&gt;The TLB is a small fixed-size array of recently used pages, which the
+CPU checks on each memory access.  It lists a few of the virtual address
+ranges to which physical pages are currently assigned.&lt;&#x2F;p&gt;
+&lt;p&gt;Accesses to virtual addresses listed in the TLB go directly through to the
+associated physical memory (or cache pages) without generating page faults
+(assuming the page permissions allow that category of access).  Accesses
+to virtual addresses not listed in the TLB (a &amp;quot;TLB miss&amp;quot;) trigger a page
+table lookup, which is performed either by hardware, or by the page fault
+handler, depending on processor type.&lt;&#x2F;p&gt;
+&lt;p&gt;For details, see: &lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;  http:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Translation_lookaside_buffer
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;1995 interview with Linus Torvalds describing the i386, PPC, and Alpha TLBs:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;  http:&#x2F;&#x2F;www.linuxjournal.com&#x2F;article&#x2F;36
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;what-is-a-page-fault-handler&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-is-a-page-fault-handler&quot; aria-label=&quot;Anchor link for: what-is-a-page-fault-handler&quot;&gt;What is a page fault handler?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;A page fault handler is an interrupt routine, called by the Memory
+Management Unit in response an attempt to access virtual memory which
+did not immediately succeed.&lt;&#x2F;p&gt;
+&lt;p&gt;When a program attempts to read, write, or execute memory in a page that
+hasn&#x27;t got the appropriate permission bits set in its page table entry
+to allow that type of access, the instruction generates an interrupt.  This
+calls the page fault handler to examines the registers and page tables of
+the interrupted process and determine what action to take to handle
+the fault.&lt;&#x2F;p&gt;
+&lt;p&gt;The page fault handler may respond to a page fault in three ways:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;The page fault handler can resolve the fault by immediately attaching a
+page of physical memory to the appropriate page table entry, adjusting
+the entry, and resuming the interrupted instruction.  This is called a
+&amp;quot;soft fault&amp;quot;.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;When the fault handler can&#x27;t immediately resolve the fault, it may
+suspend the interrupted process and switch to another while the system
+works to resolve the issue.  This is called a &amp;quot;hard fault&amp;quot;, and results
+when an I&#x2F;O operation most be performed to prepare the physical page
+needed to resolve the fault.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;If the page fault handler can&#x27;t resolve the fault, it sends a signal
+(SIGSEGV) to the process, informing it of the failure.  Although a process
+can install a SIGSEGV handler (debuggers and emulators tend to do this),
+the default behavior of an unhandled SIGSEGV is to kill the process with
+the message &amp;quot;bus error&amp;quot;.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;A page fault that occurs in an interrupt handler is called a &amp;quot;double fault&amp;quot;,
+and usually panics the kernel.  The double fault handler calls the kernel&#x27;s
+panic() function to print error messages to help diagnose the problem.
+The process to be killed for accessing memory it shouldn&#x27;t is the
+kernel itself, and thus the system is too confused to continue.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;http:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Double_fault
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;A triple fault cannot be handled in software.  If a page fault occurrs in
+the double fault handler, the machine immediately reboots.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;http:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Triple_fault
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;how-does-the-page-fault-handler-allocate-physical-memory&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#how-does-the-page-fault-handler-allocate-physical-memory&quot; aria-label=&quot;Anchor link for: how-does-the-page-fault-handler-allocate-physical-memory&quot;&gt;How does the page fault handler allocate physical memory?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;The Linux kernel uses lazy (on-demand) allocation of physical pages,
+deferring the allocation until necessary and avoiding allocating physical
+pages which will never actually be used.&lt;&#x2F;p&gt;
+&lt;p&gt;Memory mappings generally start out with no physical pages attached.  They
+define virtual address ranges without any associated physical memory.  So
+malloc() and similar allocate space, but the actual memory is allocated
+later by the page fault handler.&lt;&#x2F;p&gt;
+&lt;p&gt;Virtual pages with no associated physical page will have the read,
+write, and execute bits disabled in their page table entries.  This causes
+any access to that address to generate a page fault, interrupting the
+program and calling the page fault handler.&lt;&#x2F;p&gt;
+&lt;p&gt;When the page fault handler needs to allocate physical memory to handle
+a page fault, it zeroes a free physical page (or grabs a page from a pool
+of prezeroed pages), attaches that page of memory to the Page Table Entry
+associated with the fault, updates that PTE to allow the appropriate access,
+and resumes the faulting instruction.&lt;&#x2F;p&gt;
+&lt;p&gt;Note that implementing this requires two sets of page table flags for
+read, write, execute, and share.  The VM_READ, VM_WRITE, VM_EXEC, and
+VM_SHARED flags (in linux&#x2F;mm.h) are used by the MMU to generate faults.
+The VM_MAYREAD, VM_MAYWRITE, VM_MAYEXEC, and VM_MAYSHARE flags are used by
+the page fault handler to determine whether the attempted access was legal
+and thus the fault handler should adjust the PTE to resolve the fault and
+allow the process to continue.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;how-does-fork-work&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#how-does-fork-work&quot; aria-label=&quot;Anchor link for: how-does-fork-work&quot;&gt;How does fork work?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;The fork() system call creates a new process by copying an existing
+process.  A new process is created with a copy of the page tables
+that calls fork().  These page tables are all copy on write mappings
+sharing the existing physical pages between parent and child.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;how-does-exec-work&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#how-does-exec-work&quot; aria-label=&quot;Anchor link for: how-does-exec-work&quot;&gt;How does exec work?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;The exec() system call executes a new file in the current process
+context.  It blanks the process&#x27;s current page table, discarding all
+existing mappings, and replaces them with a fresh page table containing
+a small number of new mappings, including an executable mmap() of the new
+file passed to the exec() call, a small amount of administrative space
+containing the environment variables and command line arguments passed
+into the new program, a new process stack, and so on.&lt;&#x2F;p&gt;
+&lt;p&gt;The normal way to launch a new process in Unix-like systems is to call
+fork(), followed immediately by a call to exec() in the new process.
+Thus fork() copies the parent process&#x27;s existing process&#x27;s memory mappings
+into the new process, then exec() immediately discards them again.
+Because these were shared mappings, the fork() allocates a lot of virtual
+space but consumes very few new physical pages.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;how-do-shared-libraries-work&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#how-do-shared-libraries-work&quot; aria-label=&quot;Anchor link for: how-do-shared-libraries-work&quot;&gt;How do shared libraries work?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Only statically linked executables are executed directly.  Shared libraries
+are executed by the dynamic linker (either ld-linux.so.2 or ld-uClibc.so.0),
+which despite the name is a statically linked executable that works a bit
+like #!&#x2F;bin&#x2F;sh or #!usr&#x2F;bin&#x2F;perl in shell scripts.  It&#x27;s the binary that&#x27;s
+launched to run this program, and the path to this program is fed to it as
+its first argument.&lt;&#x2F;p&gt;
+&lt;p&gt;The dynamic linker mmap()s the executable files, and any shared libraries
+it needs, using the MAP_PRIVATE flag.  This allows it to write to those
+pages to perform the dynamic linking fixups allowing the executable&#x27;s calls
+out to the shared library code to connect.  (It calls mprotect() to set the
+pages read only before handing control over to the linked executable.)
+The dynamic linker traces through various lists of calls in the program&#x27;s
+ELF tables, looks up the appropriate function pointer for each one, and
+writes that pointer to the call site in the memory mapping.&lt;&#x2F;p&gt;
+&lt;p&gt;Pages the dynamic linker writes to are essentially converted to anonymous
+pages by breaking the copy-on-write.  These new &amp;quot;dirtied&amp;quot; pages allocate
+physical memory visible only to this process.  Thus keeping to a minimum
+the number of dirtied pages allows the rest to remain shared, and thus saves
+memory.&lt;&#x2F;p&gt;
+&lt;p&gt;Shared libraries are normally compiled with the -fpic flag (Position
+Independent Code), which creates an object table containing all the
+references to external calls to data and functions.  Instead of reaching
+out and touching the shared objects directly, the code bounces off this
+table.  This makes the code slightly larger by inserting an extra jump
+or extra load, but the advantage is that all the external references
+modified by the linker are grouped together into a small number of pages.&lt;&#x2F;p&gt;
+&lt;p&gt;So the binary is slightly larger, but more of the pages are shared since
+the number of physical pages dirtied by the dynamic linker is smaller each
+time the shared object is used.&lt;&#x2F;p&gt;
+&lt;p&gt;Normally only shared libraries are compiled this way, but some programs
+(such as busybox) which the system expects to run many instances of may
+also benefit from the increased sharing more than they suffer from the
+increased size.&lt;&#x2F;p&gt;
+&lt;p&gt;Note that statically linked programs have no fixups applied to them, and
+thus no private executable pages.  Every page of their executable mapping
+remains shared.  They also spawn faster, since there&#x27;s no dynamic linker
+performing fixups.  Thus in some circumstances, static linking is actually
+more efficient than dynamic linking.  (Strange but true.)&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;how-does-copy-on-write-work&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#how-does-copy-on-write-work&quot; aria-label=&quot;Anchor link for: how-does-copy-on-write-work&quot;&gt;How does copy on write work?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;If two page table entries point to the same physical page, the contents
+of that page show up in both locations when read.  A reference counter
+associated with the page tracks how many page table entries point to that
+page.  Each of those page table entries has read permission (but not
+write permissions) for the page.&lt;&#x2F;p&gt;
+&lt;p&gt;Attemps to write to the page generate a page fault.  The page fault handler
+allocates a new physical page, copies the contents of the shared page into
+the new page, attaches the new page to the faulting page table entry, sets
+the updated PTE writeable, decrements the count on the old shared page
+(possibly removing its shared status if the reference count falls to 1),
+and resumes the faulting process allowing the write to go through to the
+new nonshared copy of the page.&lt;&#x2F;p&gt;
+&lt;p&gt;This is a form of lazy allocation, deferring memory allocation until
+the new memory is actually used.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-are-clean-pages&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-are-clean-pages&quot; aria-label=&quot;Anchor link for: what-are-clean-pages&quot;&gt;What are clean pages?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Clean pages have copies of their data stored elsewhere, such as in swap
+space or in a file.  Thus the physical memory storing that information may
+be reclaimed an reused elsewhere by detaching the physical page from the
+associated Page Table Entry.  When the page&#x27;s contents are needed again,
+a new physical page may be allocated and its contents read from the stored
+copy.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-are-active-pages&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-are-active-pages&quot; aria-label=&quot;Anchor link for: what-are-active-pages&quot;&gt;What are active pages?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Active pages are page table entries that have associated physical pages
+which have been used recently.&lt;&#x2F;p&gt;
+&lt;p&gt;The system can track active pages by removing the read, write, and execute
+bits from page table entries but leaving the associated physical page
+still attached, then taking a soft fault the next time that page is
+accessed.  The fault handler can cheaply switch the appropriate access
+bit back on and resume the faulting instruction, thereby recording that
+the page is currently in use.&lt;&#x2F;p&gt;
+&lt;p&gt;Pages which are active are poor candidates for page stealing, even if
+they are clean, because the process using them will quickly fault a new
+physical page back in again if the current one is reclaimed.&lt;&#x2F;p&gt;
+&lt;p&gt;Note that reading a lot of filesystem data marks cache pages as active,
+since they&#x27;re recently used.  This not only causes the page cache to
+allocate lots of physical pages, but prevents those pages from being
+reclaimed since they were used more recently than other pages in the
+system.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-are-free-pages&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-are-free-pages&quot; aria-label=&quot;Anchor link for: what-are-free-pages&quot;&gt;What are free pages?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;When a page&#x27;s reference count goes to zero, the page is added to the free
+list inside the kernel.  These free pages are not currently used for any
+purpose, and are essentially wasted until some use is found for them.&lt;&#x2F;p&gt;
+&lt;p&gt;A freshly booted system starts with lots of free pages.  Free pages also
+occur when processes exit(), or when munmap() discards a mapping and the
+private pages associated with it.&lt;&#x2F;p&gt;
+&lt;p&gt;The kernel tries to minimize the number of free pages in the system.
+Instead, it tries to find uses for these pages which improve performance of
+existing processes, but which leaves them easily reclaimable if the memory
+is needed for another purpose.&lt;&#x2F;p&gt;
+&lt;p&gt;For example, the page cache keeps around copies of file contents long
+after they were last accessed, potentially avoiding an expensive disk
+access if that file is read again in future.  If those pages are needed
+for other purposes, the cached contents can easily be discarded and the
+pages reallocated.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-is-page-stealing&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-is-page-stealing&quot; aria-label=&quot;Anchor link for: what-is-page-stealing&quot;&gt;What is page stealing?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Page stealing is a response to a shortage of free pages, by &amp;quot;stealing&amp;quot;
+existing allocated physical pages from their current users.  It&#x27;s a&lt;br &#x2F;&gt;
+statistical method of effectively obtaining extra physical pages by
+identifying existing allocations unlikely to be used again in the
+near future and recycling them.&lt;&#x2F;p&gt;
+&lt;p&gt;Page stealing removes existing physical pages from their mappings, disposes
+of their current contents (often by writing them to disk), and reuses the
+memory elsewhere.  If the original user needs their page back, a new
+physical page is allocated and the old contents loaded into the new page.&lt;&#x2F;p&gt;
+&lt;p&gt;Page stealing looks for inactive pages, since active ones would probably
+just be faulted back in again immediately.  Clean inactive pages are almost
+as good as free pages, because their current contents are already copied
+somewhere else and can be discarded without even performing any I&#x2F;O.
+Dirty pages are cleaned by scheduling I&#x2F;O to write them to backing store
+(swap for anonymous pages, to the mapped file for shared file backed
+mappings).&lt;&#x2F;p&gt;
+&lt;p&gt;Page stealing attempts to determine which existing physical pages are least
+likely to be needed again soon, meaning its trying to predict the future
+actions of the processes using those pages.  It does so through various
+heuristics, which can never be perfect.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-is-a-working-set-of-pages&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-is-a-working-set-of-pages&quot; aria-label=&quot;Anchor link for: what-is-a-working-set-of-pages&quot;&gt;What is a &amp;quot;working set&amp;quot; of pages?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;A working set is the set of memory chunks required to complete an
+operation.  For example, the CPU attempts to keep the set of cache
+lines required for tight inner loops in L1 cache until the loop completes.
+It attempts to keep the set of frequently used functions from various
+parts of a program (including shared libraries) in the L2 cache.  It does
+so both by prefetching cache lines it predicts it may need soon, and by
+making decisions about which cache lines to discard and which to keep when
+making space to load new cache lines.&lt;&#x2F;p&gt;
+&lt;p&gt;The page fault handler attempts to keep each currently running process&#x27;s
+working set of pages in physical memory until the process blocks awaiting
+input or exits.  Unused portions of program code may never even be loaded
+on a given program run (such as an &amp;quot;options&amp;quot; menu for a program that isn&#x27;t
+currently being configured, or portions of generic shared libraries which
+this program doesn&#x27;t actually use).&lt;&#x2F;p&gt;
+&lt;p&gt;The working set is determined dynamically at runtime, and can change
+over time as a program does different things.&lt;&#x2F;p&gt;
+&lt;p&gt;The objective of page stealing is to keep the &amp;quot;working set&amp;quot; of pages in
+fast physical memory, allowing processes to &amp;quot;race to quiescence&amp;quot; where
+the system completes its current tasks quickly and settles down into
+an idle state waiting for the next thing to do.  From this point of view,
+physical memory can be seen as a cache both for swap pages and for
+executables in the filesystem.  The task of keeping the working set in
+physical memory (and avoiding page faults that trigger I&#x2F;O) is analogous
+to the CPU&#x27;s task of keeping the appropriate contents in L1 and L2 caches.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-is-thrashing&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-is-thrashing&quot; aria-label=&quot;Anchor link for: what-is-thrashing&quot;&gt;What is thrashing?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;In low memory situations, each new allocation involves stealing an in-use
+page from elsewhere, saving its current contents, and loading new contents.
+When that page is again referenced, another page must be stolen to replace
+it, saving the new contents and reloading the old contents.&lt;&#x2F;p&gt;
+&lt;p&gt;It essentially means that the working set required to service the main
+loops of the programs the system is running are larger than available
+physical memory, either because physical memory is tied up doing something
+else or because the working set is just that big.&lt;&#x2F;p&gt;
+&lt;p&gt;This can lead to a state where the CPU generates a constant stream of
+page faults, and spends most of its time sitting idle, waiting for I&#x2F;O to
+service those page faults.&lt;&#x2F;p&gt;
+&lt;p&gt;This is often called &amp;quot;swap thrashing&amp;quot;, and in some ways is the result of
+a failure of the system&#x27;s swap file.&lt;&#x2F;p&gt;
+&lt;p&gt;If the swap file is too small (or entirely absent), the system can only
+steal pages from file backed mappings.  Since every executable program
+and shared library is a file backed mapping, this means the system yanks
+executable pages, which is generally faults back in fairly rapidly since
+they tend to get used a lot.  This can quickly lead to thrasing.&lt;&#x2F;p&gt;
+&lt;p&gt;The other way to encourage swap thrashing is by having too large of a swap
+file, so that programs that query available memory see huge amounts of swap
+space and try to use it.  The system&#x27;s available physical memory and I&#x2F;O
+bandwidth don&#x27;t change with the size of the swap file, so attempts to use
+any significant portion of that swap space result memory accesses occuring at
+disk I&#x2F;O speed (four orders of magnitude slower than main memory, stretching
+each 1&#x2F;10th of a second out to about two minutes).&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-is-the-out-of-memory-oom-killer&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-is-the-out-of-memory-oom-killer&quot; aria-label=&quot;Anchor link for: what-is-the-out-of-memory-oom-killer&quot;&gt;What is the Out Of Memory (OOM) killer?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;If the system ever truly ran out of physical memory, it could reach a state
+where every process is waiting for some other process to release a page
+before it could continue.  This deadlock situation would freeze the system.&lt;&#x2F;p&gt;
+&lt;p&gt;Before this happened, the system would start thrashing, where it would
+slow itself to a crawl by spending all its time constantly stealing pages
+only to steal them back again immediately.  This situation is almost as
+bad as true deadlock, slowing response time to useless levels (five or ten
+minute latency on normally instantaneous responses is not unusual during
+swap thrashing; this is assuming your operation does not time out instead).&lt;&#x2F;p&gt;
+&lt;p&gt;A system that enters swap thrashing may take hours to recover (assuming
+a backlog of demands does not emerge as it fails to service them, preventing
+it from ever recovering).  Or it can take just as long to proceed to
+a true deadlock (where the flood of swap I&#x2F;O stops because the CPU is pegged
+at 100% searching for the next page to steal, never finding one, and thus
+stops scheduling new I&#x2F;O).&lt;&#x2F;p&gt;
+&lt;p&gt;To avoid either situation, Linux introduced the OOM killer.  When it
+detects the system has entered swap thrashing, it heuristically determines
+a process to kill to free up pages.  It can also be configured to reboot
+the entire system instead of selecting a specific process to kill.&lt;&#x2F;p&gt;
+&lt;p&gt;The OOM killer&#x27;s process-killing capability is a reasonable way to deal with
+runaway processes and &amp;quot;fork bombs&amp;quot;, but in the absence of a clearly
+malfunctioning process that is truly &amp;quot;at fault&amp;quot;, killing any process is
+often unacceptable.&lt;&#x2F;p&gt;
+&lt;p&gt;Note that the OOM killer doesn&#x27;t wait for a true memory exhaustion to
+deadlock the system, both because the system is effectively down while
+thrashing, and because a paralyzed system might not be able to run even
+the OOM killer.&lt;&#x2F;p&gt;
+&lt;p&gt;The OOM killer&#x27;s process killing heuristics are a reasonable way to deal with
+runaway processes and &amp;quot;fork bombs&amp;quot;, but in the absence of a clearly
+malfunctioning process that is truly &amp;quot;at fault&amp;quot;, killing any process is
+often unacceptable.  Developers often argue about the choice of processes
+to kill, and exactly when the thrashing is bad enough to trigger the OOM
+killer and when to allow the system to attempt to work its way through
+to recovery.  Both of these heuristics are by their nature imperfect,
+because they attempt to predict the future.&lt;&#x2F;p&gt;
+&lt;p&gt;In general, developers try to avoid triggering the OOM killer, and treat
+its occurrence as the userspace equivalent of a kernel panic().  The system
+got into an untenable state, it might be good to find out why and prevent
+its recurrence.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;why-is-strict-overcommit-a-dumb-idea&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#why-is-strict-overcommit-a-dumb-idea&quot; aria-label=&quot;Anchor link for: why-is-strict-overcommit-a-dumb-idea&quot;&gt;Why is &amp;quot;strict overcommit&amp;quot; a dumb idea?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;People who don&#x27;t understand how virtual memory works often insist on
+tracking the relationship between virtual and physical memory, and attempting
+to enforce some correspondence between them (when there isn&#x27;t one), instead
+of controlling their programs&#x27; behavior.&lt;&#x2F;p&gt;
+&lt;p&gt;Many common unix programming idioms create large virtual memory
+ranges with the potential to consume a lot of physical memory, but
+never realize that potential.  Linux allows the system to &amp;quot;overcommit&amp;quot;
+memory, creating memory mappings that promise more physical memory than
+the system could actually deliver.&lt;&#x2F;p&gt;
+&lt;p&gt;For example, the fork&#x2F;exec combo creates transient virtual memory usage
+spikes, which go away again almost immediately without ever breaking the
+copy on write status of most of the pages in the forked page tables.  Thus
+if a large process forks off a smaller process, enormous physical memory
+demands threaten to happen (as far as overcommit is concerned), but never
+materialize.&lt;&#x2F;p&gt;
+&lt;p&gt;Dynamic linking raises similar issues: the dynamic linker maps executable
+files and shared libraries MAP_PRIVATE, which allows it to write to those
+pages to perform the dynamic linking fixups allowing the shared library
+calls to connect to the shared library.  In theory, there could be a
+call to functions or data in a shared library within every page of the
+executable (and thus the entire mapping could be converted to anonymous
+memory by the copy on write actions of the dynamic linker).  And since
+shared libraries can call other shared libraries, those could require
+private physical memory for their entire mapping too.&lt;&#x2F;p&gt;
+&lt;p&gt;In reality, that doesn&#x27;t happen.  It would be incredibly inefficient and
+defeat the purpose of using shared libraries in the first place.  Most
+shared libraries are compiled as Position Independent Code (PIC), and
+some executables are Position Independent Executalbles (PIE), which
+groups &lt;&#x2F;p&gt;
+&lt;p&gt;People who don&#x27;t understand how virtual memory works often insist on
+tracking the relationship between virtual and physical memory, and attempting
+to enforce some correspondence between them (when there isn&#x27;t one).  Instead
+of designing their programs with predictable and controllable behavior, they
+try to make the operating system predict the future.  This doesn&#x27;t work.&lt;&#x2F;p&gt;
+&lt;p&gt;Strict overcommit encourages the addition of gigabytes (even terabytes)
+of swap space, which leads to swap thrasing if it is ever used.  Systems
+with large amounts of swap space can literally thrash for days, during which
+they perform less computation than they could perform in a single minute
+during non-thrashing operation (such as if the OOM killer triggered a
+reboot).&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-is-the-appeal-of-huge-pages&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-is-the-appeal-of-huge-pages&quot; aria-label=&quot;Anchor link for: what-is-the-appeal-of-huge-pages&quot;&gt;What is the appeal of huge pages?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;The CPU has a limited number of TLB entries.  A huge page allows a single TLB
+entry to translate addresses for a large amount of contiguous physical
+memory.  (For example, the entire Linux kernel fits within a single 2
+megabyte &amp;quot;huge page&amp;quot; on x86 systems.  Keeping the entire kernel in a
+single TLB entry means that calling into the kernel doesn&#x27;t flush the
+userspace mappings out of the TLB.)&lt;&#x2F;p&gt;
+&lt;p&gt;Using huge pages means the MMU spends less time walking page tables to refill
+the TLB, and can lead to about a 10% performance increase if used
+correctly.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-are-memory-zones-and-high-memory&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-are-memory-zones-and-high-memory&quot; aria-label=&quot;Anchor link for: what-are-memory-zones-and-high-memory&quot;&gt;What are memory zones and &amp;quot;high memory&amp;quot;?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;http:&#x2F;&#x2F;kerneltrap.org&#x2F;node&#x2F;2450
+http:&#x2F;&#x2F;linux-mm.org&#x2F;HighMemory
+http:&#x2F;&#x2F;www.cs.columbia.edu&#x2F;~smb&#x2F;classes&#x2F;s06-4118&#x2F;l19.pdf
+http:&#x2F;&#x2F;book.opensourceproject.org.cn&#x2F;kernel&#x2F;kernelpri&#x2F;opensource&#x2F;0131181637&#x2F;ch04lev1sec2.html&lt;&#x2F;p&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>分布式事务:两阶段提交与三阶段提交</title>
+        <published>2021-03-16T15:32:32+00:00</published>
+        <updated>2021-03-16T15:32:32+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/distribute-transaction-2pc-3pc/" type="text/html"/>
+        <id>https://wendajiang.github.io/distribute-transaction-2pc-3pc/</id>
+        <content type="html">&lt;!--
+mermaid example:
+&lt;div class=&quot;mermaid&quot;
+    mermaid program
+&lt;&#x2F;div&gt;
+--&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;segmentfault.com&#x2F;a&#x2F;1190000012534071&quot;&gt;转载&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;在分布式系统中著有 CAP 理论，该理论由加州大学伯克利分校的 &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Eric_Brewer_(scientist)&quot;&gt;Eric Brewer&lt;&#x2F;a&gt; 教授提出，阐述了在一个分布式系统中不可能同时满足一致性（ &lt;strong&gt;C&lt;&#x2F;strong&gt; onsistency）、可用性（ &lt;strong&gt;A&lt;&#x2F;strong&gt; vailability），以及分区容错性（ &lt;strong&gt;P&lt;&#x2F;strong&gt; artition Tolerance）。&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;一致性:&lt;&#x2F;strong&gt; 在分布式系统中数据往往存在多个副本，一致性描述的是这些副本中的数据在内容和组织上的一致。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;可用性:&lt;&#x2F;strong&gt; 描述系统对用户的服务能力，所谓可用是指在用户能够容忍的时间范围内返回用户期望的结果。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;分区容错性:&lt;&#x2F;strong&gt; 分布式系统通常由多个节点构成，由于网络是不可靠的，所以存在分布式集群中的节点因为网络通信故障导致被孤立成一个个小集群的可能性，即网络分区，分区容错性要求在出现网络分区时系统仍然能够对外提供一致性的可用服务。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;对于一个分布式系统而言，我们要始终假设网络是不可靠的，因此分区容错性是对一个分布式系统最基本的要求，我们的切入点更多的是尝试在可用性和一致性之间寻找一个平衡点，但这也并非要求我们在系统设计时一直建立在网络出现分区的前提之上，然后对一致性和可用性在选择时非此即彼。&lt;&#x2F;p&gt;
+&lt;p&gt;Eric Brewer 教授在 2012 年就曾指出 &lt;strong&gt;CAP 理论证明不能同时满足一致性、可用性，以及分区容错性的观点在实际系统设计指导上存在一定的误导性。&lt;&#x2F;strong&gt;  传统对于 CAP 理论的理解认为在设计分布式系统时必须满足 P，然后在 C 和 A 之间进行取舍，这是片面的。实际中网络出现分区的可能性还是比较小的，尤其是目前网络环境正在变得越来越好，甚至许多系统都拥有专线支撑，所以在网络未出现分区时，还是应该兼顾 A 和 C。另外就是对于一致性、可用性，以及分区容错性三者在度量上也应该有一个评定范围，最简单的以可用性来说，当有多少占比请求出现响应超时才可以被认为是不满足可用性，而不是一出现超时就认为是不可用的。最后我们需要考虑的一点就是分布式系统一般都是一个比较大且复杂的系统，我们应该从更小的粒度上对各个子系统进行评估和设计，而不是简单的从整体上武断决策。&lt;&#x2F;p&gt;
+&lt;p&gt;让分布式集群始终对外提供可用的一致性服务一直是富有挑战和趣味的任务。暂且抛开可用性，拿一致性来说，对于关系型数据库我们通常利用事务来保证数据的强一致性，但是当我们的数据量越来越大，大到单库已经无法承担时，我们不得不采取分库分表的策略对数据库实现水平拆分，或者引入 NoSQL 技术，构建分布式数据库集群以分摊读写压力，从而提升数据库的存储和响应能力，但是多个数据库实例也为我们使用数据库带来了许多的限制，比如主键的全局唯一、联表查询、数据聚合等等，另外一个相当棘手的问题就是数据库的事务由原先的单库事务变成了现在的分布式事务。&lt;&#x2F;p&gt;
+&lt;p&gt;分布式事务的实现并不是无解的，比如下文要展开的两阶段提交（2PC:Two-Phase Commit）和三阶段提交（3PC:Three-Phase Commit）都给我们提供了思路，但是在分布式环境下如何保证数据的强一致性，并对外提供高可用的服务还是相当棘手的，因此很多分布式系统对于数据强一致性都敬而远之。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;liang-jie-duan-ti-jiao-xie-yi-2pc-two-phase-commit&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#liang-jie-duan-ti-jiao-xie-yi-2pc-two-phase-commit&quot; aria-label=&quot;Anchor link for: liang-jie-duan-ti-jiao-xie-yi-2pc-two-phase-commit&quot;&gt;两阶段提交协议 (2PC: Two-Phase Commit )&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;两阶段提交协议的目标是在于为分布式系统保证数据的一致性，许多分布式协议采用该协议提供对分布式事务的支持。顾名思义，该协议将一个分布式的事务过程拆分为两个阶段:&lt;strong&gt;投票&lt;&#x2F;strong&gt;和&lt;strong&gt;事务提交&lt;&#x2F;strong&gt;。为了让整个数据库集群能够正常运营，改协议指定了一个&lt;strong&gt;协调者&lt;&#x2F;strong&gt;单点，用于协调整个数据库集群各节点的运行。为了简化描述，我们将数据库集群中的各个节点称为参与者，三阶段提交协议中同样包含协调者和参与者这两个角色定义。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;di-yi-jie-duan-tou-piao&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#di-yi-jie-duan-tou-piao&quot; aria-label=&quot;Anchor link for: di-yi-jie-duan-tou-piao&quot;&gt;第一阶段:投票&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;该阶段的主要目的是在于打探数据库集群中的各个参与者是否能够正常执行事务，具体步骤如下:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;协调者向所有的参与者发送事务执行请求，并等待参与者反馈事务执行结果&lt;&#x2F;li&gt;
+&lt;li&gt;事务参与者收到请求后，执行事务但是不提交，并记录事务日志&lt;&#x2F;li&gt;
+&lt;li&gt;参与者将自己事务执行情况反馈给协调者，同时阻塞等待协调者的后续指令&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h3 id=&quot;di-er-jie-duan-shi-wu-ti-jiao&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#di-er-jie-duan-shi-wu-ti-jiao&quot; aria-label=&quot;Anchor link for: di-er-jie-duan-shi-wu-ti-jiao&quot;&gt;第二阶段:事务提交&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;经过第一阶段的协调者询问之后，各个参与者回复自己事务的执行情况，存在三种可能:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;所有参与者都回复能正常执行事务&lt;&#x2F;li&gt;
+&lt;li&gt;一个或者多个参与者回复事务执行失败&lt;&#x2F;li&gt;
+&lt;li&gt;协调者等待超时&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;对于第一种情况，协调者向所有参与者发出提交事务的通知，具体步骤如下:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
+  sequenceDiagram;
+  协调者 -&amp;gt;&amp;gt; 参与者集群:1. 询问各参与者事务是否可以正常执行;
+  参与者集群 -&amp;gt;&amp;gt; 参与者集群:1.1 执行事务，但不提交;
+  参与者集群 -&amp;gt;&amp;gt; 协调者:1.2 所有参与者均能成功执行事务;
+  协调者 -&amp;gt;&amp;gt; 参与者集群:2. 向所有参与者发起事务提交通知;
+  参与者集群 -&amp;gt;&amp;gt; 参与者集群:2.1 提交事务，并释放资源;
+  参与者集群 -&amp;gt;&amp;gt; 协调者:2.2 反馈事务提交结果;
+&lt;&#x2F;pre&gt;
+&lt;p&gt;对于第二或者第三种情况，协调者认为参与者无法成功执行事务，为了整个集群的数据一致性，所以要向各个参与者发送事务回滚通知，具体步骤如下:&lt;&#x2F;p&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
+  sequenceDiagram;
+  协调者 -&amp;gt;&amp;gt; 参与者集群:1. 询问各参与者事务是否可以正常执行;
+  参与者集群 -&amp;gt;&amp;gt; 参与者集群:1.1 执行事务，但不提交;
+  参与者集群 -&amp;gt;&amp;gt; 协调者:1.2 一个或者多个事务为成功执行，或者未在约定时间内返回结果;
+  协调者 -&amp;gt;&amp;gt; 参与者集群:2. 向所有参与者发起事务回滚通知;
+  参与者集群 -&amp;gt;&amp;gt; 参与者集群:2.1 回滚事务，并释放资源;
+  参与者集群 -&amp;gt;&amp;gt; 协调者:2.2 反馈事务回滚结果;
+&lt;&#x2F;pre&gt;
+&lt;p&gt;两阶段提交协议是为了解决分布式数据库的强一致性问题，实际应用中更多用来解决事务操作的原子性，下图描绘了协调者参与者的状态转换:&lt;&#x2F;p&gt;
+&lt;center&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
+  stateDiagram-v2
+    S --&amp;gt; WAIT: vote request
+    WAIT --&amp;gt; ROLLBACK: some fail
+    WAIT --&amp;gt; COMMIT: all success
+    ROLLBACK --&amp;gt; E
+    COMMIT --&amp;gt; E
+&lt;&#x2F;pre&gt;
+
+协调者状态转换
+&lt;&#x2F;center&gt;
+&lt;center&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
+  stateDiagram-v2
+    S --&amp;gt; READY: vote response
+    S --&amp;gt; ROLLBACK: timeout
+    READY --&amp;gt; ROLLBACK: do rollback
+    READY --&amp;gt; COMMIT: do commit
+    ROLLBACK --&amp;gt; E
+    COMMIT --&amp;gt; E
+&lt;&#x2F;pre&gt;
+
+参与者状态转换
+&lt;&#x2F;center&gt;
+站在协调者的角度，在发起投票之后就进入了 WAIT 状态，等待所有参与者回复各自事务执行状态，并在收到所有参与者的回复后决策下一步是发送 commit 或 rollback 信息。站在参与者的角度，当回复完协调者的投票请求之后便进入 READY 状态（能够正常执行事务），接下去就是等待协调者最终的决策通知，一旦收到通知便可依据决策执行 commit 或 rollback 操作。
+&lt;p&gt;两阶段提交协议原理简单、易于实现，但是缺点也是显而易见的，包含如下:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;单点问题&lt;&#x2F;strong&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;协调者在整个两阶段提交过程中扮演着举足轻重的作用，一旦协调者所在服务器宕机，就会影响整个数据库集群的正常运行。比如在第二阶段中，如果协调者因为故障不能正常发送事务提交或回滚通知，那么参与者们将一直处于阻塞状态，整个数据库集群将无法提供服务。&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;同步阻塞&lt;&#x2F;strong&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;两阶段提交执行过程中，所有的参与者都需要听从协调者的统一调度，期间处于阻塞状态而不能从事其他操作，这样效率极其低下。&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;数据不一致性&lt;&#x2F;strong&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;两阶段提交协议虽然是分布式数据强一致性所设计，但仍然存在数据不一致性的可能性。比如在第二阶段中，假设协调者发出了事务 commit 通知，但是因为网络问题该通知仅被一部分参与者所收到并执行了 commit 操作，其余的参与者则因为没有收到通知一直处于阻塞状态，这时候就产生了数据的不一致性。&lt;&#x2F;p&gt;
+&lt;p&gt;针对上述问题可以引入 &lt;strong&gt;超时机制&lt;&#x2F;strong&gt; 和 &lt;strong&gt;互询机制&lt;&#x2F;strong&gt; 在很大程度上予以解决。&lt;&#x2F;p&gt;
+&lt;p&gt;对于协调者来说如果在指定时间内没有收到所有参与者的应答，则可以自动退出 WAIT 状态，并向所有参与者发送 rollback 通知。对于参与者来说如果位于 READY 状态，但是在指定时间内没有收到协调者的第二阶段通知，则不能武断地执行 rollback 操作，因为协调者可能发送的是 commit 通知，这个时候执行 rollback 就会导致数据不一致。&lt;&#x2F;p&gt;
+&lt;p&gt;此时，我们可以介入互询机制，让参与者 A 去询问其他参与者 B 的执行情况。如果 B 执行了 rollback 或 commit 操作，则 A 可以大胆的与 B 执行相同的操作；如果 B 此时还没有到达 READY 状态，则可以推断出协调者发出的肯定是 rollback 通知；如果 B 同样位于 READY 状态，则 A 可以继续询问另外的参与者。只有当所有的参与者都位于 READY 状态时，此时两阶段提交协议无法处理，将陷入长时间的阻塞状态。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;san-jie-duan-ti-jiao-xie-yi-3pc-three-phase-commit&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#san-jie-duan-ti-jiao-xie-yi-3pc-three-phase-commit&quot; aria-label=&quot;Anchor link for: san-jie-duan-ti-jiao-xie-yi-3pc-three-phase-commit&quot;&gt;三阶段提交协议 (3PC: Three-Phase Commit)&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;针对两阶段提交存在的问题，三阶段提交协议通过引入一个 &lt;strong&gt;预询盘&lt;&#x2F;strong&gt; 阶段，以及超时策略来减少整个集群的阻塞时间，提升系统性能。三阶段提交的三个阶段分别为:预询盘（can_commit）、预提交（pre_commit），以及事务提交（do_commit）。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;di-yi-jie-duan-yu-xun-pan&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#di-yi-jie-duan-yu-xun-pan&quot; aria-label=&quot;Anchor link for: di-yi-jie-duan-yu-xun-pan&quot;&gt;第一阶段:预询盘&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;该阶段协调者会去询问各个参与者是否能够正常执行事务，参与者根据自身情况回复一个预估值，相对于真正的执行事务，这个过程是轻量的，具体步骤如下:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;协调者向各个参与者发送事务询问通知，询问是否可以执行事务操作，并等待回复；&lt;&#x2F;li&gt;
+&lt;li&gt;各个参与者依据自身状况回复一个预估值，如果预估自己能够正常执行事务就返回确定信息，并进入预备状态，否则返回否定信息。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h4 id=&quot;di-er-jie-duan-yu-ti-jiao&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#di-er-jie-duan-yu-ti-jiao&quot; aria-label=&quot;Anchor link for: di-er-jie-duan-yu-ti-jiao&quot;&gt;第二阶段:预提交&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;本阶段协调者会根据第一阶段的询盘结果采取相应操作，询盘结果主要有 3 种:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;所有的参与者都返回确定信息。&lt;&#x2F;li&gt;
+&lt;li&gt;一个或多个参与者返回否定信息。&lt;&#x2F;li&gt;
+&lt;li&gt;协调者等待超时。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;针对第 1 种情况，协调者会向所有参与者发送事务执行请求，具体步骤如下:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;协调者向所有的事务参与者发送事务执行通知；&lt;&#x2F;li&gt;
+&lt;li&gt;参与者收到通知后执行事务但不提交；&lt;&#x2F;li&gt;
+&lt;li&gt;参与者将事务执行情况返回给客户端。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;&lt;strong&gt;在上述步骤中，如果参与者等待超时，则会中断事务。&lt;&#x2F;strong&gt;  针对第 2 和第 3 种情况，协调者认为事务无法正常执行，于是向各个参与者发出 abort 通知，请求退出预备状态，具体步骤如下:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;协调者向所有事务参与者发送 abort 通知；&lt;&#x2F;li&gt;
+&lt;li&gt;参与者收到通知后中断事务。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
+  sequenceDiagram;
+  协调者 -&amp;gt;&amp;gt; 参与者集群:1. 向各个参与者发送 can_commit 请求，询问是否可以执行事务;
+  参与者集群 -&amp;gt;&amp;gt; 协调者:1.1 如果存在一个或者多个参与者返回不能执行事务，或者超时;
+  协调者 -&amp;gt;&amp;gt; 参与者集群:2. 向各个参与者发送 abort 通知;
+  参与者集群 -&amp;gt;&amp;gt; 参与者集群:2.1 收到通知或者等待超时，执行中断事务操作;
+&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;di-san-jie-duan-shi-wu-ti-jiao&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#di-san-jie-duan-shi-wu-ti-jiao&quot; aria-label=&quot;Anchor link for: di-san-jie-duan-shi-wu-ti-jiao&quot;&gt;第三阶段:事务提交&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;如果第二阶段事务未中断，那么本阶段协调者将会依据事务执行返回的结果来决定提交或回滚事务，分为 3 种情况:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;所有的参与者都能正常执行事务。&lt;&#x2F;li&gt;
+&lt;li&gt;一个或多个参与者执行事务失败。&lt;&#x2F;li&gt;
+&lt;li&gt;协调者等待超时。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;针对第 1 种情况，协调者向各个参与者发起事务提交请求，具体步骤如下:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;协调者向所有参与者发送事务 commit 通知；&lt;&#x2F;li&gt;
+&lt;li&gt;所有参与者在收到通知之后执行 commit 操作，并释放占有的资源；&lt;&#x2F;li&gt;
+&lt;li&gt;参与者向协调者反馈事务提交结果。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
+  sequenceDiagram;
+  协调者 -&amp;gt;&amp;gt; 参与者集群:1. 向各个参与者发送 can_commit 请求，询问是否可以执行事务;
+  参与者集群 -&amp;gt;&amp;gt; 协调者:1.1 如果存在一个或者多个参与者返回不能执行事务，或者超时;
+  协调者 -&amp;gt;&amp;gt; 参与者集群:2. 向各个参与者发送 pre_commit 请求;
+  参与者集群 -&amp;gt;&amp;gt; 参与者集群:2.1 执行事务操作，但不提交;
+  参与者集群 -&amp;gt;&amp;gt; 协调者:2.2 返回事务执行结果;
+  协调者 -&amp;gt;&amp;gt; 协调者:3. 所有参与者均能执行正常事务;
+  协调者 -&amp;gt;&amp;gt; 参与者集群:4. 向各个参与者发送提交通知;
+  参与者集群 -&amp;gt;&amp;gt; 参与者集群:4.1 收到提交通知，提交事务;
+  协调者 -&amp;gt;&amp;gt; 参与者集群:4.2 返回事务提交结果;
+&lt;&#x2F;pre&gt;
+&lt;p&gt;针对第 2 和 3 种情况，协调者认为事务无法成功执行，于是向各个参与者发送事务回滚请求，具体步骤如下:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;协调者向所有参与者发送事务 rollback 通知&lt;&#x2F;li&gt;
+&lt;li&gt;所有参与者在收到通知之后执行 rollback 操作，并释放占有的资源&lt;&#x2F;li&gt;
+&lt;li&gt;参与者向协调者反馈事务回滚操作&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
+  sequenceDiagram
+  协调者 -&amp;gt;&amp;gt; 参与者集群:1. 向各个参与者发送 can_commit 请求，询问是否可以执行事务
+  参与者集群 -&amp;gt;&amp;gt; 协调者:1.1 各个参与者都能执行事务，返回确定信息
+  协调者 -&amp;gt;&amp;gt; 参与者集群:2. 向各个参与者发送 pre_commit 请求
+  参与者集群 -&amp;gt;&amp;gt; 参与者集群:2.1 执行事务操作，但不提交
+  参与者集群 -&amp;gt;&amp;gt; 协调者:2.2 返回事务执行结果
+  协调者 -&amp;gt;&amp;gt; 协调者:3. 如果存在一个或者多个事务不能正常执行，或者等待超时
+  协调者 -&amp;gt;&amp;gt; 参与者集群:4. 向各个参与者发送回滚通知
+  参与者集群 -&amp;gt;&amp;gt; 参与者集群:4.1 收到回滚通知，执行回滚操作
+  协调者 -&amp;gt;&amp;gt; 参与者集群:4.2 返回事务回滚结果
+&lt;&#x2F;pre&gt;
+&lt;p&gt;在本阶段如果协调者或者网络问题，导致参与者迟迟不能收到来自协调者的 commit 或者 rollback 请求，那么参与者将不会如两阶段提交中那样陷入阻塞，而是等待超时后继续 commit，相对于两阶段提交虽然降低了同步阻塞，但是还是无法完全避免数据的不一致&lt;&#x2F;p&gt;
+&lt;center&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
+  stateDiagram-v2
+    S --&amp;gt; WAIT: vote request
+    WAIT --&amp;gt; ABORT: some fail
+    WAIT --&amp;gt; PRE_COMMIT: all success
+    PRE_COMMIT --&amp;gt; ROLLBACK: some fail
+    PRE_COMMIT --&amp;gt; COMMIT: all success
+    ABORT --&amp;gt; E
+    ROLLBACK --&amp;gt; E
+    COMMIT --&amp;gt; E
+&lt;&#x2F;pre&gt;
+
+协调者状态转换
+&lt;&#x2F;center&gt;
+&lt;center&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
+  stateDiagram-v2
+    S --&amp;gt; READY: vote response
+    S --&amp;gt; ABORT: timeout
+    READY --&amp;gt; ABORT: do rollback
+    READY --&amp;gt; PRE_COMMIT: do commit
+    PRE_COMMIT --&amp;gt; ROLLBACK: some failed
+    PRE_COMMIT --&amp;gt; COMMIT: all success
+    ABORT --&amp;gt; E
+    ROLLBACK --&amp;gt; E
+    COMMIT --&amp;gt; E
+&lt;&#x2F;pre&gt;
+
+参与者状态转换
+&lt;&#x2F;center&gt;
+&lt;p&gt;两阶段提交中存在的长时间阻塞状态发生的状态还是非常低，所以虽然三阶段提交协议相对于两阶段提交协议对于数据强一致性更有保障，但是因为效率问题，两阶段提交协议在实际系统中反而更加受宠。&lt;&#x2F;p&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>mysql_transaction</title>
+        <published>2021-03-04T12:23:02+00:00</published>
+        <updated>2021-03-04T12:23:02+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/mysql-transaction/" type="text/html"/>
+        <id>https://wendajiang.github.io/mysql-transaction/</id>
+        <content type="html">&lt;p&gt;这篇文章属于转载，原链接 https:&#x2F;&#x2F;draveness.me&#x2F;mysql-transaction&#x2F;
+原链接作者如要求删除，请联系 wendajiang1993@gmail.com&lt;&#x2F;p&gt;
+&lt;p&gt;在关系型数据库中，事务的重要性不言而喻，只要对数据库稍有了解的人都知道事务具有 ACID 四个基本属性。&lt;&#x2F;p&gt;
+&lt;p&gt;ACID&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Atomicity&lt;&#x2F;li&gt;
+&lt;li&gt;Consistency&lt;&#x2F;li&gt;
+&lt;li&gt;Isolation&lt;&#x2F;li&gt;
+&lt;li&gt;Durability&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;事务其实就是并发控制的基本单位：相信我们都知道，事务是一个序列操作，要么都执行，要么都不执行，是不可分割的。数据库事务的 ACID 四大特性是事务的基础。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;atomicity-yuan-zi-xing&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#atomicity-yuan-zi-xing&quot; aria-label=&quot;Anchor link for: atomicity-yuan-zi-xing&quot;&gt;Atomicity 原子性&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;要保证事务的原子性，就需要在异常发生时，对已经执行的操作进行回滚，而在 MySQL 中，恢复机制是通过回滚日志（undo log）实现的，所有事务进行的修改都会记录到这个回滚日志中，然后在对应数据库中进行写入。&lt;&#x2F;p&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
+  graph LR
+	subgraph SQL1
+	A(Undo Log) -.-&amp;gt; B(Update Record) 
+	end
+	subgraph SQL2
+	B --&amp;gt; C(Undo Log) -.-&amp;gt; D(Update Record)
+	end
+&lt;&#x2F;pre&gt;
+&lt;p&gt;回滚日志除了能够在发生错误或者用户执行 &lt;code&gt;ROLLBACK&lt;&#x2F;code&gt; 时提供回滚相关的信息，它还能够在整个系统发生崩溃、数据库进程直接被杀死后，当用户再次启动数据库进程时，还能够立刻通过查询回滚日志将之前未完成的事务进行回滚，这也就需要回滚日志必须先于数据持久化到磁盘上，是我们需要先写日志后写数据库的主要原因。&lt;&#x2F;p&gt;
+&lt;p&gt;回滚日志并不能将数据库物理地恢复到执行语句或者事务之前的样子；它是逻辑日志，当回滚日志被使用时，它只会按照日志&lt;strong&gt;逻辑地&lt;&#x2F;strong&gt;将数据库中的修改撤销掉，可以&lt;strong&gt;理解&lt;&#x2F;strong&gt;为，我们在事务中使用的每一条 &lt;code&gt;INSERT&lt;&#x2F;code&gt; 都对应了一条 &lt;code&gt;DELETE&lt;&#x2F;code&gt;，每一条 &lt;code&gt;UPDATE&lt;&#x2F;code&gt; 也都对应一条相反的 &lt;code&gt;UPDATE&lt;&#x2F;code&gt; 语句。&lt;&#x2F;p&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
+  flowchart LR
+	A(&amp;quot;INSERT INTO users (id, name) VALUES (1, &amp;#x27;draven&amp;#x27;)&amp;quot;) --&amp;gt; B(&amp;quot;DELETE FROM users where id = 1&amp;quot;)
+	C(&amp;quot;UPDATE users SET name=&amp;#x27;dravenss&amp;#x27; WHERE id = 1&amp;quot;) --&amp;gt; D(&amp;quot;UPDATE users SET name=&amp;#x27;draven&amp;#x27; WHERE id = 1&amp;quot;)
+&lt;&#x2F;pre&gt;
+&lt;p&gt;在这里，我们并不会介绍回滚日志的格式以及它是如何被管理的，本文重点关注在它到底是一个什么样的东西，究竟解决了、如何解决了什么样的问题，如果想要了解具体实现细节，需要进一步学习 @todo&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;shi-wu-de-zhuang-tai&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#shi-wu-de-zhuang-tai&quot; aria-label=&quot;Anchor link for: shi-wu-de-zhuang-tai&quot;&gt;事务的状态&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;因为事务具有原子性，是一个密不可分的整体，事物的状态也有三种 Active,Commited,Failed，事务要不在执行中，要不就是成功或者失败&lt;&#x2F;p&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
+  flowchart LR
+	B((Active)) --&amp;gt; A((Commited))
+	B --&amp;gt; C((Failed))
+&lt;&#x2F;pre&gt;
+&lt;p&gt;但是放大来看，事务不在是原子的，其中包括了很多中间状态，比如部分提交，事务的状态图也变得越来越复杂。&lt;&#x2F;p&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
+  flowchart LR
+	A((Active))
+	B((Partially))
+	C((Failed))
+	D((Commited))
+	E((Aborted))
+	A --&amp;gt; B;
+	A --&amp;gt; C;
+	B --&amp;gt; D;
+	C --&amp;gt; E;
+	B --&amp;gt; C;
+&lt;&#x2F;pre&gt;
+&lt;ul&gt;
+&lt;li&gt;Active：事务的初始状态，表示事务正在执行；&lt;&#x2F;li&gt;
+&lt;li&gt;Partially Commited：在最后一条语句执行之后；&lt;&#x2F;li&gt;
+&lt;li&gt;Failed：发现事务无法正常执行之后；&lt;&#x2F;li&gt;
+&lt;li&gt;Aborted：事务被回滚并且数据库恢复到了事务进行之前的状态之后；&lt;&#x2F;li&gt;
+&lt;li&gt;Commited：成功执行整个事务；&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;虽然在发生错误时，整个数据库的状态可以恢复，但是如果我们在事务中执行了诸如：向标准输出打印日志、向外界发出邮件、没有通过数据库修改了磁盘上的内容甚至在事务执行期间发生了转账汇款，那么这些操作作为可见的外部输出都是没有办法回滚的；这些问题都是由应用开发者解决和负责的，在绝大多数情况下，我们都需要在整个事务提交后，再触发类似的无法回滚的操作。&lt;&#x2F;p&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
+  graph LR
+	A((BEGIN))
+	B((SQLs))
+	C((COMMITED))
+	D((External Write))
+	A2((BEGIN))
+	B2((SQLs))
+	C2((COMMITED))
+	D2((shut down))
+	E2((&amp;quot;???&amp;quot;))
+	subgraph Normal
+		A -.-&amp;gt; B -.-&amp;gt; C -.-&amp;gt; D
+	end
+	subgraph Abnormal
+		A2 -.-&amp;gt; B2 -.-&amp;gt; C2 -.-&amp;gt; D2 -.-&amp;gt; E2
+	end
+	style D2 fill:#f9f,stroke:#333,stroke-width:4px
+&lt;&#x2F;pre&gt;
+&lt;p&gt;以订票为例，哪怕我们在整个事务结束之后，才向第三方发起请求，由于向第三方请求并获取结果是一个需要较长时间的操作，如果在事务刚刚提交时，数据库或者服务器发生了崩溃，那么我们就非常有可能丢失发起请求这一过程，这就造成了非常严重的问题；而这一点就不是数据库所能保证的，开发者需要在适当的时候查看请求是否被发起、结果是成功还是失败。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;bing-xing-shi-wu-de-yuan-zi-xing&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#bing-xing-shi-wu-de-yuan-zi-xing&quot; aria-label=&quot;Anchor link for: bing-xing-shi-wu-de-yuan-zi-xing&quot;&gt;并行事务的原子性&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;到目前为止，所有的事务都只是串行执行的，一直都没有考虑过并行执行的问题；然而在实际工作中，并行执行的事务才是常态，然而并行任务下，却可能出现非常复杂的问题：&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;mysql-transaction&#x2F;transaction1.png&quot; alt=&quot;image-20200820153119619&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;当 Transaction1 在执行的过程中对 &lt;code&gt;id = 1&lt;&#x2F;code&gt; 的用户进行了读写，但是没有将修改的内容进行提交或者回滚，在这时 Transaction2 对同样的数据进行了读操作并提交了事务；也就是说 Transaction2 是依赖于 Transaction1 的，当 Transaction1 由于一些错误需要回滚时，因为要保证事务的原子性，需要对 Transaction2 进行回滚，但是由于我们已经提交了 Transaction2，所以我们已经没有办法进行回滚操作，在这种问题下我们就发生了问题，&lt;strong&gt;Database System Concepts&lt;&#x2F;strong&gt; 一书中将这种现象称为&lt;em&gt;不可恢复安排&lt;&#x2F;em&gt;（Nonrecoverable Schedule），那什么情况下是可以恢复的呢？&lt;&#x2F;p&gt;
+&lt;p&gt;书中描述的如果 Tran2 依赖 Tran1，那么 Tran1 必须在 Tran2 提交之前完成提交，但是当事务数量逐渐增多，整个恢复流程也会变得越来越复杂，多个事务依赖时，就会出现级联回滚（cascading rollback），级联回滚会导致大量工作需要撤回。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;durability-chi-jiu-xing&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#durability-chi-jiu-xing&quot; aria-label=&quot;Anchor link for: durability-chi-jiu-xing&quot;&gt;Durability 持久性&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;既然是数据库，对数据的持久存储就有需求，驶入的持久性体现在，一旦事务被提交，数据一定能够被写入数据库中持久存储起来。&lt;&#x2F;p&gt;
+&lt;p&gt;当事务被提交之后，就无法被撤销，只能创建一个相反的事务进行补偿，这也是事务持久性的体现之一。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zhong-zuo-ri-zhi-redo-log&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#zhong-zuo-ri-zhi-redo-log&quot; aria-label=&quot;Anchor link for: zhong-zuo-ri-zhi-redo-log&quot;&gt;重做日志 （redo log）&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;与原子性一样，事务的持久性也是通过日志来实现的，MySQL 使用重做日志（redo log）实现事务的持久性，redo log 由两个部分组成，一是内存中的重做日志缓冲区，因为重做日志缓冲区在内存中，所以是易失的，另一个就是在磁盘上的重做日志文件，是持久的。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;mysql-transaction&#x2F;redolog.png&quot; alt=&quot;image-20200820213642125&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;当我们在一个事务中尝试对数据进行修改时，它会先将数据从磁盘读入内存，并更新内存中缓存的数据，然后生成一条 redo log 并写入 redo log 缓存，当事务真正提交时，MySQL 会将重做日志缓冲中的内容刷新到重做日志文件，在将内存中的数据更新到磁盘上，图上的 4、5 步就是在事务提交时执行的。&lt;&#x2F;p&gt;
+&lt;p&gt;在 InnoDB 中，redo log 都是以 512 字节的块的形式进行存储的，同时因为块的大小与磁盘扇区大小相同，所以 redo log 的写入可以保证原子性，不会由于机器断电导致 redo log 仅写入一半并留下脏数据。&lt;&#x2F;p&gt;
+&lt;p&gt;除了所有对数据库的修改会产生 redo log，因为回滚日志也是需要持久存储的，它们也会创建对应的 redo log，在发生错误后，数据库重启时会从 redo log 中找出未被更新到数据库磁盘中的日志重新执行以满足事务的持久性。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;hui-gun-ri-zhi-he-zhong-zuo-ri-zhi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#hui-gun-ri-zhi-he-zhong-zuo-ri-zhi&quot; aria-label=&quot;Anchor link for: hui-gun-ri-zhi-he-zhong-zuo-ri-zhi&quot;&gt;回滚日志和重做日志&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;到现在为止我们了解了 MySQL 中的两种日志，回滚日志（undo log）和重做日志（redo log）；在数据库系统中，事务的原子性和持久性是由事务日志（transaction log）保证的，在实现时也就是上面提到的两种日志，前者用于对事务的影响进行撤销，后者在错误处理时对已经提交的事务进行重做，它们能保证两点：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;发生错误或者需要回滚的事务能够成功回滚（原子性）；&lt;&#x2F;li&gt;
+&lt;li&gt;在事务提交后，数据没来得及写入磁盘就宕机时，在下次重新启动后能够成功恢复数据（持久性）；&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;在数据库中，这两种日志经常都是一起工作的，我们&lt;strong&gt;可以&lt;&#x2F;strong&gt;将它们整体看做一条事务日志，其中包含了事务的 ID、修改的行元素以及修改前后的值。&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Transaction Log&lt;&#x2F;th&gt;&lt;th&gt;&lt;&#x2F;th&gt;&lt;th&gt;&lt;&#x2F;th&gt;&lt;th&gt;&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;Transaction ID&lt;&#x2F;td&gt;&lt;td&gt;Element&lt;&#x2F;td&gt;&lt;td&gt;OldValue&lt;&#x2F;td&gt;&lt;td&gt;NewValue&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;一条事务日志同时包含了修改前后的值，能够非常简单的进行回滚和重做两种操作，具体细节，此处不展开 @todo 查&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;isolation-ge-chi-xing&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#isolation-ge-chi-xing&quot; aria-label=&quot;Anchor link for: isolation-ge-chi-xing&quot;&gt;Isolation 隔离性&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;事务的隔离性是数据库处理数据的几个基础之一，如果没有数据库事务之间的隔离性，就会发生上面提到的级联回滚的问题，造成性能上的巨大损失。如果所有事务的执行顺序都是线性的，那么对于事务的管理容易得多，但是允许事务的并行执行能够提升吞吐量和资源利用率，并且减少每个事务的等待时间。&lt;&#x2F;p&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
+  graph LR
+	A((Improve Throughput)) --- B((Improve Resource Utilization)) --- C((Reduced Wating Time))
+&lt;&#x2F;pre&gt;
+&lt;p&gt;当多个事务同时并发执行时，事务的隔离性可能就会被违反，虽然单个事务的执行可能没有任何错误，但是从总体来看就会造成一些数据库的一致性出现问题，而串行执行能够允许开发者忽略并行造成的影响，能够很好的维护数据库的一致性，但是却会影响事务的并行执行。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;shi-wu-de-ge-chi-ji-bie&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#shi-wu-de-ge-chi-ji-bie&quot; aria-label=&quot;Anchor link for: shi-wu-de-ge-chi-ji-bie&quot;&gt;事务的隔离级别&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;所以说数据库的隔离性和一致性其实是一个需要开发者去权衡的问题，为数据库提供什么样的隔离性层级也就决定了数据库的性能以及可以达到什么样的一致性；在 SQL 标准中定义了四种数据库的事务的隔离级别：&lt;code&gt;READ UNCOMMITED&lt;&#x2F;code&gt;、&lt;code&gt;READ COMMITED&lt;&#x2F;code&gt;、&lt;code&gt;REPEATABLE READ&lt;&#x2F;code&gt; 和 &lt;code&gt;SERIALIZABLE&lt;&#x2F;code&gt;；每个事务的隔离级别其实都比上一级多解决了一个问题：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;READ UNCOMMITED: 使用查询语句不会加锁，但是可能会读到未提交的行（Dirty Read）&lt;&#x2F;li&gt;
+&lt;li&gt;READ COMMITED: 只对记录加记录锁，而不会在记录之间加间隙锁，所以允许新的记录插入到被锁定记录的附近，所以在多次使用查询语句时，可能得到不同的结果（Non-Repeatable Read）&lt;&#x2F;li&gt;
+&lt;li&gt;REPEATABLE READ: 多次读取同一范围的数据会返回第一次查询的快照，不会返回不同的数据行，但是可能发生幻读（Phantom Read）&lt;&#x2F;li&gt;
+&lt;li&gt;SERIALIZABLE：InnoDB 隐式地将全部的查询语句加上共享锁，解决了幻读的问题&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;以上所有级别的事务隔离级别都不允许脏写（Dirty Write），就是当前事务更新了另一个事务已经更新但是没有提交的数据，大部分数据库使用了 READ COMMITED 作为默认的事务隔离级别，但是 MySQL 使用了 ERPEATABLE READ 作为默认级别，从 RAED UNCOMMITED 到 SERIALIZABLE，随着事务隔离级别变得越来越严格，数据库对于并发执行事务的性能也逐渐下降&lt;&#x2F;p&gt;
+&lt;pre class=&quot;mermaid&quot;&gt;
+  graph LR
+	A[&amp;quot;High Performance&amp;quot;] --- B1((READ UNCOMMITED)) --- B2((READ COMMITED)) --- B3((REPEATABLE READ)) --- B4((SERIALIZABLE)) --&amp;gt; C[Low Performance]
+&lt;&#x2F;pre&gt;
+&lt;p&gt;展示各个隔离级别对于脏读，不可重复读，幻读的解决情况：&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;mysql-transaction&#x2F;tranisolationmatrix.png&quot; alt=&quot;image-20200821103436656&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ge-chi-ji-bie-de-shi-xian&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#ge-chi-ji-bie-de-shi-xian&quot; aria-label=&quot;Anchor link for: ge-chi-ji-bie-de-shi-xian&quot;&gt;隔离级别的实现&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;数据库对于隔离级别的实现就是使用&lt;strong&gt;并发控制机制&lt;&#x2F;strong&gt;对在同一时间执行的事务进行控制，限制不同的事务对于同一资源的访问和更新，而最重要也最常见的并发控制机制，在这里我们将简单介绍三种最重要的并发控制器机制的工作原理。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;suo&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#suo&quot; aria-label=&quot;Anchor link for: suo&quot;&gt;锁&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;锁是一种最为常见的并发控制机制，在一个事务中，我们并不会将整个数据库都加锁，而是只会锁住那些需要访问的数据项， MySQL 和常见数据库中的锁都分为两种，共享锁（Shared）和互斥锁（Exclusive），前者也叫读锁，后者叫写锁&lt;&#x2F;p&gt;
+&lt;p&gt;读锁保证了读操作可以并发执行，相互不受影响，写锁保证了在更新数据库数据时不会有其他事务访问或者更改同一条记录造成不可预知的情况&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;shi-jian-chuo&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#shi-jian-chuo&quot; aria-label=&quot;Anchor link for: shi-jian-chuo&quot;&gt;时间戳&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;除了锁，另一种实现事务的隔离性的方式就是通过时间戳，使用这种方式实现事务的数据库，例如 PostgreSQL 会为每一条记录保留两个字段；&lt;em&gt;读时间戳&lt;&#x2F;em&gt;中包括了所有访问该记录的事务中的最大时间戳，而记录行的&lt;em&gt;写时间戳&lt;&#x2F;em&gt;中保存了将记录改到当前值的事务的时间戳。&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;记录行的结构&lt;&#x2F;th&gt;&lt;th&gt;&lt;&#x2F;th&gt;&lt;th&gt;&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;Data&lt;&#x2F;td&gt;&lt;td&gt;Read Timstamp&lt;&#x2F;td&gt;&lt;td&gt;Write Timestamp&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;使用时间戳实现事务的隔离性时，往往都会使用乐观锁，先对数据进行修改，在写回时再去判断当前值，也就是时间戳是否改变过，如果没有改变过，就写入，否则，生成一个新的时间戳并再次更新数据，乐观锁其实并不是真正的锁机制，它只是一种思想，在这里并不会对它进行展开介绍&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;duo-ban-ben-he-kuai-zhao-ge-chi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#duo-ban-ben-he-kuai-zhao-ge-chi&quot; aria-label=&quot;Anchor link for: duo-ban-ben-he-kuai-zhao-ge-chi&quot;&gt;多版本和快照隔离&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;通过维护多个版本的数据，数据库可以允许事务在数据被其他事务更新时对旧版本的数据进行读取，很多数据库都对这一机制进行了实现；因为所有的读操作不再需要等待写锁的释放，所以能够显著地提升读的性能，MySQL 和 PostgreSQL 都对这一机制进行自己的实现，也就是 MVCC，虽然各自实现的方式有所不同，MySQL 就通过文章中提到的回滚日志实现了 MVCC，保证事务并行执行时能够不等待互斥锁的释放直接获取数据。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;ge-chi-xing-he-yuan-zi-xing&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#ge-chi-xing-he-yuan-zi-xing&quot; aria-label=&quot;Anchor link for: ge-chi-xing-he-yuan-zi-xing&quot;&gt;隔离性和原子性&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;简单提一下在原子性里面提到的级联回滚，如果一个事务对数据进行了写入，就会获取一个互斥锁，其他事务想要获取该行数据的读锁就必须等待写锁的释放，就不会发生级联回滚的问题。&lt;&#x2F;p&gt;
+&lt;p&gt;不过在大多数的数据库，比如 MySQL 中都使用了 MVCC 等特性，也就是正常的读方法是不需要获取锁的，在想要对读取的数据进行更新时需要使用 &lt;code&gt;SELECT ... FOR UPDATE&lt;&#x2F;code&gt; 尝试获取对应行的互斥锁，以保证不同事务可以正常工作。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;consistency-yi-zhi-xing&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#consistency-yi-zhi-xing&quot; aria-label=&quot;Anchor link for: consistency-yi-zhi-xing&quot;&gt;Consistency 一致性&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;两个一致性 A&lt;em&gt;&lt;strong&gt;C&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt;ID ， &lt;em&gt;&lt;strong&gt;C&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt;AP&lt;&#x2F;p&gt;
+&lt;p&gt;数据库对于 &lt;em&gt;&lt;strong&gt;ACID&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt; 中的一致性的定义是这样的：如果一个事务原子地在一个一致地数据库中独立运行，那么在它执行之后，数据库的状态一定是一致的。对于这个概念，它的第一层意思就是对于数据完整性的约束，包括主键约束、引用约束以及一些约束检查等等，在事务的执行的前后以及过程中不会违背对数据完整性的约束，所有对数据库写入的操作都应该是合法的，并不能产生不合法的数据状态。&lt;&#x2F;p&gt;
+&lt;p&gt;而第二层意思其实是指逻辑上的对于开发者的要求，我们要在代码中写出正确的事务逻辑，比如银行转账，事务中的逻辑不可能只扣钱或者只加钱，这是应用层面上对于数据库一致性的要求。&lt;&#x2F;p&gt;
+&lt;p&gt;数据库 ACID 中的一致性对事务的要求不止包含对数据完整性以及合法性的检查，还包含应用层面逻辑的正确。&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;p&gt;CAP 定理中的数据一致性，其实是说分布式系统中的各个节点中对于同一数据的拷贝有着相同的值；而 ACID 中的一致性是指数据库的规则，如果 schema 中规定了一个值必须是唯一的，那么一致的系统必须确保在所有的操作中，该值都是唯一的，由此来看 CAP 和 ACID 对于一致性的定义有着根本性的区别&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;zong-jie&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#zong-jie&quot; aria-label=&quot;Anchor link for: zong-jie&quot;&gt;总结&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;事务的 ACID 四大基本特性是保证数据库能够运行的基石，但是完全保证数据库的 ACID，尤其是隔离性会对性能有比较大影响，在实际的使用中我们也会根据业务的需求对隔离性进行调整，除了隔离性，数据库的原子性和持久性相信都是比较好理解的特性，前者保证数据库的事务要么全部执行、要么全部不执行，后者保证了对数据库的写入都是持久存储的、非易失的，而一致性不仅是数据库对本身数据的完整性的要求，同时也对开发者提出了要求 - 写出逻辑正确并且合理的事务。&lt;&#x2F;p&gt;
+&lt;p&gt;最后，也是最重要的，当别人在讲一致性的时候，一定要搞清楚他的上下文&lt;&#x2F;p&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>Redis 分布式锁 [翻译]</title>
+        <published>2021-02-03T01:26:18+00:00</published>
+        <updated>2021-02-03T01:26:18+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/redis-distribute-lock/" type="text/html"/>
+        <id>https://wendajiang.github.io/redis-distribute-lock/</id>
+        <content type="html">&lt;h1 id=&quot;fan-yi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#fan-yi&quot; aria-label=&quot;Anchor link for: fan-yi&quot;&gt;翻译&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;原文：&lt;a href=&quot;https:&#x2F;&#x2F;redis.io&#x2F;topics&#x2F;distlock&quot;&gt;redis 官方推荐&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;http:&#x2F;&#x2F;martin.kleppmann.com&#x2F;2016&#x2F;02&#x2F;08&#x2F;how-to-do-distributed-locking.html&quot;&gt;martin kleppmann 对于 redlock 的评论&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;zheng-ti-tao-lun-zhuan-zai&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#zheng-ti-tao-lun-zhuan-zai&quot; aria-label=&quot;Anchor link for: zheng-ti-tao-lun-zhuan-zai&quot;&gt;整体讨论[转载]&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;http:&#x2F;&#x2F;zhangtielei.com&#x2F;posts&#x2F;blog-redlock-reasoning.html&lt;&#x2F;p&gt;
+&lt;p&gt;http:&#x2F;&#x2F;zhangtielei.com&#x2F;posts&#x2F;blog-redlock-reasoning-part2.html&lt;&#x2F;p&gt;
+&lt;p&gt;关于 Redis 分布式锁的安全性问题，在分布式系统专家 Martin Kleppmann 和 Redis 的作者 antirez 之间就发生过一场争论。由于对这个问题一直以来比较关注，所以我前些日子仔细阅读了与这场争论相关的资料。这场争论的大概过程是这样的：为了规范各家对基于 Redis 的分布式锁的实现，Redis 的作者提出了一个更安全的实现，叫做 Redlock。有一天，Martin Kleppmann 写了一篇 blog，分析了 Redlock 在安全性上存在的一些问题。然后 Redis 的作者立即写了一篇 blog 来反驳 Martin 的分析。但 Martin 表示仍然坚持原来的观点。随后，这个问题在 Twitter 和 Hacker News 上引发了激烈的讨论，很多分布式系统的专家都参与其中。&lt;&#x2F;p&gt;
+&lt;p&gt;对于那些对分布式系统感兴趣的人来说，这个事件非常值得关注。不管你是刚接触分布式系统的新手，还是有着多年分布式开发经验的老手，读完这些分析和评论之后，大概都会有所收获。要知道，亲手实现过 Redis Cluster 这样一个复杂系统的 antirez，足以算得上分布式领域的一名专家了。但对于由分布式锁引发的一系列问题的分析中，不同的专家却能得出迥异的结论，从中我们可以窥见分布式系统相关的问题具有何等的复杂性。实际上，在分布式系统的设计中经常发生的事情是：许多想法初看起来毫无破绽，而一旦详加考量，却发现不是那么天衣无缝。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;redlock-suan-fa&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#redlock-suan-fa&quot; aria-label=&quot;Anchor link for: redlock-suan-fa&quot;&gt;Redlock 算法&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;就像本文开头所讲的，借助 Redis 来实现一个分布式锁 (Distributed Lock) 的做法，已经有很多人尝试过。人们构建这样的分布式锁的目的，是为了对一些共享资源进行互斥访问。&lt;&#x2F;p&gt;
+&lt;p&gt;但是，这些实现虽然思路大体相近，但实现细节上各不相同，它们能提供的安全性和可用性也不尽相同。所以，Redis 的作者 antirez 给出了一个更好的实现，称为 Redlock，算是 Redis 官方对于实现分布式锁的指导规范。Redlock 的算法描述就放在 Redis 的官网上：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;https:&#x2F;&#x2F;redis.io&#x2F;topics&#x2F;distlock&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;在 Redlock 之前，很多人对于分布式锁的实现都是基于单个 Redis 节点的。而 Redlock 是基于多个 Redis 节点（都是 Master）的一种实现。为了能理解 Redlock，我们首先需要把简单的基于单 Redis 节点的算法描述清楚，因为它是 Redlock 的基础。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;ji-yu-dan-redis-jie-dian-de-fen-bu-shi-suo&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#ji-yu-dan-redis-jie-dian-de-fen-bu-shi-suo&quot; aria-label=&quot;Anchor link for: ji-yu-dan-redis-jie-dian-de-fen-bu-shi-suo&quot;&gt;基于单 Redis 节点的分布式锁&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;首先，Redis 客户端为了&lt;strong&gt;获取锁&lt;&#x2F;strong&gt;，向 Redis 节点发送如下命令：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;SET&lt;&#x2F;span&gt;&lt;span&gt; resource_name my_random_value NX PX 30000
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;上面的命令如果执行成功，则客户端成功获取到了锁，接下来就可以&lt;strong&gt;访问共享资源&lt;&#x2F;strong&gt;了；而如果上面的命令执行失败，则说明获取锁失败。&lt;&#x2F;p&gt;
+&lt;p&gt;注意，在上面的&lt;code&gt;SET&lt;&#x2F;code&gt;命令中：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;my_random_value&lt;&#x2F;code&gt;是由客户端生成的一个随机字符串，它要保证在足够长的一段时间内在所有客户端的所有获取锁的请求中都是唯一的。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;NX&lt;&#x2F;code&gt;表示只有当&lt;code&gt;resource_name&lt;&#x2F;code&gt;对应的 key 值不存在的时候才能&lt;code&gt;SET&lt;&#x2F;code&gt;成功。这保证了只有第一个请求的客户端才能获得锁，而其它客户端在锁被释放之前都无法获得锁。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;PX 30000&lt;&#x2F;code&gt;表示这个锁有一个 30 秒的自动过期时间。当然，这里 30 秒只是一个例子，客户端可以选择合适的过期时间。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;最后，当客户端完成了对共享资源的操作之后，执行下面的 Redis Lua 脚本来&lt;strong&gt;释放锁&lt;&#x2F;strong&gt;：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;lua&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-lua &quot;&gt;&lt;code class=&quot;language-lua&quot; data-lang=&quot;lua&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;redis&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;call&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;get&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;KEYS&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;]) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;ARGV&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;then
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;redis&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;call&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;del&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;KEYS&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;])
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;else
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这段 Lua 脚本在执行的时候要把前面的&lt;code&gt;my_random_value&lt;&#x2F;code&gt;作为&lt;code&gt;ARGV[1]&lt;&#x2F;code&gt;的值传进去，把&lt;code&gt;resource_name&lt;&#x2F;code&gt;作为&lt;code&gt;KEYS[1]&lt;&#x2F;code&gt;的值传进去。&lt;&#x2F;p&gt;
+&lt;p&gt;至此，基于单 Redis 节点的分布式锁的算法就描述完了。这里面有好几个问题需要重点分析一下。&lt;&#x2F;p&gt;
+&lt;p&gt;首先第一个问题，这个锁必须要设置一个过期时间。否则的话，当一个客户端获取锁成功之后，假如它崩溃了，或者由于发生了网络分割（network partition）导致它再也无法和 Redis 节点通信了，那么它就会一直持有这个锁，而其它客户端永远无法获得锁了。antirez 在后面的分析中也特别强调了这一点，而且把这个过期时间称为锁的有效时间 (lock validity time)。获得锁的客户端必须在这个时间之内完成对共享资源的访问。&lt;&#x2F;p&gt;
+&lt;p&gt;第二个问题，第一步&lt;strong&gt;获取锁&lt;&#x2F;strong&gt;的操作，网上不少文章把它实现成了两个 Redis 命令：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;SETNX&lt;&#x2F;span&gt;&lt;span&gt; resource_name my_random_value
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;EXPIRE&lt;&#x2F;span&gt;&lt;span&gt; resource_name 30
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;虽然这两个命令和前面算法描述中的一个&lt;code&gt;SET&lt;&#x2F;code&gt;命令执行效果相同，但却不是原子的。如果客户端在执行完&lt;code&gt;SETNX&lt;&#x2F;code&gt;后崩溃了，那么就没有机会执行&lt;code&gt;EXPIRE&lt;&#x2F;code&gt;了，导致它一直持有这个锁。&lt;&#x2F;p&gt;
+&lt;p&gt;第三个问题，也是 antirez 指出的，设置一个随机字符串&lt;code&gt;my_random_value&lt;&#x2F;code&gt;是很有必要的，它保证了一个客户端释放的锁必须是自己持有的那个锁。假如获取锁时&lt;code&gt;SET&lt;&#x2F;code&gt;的不是一个随机字符串，而是一个固定值，那么可能会发生下面的执行序列：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;客户端 1 获取锁成功。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 1 在某个操作上阻塞了很长时间。&lt;&#x2F;li&gt;
+&lt;li&gt;过期时间到了，锁自动释放了。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 2 获取到了对应同一个资源的锁。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 1 从阻塞中恢复过来，释放掉了客户端 2 持有的锁。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;之后，客户端 2 在访问共享资源的时候，就没有锁为它提供保护了。&lt;&#x2F;p&gt;
+&lt;p&gt;第四个问题，释放锁的操作必须使用 Lua 脚本来实现。释放锁其实包含三步操作：&#x27;GET&#x27;、判断和&#x27;DEL&#x27;，用 Lua 脚本来实现能保证这三步的原子性。否则，如果把这三步操作放到客户端逻辑中去执行的话，就有可能发生与前面第三个问题类似的执行序列：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;客户端 1 获取锁成功。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 1 访问共享资源。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 1 为了释放锁，先执行&#x27;GET&#x27;操作获取随机字符串的值。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 1 判断随机字符串的值，与预期的值相等。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 1 由于某个原因阻塞住了很长时间。&lt;&#x2F;li&gt;
+&lt;li&gt;过期时间到了，锁自动释放了。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 2 获取到了对应同一个资源的锁。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 1 从阻塞中恢复过来，执行&lt;code&gt;DEL&lt;&#x2F;code&gt;操纵，释放掉了客户端 2 持有的锁。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;实际上，在上述第三个问题和第四个问题的分析中，如果不是客户端阻塞住了，而是出现了大的网络延迟，也有可能导致类似的执行序列发生。&lt;&#x2F;p&gt;
+&lt;p&gt;前面的四个问题，只要实现分布式锁的时候加以注意，就都能够被正确处理。但除此之外，antirez 还指出了一个问题，是由 failover 引起的，却是基于单 Redis 节点的分布式锁无法解决的。正是这个问题催生了 Redlock 的出现。&lt;&#x2F;p&gt;
+&lt;p&gt;这个问题是这样的。假如 Redis 节点宕机了，那么所有客户端就都无法获得锁了，服务变得不可用。为了提高可用性，我们可以给这个 Redis 节点挂一个 Slave，当 Master 节点不可用的时候，系统自动切到 Slave 上（failover）。但由于 Redis 的主从复制（replication）是异步的，这可能导致在 failover 过程中丧失锁的安全性。考虑下面的执行序列：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;客户端 1 从 Master 获取了锁。&lt;&#x2F;li&gt;
+&lt;li&gt;Master 宕机了，存储锁的 key 还没有来得及同步到 Slave 上。&lt;&#x2F;li&gt;
+&lt;li&gt;Slave 升级为 Master。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 2 从新的 Master 获取到了对应同一个资源的锁。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;于是，客户端 1 和客户端 2 同时持有了同一个资源的锁。锁的安全性被打破。针对这个问题，antirez 设计了 Redlock 算法，我们接下来会讨论。&lt;&#x2F;p&gt;
+&lt;p&gt;【&lt;strong&gt;其它疑问&lt;&#x2F;strong&gt;】&lt;&#x2F;p&gt;
+&lt;p&gt;前面这个算法中出现的锁的有效时间 (lock validity time)，设置成多少合适呢？如果设置太短的话，锁就有可能在客户端完成对于共享资源的访问之前过期，从而失去保护；如果设置太长的话，一旦某个持有锁的客户端释放锁失败，那么就会导致所有其它客户端都无法获取锁，从而长时间内无法正常工作。看来真是个两难的问题。&lt;&#x2F;p&gt;
+&lt;p&gt;而且，在前面对于随机字符串&lt;code&gt;my_random_value&lt;&#x2F;code&gt;的分析中，antirez 也在文章中承认的确应该考虑客户端长期阻塞导致锁过期的情况。如果真的发生了这种情况，那么共享资源是不是已经失去了保护呢？antirez 重新设计的 Redlock 是否能解决这些问题呢？&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;fen-bu-shi-suo-redlock&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#fen-bu-shi-suo-redlock&quot; aria-label=&quot;Anchor link for: fen-bu-shi-suo-redlock&quot;&gt;分布式锁 Redlock&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;由于前面介绍的基于单 Redis 节点的分布式锁在 failover 的时候会产生解决不了的安全性问题，因此 antirez 提出了新的分布式锁的算法 Redlock，它基于 N 个完全独立的 Redis 节点（通常情况下 N 可以设置成 5）。&lt;&#x2F;p&gt;
+&lt;p&gt;运行 Redlock 算法的客户端依次执行下面各个步骤，来完成&lt;strong&gt;获取锁&lt;&#x2F;strong&gt;的操作：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;获取当前时间（毫秒数）。&lt;&#x2F;li&gt;
+&lt;li&gt;按顺序依次向 N 个 Redis 节点执行&lt;strong&gt;获取锁&lt;&#x2F;strong&gt;的操作。这个获取操作跟前面基于单 Redis 节点的&lt;strong&gt;获取锁&lt;&#x2F;strong&gt;的过程相同，包含随机字符串&lt;code&gt;my_random_value&lt;&#x2F;code&gt;，也包含过期时间（比如&lt;code&gt;PX 30000&lt;&#x2F;code&gt;，即锁的有效时间）。为了保证在某个 Redis 节点不可用的时候算法能够继续运行，这个&lt;strong&gt;获取锁&lt;&#x2F;strong&gt;的操作还有一个超时时间 (time out)，它要远小于锁的有效时间（几十毫秒量级）。客户端在向某个 Redis 节点获取锁失败以后，应该立即尝试下一个 Redis 节点。这里的失败，应该包含任何类型的失败，比如该 Redis 节点不可用，或者该 Redis 节点上的锁已经被其它客户端持有（注：Redlock 原文中这里只提到了 Redis 节点不可用的情况，但也应该包含其它的失败情况）。&lt;&#x2F;li&gt;
+&lt;li&gt;计算整个获取锁的过程总共消耗了多长时间，计算方法是用当前时间减去第 1 步记录的时间。如果客户端从大多数 Redis 节点（&amp;gt;= N&#x2F;2+1）成功获取到了锁，并且获取锁总共消耗的时间没有超过锁的有效时间 (lock validity time)，那么这时客户端才认为最终获取锁成功；否则，认为最终获取锁失败。&lt;&#x2F;li&gt;
+&lt;li&gt;如果最终获取锁成功了，那么这个锁的有效时间应该重新计算，它等于最初的锁的有效时间减去第 3 步计算出来的获取锁消耗的时间。&lt;&#x2F;li&gt;
+&lt;li&gt;如果最终获取锁失败了（可能由于获取到锁的 Redis 节点个数少于 N&#x2F;2+1，或者整个获取锁的过程消耗的时间超过了锁的最初有效时间），那么客户端应该立即向所有 Redis 节点发起&lt;strong&gt;释放锁&lt;&#x2F;strong&gt;的操作（即前面介绍的 Redis Lua 脚本）。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;当然，上面描述的只是&lt;strong&gt;获取锁&lt;&#x2F;strong&gt;的过程，而&lt;strong&gt;释放锁&lt;&#x2F;strong&gt;的过程比较简单：客户端向所有 Redis 节点发起&lt;strong&gt;释放锁&lt;&#x2F;strong&gt;的操作，不管这些节点当时在获取锁的时候成功与否。&lt;&#x2F;p&gt;
+&lt;p&gt;由于 N 个 Redis 节点中的大多数能正常工作就能保证 Redlock 正常工作，因此理论上它的可用性更高。我们前面讨论的单 Redis 节点的分布式锁在 failover 的时候锁失效的问题，在 Redlock 中不存在了，但如果有节点发生崩溃重启，还是会对锁的安全性有影响的。具体的影响程度跟 Redis 对数据的持久化程度有关。&lt;&#x2F;p&gt;
+&lt;p&gt;假设一共有 5 个 Redis 节点：A, B, C, D, E。设想发生了如下的事件序列：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;客户端 1 成功锁住了 A, B, C，&lt;strong&gt;获取锁&lt;&#x2F;strong&gt;成功（但 D 和 E 没有锁住）。&lt;&#x2F;li&gt;
+&lt;li&gt;节点 C 崩溃重启了，但客户端 1 在 C 上加的锁没有持久化下来，丢失了。&lt;&#x2F;li&gt;
+&lt;li&gt;节点 C 重启后，客户端 2 锁住了 C, D, E，&lt;strong&gt;获取锁&lt;&#x2F;strong&gt;成功。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;这样，客户端 1 和客户端 2 同时获得了锁（针对同一资源）。&lt;&#x2F;p&gt;
+&lt;p&gt;在默认情况下，Redis 的 AOF 持久化方式是每秒写一次磁盘（即执行 fsync），因此最坏情况下可能丢失 1 秒的数据。为了尽可能不丢数据，Redis 允许设置成每次修改数据都进行 fsync，但这会降低性能。当然，即使执行了 fsync 也仍然有可能丢失数据（这取决于系统而不是 Redis 的实现）。所以，上面分析的由于节点重启引发的锁失效问题，总是有可能出现的。为了应对这一问题，antirez 又提出了&lt;strong&gt;延迟重启&lt;&#x2F;strong&gt; (delayed restarts) 的概念。也就是说，一个节点崩溃后，先不立即重启它，而是等待一段时间再重启，这段时间应该大于锁的有效时间 (lock validity time)。这样的话，这个节点在重启前所参与的锁都会过期，它在重启后就不会对现有的锁造成影响。&lt;&#x2F;p&gt;
+&lt;p&gt;关于 Redlock 还有一点细节值得拿出来分析一下：在最后&lt;strong&gt;释放锁&lt;&#x2F;strong&gt;的时候，antirez 在算法描述中特别强调，客户端应该向所有 Redis 节点发起&lt;strong&gt;释放锁&lt;&#x2F;strong&gt;的操作。也就是说，即使当时向某个节点获取锁没有成功，在释放锁的时候也不应该漏掉这个节点。这是为什么呢？设想这样一种情况，客户端发给某个 Redis 节点的&lt;strong&gt;获取锁&lt;&#x2F;strong&gt;的请求成功到达了该 Redis 节点，这个节点也成功执行了&lt;code&gt;SET&lt;&#x2F;code&gt;操作，但是它返回给客户端的响应包却丢失了。这在客户端看来，获取锁的请求由于超时而失败了，但在 Redis 这边看来，加锁已经成功了。因此，释放锁的时候，客户端也应该对当时获取锁失败的那些 Redis 节点同样发起请求。实际上，这种情况在异步通信模型中是有可能发生的：客户端向服务器通信是正常的，但反方向却是有问题的。&lt;&#x2F;p&gt;
+&lt;p&gt;【&lt;strong&gt;其它疑问&lt;&#x2F;strong&gt;】&lt;&#x2F;p&gt;
+&lt;p&gt;前面在讨论单 Redis 节点的分布式锁的时候，最后我们提出了一个疑问，如果客户端长期阻塞导致锁过期，那么它接下来访问共享资源就不安全了（没有了锁的保护）。这个问题在 Redlock 中是否有所改善呢？显然，这样的问题在 Redlock 中是依然存在的。&lt;&#x2F;p&gt;
+&lt;p&gt;另外，在算法第 4 步成功获取了锁之后，如果由于获取锁的过程消耗了较长时间，重新计算出来的剩余的锁有效时间很短了，那么我们还来得及去完成共享资源访问吗？如果我们认为太短，是不是应该立即进行锁的释放操作？那到底多短才算呢？又是一个选择难题。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;martin-de-fen-xi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#martin-de-fen-xi&quot; aria-label=&quot;Anchor link for: martin-de-fen-xi&quot;&gt;Martin 的分析&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Martin Kleppmann 在 2016-02-08 这一天发表了一篇 blog，名字叫&amp;quot;How to do distributed locking&amp;quot;，地址如下：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;https:&#x2F;&#x2F;martin.kleppmann.com&#x2F;2016&#x2F;02&#x2F;08&#x2F;how-to-do-distributed-locking.html&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Martin 在这篇文章中谈及了分布式系统的很多基础性的问题（特别是分布式计算的异步模型），对分布式系统的从业者来说非常值得一读。这篇文章大体可以分为两大部分：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;前半部分，与 Redlock 无关。Martin 指出，即使我们拥有一个完美实现的分布式锁（带自动过期功能），在没有共享资源参与进来提供某种 fencing 机制的前提下，我们仍然不可能获得足够的安全性。&lt;&#x2F;li&gt;
+&lt;li&gt;后半部分，是对 Redlock 本身的批评。Martin 指出，由于 Redlock 本质上是建立在一个同步模型之上，对系统的记时假设 (timing assumption) 有很强的要求，因此本身的安全性是不够的。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;首先我们讨论一下前半部分的关键点。Martin 给出了下面这样一份时序图：&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;redis-distribute-lock&#x2F;image-20200804204605476.png&quot; alt=&quot;image-20200804204605476&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;在上面的时序图中，假设锁服务本身是没有问题的，它总是能保证任一时刻最多只有一个客户端获得锁。上图中出现的 lease 这个词可以暂且认为就等同于一个带有自动过期功能的锁。客户端 1 在获得锁之后发生了很长时间的 GC pause，在此期间，它获得的锁过期了，而客户端 2 获得了锁。当客户端 1 从 GC pause 中恢复过来的时候，它不知道自己持有的锁已经过期了，它依然向共享资源（上图中是一个存储服务）发起了写数据请求，而这时锁实际上被客户端 2 持有，因此两个客户端的写请求就有可能冲突（锁的互斥作用失效了）。&lt;&#x2F;p&gt;
+&lt;p&gt;初看上去，有人可能会说，既然客户端 1 从 GC pause 中恢复过来以后不知道自己持有的锁已经过期了，那么它可以在访问共享资源之前先判断一下锁是否过期。但仔细想想，这丝毫也没有帮助。因为 GC pause 可能发生在任意时刻，也许恰好在判断完之后。&lt;&#x2F;p&gt;
+&lt;p&gt;也有人会说，如果客户端使用没有 GC 的语言来实现，是不是就没有这个问题呢？Martin 指出，系统环境太复杂，仍然有很多原因导致进程的 pause，比如虚存造成的缺页故障 (page fault)，再比如 CPU 资源的竞争。即使不考虑进程 pause 的情况，网络延迟也仍然会造成类似的结果。&lt;&#x2F;p&gt;
+&lt;p&gt;总结起来就是说，即使锁服务本身是没有问题的，而仅仅是客户端有长时间的 pause 或网络延迟，仍然会造成两个客户端同时访问共享资源的冲突情况发生。而这种情况其实就是我们在前面已经提出来的“客户端长期阻塞导致锁过期”的那个疑问。&lt;&#x2F;p&gt;
+&lt;p&gt;那怎么解决这个问题呢？Martin 给出了一种方法，称为 fencing token。fencing token 是一个单调递增的数字，当客户端成功获取锁的时候它随同锁一起返回给客户端。而客户端访问共享资源的时候带着这个 fencing token，这样提供共享资源的服务就能根据它进行检查，拒绝掉延迟到来的访问请求（避免了冲突）。如下图：&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;redis-distribute-lock&#x2F;image-20200804204717901.png&quot; alt=&quot;image-20200804204717901&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;在上图中，客户端 1 先获取到的锁，因此有一个较小的 fencing token，等于 33，而客户端 2 后获取到的锁，有一个较大的 fencing token，等于 34。客户端 1 从 GC pause 中恢复过来之后，依然是向存储服务发送访问请求，但是带了 fencing token = 33。存储服务发现它之前已经处理过 34 的请求，所以会拒绝掉这次 33 的请求。这样就避免了冲突。&lt;&#x2F;p&gt;
+&lt;p&gt;现在我们再讨论一下 Martin 的文章的后半部分。&lt;&#x2F;p&gt;
+&lt;p&gt;Martin 在文中构造了一些事件序列，能够让 Redlock 失效（两个客户端同时持有锁）。为了说明 Redlock 对系统记时 (timing) 的过分依赖，他首先给出了下面的一个例子（还是假设有 5 个 Redis 节点 A, B, C, D, E）：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;客户端 1 从 Redis 节点 A, B, C 成功获取了锁（多数节点）。由于网络问题，与 D 和 E 通信失败。&lt;&#x2F;li&gt;
+&lt;li&gt;节点 C 上的时钟发生了向前跳跃，导致它上面维护的锁快速过期。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 2 从 Redis 节点 C, D, E 成功获取了同一个资源的锁（多数节点）。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 1 和客户端 2 现在都认为自己持有了锁。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;上面这种情况之所以有可能发生，本质上是因为 Redlock 的安全性 (safety property) 对系统的时钟有比较强的依赖，一旦系统的时钟变得不准确，算法的安全性也就保证不了了。Martin 在这里其实是要指出分布式算法研究中的一些基础性问题，或者说一些常识问题，即好的分布式算法应该基于异步模型 (asynchronous model)，算法的安全性不应该依赖于任何记时假设 (timing assumption)。在异步模型中：进程可能 pause 任意长的时间，消息可能在网络中延迟任意长的时间，甚至丢失，系统时钟也可能以任意方式出错。一个好的分布式算法，这些因素不应该影响它的安全性 (safety property)，只可能影响到它的活性 (liveness property)，也就是说，即使在非常极端的情况下（比如系统时钟严重错误），算法顶多是不能在有限的时间内给出结果而已，而不应该给出错误的结果。这样的算法在现实中是存在的，像比较著名的 Paxos，或 Raft。但显然按这个标准的话，Redlock 的安全性级别是达不到的。&lt;&#x2F;p&gt;
+&lt;p&gt;随后，Martin 觉得前面这个时钟跳跃的例子还不够，又给出了一个由客户端 GC pause 引发 Redlock 失效的例子。如下：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;客户端 1 向 Redis 节点 A, B, C, D, E 发起锁请求。&lt;&#x2F;li&gt;
+&lt;li&gt;各个 Redis 节点已经把请求结果返回给了客户端 1，但客户端 1 在收到请求结果之前进入了长时间的 GC pause。&lt;&#x2F;li&gt;
+&lt;li&gt;在所有的 Redis 节点上，锁过期了。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 2 在 A, B, C, D, E 上获取到了锁。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 1 从 GC pause 从恢复，收到了前面第 2 步来自各个 Redis 节点的请求结果。客户端 1 认为自己成功获取到了锁。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 1 和客户端 2 现在都认为自己持有了锁。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;Martin 给出的这个例子其实有点小问题。在 Redlock 算法中，客户端在完成向各个 Redis 节点的获取锁的请求之后，会计算这个过程消耗的时间，然后检查是不是超过了锁的有效时间 (lock validity time)。也就是上面的例子中第 5 步，客户端 1 从 GC pause 中恢复过来以后，它会通过这个检查发现锁已经过期了，不会再认为自己成功获取到锁了。随后 antirez 在他的反驳文章中就指出来了这个问题，但 Martin 认为这个细节对 Redlock 整体的安全性没有本质的影响。&lt;&#x2F;p&gt;
+&lt;p&gt;抛开这个细节，我们可以分析一下 Martin 举这个例子的意图在哪。初看起来，这个例子跟文章前半部分分析通用的分布式锁时给出的 GC pause 的时序图是基本一样的，只不过那里的 GC pause 发生在客户端 1 获得了锁之后，而这里的 GC pause 发生在客户端 1 获得锁之前。但两个例子的侧重点不太一样。Martin 构造这里的这个例子，是为了强调在一个分布式的异步环境下，长时间的 GC pause 或消息延迟（上面这个例子中，把 GC pause 换成 Redis 节点和客户端 1 之间的消息延迟，逻辑不变），会让客户端获得一个已经过期的锁。从客户端 1 的角度看，Redlock 的安全性被打破了，因为客户端 1 收到锁的时候，这个锁已经失效了，而 Redlock 同时还把这个锁分配给了客户端 2。换句话说，Redis 服务器在把锁分发给客户端的途中，锁就过期了，但又没有有效的机制让客户端明确知道这个问题。而在之前的那个例子中，客户端 1 收到锁的时候锁还是有效的，锁服务本身的安全性可以认为没有被打破，后面虽然也出了问题，但问题是出在客户端 1 和共享资源服务器之间的交互上。&lt;&#x2F;p&gt;
+&lt;p&gt;在 Martin 的这篇文章中，还有一个很有见地的观点，就是对锁的用途的区分。他把锁的用途分为两种：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;为了效率 (efficiency)，协调各个客户端避免做重复的工作。即使锁偶尔失效了，只是可能把某些操作多做一遍而已，不会产生其它的不良后果。比如重复发送了一封同样的 email。&lt;&#x2F;li&gt;
+&lt;li&gt;为了正确性 (correctness)。在任何情况下都不允许锁失效的情况发生，因为一旦发生，就可能意味着数据不一致 (inconsistency)，数据丢失，文件损坏，或者其它严重的问题。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;最后，Martin 得出了如下的结论：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果是为了效率 (efficiency) 而使用分布式锁，允许锁的偶尔失效，那么使用单 Redis 节点的锁方案就足够了，简单而且效率高。Redlock 则是个过重的实现 (heavyweight)。&lt;&#x2F;li&gt;
+&lt;li&gt;如果是为了正确性 (correctness) 在很严肃的场合使用分布式锁，那么不要使用 Redlock。它不是建立在异步模型上的一个足够强的算法，它对于系统模型的假设中包含很多危险的成分（对于 timing)。而且，它没有一个机制能够提供 fencing token。那应该使用什么技术呢？Martin 认为，应该考虑类似 Zookeeper 的方案，或者支持事务的数据库。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Martin 对 Redlock 算法的形容是：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;neither fish nor fowl （非驴非马）&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;【&lt;strong&gt;其它疑问&lt;&#x2F;strong&gt;】&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Martin 提出的 fencing token 的方案，需要对提供共享资源的服务进行修改，这在现实中可行吗？&lt;&#x2F;li&gt;
+&lt;li&gt;根据 Martin 的说法，看起来，如果资源服务器实现了 fencing token，它在分布式锁失效的情况下也仍然能保持资源的互斥访问。这是不是意味着分布式锁根本没有存在的意义了？&lt;&#x2F;li&gt;
+&lt;li&gt;资源服务器需要检查 fencing token 的大小，如果提供资源访问的服务也是包含多个节点的（分布式的），那么这里怎么检查才能保证 fencing token 在多个节点上是递增的呢？&lt;&#x2F;li&gt;
+&lt;li&gt;Martin 对于 fencing token 的举例中，两个 fencing token 到达资源服务器的顺序颠倒了（小的 fencing token 后到了），这时资源服务器检查出了这一问题。如果客户端 1 和客户端 2 都发生了 GC pause，两个 fencing token 都延迟了，它们几乎同时达到了资源服务器，但保持了顺序，那么资源服务器是不是就检查不出问题了？这时对于资源的访问是不是就发生冲突了？&lt;&#x2F;li&gt;
+&lt;li&gt;分布式锁+fencing 的方案是绝对正确的吗？能证明吗？&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;antirez-de-fan-bo&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#antirez-de-fan-bo&quot; aria-label=&quot;Anchor link for: antirez-de-fan-bo&quot;&gt;antirez 的反驳&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Martin 在发表了那篇分析分布式锁的 blog (How to do distributed locking) 之后，该文章在 Twitter 和 Hacker News 上引发了广泛的讨论。但人们更想听到的是 Redlock 的作者 antirez 对此会发表什么样的看法。&lt;&#x2F;p&gt;
+&lt;p&gt;Martin 的那篇文章是在 2016-02-08 这一天发表的，但据 Martin 说，他在公开发表文章的一星期之前就把草稿发给了 antirez 进行 review，而且他们之间通过 email 进行了讨论。不知道 Martin 有没有意料到，antirez 对于此事的反应很快，就在 Martin 的文章发表出来的第二天，antirez 就在他的博客上贴出了他对于此事的反驳文章，名字叫&amp;quot;Is Redlock safe?&amp;quot;，地址如下：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;http:&#x2F;&#x2F;antirez.com&#x2F;news&#x2F;101&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;这是高手之间的过招。antirez 这篇文章也条例非常清晰，并且中间涉及到大量的细节。antirez 认为，Martin 的文章对于 Redlock 的批评可以概括为两个方面（与 Martin 文章的前后两部分对应）：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;带有自动过期功能的分布式锁，必须提供某种 fencing 机制来保证对共享资源的真正的互斥保护。Redlock 提供不了这样一种机制。&lt;&#x2F;li&gt;
+&lt;li&gt;Redlock 构建在一个不够安全的系统模型之上。它对于系统的记时假设 (timing assumption) 有比较强的要求，而这些要求在现实的系统中是无法保证的。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;antirez 对这两方面分别进行了反驳。&lt;&#x2F;p&gt;
+&lt;p&gt;首先，关于 fencing 机制。antirez 对于 Martin 的这种论证方式提出了质疑：既然在锁失效的情况下已经存在一种 fencing 机制能继续保持资源的互斥访问了，那为什么还要使用一个分布式锁并且还要求它提供那么强的安全性保证呢？即使退一步讲，Redlock 虽然提供不了 Martin 所讲的递增的 fencing token，但利用 Redlock 产生的随机字符串 (&lt;code&gt;my_random_value&lt;&#x2F;code&gt;) 可以达到同样的效果。这个随机字符串虽然不是递增的，但却是唯一的，可以称之为 unique token。antirez 举了个例子，比如，你可以用它来实现“Check and Set”操作，原话是：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;When starting to work with a shared resource, we set its state to “&lt;code&gt;&amp;lt;token&amp;gt;&lt;&#x2F;code&gt;”, then we operate the read-modify-write only if the token is still the same when we write.（译文：当开始和共享资源交互的时候，我们将它的状态设置成“&lt;code&gt;&amp;lt;token&amp;gt;&lt;&#x2F;code&gt;”，然后仅在 token 没改变的情况下我们才执行“读取-修改-写回”操作。）&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;第一遍看到这个描述的时候，我个人是感觉没太看懂的。“Check and Set”应该就是我们平常听到过的 CAS 操作了，但它如何在这个场景下工作，antirez 并没有展开说（在后面讲到 Hacker News 上的讨论的时候，我们还会提到）。&lt;&#x2F;p&gt;
+&lt;p&gt;然后，antirez 的反驳就集中在第二个方面上：关于算法在记时 (timing) 方面的模型假设。在我们前面分析 Martin 的文章时也提到过，Martin 认为 Redlock 会失效的情况主要有三种：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;时钟发生跳跃。&lt;&#x2F;li&gt;
+&lt;li&gt;长时间的 GC pause。&lt;&#x2F;li&gt;
+&lt;li&gt;长时间的网络延迟。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;antirez 肯定意识到了这三种情况对 Redlock 最致命的其实是第一点：时钟发生跳跃。这种情况一旦发生，Redlock 是没法正常工作的。而对于后两种情况来说，Redlock 在当初设计的时候已经考虑到了，对它们引起的后果有一定的免疫力。所以，antirez 接下来集中精力来说明通过恰当的运维，完全可以避免时钟发生大的跳动，而 Redlock 对于时钟的要求在现实系统中是完全可以满足的。&lt;&#x2F;p&gt;
+&lt;p&gt;Martin 在提到时钟跳跃的时候，举了两个可能造成时钟跳跃的具体例子：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;系统管理员手动修改了时钟。&lt;&#x2F;li&gt;
+&lt;li&gt;从 NTP 服务收到了一个大的时钟更新事件。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;antirez 反驳说：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;手动修改时钟这种人为原因，不要那么做就是了。否则的话，如果有人手动修改 Raft 协议的持久化日志，那么就算是 Raft 协议它也没法正常工作了。&lt;&#x2F;li&gt;
+&lt;li&gt;使用一个不会进行“跳跃”式调整系统时钟的 ntpd 程序（可能是通过恰当的配置），对于时钟的修改通过多次微小的调整来完成。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;而 Redlock 对时钟的要求，并不需要完全精确，它只需要时钟差不多精确就可以了。比如，要记时 5 秒，但可能实际记了 4.5 秒，然后又记了 5.5 秒，有一定的误差。不过只要误差不超过一定范围，这对 Redlock 不会产生影响。antirez 认为呢，像这样对时钟精度并不是很高的要求，在实际环境中是完全合理的。&lt;&#x2F;p&gt;
+&lt;p&gt;好了，到此为止，如果你相信 antirez 这里关于时钟的论断，那么接下来 antirez 的分析就基本上顺理成章了。&lt;&#x2F;p&gt;
+&lt;p&gt;关于 Martin 提到的能使 Redlock 失效的后两种情况，Martin 在分析的时候恰好犯了一个错误（在 &lt;a href=&quot;http:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s?__biz=MzA4NTg1MjM0Mg==&amp;amp;mid=2657261514&amp;amp;idx=1&amp;amp;sn=47b1a63f065347943341910dddbb785d&amp;amp;chksm=84479e13b3301705ea29c86f457ad74010eba8a8a5c12a7f54bcf264a4a8c9d6adecbe32ad0b&amp;amp;scene=21#wechat_redirect&quot;&gt;本文上半部分&lt;&#x2F;a&gt; 已经提到过）。在 Martin 给出的那个由客户端 GC pause 引发 Redlock 失效的例子中，这个 GC pause 引发的后果相当于在锁服务器和客户端之间发生了长时间的消息延迟。Redlock 对于这个情况是能处理的。回想一下 Redlock 算法的具体过程，它使用起来的过程大体可以分成 5 步：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;获取当前时间。&lt;&#x2F;li&gt;
+&lt;li&gt;完成&lt;strong&gt;获取锁&lt;&#x2F;strong&gt;的整个过程（与 N 个 Redis 节点交互）。&lt;&#x2F;li&gt;
+&lt;li&gt;再次获取当前时间。&lt;&#x2F;li&gt;
+&lt;li&gt;把两个时间相减，计算&lt;strong&gt;获取锁&lt;&#x2F;strong&gt;的过程是否消耗了太长时间，导致锁已经过期了。如果没过期，&lt;&#x2F;li&gt;
+&lt;li&gt;客户端持有锁去访问共享资源。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;在 Martin 举的例子中，GC pause 或网络延迟，实际发生在上述第 1 步和第 3 步之间。而不管在第 1 步和第 3 步之间由于什么原因（进程停顿或网络延迟等）导致了大的延迟出现，在第 4 步都能被检查出来，不会让客户端拿到一个它认为有效而实际却已经过期的锁。当然，这个检查依赖系统时钟没有大的跳跃。这也就是为什么 antirez 在前面要对时钟条件进行辩护的原因。&lt;&#x2F;p&gt;
+&lt;p&gt;有人会说，在第 3 步之后，仍然可能会发生延迟啊。没错，antirez 承认这一点，他对此有一段很有意思的论证，原话如下：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The delay can only happen after steps 3, resulting into the lock to be considered ok while actually expired, that is, we are back at the first problem Martin identified of distributed locks where the client fails to stop working to the shared resource before the lock validity expires. Let me tell again how this problem is common with &lt;em&gt;all the distributed locks implementations&lt;&#x2F;em&gt;, and how the token as a solution is both unrealistic and can be used with Redlock as well.（译文：延迟只能发生在第 3 步之后，这导致锁被认为是有效的而实际上已经过期了，也就是说，我们回到了 Martin 指出的第一个问题上，客户端没能够在锁的有效性过期之前完成与共享资源的交互。让我再次申明一下，这个问题对于&lt;em&gt;所有的分布式锁的实现&lt;&#x2F;em&gt;是普遍存在的，而且基于 token 的这种解决方案是不切实际的，但也能和 Redlock 一起用。）&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;这里 antirez 所说的“Martin 指出的第一个问题”具体是什么呢？在 &lt;a href=&quot;http:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s?__biz=MzA4NTg1MjM0Mg==&amp;amp;mid=2657261514&amp;amp;idx=1&amp;amp;sn=47b1a63f065347943341910dddbb785d&amp;amp;chksm=84479e13b3301705ea29c86f457ad74010eba8a8a5c12a7f54bcf264a4a8c9d6adecbe32ad0b&amp;amp;scene=21#wechat_redirect&quot;&gt;本文上半部分&lt;&#x2F;a&gt; 我们提到过，Martin 的文章分为两大部分，其中前半部分与 Redlock 没有直接关系，而是指出了任何一种带自动过期功能的分布式锁在没有提供 fencing 机制的前提下都有可能失效。这里 antirez 所说的就是指的 Martin 的文章的前半部分。换句话说，对于大延迟给 Redlock 带来的影响，恰好与 Martin 在文章的前半部分针对所有的分布式锁所做的分析是一致的，而这种影响不单单针对 Redlock。Redlock 的实现已经保证了它是和其它任何分布式锁的安全性是一样的。当然，与其它“更完美”的分布式锁相比，Redlock 似乎提供不了 Martin 提出的那种递增的 token，但 antirez 在前面已经分析过了，关于 token 的这种论证方式本身就是“不切实际”的，或者退一步讲，Redlock 能提供的 unique token 也能够提供完全一样的效果。&lt;&#x2F;p&gt;
+&lt;p&gt;另外，关于大延迟对 Redlock 的影响，antirez 和 Martin 在 Twitter 上有下面的对话：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;antirez&lt;&#x2F;strong&gt;:@martinkl so I wonder if after my reply, we can at least agree about unbound messages delay to don’t cause any harm.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Martin&lt;&#x2F;strong&gt;:@antirez Agree about message delay between app and lock server. Delay between app and resource being accessed is still problematic.&lt;&#x2F;p&gt;
+&lt;p&gt;（译文：&lt;strong&gt;antirez&lt;&#x2F;strong&gt; 问：我想知道，在我发文回复之后，我们能否在一点上达成一致，就是大的消息延迟不会给 Redlock 的运行造成损害。&lt;strong&gt;Martin&lt;&#x2F;strong&gt; 答：对于客户端和锁服务器之间的消息延迟，我同意你的观点。但客户端和被访问资源之间的延迟还是有问题的。）&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;通过这段对话可以看出，对于 Redlock 在第 4 步所做的锁有效性的检查，Martin 是予以肯定的。但他认为客户端和资源服务器之间的延迟还是会带来问题的。Martin 在这里说的有点模糊。就像 antirez 前面分析的，客户端和资源服务器之间的延迟，对所有的分布式锁的实现都会带来影响，这不单单是 Redlock 的问题了。&lt;&#x2F;p&gt;
+&lt;p&gt;以上就是 antirez 在 blog 中所说的主要内容。有一些点值得我们注意一下：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;antirez 是同意大的系统时钟跳跃会造成 Redlock 失效的。在这一点上，他与 Martin 的观点的不同在于，他认为在实际系统中是可以避免大的时钟跳跃的。当然，这取决于基础设施和运维方式。&lt;&#x2F;li&gt;
+&lt;li&gt;antirez 在设计 Redlock 的时候，是充分考虑了网络延迟和程序停顿所带来的影响的。但是，对于客户端和资源服务器之间的延迟（即发生在算法第 3 步之后的延迟），antirez 是承认所有的分布式锁的实现，包括 Redlock，是没有什么好办法来应对的。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;讨论进行到这，Martin 和 antirez 之间谁对谁错其实并不是那么重要了。只要我们能够对 Redlock（或者其它分布式锁）所能提供的安全性的程度有充分的了解，那么我们就能做出自己的选择了。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;hacker-news-shang-de-yi-xie-tao-lun&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#hacker-news-shang-de-yi-xie-tao-lun&quot; aria-label=&quot;Anchor link for: hacker-news-shang-de-yi-xie-tao-lun&quot;&gt;Hacker News 上的一些讨论&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;针对 Martin 和 antirez 的两篇 blog，很多技术人员在 Hacker News 上展开了激烈的讨论。这些讨论所在地址如下：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;针对 Martin 的 blog 的讨论：https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=11059738&lt;&#x2F;li&gt;
+&lt;li&gt;针对 antirez 的 blog 的讨论：https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=11065933&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;在 Hacker News 上，antirez 积极参与了讨论，而 Martin 则始终置身事外。&lt;&#x2F;p&gt;
+&lt;p&gt;下面我把这些讨论中一些有意思的点拿出来与大家一起分享一下（集中在对于 fencing token 机制的讨论上）。&lt;&#x2F;p&gt;
+&lt;p&gt;关于 antirez 提出的“Check and Set”操作，他在 blog 里并没有详加说明。果然，在 Hacker News 上就有人出来问了。antirez 给出的答复如下：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;You want to modify locked resource X. You set X.currlock = token. Then you read, do whatever you want, and when you write, you &amp;quot;write-if-currlock == token&amp;quot;. If another client did X.currlock = somethingelse, the transaction fails.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;翻译一下可以这样理解：假设你要修改资源 X，那么遵循下面的伪码所定义的步骤。&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;先设置 X.currlock = token。&lt;&#x2F;li&gt;
+&lt;li&gt;读出资源 X（包括它的值和附带的 X.currlock）。&lt;&#x2F;li&gt;
+&lt;li&gt;按照&amp;quot;write-if-currlock == token&amp;quot;的逻辑，修改资源 X 的值。意思是说，如果对 X 进行修改的时候，X.currlock 仍然和当初设置进去的 token 相等，那么才进行修改；如果这时 X.currlock 已经是其它值了，那么说明有另外一方也在试图进行修改操作，那么放弃当前的修改，从而避免冲突。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;随后 Hacker News 上一位叫 viraptor 的用户提出了异议，它给出了这样一个执行序列：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;A: X.currlock = Token_ID_A&lt;&#x2F;li&gt;
+&lt;li&gt;A: resource read&lt;&#x2F;li&gt;
+&lt;li&gt;A: is X.currlock still Token_ID_A? yes&lt;&#x2F;li&gt;
+&lt;li&gt;B: X.currlock = Token_ID_B&lt;&#x2F;li&gt;
+&lt;li&gt;B: resource read&lt;&#x2F;li&gt;
+&lt;li&gt;B: is X.currlock still Token_ID_B? yes&lt;&#x2F;li&gt;
+&lt;li&gt;B: resource write&lt;&#x2F;li&gt;
+&lt;li&gt;A: resource write&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;到了最后两步，两个客户端 A 和 B 同时进行写操作，冲突了。不过，这位用户应该是理解错了 antirez 给出的修改过程了。按照 antirez 的意思，判断 X.currlock 是否修改过和对资源的写操作，应该是一个原子操作。只有这样理解才能合乎逻辑，否则的话，这个过程就有严重的破绽。这也是为什么 antirez 之前会对 fencing 机制产生质疑：既然资源服务器本身都能提供互斥的原子操作了，为什么还需要一个分布式锁呢？因此，antirez 认为这种 fencing 机制是很累赘的，他之所以还是提出了这种“Check and Set”操作，只是为了证明在提供 fencing token 这一点上，Redlock 也能做到。但是，这里仍然有一些不明确的地方，如果将&amp;quot;write-if-currlock == token&amp;quot;看做是原子操作的话，这个逻辑势必要在资源服务器上执行，那么第二步为什么还要“读出资源 X”呢？除非这个“读出资源 X”的操作也是在资源服务器上执行，它包含在“判断-写回”这个原子操作里面。而假如不这样理解的话，“读取-判断-写回”这三个操作都放在客户端执行，那么看不出它们如何才能实现原子性操作。在下面的讨论中，我们暂时忽略“读出资源 X”这一步。&lt;&#x2F;p&gt;
+&lt;p&gt;这个基于 random token 的“Check and Set”操作，如果与 Martin 提出的递增的 fencing token 对比一下的话，至少有两点不同：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;“Check and Set”对于写操作要分成两步来完成（设置 token、判断-写回），而递增的 fencing token 机制只需要一步（带着 token 向资源服务器发起写请求）。&lt;&#x2F;li&gt;
+&lt;li&gt;递增的 fencing token 机制能保证最终操作共享资源的顺序，那些延迟时间太长的操作就无法操作共享资源了。但是基于 random token 的“Check and Set”操作不会保证这个顺序，那些延迟时间太长的操作如果后到达了，它仍然有可能操作共享资源（当然是以互斥的方式）。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;对于前一点不同，我们在后面的分析中会看到，如果资源服务器也是分布式的，那么使用递增的 fencing token 也要变成两步。&lt;&#x2F;p&gt;
+&lt;p&gt;而对于后一点操作顺序上的不同，antirez 认为这个顺序没有意义，关键是能互斥访问就行了。他写下了下面的话：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;So the goal is, when race conditions happen, to avoid them in some way.......Note also that when it happens that, because of delays, the clients are accessing concurrently, the lock ID has little to do with the order in which the operations were indented to happen.（译文： 我们的目标是，当竞争条件出现的时候，能够以&lt;strong&gt;某种方式&lt;&#x2F;strong&gt;避免。...... 还需要注意的是，当那种竞争条件出现的时候，比如由于延迟，客户端是同时来访问的，锁的 ID 的大小顺序跟那些操作真正想执行的顺序，是没有什么关系的。）&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;这里的 lock ID，跟 Martin 说的递增的 token 是一回事。&lt;&#x2F;p&gt;
+&lt;p&gt;随后，antirez 举了一个“将名字加入列表”的操作的例子：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;T0: Client A receives new name to add from web.&lt;&#x2F;li&gt;
+&lt;li&gt;T0: Client B is idle&lt;&#x2F;li&gt;
+&lt;li&gt;T1: Client A is experiencing pauses.&lt;&#x2F;li&gt;
+&lt;li&gt;T1: Client B receives new name to add from web.&lt;&#x2F;li&gt;
+&lt;li&gt;T2: Client A is experiencing pauses.&lt;&#x2F;li&gt;
+&lt;li&gt;T2: Client B receives a lock with ID 1&lt;&#x2F;li&gt;
+&lt;li&gt;T3: Client A receives a lock with ID 2&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;你看，两个客户端（其实是 Web 服务器）执行“添加名字”的操作，A 本来是排在 B 前面的，但获得锁的顺序却是 B 排在 A 前面。因此，antirez 说，锁的 ID 的大小顺序跟那些操作真正想执行的顺序，是没有什么关系的。关键是能排出一个顺序来，能互斥访问就行了。那么，至于锁的 ID 是递增的，还是一个 random token，自然就不那么重要了。&lt;&#x2F;p&gt;
+&lt;p&gt;Martin 提出的 fencing token 机制，给人留下了无尽的疑惑。这主要是因为他对于这一机制的描述缺少太多的技术细节。从上面的讨论可以看出，antirez 对于这一机制的看法是，它跟一个 random token 没有什么区别，而且，它需要资源服务器本身提供某种互斥机制，这几乎让分布式锁本身的存在失去了意义。围绕 fencing token 的问题，还有两点是比较引人注目的，Hacker News 上也有人提出了相关的疑问：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;（1）关于资源服务器本身的架构细节。&lt;&#x2F;li&gt;
+&lt;li&gt;（2）资源服务器对于 fencing token 进行检查的实现细节，比如是否需要提供一种原子操作。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;关于上述问题（1），Hacker News 上有一位叫 dwenzek 的用户发表了下面的评论：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;...... the issue around the usage of fencing tokens to reject any late usage of a lock is unclear just because the protected resource and its access are themselves unspecified. Is the resource distributed or not? If distributed, does the resource has a mean to ensure that tokens are increasing over all the nodes? Does the resource have a mean to rollback any effects done by a client which session is interrupted by a timeout?&lt;&#x2F;p&gt;
+&lt;p&gt;（译文：...... 关于使用 fencing token 拒绝掉延迟请求的相关议题，是不够清晰的，因为受保护的资源以及对它的访问方式本身是没有被明确定义过的。资源服务是不是分布式的呢？如果是，资源服务有没有一种方式能确保 token 在所有节点上递增呢？对于客户端的 Session 由于过期而被中断的情况，资源服务有办法将它的影响回滚吗？）&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;这些疑问在 Hacker News 上并没有人给出解答。而关于分布式的资源服务器架构如何处理 fencing token，另外一名分布式系统的专家 Flavio Junqueira 在他的一篇 blog 中有所提及（我们后面会再提到）。&lt;&#x2F;p&gt;
+&lt;p&gt;关于上述问题（2），Hacker News 上有一位叫 reza_n 的用户发表了下面的疑问：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I understand how a fencing token can prevent out of order writes when 2 clients get the same lock. But what happens when those writes happen to arrive in order and you are doing a value modification? Don&#x27;t you still need to rely on some kind of value versioning or optimistic locking? Wouldn&#x27;t this make the use of a distributed lock unnecessary?&lt;&#x2F;p&gt;
+&lt;p&gt;（译文： 我理解当两个客户端同时获得锁的时候 fencing token 是如何防止乱序的。但是如果两个写操作恰好按序到达了，而且它们在对同一个值进行修改，那会发生什么呢？难道不会仍然是依赖某种数据版本号或者乐观锁的机制？这不会让分布式锁变得没有必要了吗？）&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;一位叫 Terr_的 Hacker News 用户答：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I believe the &amp;quot;first&amp;quot; write fails, because the token being passed in is no longer &amp;quot;the lastest&amp;quot;, which indicates their lock was already released or expired.&lt;&#x2F;p&gt;
+&lt;p&gt;（译文： 我认为“第一个”写请求会失败，因为它传入的 token 不再是“最新的”了，这意味着锁已经释放或者过期了。）&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;Terr_的回答到底对不对呢？这不好说，取决于资源服务器对于 fencing token 进行检查的实现细节。让我们来简单分析一下。&lt;&#x2F;p&gt;
+&lt;p&gt;为了简单起见，我们假设有一台（先不考虑分布式的情况）通过 RPC 进行远程访问文件服务器，它无法提供对于文件的互斥访问（否则我们就不需要分布式锁了）。现在我们按照 Martin 给出的说法，加入 fencing token 的检查逻辑。由于 Martin 没有描述具体细节，我们猜测至少有两种可能。&lt;&#x2F;p&gt;
+&lt;p&gt;第一种可能，我们修改了文件服务器的代码，让它能多接受一个 fencing token 的参数，并在进行所有处理之前加入了一个简单的判断逻辑，保证只有当前接收到的 fencing token 大于之前的值才允许进行后边的访问。而一旦通过了这个判断，后面的处理不变。&lt;&#x2F;p&gt;
+&lt;p&gt;现在想象 reza_n 描述的场景，客户端 1 和客户端 2 都发生了 GC pause，两个 fencing token 都延迟了，它们几乎同时到达了文件服务器，而且保持了顺序。那么，我们新加入的判断逻辑，应该对两个请求都会放过，而放过之后它们几乎同时在操作文件，还是冲突了。既然 Martin 宣称 fencing token 能保证分布式锁的正确性，那么上面这种可能的猜测也许是我们理解错了。&lt;&#x2F;p&gt;
+&lt;p&gt;当然，还有第二种可能，就是我们对文件服务器确实做了比较大的改动，让这里判断 token 的逻辑和随后对文件的处理放在一个原子操作里了。这可能更接近 antirez 的理解。这样的话，前面 reza_n 描述的场景中，两个写操作都应该成功。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ji-yu-zookeeper-de-fen-bu-shi-suo-geng-an-quan-ma&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#ji-yu-zookeeper-de-fen-bu-shi-suo-geng-an-quan-ma&quot; aria-label=&quot;Anchor link for: ji-yu-zookeeper-de-fen-bu-shi-suo-geng-an-quan-ma&quot;&gt;基于 ZooKeeper 的分布式锁更安全吗？&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;很多人（也包括 Martin 在内）都认为，如果你想构建一个更安全的分布式锁，那么应该使用 ZooKeeper，而不是 Redis。那么，为了对比的目的，让我们先暂时脱离开本文的题目，讨论一下基于 ZooKeeper 的分布式锁能提供绝对的安全吗？它需要 fencing token 机制的保护吗？&lt;&#x2F;p&gt;
+&lt;p&gt;我们不得不提一下分布式专家 Flavio Junqueira 所写的一篇 blog，题目叫“Note on fencing and distributed locks”，地址如下：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;https:&#x2F;&#x2F;fpj.me&#x2F;2016&#x2F;02&#x2F;10&#x2F;note-on-fencing-and-distributed-locks&#x2F;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Flavio Junqueira 是 ZooKeeper 的作者之一，他的这篇 blog 就写在 Martin 和 antirez 发生争论的那几天。他在文中给出了一个基于 ZooKeeper 构建分布式锁的描述（当然这不是唯一的方式）：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;客户端尝试创建一个 znode 节点，比如&lt;code&gt;&#x2F;lock&lt;&#x2F;code&gt;。那么第一个客户端就创建成功了，相当于拿到了锁；而其它的客户端会创建失败（znode 已存在），获取锁失败。&lt;&#x2F;li&gt;
+&lt;li&gt;持有锁的客户端访问共享资源完成后，将 znode 删掉，这样其它客户端接下来就能来获取锁了。&lt;&#x2F;li&gt;
+&lt;li&gt;znode 应该被创建成 ephemeral 的。这是 znode 的一个特性，它保证如果创建 znode 的那个客户端崩溃了，那么相应的 znode 会被自动删除。这保证了锁一定会被释放。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;看起来这个锁相当完美，没有 Redlock 过期时间的问题，而且能在需要的时候让锁自动释放。但仔细考察的话，并不尽然。&lt;&#x2F;p&gt;
+&lt;p&gt;ZooKeeper 是怎么检测出某个客户端已经崩溃了呢？实际上，每个客户端都与 ZooKeeper 的某台服务器维护着一个 Session，这个 Session 依赖定期的心跳 (heartbeat) 来维持。如果 ZooKeeper 长时间收不到客户端的心跳（这个时间称为 Sesion 的过期时间），那么它就认为 Session 过期了，通过这个 Session 所创建的所有的 ephemeral 类型的 znode 节点都会被自动删除。&lt;&#x2F;p&gt;
+&lt;p&gt;设想如下的执行序列：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;客户端 1 创建了 znode 节点&lt;code&gt;&#x2F;lock&lt;&#x2F;code&gt;，获得了锁。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 1 进入了长时间的 GC pause。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 1 连接到 ZooKeeper 的 Session 过期了。znode 节点&lt;code&gt;&#x2F;lock&lt;&#x2F;code&gt;被自动删除。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 2 创建了 znode 节点&lt;code&gt;&#x2F;lock&lt;&#x2F;code&gt;，从而获得了锁。&lt;&#x2F;li&gt;
+&lt;li&gt;客户端 1 从 GC pause 中恢复过来，它仍然认为自己持有锁。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;最后，客户端 1 和客户端 2 都认为自己持有了锁，冲突了。这与之前 Martin 在文章中描述的由于 GC pause 导致的分布式锁失效的情况类似。&lt;&#x2F;p&gt;
+&lt;p&gt;看起来，用 ZooKeeper 实现的分布式锁也不一定就是安全的。该有的问题它还是有。但是，ZooKeeper 作为一个专门为分布式应用提供方案的框架，它提供了一些非常好的特性，是 Redis 之类的方案所没有的。像前面提到的 ephemeral 类型的 znode 自动删除的功能就是一个例子。&lt;&#x2F;p&gt;
+&lt;p&gt;还有一个很有用的特性是 ZooKeeper 的 watch 机制。这个机制可以这样来使用，比如当客户端试图创建&lt;code&gt;&#x2F;lock&lt;&#x2F;code&gt;的时候，发现它已经存在了，这时候创建失败，但客户端不一定就此对外宣告获取锁失败。客户端可以进入一种等待状态，等待当&lt;code&gt;&#x2F;lock&lt;&#x2F;code&gt;节点被删除的时候，ZooKeeper 通过 watch 机制通知它，这样它就可以继续完成创建操作（获取锁）。这可以让分布式锁在客户端用起来就像一个本地的锁一样：加锁失败就阻塞住，直到获取到锁为止。这样的特性 Redlock 就无法实现。&lt;&#x2F;p&gt;
+&lt;p&gt;小结一下，基于 ZooKeeper 的锁和基于 Redis 的锁相比在实现特性上有两个不同：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;在正常情况下，客户端可以持有锁任意长的时间，这可以确保它做完所有需要的资源访问操作之后再释放锁。这避免了基于 Redis 的锁对于有效时间 (lock validity time) 到底设置多长的两难问题。实际上，基于 ZooKeeper 的锁是依靠 Session（心跳）来维持锁的持有状态的，而 Redis 不支持 Sesion。&lt;&#x2F;li&gt;
+&lt;li&gt;基于 ZooKeeper 的锁支持在获取锁失败之后等待锁重新释放的事件。这让客户端对锁的使用更加灵活。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;顺便提一下，如上所述的基于 ZooKeeper 的分布式锁的实现，并不是最优的。它会引发“herd effect”（羊群效应），降低获取锁的性能。一个更好的实现参见下面链接：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;http:&#x2F;&#x2F;zookeeper.apache.org&#x2F;doc&#x2F;r3.4.9&#x2F;recipes.html#sc_recipes_Locks&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;我们重新回到 Flavio Junqueira 对于 fencing token 的分析。Flavio Junqueira 指出，fencing token 机制本质上是要求客户端在每次访问一个共享资源的时候，在执行任何操作之前，先对资源进行某种形式的“标记”(mark) 操作，这个“标记”能保证持有旧的锁的客户端请求（如果延迟到达了）无法操作资源。这种标记操作可以是很多形式，fencing token 是其中比较典型的一个。&lt;&#x2F;p&gt;
+&lt;p&gt;随后 Flavio Junqueira 提到用递增的 epoch number（相当于 Martin 的 fencing token）来保护共享资源。而对于分布式的资源，为了方便讨论，假设分布式资源是一个小型的多备份的数据存储 (a small replicated data store)，执行写操作的时候需要向所有节点上写数据。最简单的做标记的方式，就是在对资源进行任何操作之前，先把 epoch number 标记到各个资源节点上去。这样，各个节点就保证了旧的（也就是小的）epoch number 无法操作数据。&lt;&#x2F;p&gt;
+&lt;p&gt;当然，这里再展开讨论下去可能就涉及到了这个数据存储服务的实现细节了。比如在实际系统中，可能为了容错，只要上面讲的标记和写入操作在多数节点上完成就算成功完成了（Flavio Junqueira 并没有展开去讲）。在这里我们能看到的，最重要的，是这种标记操作如何起作用的方式。这有点类似于 Paxos 协议（Paxos 协议要求每个 proposal 对应一个递增的数字，执行 accept 请求之前先执行 prepare 请求）。antirez 提出的 random token 的方式显然不符合 Flavio Junqueira 对于“标记”操作的定义，因为它无法区分新的 token 和旧的 token。只有递增的数字才能确保最终收敛到最新的操作结果上。&lt;&#x2F;p&gt;
+&lt;p&gt;在这个分布式数据存储服务（共享资源）的例子中，客户端在标记完成之后执行写入操作的时候，存储服务的节点需要判断 epoch number 是不是最新，然后确定能不能执行写入操作。如果按照上一节我们的分析思路，这里的 epoch 判断和接下来的写入操作，是不是在一个原子操作里呢？根据 Flavio Junqueira 的相关描述，我们相信，应该是原子的。那么既然资源本身可以提供原子互斥操作了，那么分布式锁还有存在的意义吗？应该说有。客户端可以利用分布式锁有效地避免冲突，等待写入机会，这对于包含多个节点的分布式资源尤其有用（当然，是出于效率的原因）。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;chubby-de-fen-bu-shi-suo-shi-zen-yang-zuo-fencing-de&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#chubby-de-fen-bu-shi-suo-shi-zen-yang-zuo-fencing-de&quot; aria-label=&quot;Anchor link for: chubby-de-fen-bu-shi-suo-shi-zen-yang-zuo-fencing-de&quot;&gt;Chubby 的分布式锁是怎样做 fencing 的？&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;提到分布式锁，就不能不提 Google 的 Chubby。&lt;&#x2F;p&gt;
+&lt;p&gt;Chubby 是 Google 内部使用的分布式锁服务，有点类似于 ZooKeeper，但也存在很多差异。Chubby 对外公开的资料，主要是一篇论文，叫做“The Chubby lock service for loosely-coupled distributed systems”，下载地址如下：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;https:&#x2F;&#x2F;research.google.com&#x2F;archive&#x2F;chubby.html&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;另外，YouTube 上有一个的讲 Chubby 的 talk，也很不错，播放地址：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=PqItueBaiRg&amp;amp;feature=youtu.be&amp;amp;t=487&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Chubby 自然也考虑到了延迟造成的锁失效的问题。论文里有一段描述如下：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;a process holding a lock L may issue a request R, but then fail. Another process may ac- quire L and perform some action before R arrives at its destination. If R later arrives, it may be acted on without the protection of L, and potentially on inconsistent data.&lt;&#x2F;p&gt;
+&lt;p&gt;（译文： 一个进程持有锁 L，发起了请求 R，但是请求失败了。另一个进程获得了锁 L 并在请求 R 到达目的方之前执行了一些动作。如果后来请求 R 到达了，它就有可能在没有锁 L 保护的情况下进行操作，带来数据不一致的潜在风险。）&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;这跟 Martin 的分析大同小异。&lt;&#x2F;p&gt;
+&lt;p&gt;Chubby 给出的用于解决（缓解）这一问题的机制称为 sequencer，类似于 fencing token 机制。锁的持有者可以随时请求一个 sequencer，这是一个字节串，它由三部分组成：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;锁的名字。&lt;&#x2F;li&gt;
+&lt;li&gt;锁的获取模式（排他锁还是共享锁）。&lt;&#x2F;li&gt;
+&lt;li&gt;lock generation number（一个 64bit 的单调递增数字）。作用相当于 fencing token 或 epoch number。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;客户端拿到 sequencer 之后，在操作资源的时候把它传给资源服务器。然后，资源服务器负责对 sequencer 的有效性进行检查。检查可以有两种方式：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;调用 Chubby 提供的 API，CheckSequencer()，将整个 sequencer 传进去进行检查。这个检查是为了保证客户端持有的锁在进行资源访问的时候仍然有效。&lt;&#x2F;li&gt;
+&lt;li&gt;将客户端传来的 sequencer 与资源服务器当前观察到的最新的 sequencer 进行对比检查。可以理解为与 Martin 描述的对于 fencing token 的检查类似。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;当然，如果由于兼容的原因，资源服务本身不容易修改，那么 Chubby 还提供了一种机制：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;lock-delay。Chubby 允许客户端为持有的锁指定一个 lock-delay 的时间值（默认是 1 分钟）。当 Chubby 发现客户端被动失去联系的时候，并不会立即释放锁，而是会在 lock-delay 指定的时间内阻止其它客户端获得这个锁。这是为了在把锁分配给新的客户端之前，让之前持有锁的客户端有充分的时间把请求队列排空 (draining the queue)，尽量防止出现延迟到达的未处理请求。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;可见，为了应对锁失效问题，Chubby 提供的三种处理方式：CheckSequencer() 检查、与上次最新的 sequencer 对比、lock-delay，它们对于安全性的保证是从强到弱的。而且，这些处理方式本身都没有保证提供绝对的正确性 (correctness)。但是，Chubby 确实提供了单调递增的 lock generation number，这就允许资源服务器在需要的时候，利用它提供更强的安全性保障。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;guan-yu-shi-zhong&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#guan-yu-shi-zhong&quot; aria-label=&quot;Anchor link for: guan-yu-shi-zhong&quot;&gt;关于时钟&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;在 Martin 与 antirez 的这场争论中，冲突最为严重的就是对于系统时钟的假设是不是合理的问题。Martin 认为系统时钟难免会发生跳跃（这与分布式算法的异步模型相符），而 antirez 认为在实际中系统时钟可以保证不发生大的跳跃。&lt;&#x2F;p&gt;
+&lt;p&gt;Martin 对于这一分歧发表了如下看法（原话）：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;So, fundamentally, this discussion boils down to whether it is reasonable to make timing assumptions for ensuring safety properties. I say no, Salvatore says yes — but that&#x27;s ok. Engineering discussions rarely have one right answer.&lt;&#x2F;p&gt;
+&lt;p&gt;（译文：从根本上来说，这场讨论最后归结到了一个问题上：为了确保安全性而做出的记时假设到底是否合理。我认为不合理，而 antirez 认为合理 —— 但是这也没关系。工程问题的讨论很少只有一个正确答案。）&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;那么，在实际系统中，时钟到底是否可信呢？对此，Julia Evans 专门写了一篇文章，“TIL: clock skew exists”，总结了很多跟时钟偏移有关的实际资料，并进行了分析。这篇文章地址：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;http:&#x2F;&#x2F;jvns.ca&#x2F;blog&#x2F;2016&#x2F;02&#x2F;09&#x2F;til-clock-skew-exists&#x2F;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Julia Evans 在文章最后得出的结论是：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;clock skew is real（时钟偏移在现实中是存在的）&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;关于分布式锁的这场争论，我们已经完整地做了回顾和分析。&lt;&#x2F;p&gt;
+&lt;p&gt;按照锁的两种用途，如果仅是为了效率 (efficiency)，那么你可以自己选择你喜欢的一种分布式锁的实现。当然，你需要清楚地知道它在安全性上有哪些不足，以及它会带来什么后果。而如果你是为了正确性 (correctness)，那么请慎之又慎。在本文的讨论中，我们在分布式锁的正确性上走得最远的地方，要数对于 ZooKeeper 分布式锁、单调递增的 epoch number 以及对分布式资源进行标记的分析了。请仔细审查相关的论证。&lt;&#x2F;p&gt;
+&lt;p&gt;Martin 为我们留下了不少疑问，尤其是他提出的 fencing token 机制。他在 blog 中提到，会在他的新书《Designing Data-Intensive Applications》的第 8 章和第 9 章再详加论述。目前，这本书尚在预售当中。我感觉，这会是一本值得一读的书，它不同于为了出名或赚钱而出版的那种短平快的书籍。可以看出作者在这本书上投入了巨大的精力。&lt;&#x2F;p&gt;
+&lt;p&gt;最后，我相信，这个讨论还远没有结束。分布式锁 (Distributed Locks) 和相应的 fencing 方案，可以作为一个长期的课题，随着我们对分布式系统的认识逐渐增加，可以再来慢慢地思考它。思考它更深层的本质，以及它在理论上的证明。&lt;&#x2F;p&gt;
+</content>
+    </entry>
+</feed>

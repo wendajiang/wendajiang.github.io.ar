@@ -1,0 +1,104 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>Signal and sigaction | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/signal-and-sigaction/ rel=canonical><meta content="Signal and sigaction" property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/signal-and-sigaction/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta property=og:updated_time><meta content="Signal and sigaction" property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/signal-and-sigaction/"
+      },
+      "headline": "Signal and sigaction",
+      "image": ,
+      "datePublished": "2022-12-16T09:43:00",
+      "dateModified": "",
+      "author": {
+        "@type": "Organization",
+        "name": "Signal and sigaction"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Signal and sigaction",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Signal And Sigaction",
+            "item": "https://wendajiang.github.io/signal-and-sigaction/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><script>function initMermaid(){var a={startOnLoad:true,theme:"neutral",flowchart:{useMaxWidth:true,htmlLabels:true}};mermaid.initialize(a);window.mermaid.init(undefined,document.querySelectorAll('.mermaid'))}</script><script async onload=initMermaid() src=https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>Signal and sigaction</h1><p><small>Posted 2022-12-16 09:43:00 ‐ <strong>2 min read</strong></small><p></div><p>First, the example<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=color:#ff79c6>#include </span><span style=color:#f1fa8c>&LTstdio.h>
+</span><span style=color:#ff79c6>#include </span><span style=color:#f1fa8c>&LTunistd.h>
+</span><span style=color:#ff79c6>#include </span><span style=color:#f1fa8c>&LTsignal.h>
+</span><span style=color:#ff79c6>#include </span><span style=color:#f1fa8c>&LTerrno.h>
+</span><span>
+</span><span style=color:#ff79c6>static </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>sig_usr</span><span>(</span><span style=font-style:italic;color:#8be9fd>int </span><span style=font-style:italic;color:#ffb86c>signum</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>if </span><span>(signum </span><span style=color:#ff79c6>==</span><span> SIGUSR1) </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#8be9fd>printf</span><span>(</span><span style=color:#f1fa8c>"SIGUSR1 received</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>);
+</span><span>  </span><span style=color:#fff>} </span><span style=color:#ff79c6>else if </span><span>(signum </span><span style=color:#ff79c6>==</span><span> SIGUSR2) </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#8be9fd>printf</span><span>(</span><span style=color:#f1fa8c>"SIGUSR2 received</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>);
+</span><span>  </span><span style=color:#fff>} </span><span style=color:#ff79c6>else </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#8be9fd>printf</span><span>(</span><span style=color:#f1fa8c>"signal </span><span style=color:#bd93f9>%d</span><span style=color:#f1fa8c> received</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>, signum);
+</span><span>  </span><span style=color:#fff>}
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#50fa7b>main</span><span>(</span><span style=font-style:italic;color:#8be9fd>void</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>char</span><span> buf[</span><span style=color:#bd93f9>512</span><span>];
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>int</span><span> n;
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>struct</span><span> sigaction sa_usr;
+</span><span>  sa_usr</span><span style=color:#ff79c6>.</span><span style=color:#fff>sa_flags </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span>  sa_usr</span><span style=color:#ff79c6>.</span><span style=color:#fff>sa_handler </span><span style=color:#ff79c6>=</span><span> sig_usr;
+</span><span>  </span><span style=color:#50fa7b>sigaction</span><span>(SIGUSR1, </span><span style=color:#ff79c6>&</span><span>sa_usr, </span><span style=color:#bd93f9>NULL</span><span>);
+</span><span>  </span><span style=color:#50fa7b>sigaction</span><span>(SIGUSR2, </span><span style=color:#ff79c6>&</span><span>sa_usr, </span><span style=color:#bd93f9>NULL</span><span>);
+</span><span>  </span><span style=color:#8be9fd>printf</span><span>(</span><span style=color:#f1fa8c>"My PID is </span><span style=color:#bd93f9>%d</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>, </span><span style=color:#50fa7b>getpid</span><span>());
+</span><span>  </span><span style=color:#ff79c6>while</span><span>(</span><span style=color:#bd93f9>1</span><span>) </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>if </span><span>(n </span><span style=color:#ff79c6>= </span><span style=color:#50fa7b>read</span><span>(STDIN_FILENO, buf, </span><span style=color:#bd93f9>511</span><span>) </span><span style=color:#ff79c6>== -</span><span style=color:#bd93f9>1</span><span>) </span><span style=color:#fff>{
+</span><span>      </span><span style=color:#ff79c6>if </span><span>(errno </span><span style=color:#ff79c6>==</span><span> EINTR) </span><span style=color:#fff>{
+</span><span>        </span><span style=color:#8be9fd>printf</span><span>(</span><span style=color:#f1fa8c>"read is interrupted by signal</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>);
+</span><span>      </span><span style=color:#fff>}
+</span><span>    </span><span style=color:#fff>} </span><span style=color:#ff79c6>else </span><span style=color:#fff>{
+</span><span>      buf[n] </span><span style=color:#ff79c6>= </span><span style=color:#f1fa8c>'</span><span style=color:#ff79c6>\0</span><span style=color:#f1fa8c>'</span><span>;
+</span><span>      </span><span style=color:#8be9fd>printf</span><span>(</span><span style=color:#f1fa8c>"</span><span style=color:#bd93f9>%d</span><span style=color:#f1fa8c> bytes read: </span><span style=color:#bd93f9>%s</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>, n, buf);
+</span><span>    </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>0</span><span>;
+</span><span style=color:#fff>}
+</span></code></pre><blockquote><p>scatter read<p>gatter write</blockquote><p>signal 通常使用一个 32 位无符号整数( <em>man 7 signal</em>), 使用单 bit 表示，因此可以表示 32 个信号。signal() sigaction() 功能类似，更改信号 handler。signal() 每次处理完需要重新设置。<p>但是 signal() 在已经进入自定义信号处理函数时，但是重新设置之前，可能系统又发生了信号，会丢失。sigaction 更可靠的原因是，在信号处理中，被捕捉的信号会被屏蔽，并且不用每次重新设置处理函数。<p>signal 中断当前进程进入内核原理在于 do_signal() 函数：<p><img alt=signal.drawio src=https://wendajiang.github.io/pics/signal_and_sigaction/signal.drawio.png></article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'Signal and sigaction',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

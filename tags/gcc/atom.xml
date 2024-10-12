@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - gcc</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/gcc/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2023-12-21T14:46:37+00:00</updated>
+    <id>https://wendajiang.github.io/tags/gcc/atom.xml</id>
+    <entry xml:lang="en">
+        <title>pointers are complicated</title>
+        <published>2023-12-21T14:46:37+00:00</published>
+        <updated>2023-12-21T14:46:37+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/pointers-are-complicated/" type="text/html"/>
+        <id>https://wendajiang.github.io/pointers-are-complicated/</id>
+        <content type="html">&lt;p&gt;Provenance notion for LLVM IR is important when implementing compiler which has pointer(e.g. Rust, C, C++).&lt;&#x2F;p&gt;
+&lt;p&gt;Otherwise, compiler optimization would cause error result.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;reference&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#reference&quot; aria-label=&quot;Anchor link for: reference&quot;&gt;reference&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.ralfj.de&#x2F;blog&#x2F;2020&#x2F;12&#x2F;14&#x2F;provenance.html&quot;&gt;src&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.open-std.org&#x2F;jtc1&#x2F;sc22&#x2F;wg14&#x2F;www&#x2F;docs&#x2F;n3005.pdf&quot;&gt;open-std Aprovenance-aware Memory Object Model for C&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;gcc.gnu.org&#x2F;bugzilla&#x2F;show_bug.cgi?id=82282s&quot;&gt;gcc(6.4.0) bug report&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>gcc&#x2F;g++ compile options</title>
+        <published>2022-12-15T18:07:49+00:00</published>
+        <updated>2022-12-15T18:07:49+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/gcc-compile-options/" type="text/html"/>
+        <id>https://wendajiang.github.io/gcc-compile-options/</id>
+        <content type="html">&lt;p&gt;onenote 迁移文&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;option&lt;&#x2F;th&gt;&lt;th&gt;解释&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;-L&lt;&#x2F;td&gt;&lt;td&gt;指定链接库需要的目录 -L&#x2F;usr&#x2F;lib&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;-l&lt;&#x2F;td&gt;&lt;td&gt;链接库名称 -ltest.    -Wl,-Bstatic 静态库 -Wl,-Bdynamic 动态库&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;-I&lt;&#x2F;td&gt;&lt;td&gt;头文件目录&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;-shared&lt;&#x2F;td&gt;&lt;td&gt;指定生成的动态库&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;-fPIC&lt;&#x2F;td&gt;&lt;td&gt;shared library 独立位置代码，如果不用，每个使用 so 的 binary 会 copy 到自己进程空间一份，无法实现真正的 share library&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;gcc -E test.c -o test.i&lt;&#x2F;td&gt;&lt;td&gt;预处理&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;gcc -S test.i -o test.s&lt;&#x2F;td&gt;&lt;td&gt;编译&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;gcc -c test.s -o test.o&lt;&#x2F;td&gt;&lt;td&gt;汇编&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;gcc test.o -o test&lt;&#x2F;td&gt;&lt;td&gt;链接&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;-O&lt;&#x2F;td&gt;&lt;td&gt;编译优化 -O0, -O1(default), -O2, -O3&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;-g&lt;&#x2F;td&gt;&lt;td&gt;生成gdb 调试信息&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;-pg&lt;&#x2F;td&gt;&lt;td&gt;gprof extra code&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;-Wall&lt;&#x2F;td&gt;&lt;td&gt;所有的警告信息 -W 很多选项&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;-Wl&lt;&#x2F;td&gt;&lt;td&gt;传递给 linker 的 option。-Wl,-R runtime lib 路径&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;-Wa&lt;&#x2F;td&gt;&lt;td&gt;传递给 assmbler 的 option&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;blockquote&gt;
+&lt;p&gt;ar 工具可以将 object file 压缩到一起，ex. ar cqs libstaticlib.a one.o two.o three.o&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>GNU gcc 工具集整理, GNU Binutils</title>
+        <published>2021-04-20T16:44:55+00:00</published>
+        <updated>2021-04-20T16:44:55+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/gnu-binutils-md/" type="text/html"/>
+        <id>https://wendajiang.github.io/gnu-binutils-md/</id>
+        <content type="html">&lt;!--
+mermaid example:
+&lt;div class=&quot;mermaid&quot;&gt;
+    mermaid program
+&lt;&#x2F;div&gt;
+--&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.gnu.org&#x2F;software&#x2F;binutils&#x2F;&quot;&gt;GNU Binutils&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;gnu-binutils&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#gnu-binutils&quot; aria-label=&quot;Anchor link for: gnu-binutils&quot;&gt;GNU Binutils&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;GNU Binutils 是一套二进制工具集，主要由：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ld&lt;&#x2F;strong&gt; -- 链接器 &lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;as&lt;&#x2F;strong&gt; -- 汇编器&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;还包括&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;addr2line&lt;&#x2F;strong&gt; - Converts addresses into filenames and line numbers.
+backtrace&#x2F;backtrace_symbol 输出的地址可以使用addr2line转化为 &lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;ar&lt;&#x2F;strong&gt; - A utility for creating, modifying and extracting from archives.
+ar，Linux系统的一个备份压缩命令，用于创建、修改备存文件（archive），或从备存文件中提取成员文件。ar命令最常见的用法是将目标文件打包为静态链接库。&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;c++filt&lt;&#x2F;strong&gt; - Filter to demangle encoded C++ symbols.
+将符号转为代码,比如 
+c++filt    _Z6myfunci    -&amp;gt; myfunc(int)   (centos 系统示例)&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;gold&lt;&#x2F;strong&gt; - A new, faster, ELF only linker, still in beta test.
+暂时忽略&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;gprof&lt;&#x2F;strong&gt; - Displays profiling information.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;nlmconv&lt;&#x2F;strong&gt; - Converts object code into an NLM.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;nm&lt;&#x2F;strong&gt; - Lists symbols from object files.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;objcopy&lt;&#x2F;strong&gt; - Copies and translates object files.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;objdump&lt;&#x2F;strong&gt; - Displays information from object files.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;ranlib&lt;&#x2F;strong&gt; - Generates an index to the contents of an archive.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;readelf&lt;&#x2F;strong&gt; - Displays information from any ELF format object file.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;size&lt;&#x2F;strong&gt; - Lists the section sizes of an object or archive file.
+例子：
+size bt_test
+text    data     bss     dec     hex filename
+2553     672      16    3241     ca9 bt_test&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;strings&lt;&#x2F;strong&gt; - Lists printable strings from files.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;strip&lt;&#x2F;strong&gt; - Discards symbols.
+&amp;quot;脱裤&amp;quot;，将文件中的符号表脱掉，&amp;quot;脱裤&amp;quot;后的文件无法使用addr2line来转化代码位置&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;windows？暂时不管&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;dlltool&lt;&#x2F;strong&gt; - Creates files for building and using DLLs.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;windmc&lt;&#x2F;strong&gt; - A Windows compatible message compiler.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;windres&lt;&#x2F;strong&gt; - A compiler for Windows resource files.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;大多数程序使用 BFD(Binary File Descriptor library)来做 manipulation。其中很多还是用 opcodes 库来汇编和反汇编机器指令&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;can-kao&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#can-kao&quot; aria-label=&quot;Anchor link for: can-kao&quot;&gt;参考&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;2ec7ee43e3a1&quot;&gt;ar,nm,ranlib使用详解&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;fu-lu&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#fu-lu&quot; aria-label=&quot;Anchor link for: fu-lu&quot;&gt;附录&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;nl -- 列出文件以及行数&lt;&#x2F;p&gt;
+</content>
+    </entry>
+</feed>

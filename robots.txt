@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wendajiang.github.io/sitemap.xml

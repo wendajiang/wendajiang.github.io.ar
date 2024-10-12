@@ -1,0 +1,77 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>无锁算法 | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/lock-free/ rel=canonical><meta content=无锁算法 property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/lock-free/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta property=og:updated_time><meta content=无锁算法 property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/lock-free/"
+      },
+      "headline": "无锁算法",
+      "image": ,
+      "datePublished": "2021-04-03T11:46:30",
+      "dateModified": "",
+      "author": {
+        "@type": "Organization",
+        "name": "无锁算法"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "无锁算法",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Lock Free",
+            "item": "https://wendajiang.github.io/lock-free/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><script>function initMermaid(){var a={startOnLoad:true,theme:"neutral",flowchart:{useMaxWidth:true,htmlLabels:true}};mermaid.initialize(a);window.mermaid.init(undefined,document.querySelectorAll('.mermaid'))}</script><script async onload=initMermaid() src=https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/lock-free/#an-introduction-to-lock-free-programming>An Introduction to Lock-Free Programming</a></li><ul><li><a href=https://wendajiang.github.io/lock-free/#what-is-it>what is it</a><li><a href=https://wendajiang.github.io/lock-free/#techniques>techniques</a></ul><li><a href=https://wendajiang.github.io/lock-free/#qi-ta>其他</a></li><ul><li><a href=https://wendajiang.github.io/lock-free/#yi-wu-suo-suan-fa>一、无锁算法</a><li><a href=https://wendajiang.github.io/lock-free/#er-shi-xian-ji-bie>二、实现级别</a><li><a href=https://wendajiang.github.io/lock-free/#san-cassuan-fa>三、CAS算法</a><li><a href=https://wendajiang.github.io/lock-free/#si-abawen-ti>四、ABA问题</a><li><a href=https://wendajiang.github.io/lock-free/#casyin-fa-de-liang-ge-wen-ti>CAS引发的两个问题</a></li><ul><li><a href=https://wendajiang.github.io/lock-free/#abawen-ti>ABA问题</a><li><a href=https://wendajiang.github.io/lock-free/#caszi-xuan-dao-zhi-de-kai-xiao>CAS自旋导致的开销</a></ul></ul></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>无锁算法</h1><p><small>Posted 2021-04-03 11:46:30 ‐ <strong>9 min read</strong></small><p><div class=category-area>「 <a href=https://wendajiang.github.io/tags/distribute> <div class=category>distribute</div> </a><a href=https://wendajiang.github.io/tags/ABA> <div class=category>ABA</div> </a> 」</div></div><hr><h1 id=an-introduction-to-lock-free-programming><a aria-label="Anchor link for: an-introduction-to-lock-free-programming" class=zola-anchor href=#an-introduction-to-lock-free-programming>An Introduction to Lock-Free Programming</a></h1><p><a href=https://preshing.com/20120612/an-introduction-to-lock-free-programming/>链接</a><h3 id=what-is-it><a aria-label="Anchor link for: what-is-it" class=zola-anchor href=#what-is-it>what is it</a></h3><p><img alt=image-20210405160006637 src=https://wendajiang.github.io/pics/lock_free/image-20210405160006637.png><h3 id=techniques><a aria-label="Anchor link for: techniques" class=zola-anchor href=#techniques>techniques</a></h3><p><img alt=image-20210405160054136 src=https://wendajiang.github.io/pics/lock_free/image-20210405160054136.png><hr><h1 id=qi-ta><a aria-label="Anchor link for: qi-ta" class=zola-anchor href=#qi-ta>其他</a></h1><h3 id=yi-wu-suo-suan-fa><a aria-label="Anchor link for: yi-wu-suo-suan-fa" class=zola-anchor href=#yi-wu-suo-suan-fa>一、无锁算法</a></h3><p>CAS（比较与交换，Compare and swap） 是一种有名的无锁算法。无锁编程，即不使用锁的情况下实现多线程之间的变量同步，也就是在没有线程被阻塞的情况下实现变量的同步，所以也叫非阻塞同步（Non-blocking Synchronization）。实现非阻塞同步的方案称为“无锁编程算法”（ Non-blocking algorithm）。 相对应的，独占锁是一种悲观锁，synchronized就是一种独占锁，它假设最坏的情况，并且只有在确保其它线程不会造成干扰的情况下执行，会导致其它所有需要锁的线程挂起，等待持有锁的线程释放锁。 使用lock实现线程同步有很多缺点：<ul><li><p>产生竞争时，线程被阻塞等待，无法做到线程实时响应。</p><li><p>dead lock，死锁。</p><li><p>live lock。</p><li><p>优先级翻转。</p><li><p>使用不当，造成性能下降。</p></ul><p>当然在部分情况下，目前来看，无锁编程并不能替代 lock。<h3 id=er-shi-xian-ji-bie><a aria-label="Anchor link for: er-shi-xian-ji-bie" class=zola-anchor href=#er-shi-xian-ji-bie>二、实现级别</a></h3><p>非同步阻塞的实现可以分成三个级别：wait-free/lock-free/obstruction-free。<ul><li>wait-free 是最理想的模式，整个操作保证每个线程在有限步骤下完成。 保证系统级吞吐（system-wide throughput）以及无线程饥饿。 截止2011年，没有多少具体的实现。即使实现了，也需要依赖于具体CPU。<li>lock-free 允许个别线程饥饿，但保证系统级吞吐。确保至少有一个线程能够继续执行。 wait-free的算法必定也是lock-free的。<li>obstruction-free 在任何时间点，一个线程被隔离为一个事务进行执行（其他线程suspended），并且在有限步骤内完成。在执行过程中，一旦发现数据被修改（采用时间戳、版本号），则回滚。也叫做乐观锁，即乐观并发控制(OOC)。事务的过程是：1读取，并写时间戳；2准备写入，版本校验；3校验通过则写入，校验不通过，则回滚。 lock-free必定是obstruction-free的。</ul><h3 id=san-cassuan-fa><a aria-label="Anchor link for: san-cassuan-fa" class=zola-anchor href=#san-cassuan-fa>三、CAS算法</a></h3><p>CAS（比较与交换，Compare and swap） 是一种有名的无锁算法。CAS, CPU指令，在大多数处理器架构，包括IA32、Space中采用的都是CAS指令，CAS的语义是“我认为V的值应该为A，如果是，那么将V的值更新为B，否则不修改并告诉V的值实际为多少”，CAS是项 乐观锁 技术，当多个线程尝试使用CAS同时更新同一个变量时，只有其中一个线程能更新变量的值，而其它线程都失败，失败的线程并不会被挂起，而是被告知这次竞争中失败，并可以再次尝试。CAS有3个操作数，内存值V，旧的预期值A，要修改的新值B。当且仅当预期值A和内存值V相同时，将内存值V修改为B，否则什么都不做。 java.util.concurrent.atomic中的AtomicXXX，都使用了这些底层的JVM支持为数字类型的引用类型提供一种高效的CAS操作，而在java.util.concurrent中的大多数类在实现时都直接或间接的使用了这些原子变量类，这些原子变量都调用了 sun.misc.Unsafe 类库里面的 CAS算法，用CPU指令来实现无锁自增，JDK源码：<pre class=language-java data-lang=java style=background:#282a36;color:#f8f8f2><code class=language-java data-lang=java><span style=color:#ff79c6>public final </span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#50fa7b>getAndIncrement</span><span>() </span><span style=color:#fff>{  
+</span><span>        </span><span style=color:#ff79c6>for </span><span>(;;) </span><span style=color:#fff>{  
+</span><span>            </span><span style=font-style:italic;color:#8be9fd>int</span><span> current </span><span style=color:#ff79c6>= </span><span style=color:#50fa7b>get</span><span>();  
+</span><span>            </span><span style=font-style:italic;color:#8be9fd>int</span><span> next </span><span style=color:#ff79c6>=</span><span> current </span><span style=color:#ff79c6>+ </span><span style=color:#bd93f9>1</span><span>;  
+</span><span>            </span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#50fa7b>compareAndSet</span><span>(current, next))  
+</span><span>                </span><span style=color:#ff79c6>return</span><span> current;  
+</span><span>        </span><span style=color:#fff>}  
+</span><span style=color:#fff>}  
+</span><span>
+</span><span style=color:#ff79c6>public final </span><span style=font-style:italic;color:#8be9fd>boolean </span><span style=color:#50fa7b>compareAndSet</span><span>(</span><span style=font-style:italic;color:#8be9fd>int</span><span> expect, </span><span style=font-style:italic;color:#8be9fd>int</span><span> update) </span><span style=color:#fff>{  
+</span><span>    </span><span style=color:#ff79c6>return</span><span> unsafe</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>compareAndSwapInt</span><span>(</span><span style=color:#bd93f9>this</span><span>, valueOffset, expect, update);  
+</span><span style=color:#fff>}
+</span></code></pre><p>因而在大部分情况下，java中使用Atomic包中的incrementAndGet的性能比用synchronized高出几倍。<h3 id=si-abawen-ti><a aria-label="Anchor link for: si-abawen-ti" class=zola-anchor href=#si-abawen-ti>四、ABA问题</a></h3><p>thread1意图对val=1进行操作变成2，cas(val,1,2)。 thread1先读取val=1；thread1被抢占（preempted），让thread2运行。 thread2 修改val=3，又修改回1。 thread1继续执行，发现期望值与“原值”（其实被修改过了）相同，完成CAS操作。 使用CAS会造成ABA问题，特别是在使用指针操作一些并发数据结构时。 解决方案 ABAʹ：添加额外的标记用来指示是否被修改。 从Java1.5开始JDK的atomic包里提供了一个类AtomicStampedReference来解决ABA问题。这个类的compareAndSet方法作用是首先检查当前引用是否等于预期引用，并且当前标志是否等于预期标志，如果全部相等，则以原子方式将该引用和该标志的值设置为给定的更新值。<h2 id=casyin-fa-de-liang-ge-wen-ti><a aria-label="Anchor link for: casyin-fa-de-liang-ge-wen-ti" class=zola-anchor href=#casyin-fa-de-liang-ge-wen-ti>CAS引发的两个问题</a></h2><p>CAS 操作包含三个操作数 —— 内存位置（V）、预期原值（A）和新值(B)。如果内存地址里面的值和A的值是一样的，那么就将内存里面的值更新成B。CAS是通过无限循环来获取数据的，若果在第一轮循环中，a线程获取地址里面的值被b线程修改了，那么a线程需要自旋，到下次循环才有可能机会执行。<p>在JVM中的CAS操作就是基于处理器的CMPXCHG汇编指令实现的，因此，JVM中的CAS的原子性是处理器保障的。<h3 id=abawen-ti><a aria-label="Anchor link for: abawen-ti" class=zola-anchor href=#abawen-ti>ABA问题</a></h3><p>ABA问题是指在CAS操作时，其他线程将变量值A改为了B，但是又被改回了A，等到本线程使用期望值A与当前变量进行比较时，发现变量A没有变，于是CAS就将A值进行了交换操作，但是实际上该值已经被其他线程改变过，这与乐观锁的设计思想不符合。ABA问题的解决思路是，每次变量更新的时候把变量的版本号加1，那么A-B-A就会变成A1-B2-A3，只要变量被某一线程修改过，改变量对应的版本号就会发生递增变化，从而解决了ABA问题。<h3 id=caszi-xuan-dao-zhi-de-kai-xiao><a aria-label="Anchor link for: caszi-xuan-dao-zhi-de-kai-xiao" class=zola-anchor href=#caszi-xuan-dao-zhi-de-kai-xiao>CAS自旋导致的开销</a></h3><p>多个线程争夺同一个资源时，如果自旋一直不成功，将会一直占用CPU。<p>解决方法：破坏掉for死循环，当超过一定时间或者一定次数时，return退出。JDK8新增的LongAddr,和ConcurrentHashMap类似的方法。当多个线程竞争时，将粒度变小，将一个变量拆分为多个变量，达到多个线程访问多个资源的效果，最后再调用sum把它合起来。</article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'无锁算法',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

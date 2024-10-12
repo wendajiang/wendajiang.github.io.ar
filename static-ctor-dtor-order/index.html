@@ -1,0 +1,302 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>Static object initialization and deinitialization | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/static-ctor-dtor-order/ rel=canonical><meta content="Static object initialization and deinitialization" property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/static-ctor-dtor-order/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta property=og:updated_time><meta content="Static object initialization and deinitialization" property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/static-ctor-dtor-order/"
+      },
+      "headline": "Static object initialization and deinitialization",
+      "image": ,
+      "datePublished": "2023-01-03T13:33:19",
+      "dateModified": "",
+      "author": {
+        "@type": "Organization",
+        "name": "Static object initialization and deinitialization"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Static object initialization and deinitialization",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Static Ctor Dtor Order",
+            "item": "https://wendajiang.github.io/static-ctor-dtor-order/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><script>function initMermaid(){var a={startOnLoad:true,theme:"neutral",flowchart:{useMaxWidth:true,htmlLabels:true}};mermaid.initialize(a);window.mermaid.init(undefined,document.querySelectorAll('.mermaid'))}</script><script async onload=initMermaid() src=https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/static-ctor-dtor-order/#yin-yan>引言</a><li><a href=https://wendajiang.github.io/static-ctor-dtor-order/#wo-yu-dao-de-wen-ti>我遇到的问题</a><li><a href=https://wendajiang.github.io/static-ctor-dtor-order/#singleton>Singleton ？</a></li><ul><li><a href=https://wendajiang.github.io/static-ctor-dtor-order/#dan-xian-cheng-xie-fa>单线程写法</a><li><a href=https://wendajiang.github.io/static-ctor-dtor-order/#yong-suo>用锁</a><li><a href=https://wendajiang.github.io/static-ctor-dtor-order/#double-check-locking>double check locking</a><li><a href=https://wendajiang.github.io/static-ctor-dtor-order/#meyers-singleton>Meyers Singleton</a><li><a href=https://wendajiang.github.io/static-ctor-dtor-order/#atomic-singleton>Atomic Singleton</a><li><a href=https://wendajiang.github.io/static-ctor-dtor-order/#phread-once>phread_once</a><li><a href=https://wendajiang.github.io/static-ctor-dtor-order/#e-yi-fang-shi>恶汉方式</a></ul></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>Static object initialization and deinitialization</h1><p><small>Posted 2023-01-03 13:33:19 ‐ <strong>11 min read</strong></small><p><div class=category-area>「 <a href=https://wendajiang.github.io/tags/cpp> <div class=category>cpp</div> </a><a href=https://wendajiang.github.io/tags/fap> <div class=category>fap</div> </a><a href=https://wendajiang.github.io/tags/singleton> <div class=category>singleton</div> </a> 」</div></div><h2 id=yin-yan><a aria-label="Anchor link for: yin-yan" class=zola-anchor href=#yin-yan>引言</a></h2><p>在工作中遇到了，<a href=https://isocpp.org/wiki/faq>isocpp</a> 中提到的 subtle 问题，在 isocpp faq 中原始问题来源于 <a href=https://isocpp.org/wiki/faq/ctors#static-init-order>fiasco</a>，简单来说就是，如果有两个 static 对象 x,y 分布在不同的源文件中。假设 y 对象的初始化中会使用 x 对象，就可能出现问题。因为 static 对象初始化发生在 main 之前，并且编译器没有保证初始化顺序，所以就可能出现 crash。<p>那么如何消除这种问题呢？<em>Construct On First Use Idiom</em> 提出来，就是使用 wrapper 来获取 static 对象，而不是直接使用。<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=color:#6272a4>// file x.cpp
+</span><span style=color:#ff79c6>#include </span><span style=color:#f1fa8c>"fred.h"
+</span><span>Fred x;
+</span><span>
+</span><span style=color:#6272a4>// file y.cpp
+</span><span style=color:#ff79c6>#include </span><span style=color:#f1fa8c>"barney.h"
+</span><span>Barney y;
+</span><span>
+</span><span>Barney</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>Barney</span><span>() </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#6272a4>// ..
+</span><span>  x</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>do_something</span><span>();
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=color:#6272a4>// => 
+</span><span>Fred</span><span style=color:#ff79c6>& </span><span style=color:#50fa7b>x</span><span>() </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>static</span><span> Fred</span><span style=color:#ff79c6>*</span><span> ans </span><span style=color:#ff79c6>= new </span><span style=color:#50fa7b>Fred</span><span>();
+</span><span>  </span><span style=color:#ff79c6>return *</span><span>ans;
+</span><span style=color:#fff>}
+</span><span>
+</span><span>Barney</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>Barney</span><span>() </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#6272a4>// ..
+</span><span>  </span><span style=color:#50fa7b>x</span><span>()</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>do_something</span><span>();
+</span><span style=color:#fff>}
+</span></code></pre><p>这就意味着 leak 了一个 Fred 对象，如果 Fred 对象析构函数必须被调用，可以使用 v2 版本的 <em>Construct On First Use Idiom</em><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=color:#6272a4>// 为什么不使用一个 local scope static object 来代替指针
+</span><span>Fred</span><span style=color:#ff79c6>& </span><span style=color:#50fa7b>x</span><span>() </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>static</span><span> Fred ans;
+</span><span>  </span><span style=color:#ff79c6>return</span><span> ans;
+</span><span style=color:#fff>}
+</span></code></pre><p>实际呢这里引入了另一个微妙我遇到的问题。让我们来回顾一下，这些技术是为了达到什么目的？<ul><li>(a)第一次使用 static 对象肯定是已经构造完成的。<li>(b)直到最后一次使用才析构</ul><p>显然如果在第一次使用前没有构造，或者最后一次使用前已经析构都是问题所在。意味着我们要考虑头和尾。现在 v2 版本的方案已经解决了使用前一定构造的问题，并且没有造成对象的 leak【实际呢，如果是一个会退出的程序，这种泄漏也可以接受，毕竟在进程退出后，系统会回收内存，并没有很大影响】<p>但是，这种方案存在问题，就是不能确保多个 static 对象的析构顺序。<h2 id=wo-yu-dao-de-wen-ti><a aria-label="Anchor link for: wo-yu-dao-de-wen-ti" class=zola-anchor href=#wo-yu-dao-de-wen-ti>我遇到的问题</a></h2><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=color:#6272a4>// logger.h
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>GlobalLogger</span><span>;
+</span><span>
+</span><span>GlobalLogger</span><span style=color:#ff79c6>& </span><span style=color:#50fa7b>logger</span><span>() </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>static</span><span> GlobalLogger</span><span style=color:#ff79c6>&</span><span> logger;
+</span><span>  </span><span style=color:#ff79c6>return</span><span> logger;
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=color:#6272a4>// file_monitor.h
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>FileMonitor</span><span>;
+</span><span style=color:#6272a4>/* FileMonitor is one data member of a global static object*/
+</span><span>FileMonitor</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>~FileMonitor</span><span>() </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#6272a4>// do something
+</span><span>  </span><span style=color:#50fa7b>logger</span><span>()</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>log</span><span>(</span><span style=color:#f1fa8c>"something"</span><span>);
+</span><span style=color:#fff>}
+</span><span>
+</span></code></pre><p>大部分时间运行没有问题，但是并没有保证在 FileMonitor 析构中使用 GlobalLogger 是有效的。所以在某些情况，会 crash。<p>那么如何解决这个问题？<a href=https://isocpp.org/wiki/faq/ctors#nifty-counter-idiom>ioscpp</a> 也提出了解决方案 <a href=https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Nifty_Counter><strong>Nifty Counter Idiom</strong></a>。<p>原理就是在头文件中定义一个辅助 static object 的计数 class，这样每个 include 头文件的编译单元就会创建一个内部的计数对象，在计数对象构造函数中积累计数，析构函数中消除计数，同时控制一个 extern global 要使用的 static object 对象的创建与销毁，达到<ul><li>(a)第一个次使用 static 对象肯定是已经构造完成的。<li>(b)直到最后一次使用才析构</ul><p>这个目的，即同时控制构造和析构。<p>nifty counter idiom 例子：<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=color:#6272a4>// Stream.h
+</span><span style=color:#ff79c6>#ifndef</span><span> STREAM_H
+</span><span style=color:#ff79c6>#define </span><span>STREAM_H
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>struct </span><span>Stream </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#50fa7b>Stream </span><span>();
+</span><span>  </span><span style=color:#50fa7b>~Stream </span><span>();
+</span><span style=color:#fff>}</span><span>;
+</span><span style=color:#ff79c6>extern</span><span> Stream</span><span style=color:#ff79c6>&</span><span> stream; </span><span style=color:#6272a4>// global stream object
+</span><span>
+</span><span style=color:#ff79c6>static </span><span style=font-style:italic;color:#8be9fd>struct </span><span>StreamInitializer </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#50fa7b>StreamInitializer </span><span>();
+</span><span>  </span><span style=color:#50fa7b>~StreamInitializer </span><span>();
+</span><span style=color:#fff>}</span><span> streamInitializer; </span><span style=color:#6272a4>// static initializer for every translation unit
+</span><span>
+</span><span style=color:#ff79c6>#endif </span><span style=color:#6272a4>// STREAM_H
+</span><span>
+</span><span style=color:#6272a4>// Stream.cpp
+</span><span style=color:#ff79c6>#include </span><span style=color:#f1fa8c>"Stream.h"
+</span><span>
+</span><span style=color:#ff79c6>#include </span><span style=color:#f1fa8c>&LTnew>         </span><span style=color:#6272a4>// placement new
+</span><span style=color:#ff79c6>#include </span><span style=color:#f1fa8c>&LTtype_traits> </span><span style=color:#6272a4>// aligned_storage
+</span><span>
+</span><span style=color:#ff79c6>static </span><span style=font-style:italic;color:#8be9fd>int</span><span> nifty_counter; </span><span style=color:#6272a4>// zero initialized at load time
+</span><span style=color:#ff79c6>static typename</span><span> std</span><span style=color:#ff79c6>::</span><span>aligned_storage<</span><span style=color:#ff79c6>sizeof </span><span>(Stream), </span><span style=color:#ff79c6>alignof </span><span>(Stream)></span><span style=color:#ff79c6>::</span><span>type
+</span><span>  stream_buf; </span><span style=color:#6272a4>// memory for the stream object
+</span><span>Stream</span><span style=color:#ff79c6>&</span><span> stream </span><span style=color:#ff79c6>= reinterpret_cast</span><span>&LTStream</span><span style=color:#ff79c6>&</span><span>> (stream_buf);
+</span><span>
+</span><span>Stream</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>Stream </span><span>()
+</span><span style=color:#fff>{
+</span><span>  </span><span style=color:#6272a4>// initialize things
+</span><span style=color:#fff>}
+</span><span>Stream</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>~Stream </span><span>()
+</span><span style=color:#fff>{
+</span><span>  </span><span style=color:#6272a4>// clean-up
+</span><span style=color:#fff>} 
+</span><span>
+</span><span>StreamInitializer</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>StreamInitializer </span><span>()
+</span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>if </span><span>(nifty_counter</span><span style=color:#ff79c6>++ == </span><span style=color:#bd93f9>0</span><span>) </span><span style=color:#ff79c6>new </span><span>(</span><span style=color:#ff79c6>&</span><span>stream) </span><span style=color:#50fa7b>Stream </span><span>(); </span><span style=color:#6272a4>// placement new
+</span><span style=color:#fff>}
+</span><span>StreamInitializer</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>~StreamInitializer </span><span>()
+</span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#ff79c6>--</span><span>nifty_counter </span><span style=color:#ff79c6>== </span><span style=color:#bd93f9>0</span><span>) (</span><span style=color:#ff79c6>&</span><span>stream)</span><span style=color:#ff79c6>-></span><span style=color:#50fa7b>~Stream </span><span>();
+</span><span style=color:#fff>}
+</span></code></pre><p>其中不同与一般方式的实现是：定义了一个 static(local to the translation unit) buffer，这个 buffer 足够存放一个 Stream。Stream 对象的引用定义在头文件中，然后设置成指向 buffer 的指针。这样实现能更好的控制 Stream 对象的构造和析构的调用。上面的例子中，构造函数在 StreamInitializer 第一次调用前被调用，然后使用 placement new 设置指针，析构函数在最后一个 StreamInitializer 使用后被调用。<p>如果是在 Stream.cpp 中定义一个 Stream 变量，会在 StreamInitializer 之后定义（这个在头文件中定义）。那么 StreamInitializer 构造函数就会在 Stream 构造函数之前运行，更糟糕的是 Initializer 的析构函数会在 Stream 析构之后运行。buffer 方案避免了这个问题。<p>由此，解决了 static object 对象构造和析构有依赖关系的问题。<h2 id=singleton><a aria-label="Anchor link for: singleton" class=zola-anchor href=#singleton>Singleton ？</a></h2><p>在这里发现 v2 版本的 "Construct On First Use Idiom" 基本就是 Meyer's Singleton 的写法，这种写法在 C++11 之后是一个线程安全（有了内存模型和顺序）的延迟单例写法。这里回顾一下单例模式在 C++ 中的各种实现<h3 id=dan-xian-cheng-xie-fa><a aria-label="Anchor link for: dan-xian-cheng-xie-fa" class=zola-anchor href=#dan-xian-cheng-xie-fa>单线程写法</a></h3><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Singleton </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>  </span><span style=color:#ff79c6>static</span><span> T</span><span style=color:#ff79c6>& </span><span style=color:#50fa7b>instance</span><span>() </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#ff79c6>!</span><span>value) </span><span style=color:#fff>{
+</span><span>      value_ </span><span style=color:#ff79c6>= new </span><span style=color:#50fa7b>T</span><span>();
+</span><span>    </span><span style=color:#fff>}
+</span><span>    </span><span style=color:#ff79c6>return *</span><span>value_;
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>private</span><span>:
+</span><span>  </span><span style=color:#50fa7b>Singleton</span><span>();
+</span><span>  </span><span style=color:#50fa7b>~Singleton</span><span>();
+</span><span>  </span><span style=color:#ff79c6>static</span><span> T</span><span style=color:#ff79c6>*</span><span> value_;
+</span><span style=color:#fff>}</span><span>;
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span>T</span><span style=color:#ff79c6>*</span><span> Singleton&LTT></span><span style=color:#ff79c6>::</span><span>value_ </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>nullptr</span><span>;
+</span></code></pre><p>多线程中，会出现使用 nullptr 的场景，或者多次初始化<h3 id=yong-suo><a aria-label="Anchor link for: yong-suo" class=zola-anchor href=#yong-suo>用锁</a></h3><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Singleton </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>  </span><span style=color:#ff79c6>static</span><span> T</span><span style=color:#ff79c6>& </span><span style=color:#50fa7b>instance</span><span>() </span><span style=color:#fff>{
+</span><span>    MutexGuard </span><span style=color:#50fa7b>guard</span><span>(mutex_); </span><span style=color:#6272a4>// RAII
+</span><span>    </span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#ff79c6>!</span><span>value) </span><span style=color:#fff>{
+</span><span>      value_ </span><span style=color:#ff79c6>= new </span><span style=color:#50fa7b>T</span><span>();
+</span><span>    </span><span style=color:#fff>}
+</span><span>    </span><span style=color:#ff79c6>return *</span><span>value_;
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>private</span><span>:
+</span><span>  </span><span style=color:#50fa7b>Singleton</span><span>();
+</span><span>  </span><span style=color:#50fa7b>~Singleton</span><span>();
+</span><span>  </span><span style=color:#ff79c6>static</span><span> T</span><span style=color:#ff79c6>*</span><span> value_;
+</span><span>  </span><span style=color:#ff79c6>static</span><span> Mutex mutex_;
+</span><span style=color:#fff>}</span><span>;
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span>T</span><span style=color:#ff79c6>*</span><span> Singleton&LTT></span><span style=color:#ff79c6>::</span><span>value_ </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>nullptr</span><span>;
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span>T</span><span style=color:#ff79c6>*</span><span> Singleton&LTT></span><span style=color:#ff79c6>::</span><span>mutex_;
+</span></code></pre><p>但是每次 instance() 都会进入 race condition，加锁，严重影响性能。<h3 id=double-check-locking><a aria-label="Anchor link for: double-check-locking" class=zola-anchor href=#double-check-locking>double check locking</a></h3><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Singleton </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>  </span><span style=color:#ff79c6>static</span><span> T</span><span style=color:#ff79c6>& </span><span style=color:#50fa7b>instance</span><span>() </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#ff79c6>!</span><span>value_) </span><span style=color:#fff>{
+</span><span>      MutexGuard </span><span style=color:#50fa7b>guard</span><span>(mutex_); </span><span style=color:#6272a4>// RAII
+</span><span>      </span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#ff79c6>!</span><span>value) </span><span style=color:#fff>{
+</span><span>        value_ </span><span style=color:#ff79c6>= new </span><span style=color:#50fa7b>T</span><span>();
+</span><span>      </span><span style=color:#fff>}
+</span><span>    </span><span style=color:#fff>}
+</span><span>    </span><span style=color:#ff79c6>return *</span><span>value_;
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>private</span><span>:
+</span><span>  </span><span style=color:#50fa7b>Singleton</span><span>();
+</span><span>  </span><span style=color:#50fa7b>~Singleton</span><span>();
+</span><span>  </span><span style=color:#ff79c6>static</span><span> T</span><span style=color:#ff79c6>*</span><span> value_;
+</span><span>  </span><span style=color:#ff79c6>static</span><span> Mutex mutex_;
+</span><span style=color:#fff>}</span><span>;
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span>T</span><span style=color:#ff79c6>*</span><span> Singleton&LTT></span><span style=color:#ff79c6>::</span><span>value_ </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>nullptr</span><span>;
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span>T</span><span style=color:#ff79c6>*</span><span> Singleton&LTT></span><span style=color:#ff79c6>::</span><span>mutex_;
+</span></code></pre><p>但是呢，value_ = new T() 这一句分为 3 步<ul><li>分配一个 T 类型对象的内存<li>在分配的内存处构造 T 对象<li>分配的指针赋值给 value_</ul><p>但是 2，3 步不一定是顺序的，比如 thread A 中执行了 1，3，然后 thread B 中 value_ 没有加锁，直接检查发现有值，直接返回使用，但是这个指针有值，但是没有构造好。这个问题的详细讨论在<a href=https://www.aristeia.com/Papers/DDJ_Jul_Aug_2004_revised.pdf>这里</a> Scott Meyers 专门写了文章讨论这个问题。<p>那么可以在 C++11 之前使用 DCL 吗？<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=color:#ff79c6>static</span><span> T</span><span style=color:#ff79c6>& </span><span style=color:#50fa7b>instance</span><span>() </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#ff79c6>!</span><span>value_) </span><span style=color:#fff>{
+</span><span>      MutexGuard </span><span style=color:#50fa7b>guard</span><span>(mutex_); </span><span style=color:#6272a4>// RAII
+</span><span>      </span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#ff79c6>!</span><span>value) </span><span style=color:#fff>{
+</span><span>        T</span><span style=color:#ff79c6>*</span><span> p </span><span style=color:#ff79c6>= static_cast</span><span>&LTT</span><span style=color:#ff79c6>*</span><span>>(</span><span style=color:#ff79c6>operator new</span><span>(</span><span style=color:#ff79c6>sizeof</span><span>(T)));
+</span><span>        </span><span style=color:#ff79c6>new </span><span>(p) </span><span style=color:#50fa7b>T</span><span>();
+</span><span>        </span><span style=color:#6272a4>// insert some memory barier
+</span><span>        value_ </span><span style=color:#ff79c6>=</span><span> p;
+</span><span>      </span><span style=color:#fff>}
+</span><span>    </span><span style=color:#fff>}
+</span><span>    </span><span style=color:#ff79c6>return *</span><span>value_;
+</span><span style=color:#fff>}
+</span></code></pre><p>在赋值和构造之间加上 <a href=https://mechanical-sympathy.blogspot.com/2011/07/memory-barriersfences.html>memory barier</a> 就能保证不乱序。<h3 id=meyers-singleton><a aria-label="Anchor link for: meyers-singleton" class=zola-anchor href=#meyers-singleton>Meyers Singleton</a></h3><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Singleton </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>  </span><span style=color:#ff79c6>static</span><span> T</span><span style=color:#ff79c6>& </span><span style=color:#50fa7b>instance</span><span>() </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>static</span><span> T value;
+</span><span>    </span><span style=color:#ff79c6>return</span><span> value;
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>private</span><span>:
+</span><span>  </span><span style=color:#50fa7b>Singleton</span><span>();
+</span><span>  </span><span style=color:#50fa7b>~Singleton</span><span>();
+</span><span style=color:#fff>}</span><span>;
+</span></code></pre><p>C++11 之后定义了 local static 变量的内存模型，可以保证一个线程在初始化一个变量时，其他线程必须等待完成才能访问。<a href=https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3337.pdf>C++11</a> 的 6.7 中<blockquote><p>If control enters the declaration concurrently while the variable is being initialized, the concurrent execution shall wait for completion of the initialization.</blockquote><p>在 <a href=http://stackoverflow.com/questions/1661529/is-meyers-implementation-of-singleton-pattern-thread-safe>stackoverflow</a> 中有讨论<h3 id=atomic-singleton><a aria-label="Anchor link for: atomic-singleton" class=zola-anchor href=#atomic-singleton>Atomic Singleton</a></h3><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Singleton </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>  </span><span style=color:#ff79c6>static</span><span> T</span><span style=color:#ff79c6>& </span><span style=color:#50fa7b>instance</span><span>() </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>while</span><span>(</span><span style=color:#bd93f9>true</span><span>) </span><span style=color:#fff>{
+</span><span>      </span><span style=color:#ff79c6>if </span><span>(ready_</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>get</span><span>()) </span><span style=color:#fff>{
+</span><span>        </span><span style=color:#ff79c6>return *</span><span>value_;
+</span><span>      </span><span style=color:#fff>} </span><span style=color:#ff79c6>else </span><span style=color:#fff>{
+</span><span>        </span><span style=color:#ff79c6>if </span><span>(initializing_</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>get_and_set</span><span>(</span><span style=color:#bd93f9>true</span><span>)) </span><span style=color:#fff>{
+</span><span>          </span><span style=color:#6272a4>// another thread is initializing, waiting in circulation
+</span><span>        </span><span style=color:#fff>} </span><span style=color:#ff79c6>else </span><span style=color:#fff>{
+</span><span>          value_ </span><span style=color:#ff79c6>= new </span><span style=color:#50fa7b>T</span><span>();
+</span><span>          ready_</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>set</span><span>(</span><span style=color:#bd93f9>true</span><span>);
+</span><span>          </span><span style=color:#ff79c6>return *</span><span>value_;
+</span><span>        </span><span style=color:#fff>}
+</span><span>      </span><span style=color:#fff>}
+</span><span>    </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>private</span><span>:
+</span><span>  </span><span style=color:#50fa7b>Singleton</span><span>();
+</span><span>  </span><span style=color:#50fa7b>~Singleton</span><span>();
+</span><span>  </span><span style=color:#ff79c6>static</span><span> T</span><span style=color:#ff79c6>*</span><span> value_;
+</span><span>  </span><span style=color:#ff79c6>static</span><span> Atomic<</span><span style=font-style:italic;color:#8be9fd>bool</span><span>> ready_;
+</span><span>  </span><span style=color:#ff79c6>static</span><span> Atomic<</span><span style=font-style:italic;color:#8be9fd>bool</span><span>> initializing_;
+</span><span style=color:#fff>}</span><span>;
+</span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span>T</span><span style=color:#ff79c6>*</span><span> Singleton&LTT></span><span style=color:#ff79c6>::</span><span>value_ </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>nullptr</span><span>;
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span>Atomic<</span><span style=font-style:italic;color:#8be9fd>bool</span><span>> Singleton&LTT></span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>ready_</span><span>(</span><span style=font-style:italic;color:#ffb86c>false</span><span>);
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span>Atomic<</span><span style=font-style:italic;color:#8be9fd>bool</span><span>> Singleton&LTT></span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>initializing_</span><span>(</span><span style=font-style:italic;color:#ffb86c>false</span><span>);
+</span><span>
+</span></code></pre><p>原则上就是区分三种状态：<ul><li>对象已经构造完成<li>对象还没构造完成，某个线程正在构造中<li>对象还没构造完成，没有线程正在构造中</ul><h3 id=phread-once><a aria-label="Anchor link for: phread-once" class=zola-anchor href=#phread-once>phread_once</a></h3><p>使用 Unix 平台，使用 pthread_once 实现<blockquote><p><code>int pthread_once(pthread_once_t *once_control, void (*init_routine)(void))</code></blockquote><p>APUE 中提到，如果每个线程都调用 pthread_once，系统保证 init_routine 只被调用一次<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Singleton </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>  </span><span style=color:#ff79c6>static</span><span> T</span><span style=color:#ff79c6>& </span><span style=color:#50fa7b>instance</span><span>() </span><span style=color:#fff>{
+</span><span>    threads</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>pthread_once</span><span>(</span><span style=color:#ff79c6>&</span><span>once_control_, init);
+</span><span>    </span><span style=color:#ff79c6>return *</span><span>value_;
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>private</span><span>:
+</span><span>  </span><span style=color:#50fa7b>Singleton</span><span>();
+</span><span>  </span><span style=color:#50fa7b>~Singleton</span><span>();
+</span><span>  </span><span style=color:#ff79c6>static </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>init</span><span>() </span><span style=color:#fff>{
+</span><span>    value_ </span><span style=color:#ff79c6>= new </span><span style=color:#50fa7b>T</span><span>();
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>static</span><span> T</span><span style=color:#ff79c6>*</span><span> value_;
+</span><span>  </span><span style=color:#ff79c6>static </span><span style=font-style:italic;color:#66d9ef>pthread_once_t</span><span> once_control_;
+</span><span style=color:#fff>}</span><span>;
+</span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span>T</span><span style=color:#ff79c6>*</span><span> Singleton&LTT></span><span style=color:#ff79c6>::</span><span>value_ </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>nullptr</span><span>;
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span style=font-style:italic;color:#66d9ef>pthread_once_t</span><span> Singleton&LTT></span><span style=color:#ff79c6>::</span><span>once_control_ </span><span style=color:#ff79c6>=</span><span> PTHREAD_ONCE_INIT;
+</span><span>
+</span></code></pre><h3 id=e-yi-fang-shi><a aria-label="Anchor link for: e-yi-fang-shi" class=zola-anchor href=#e-yi-fang-shi>恶汉方式</a></h3><p>直接构造，在 main 之后使用就没有问题了，然后关于 static storage C++ 的保证<blockquote><p>The storage for objects with static storage duration (basic.stc.static) shall be zero-initialized (dcl.init) before any other initialization takes place. Zero-initialization and initialization with a constant expression are collectively called static initialization; all other initialization is dynamic initialization. Objects of POD types (basic.types) with static storage duration initialized with constant expressions (expr.const) shall be initialized before any dynamic initialization takes place. Objects with static storage duration defined in namespace scope in the same translation unit and dynamically initialized shall be initialized in the order in which their definition appears in the translation unit.</blockquote><p>我们看到在同一个 tranlation uint 中，初始化顺序与定义顺序相同。不同 translation unit 之间的顺序无定义，就需要第二节说的各种方式来规避可能出现的问题</article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'Static object initialization and deinitializatio…',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

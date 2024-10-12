@@ -1,0 +1,72 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>faster compile | 「靡不有初，鲜克有终」</title><meta content="how to speed up compile time " name=description><link href=https://wendajiang.github.io/faster-compile/ rel=canonical><meta content="faster compile" property=og:title><meta content="how to speed up compile time " property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/faster-compile/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta content=2024-07-31T11:50:08 property=og:updated_time><meta content="faster compile" property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/faster-compile/"
+      },
+      "headline": "faster compile",
+      "image": ,
+      "datePublished": "2024-07-31T11:50:08",
+      "dateModified": "2024-07-31T11:50:08",
+      "author": {
+        "@type": "Organization",
+        "name": "faster compile"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "faster compile",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "how to speed up compile time "
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Faster Compile",
+            "item": "https://wendajiang.github.io/faster-compile/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/faster-compile/#profile>profile</a><li><a href=https://wendajiang.github.io/faster-compile/#speed-up>speed up</a></li><ul><li><a href=https://wendajiang.github.io/faster-compile/#do-not-change-the-code>do not change the code</a><li><a href=https://wendajiang.github.io/faster-compile/#grab-bag>Grab bag</a><li><a href=https://wendajiang.github.io/faster-compile/#change-the-code>change the code</a></ul><li><a href=https://wendajiang.github.io/faster-compile/#reference>reference</a></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>faster compile</h1><p><small>Posted 2024-07-31 11:50:08 ‐ <strong>2 min read</strong></small><p><div class=category-area>「 <a href=https://wendajiang.github.io/tags/compiler> <div class=category>compiler</div> </a> 」</div></div><h1 id=profile><a aria-label="Anchor link for: profile" class=zola-anchor href=#profile>profile</a></h1><ul><li>clang -ftime-trace would output one json file, that can generate flame graph<li>gcc -ftime-report would output the phase time and percent</ul><h1 id=speed-up><a aria-label="Anchor link for: speed-up" class=zola-anchor href=#speed-up>speed up</a></h1><h2 id=do-not-change-the-code><a aria-label="Anchor link for: do-not-change-the-code" class=zola-anchor href=#do-not-change-the-code>do not change the code</a></h2><ol><li>faster linker lld faster than gnu bsd linker<li>PCH(pre-compiled header) <code>target_precompile_headers(&LTtarget> PUBLIC &LTheaders>)</code><li>cache compile result <ul><li>ccache<li>sccache(cache shareing)</ul><li>unity builds <code>cmake -DCMAKE_UNITY_BUILD=ON</code> when cmake 3.16+<li>LTO (link time optimization) <code>cmake -DLLVM_ENABLE_LTO=Thin</code> for clang<li>PGO(profile guided optimization)<pre class=language-markdown data-lang=markdown style=background:#282a36;color:#f8f8f2><code class=language-markdown data-lang=markdown><span>build clang with cmake -DLLVM_BUILD_INSTRUMENTED=IR
+</span><span>use this to train the compiler
+</span><span>  </span><span style=color:#ff79c6>- </span><span>we build some application
+</span><span>  </span><span style=color:#ff79c6>-</span><span> generate a profraw file
+</span><span>merge all profraw files with llvm-prodata
+</span><span>feed output to clang cmake with -DLLVM_PROFDATA_FILE=<</span><span style=color:#ff79c6>path</span><span>>
+</span><span>combine with LTO for best results
+</span></code></pre><li>Post link optimization <ul><li>LLVM-BOLT<li>LLVM-Propeller</ul></ol><h2 id=grab-bag><a aria-label="Anchor link for: grab-bag" class=zola-anchor href=#grab-bag>Grab bag</a></h2><ol><li>-fvisibility=hidden<li>-fexperimental-new-pass-manager<li>distcc<li>LTO on your code<li>-ftime-trace</ol><p><a href=https://github.com/google/bloaty>bloaty</a> a size profiler for binaries<h2 id=change-the-code><a aria-label="Anchor link for: change-the-code" class=zola-anchor href=#change-the-code>change the code</a></h2><ol><li>split one large file into many small file , so that is benefit from parallel compiling<li>PIMPL<li>fwd class instead of include header</ol><h1 id=reference><a aria-label="Anchor link for: reference" class=zola-anchor href=#reference>reference</a></h1><ul><li><a href="https://www.youtube.com/watch?v=X4pyOtawqjg">youtube</a><li><a href=https://onqtam.com/programming/2019-12-20-pch-unity-cmake-3-16/>cmake3.16 introduce and something</a></ul></article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'faster compile',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

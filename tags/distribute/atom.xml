@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - distribute</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/distribute/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2021-04-03T11:46:30+00:00</updated>
+    <id>https://wendajiang.github.io/tags/distribute/atom.xml</id>
+    <entry xml:lang="en">
+        <title>无锁算法</title>
+        <published>2021-04-03T11:46:30+00:00</published>
+        <updated>2021-04-03T11:46:30+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/lock-free/" type="text/html"/>
+        <id>https://wendajiang.github.io/lock-free/</id>
+        <content type="html">&lt;!--
+mermaid example:
+&lt;div class=&quot;mermaid&quot;&gt;
+    mermaid program
+&lt;&#x2F;div&gt;
+--&gt;
+&lt;hr &#x2F;&gt;
+&lt;h1 id=&quot;an-introduction-to-lock-free-programming&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#an-introduction-to-lock-free-programming&quot; aria-label=&quot;Anchor link for: an-introduction-to-lock-free-programming&quot;&gt;An Introduction to Lock-Free Programming&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;preshing.com&#x2F;20120612&#x2F;an-introduction-to-lock-free-programming&#x2F;&quot;&gt;链接&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;what-is-it&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-is-it&quot; aria-label=&quot;Anchor link for: what-is-it&quot;&gt;what is it&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;lock_free&#x2F;image-20210405160006637.png&quot; alt=&quot;image-20210405160006637&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;techniques&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#techniques&quot; aria-label=&quot;Anchor link for: techniques&quot;&gt;techniques&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;lock_free&#x2F;image-20210405160054136.png&quot; alt=&quot;image-20210405160054136&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;h1 id=&quot;qi-ta&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#qi-ta&quot; aria-label=&quot;Anchor link for: qi-ta&quot;&gt;其他&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;h3 id=&quot;yi-wu-suo-suan-fa&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#yi-wu-suo-suan-fa&quot; aria-label=&quot;Anchor link for: yi-wu-suo-suan-fa&quot;&gt;一、无锁算法&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;CAS（比较与交换，Compare and swap） 是一种有名的无锁算法。无锁编程，即不使用锁的情况下实现多线程之间的变量同步，也就是在没有线程被阻塞的情况下实现变量的同步，所以也叫非阻塞同步（Non-blocking Synchronization）。实现非阻塞同步的方案称为“无锁编程算法”（ Non-blocking algorithm）。
+相对应的，独占锁是一种悲观锁，synchronized就是一种独占锁，它假设最坏的情况，并且只有在确保其它线程不会造成干扰的情况下执行，会导致其它所有需要锁的线程挂起，等待持有锁的线程释放锁。
+使用lock实现线程同步有很多缺点：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;产生竞争时，线程被阻塞等待，无法做到线程实时响应。&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;dead lock，死锁。&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;live lock。&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;优先级翻转。&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;使用不当，造成性能下降。&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;当然在部分情况下，目前来看，无锁编程并不能替代 lock。 &lt;&#x2F;p&gt;
+&lt;h3 id=&quot;er-shi-xian-ji-bie&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#er-shi-xian-ji-bie&quot; aria-label=&quot;Anchor link for: er-shi-xian-ji-bie&quot;&gt;二、实现级别&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;非同步阻塞的实现可以分成三个级别：wait-free&#x2F;lock-free&#x2F;obstruction-free。&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;wait-free
+是最理想的模式，整个操作保证每个线程在有限步骤下完成。
+保证系统级吞吐（system-wide throughput）以及无线程饥饿。
+截止2011年，没有多少具体的实现。即使实现了，也需要依赖于具体CPU。&lt;&#x2F;li&gt;
+&lt;li&gt;lock-free
+允许个别线程饥饿，但保证系统级吞吐。确保至少有一个线程能够继续执行。
+wait-free的算法必定也是lock-free的。&lt;&#x2F;li&gt;
+&lt;li&gt;obstruction-free
+在任何时间点，一个线程被隔离为一个事务进行执行（其他线程suspended），并且在有限步骤内完成。在执行过程中，一旦发现数据被修改（采用时间戳、版本号），则回滚。也叫做乐观锁，即乐观并发控制(OOC)。事务的过程是：1读取，并写时间戳；2准备写入，版本校验；3校验通过则写入，校验不通过，则回滚。
+lock-free必定是obstruction-free的。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;san-cassuan-fa&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#san-cassuan-fa&quot; aria-label=&quot;Anchor link for: san-cassuan-fa&quot;&gt;三、CAS算法&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;CAS（比较与交换，Compare and swap） 是一种有名的无锁算法。CAS, CPU指令，在大多数处理器架构，包括IA32、Space中采用的都是CAS指令，CAS的语义是“我认为V的值应该为A，如果是，那么将V的值更新为B，否则不修改并告诉V的值实际为多少”，CAS是项 乐观锁 技术，当多个线程尝试使用CAS同时更新同一个变量时，只有其中一个线程能更新变量的值，而其它线程都失败，失败的线程并不会被挂起，而是被告知这次竞争中失败，并可以再次尝试。CAS有3个操作数，内存值V，旧的预期值A，要修改的新值B。当且仅当预期值A和内存值V相同时，将内存值V修改为B，否则什么都不做。
+java.util.concurrent.atomic中的AtomicXXX，都使用了这些底层的JVM支持为数字类型的引用类型提供一种高效的CAS操作，而在java.util.concurrent中的大多数类在实现时都直接或间接的使用了这些原子变量类，这些原子变量都调用了 sun.misc.Unsafe 类库里面的 CAS算法，用CPU指令来实现无锁自增，JDK源码：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;java&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-java &quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public final &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;getAndIncrement&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{  
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;(;;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{  
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; current &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;get&lt;&#x2F;span&gt;&lt;span&gt;();  
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; next &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; current &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;  
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;compareAndSet&lt;&#x2F;span&gt;&lt;span&gt;(current, next))  
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return&lt;&#x2F;span&gt;&lt;span&gt; current;  
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}  
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}  
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public final &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;boolean &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;compareAndSet&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; expect, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; update) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{  
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return&lt;&#x2F;span&gt;&lt;span&gt; unsafe&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;compareAndSwapInt&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;, valueOffset, expect, update);  
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;因而在大部分情况下，java中使用Atomic包中的incrementAndGet的性能比用synchronized高出几倍。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;si-abawen-ti&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#si-abawen-ti&quot; aria-label=&quot;Anchor link for: si-abawen-ti&quot;&gt;四、ABA问题&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;thread1意图对val=1进行操作变成2，cas(val,1,2)。
+thread1先读取val=1；thread1被抢占（preempted），让thread2运行。
+thread2 修改val=3，又修改回1。
+thread1继续执行，发现期望值与“原值”（其实被修改过了）相同，完成CAS操作。
+使用CAS会造成ABA问题，特别是在使用指针操作一些并发数据结构时。
+解决方案
+ABAʹ：添加额外的标记用来指示是否被修改。
+从Java1.5开始JDK的atomic包里提供了一个类AtomicStampedReference来解决ABA问题。这个类的compareAndSet方法作用是首先检查当前引用是否等于预期引用，并且当前标志是否等于预期标志，如果全部相等，则以原子方式将该引用和该标志的值设置为给定的更新值。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;casyin-fa-de-liang-ge-wen-ti&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#casyin-fa-de-liang-ge-wen-ti&quot; aria-label=&quot;Anchor link for: casyin-fa-de-liang-ge-wen-ti&quot;&gt;CAS引发的两个问题&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;CAS 操作包含三个操作数 —— 内存位置（V）、预期原值（A）和新值(B)。如果内存地址里面的值和A的值是一样的，那么就将内存里面的值更新成B。CAS是通过无限循环来获取数据的，若果在第一轮循环中，a线程获取地址里面的值被b线程修改了，那么a线程需要自旋，到下次循环才有可能机会执行。&lt;&#x2F;p&gt;
+&lt;p&gt;在JVM中的CAS操作就是基于处理器的CMPXCHG汇编指令实现的，因此，JVM中的CAS的原子性是处理器保障的。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;abawen-ti&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#abawen-ti&quot; aria-label=&quot;Anchor link for: abawen-ti&quot;&gt;ABA问题&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;ABA问题是指在CAS操作时，其他线程将变量值A改为了B，但是又被改回了A，等到本线程使用期望值A与当前变量进行比较时，发现变量A没有变，于是CAS就将A值进行了交换操作，但是实际上该值已经被其他线程改变过，这与乐观锁的设计思想不符合。ABA问题的解决思路是，每次变量更新的时候把变量的版本号加1，那么A-B-A就会变成A1-B2-A3，只要变量被某一线程修改过，改变量对应的版本号就会发生递增变化，从而解决了ABA问题。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;caszi-xuan-dao-zhi-de-kai-xiao&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#caszi-xuan-dao-zhi-de-kai-xiao&quot; aria-label=&quot;Anchor link for: caszi-xuan-dao-zhi-de-kai-xiao&quot;&gt;CAS自旋导致的开销&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;多个线程争夺同一个资源时，如果自旋一直不成功，将会一直占用CPU。&lt;&#x2F;p&gt;
+&lt;p&gt;解决方法：破坏掉for死循环，当超过一定时间或者一定次数时，return退出。JDK8新增的LongAddr,和ConcurrentHashMap类似的方法。当多个线程竞争时，将粒度变小，将一个变量拆分为多个变量，达到多个线程访问多个资源的效果，最后再调用sum把它合起来。&lt;&#x2F;p&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>分布式算法路线图</title>
+        <published>2021-02-03T01:02:18+00:00</published>
+        <updated>2021-02-03T01:02:18+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/distribute-algs-roadmap/" type="text/html"/>
+        <id>https://wendajiang.github.io/distribute-algs-roadmap/</id>
+        <content type="html">&lt;p&gt;开发分布式系统最关键的是根据场景特点，选择合适的算法，在一致性和可用性之间折中&lt;&#x2F;p&gt;
+&lt;p&gt;分布式算法的四度空间：&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: center&quot;&gt;协议&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: center&quot;&gt;拜占庭容错&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: center&quot;&gt;一致性&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: center&quot;&gt;性能&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: center&quot;&gt;可用性&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;2PC（2阶段提交协议）&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;否&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;强一致性&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;低&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;低&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;TCC&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;否&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;最终一致性&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;低&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;低&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;Paxos&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;否&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;强一致性&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;中&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;中&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;ZAB&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;否&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;最终一致性&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;中&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;中&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;Raft&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;否&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;强一致性&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;中&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;中&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;Gossip&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;否&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;最终一致性&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;高&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;高&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;Quorum NWR&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;否&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;强一致性&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;中&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;中&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;PBFT&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;是&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;N&#x2F;A&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;低&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;中&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: center&quot;&gt;POW&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;是&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;N&#x2F;A&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;低&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;中&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h3 id=&quot;yi-zhi-xing&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#yi-zhi-xing&quot; aria-label=&quot;Anchor link for: yi-zhi-xing&quot;&gt;一致性&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;强一致性：保证写操作完成后，任何后续访问都能读到更新后的值&lt;&#x2F;li&gt;
+&lt;li&gt;弱一致性：写操作完成后，系统不能保证后续访问都能读到更新后的值&lt;&#x2F;li&gt;
+&lt;li&gt;最终一致性：保证如果某个对象没有新的写操作了，最终所有后续访问都能读到相同的最近更新的值&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;强一致性是具有多种含义的。&lt;&#x2F;p&gt;
+&lt;p&gt;首先，在埃里克·布鲁尔的猜想中，CAP 中的强一致性（也就是 C）是指 ACID 的 C，系统状态的一致性，而这种一致性，可以通过二阶段提交协议来实现。&lt;&#x2F;p&gt;
+&lt;p&gt;其次，在 CAP 定理中，CAP 中的强一致性（也就是 C）是指原子一致性（也就是线性一致性）。其中，Paxos、Raft 能实现线性一致性，而 ZooKeeper 基于读性能的考虑，它通过 ZAB 协议提供的是最终一致性。&lt;&#x2F;p&gt;
+&lt;p&gt;一般而言，在需要系统状态的一致性时，你可以考虑采用二阶段提交协议、TCC。在需要数据访问是的强一致性时，你可考虑 Raft 算法。在可用性优先的系统，你可以采用 Gossip 协议来实现最终一致性，并实现 Quorum NWR 来提供强一致性。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ke-yong-xing&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#ke-yong-xing&quot; aria-label=&quot;Anchor link for: ke-yong-xing&quot;&gt;可用性&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;可用性强调的是服务可用&lt;&#x2F;p&gt;
+&lt;p&gt;一般来讲，采用Gossip协议实现最终一致性的系统，可用性最高。其次是Paxos、ZAB、Raft、Quorum NWR、PBFT、POW，可以容忍一定数量节点故障&lt;&#x2F;p&gt;
+&lt;p&gt;最后是二阶段提交协议、TCC，只有当所有节点都运行时，才能工作，可用性最低&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;xing-neng&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#xing-neng&quot; aria-label=&quot;Anchor link for: xing-neng&quot;&gt;性能&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;一般来讲，采用 Gossip 协议的 AP 型分布式系统，具备水平扩展能力，读写性能是最高的。其次是 Paxos 算法、ZAB 协议、Raft 算法，因为它们都是领导者模型，写性能受限于领导者，读性能取决于一致性实现。最后是二阶段提交协议和 TCC，因为在实现事务时，需要预留和锁定资源，性能相对低。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;2021-02-03-distribute-algs-roadmap&#x2F;%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%AE%AE%E5%92%8C%E7%AE%97%E6%B3%95%E5%AE%9E%E6%88%98.png&quot; alt=&quot;111&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+</content>
+    </entry>
+</feed>

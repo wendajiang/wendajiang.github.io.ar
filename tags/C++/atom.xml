@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - C++</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/C++/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-01-05T10:20:00+00:00</updated>
+    <id>https://wendajiang.github.io/tags/C++/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Testing Framework</title>
+        <published>2023-02-09T16:22:43+00:00</published>
+        <updated>2023-02-09T16:22:43+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/testing-framework/" type="text/html"/>
+        <id>https://wendajiang.github.io/testing-framework/</id>
+        <content type="html">&lt;h1 id=&quot;from-catch2&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#from-catch2&quot; aria-label=&quot;Anchor link for: from-catch2&quot;&gt;From Catch2&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;When I need to unit-test for some software, I find the Catch2 library, v2 version is only header-library. I read the document: &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;catchorg&#x2F;Catch2&#x2F;blob&#x2F;devel&#x2F;docs&#x2F;why-catch.md#top&quot;&gt;Why do we need yet another C++ test framework?&lt;&#x2F;a&gt;, for c++ there are so many established frameworks, including to(but not limited to), Google Test, Boost.Test, CppUnit and so on. Summary as follow:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Easy to use. Just download some file, add them into your project. No external dependencies.&lt;&#x2F;li&gt;
+&lt;li&gt;BDD-style, Given-When-Then sections as well as traditional unit test cases&lt;&#x2F;li&gt;
+&lt;li&gt;Write test cases as, self-registering, functions(or methods, if you prefer)&lt;&#x2F;li&gt;
+&lt;li&gt;Tests are named using free-form strings - no more couching names in legal identifiers&lt;&#x2F;li&gt;
+&lt;li&gt;...&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;For me simple and practical using, the first tip is important.&lt;&#x2F;p&gt;
+&lt;p&gt;But, yes, there is always but, the v3 version brings a bunch of significant changes, the big one being that Catch2 is no longer a single-header library, and behaves as a normal library, with multiple headers and separately compiled implementation.&lt;&#x2F;p&gt;
+&lt;p&gt;It&#x27;s ok, and what I need particular requirement is I want to write test with productive code. And personly I like the single-header library, it&#x27;s easiest to use.&lt;&#x2F;p&gt;
+&lt;p&gt;And I find the doctest repo.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;doctest&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#doctest&quot; aria-label=&quot;Anchor link for: doctest&quot;&gt;Doctest&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;Tests can be a form of documentation and should be able to reside near the production code which they test. &lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;This makes the barrier for writing tests much lower - you don&#x27;t have to: 1) make a separate source file 2) include a bunch of stuff in it 3) add it to the build system and 4) add it to source control - You can just write the tests for a class or a piece of functionality at the bottom of its source file - or even header file!&lt;&#x2F;li&gt;
+&lt;li&gt;Tests in the production code can be thought of as documentation&#x2F;up-to-date comments - showcasing the APIs&lt;&#x2F;li&gt;
+&lt;li&gt;Testing internals that are not exposed through the public API and headers is no longer a mind-bending exercise&lt;&#x2F;li&gt;
+&lt;li&gt;Test-driven development in C++ has never been easier!&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;And there is the DOCTEST_CONFIG_DISABLE config to remove all tests from the library or binary.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;assertion-micro&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#assertion-micro&quot; aria-label=&quot;Anchor link for: assertion-micro&quot;&gt;Assertion Micro&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;REQUIRE : will immediately quit the test case if the assert fails and will mark the test case as failed&lt;&#x2F;li&gt;
+&lt;li&gt;CHECK : will mark the test case as failed if the assert fails but will continue with the test case&lt;&#x2F;li&gt;
+&lt;li&gt;WARN : will only print a message if the assert fails but will not mark the test case as failed&lt;&#x2F;li&gt;
+&lt;li&gt;&amp;lt;LEVEL&amp;gt;_THOWS : except a throw&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;test-cases&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#test-cases&quot; aria-label=&quot;Anchor link for: test-cases&quot;&gt;Test cases&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;TEST_CASE(test name)&lt;&#x2F;li&gt;
+&lt;li&gt;SUBCASE &lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;bdd-style-test-cases&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#bdd-style-test-cases&quot; aria-label=&quot;Anchor link for: bdd-style-test-cases&quot;&gt;BDD-style test cases&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;SCENARIO(scenario name) -&amp;gt; map to TEST_CASE, and the test case name will be prefixed by &amp;quot;Scenario: &amp;quot;&lt;&#x2F;li&gt;
+&lt;li&gt;GIVEN &#x2F; WHEN&#x2F; THEN - map to SUBCASE, the prefixed would be &amp;quot;given: &#x2F; when: &#x2F; then: &amp;quot;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;test-suites&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#test-suites&quot; aria-label=&quot;Anchor link for: test-suites&quot;&gt;Test suites&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Test cases can be grouped into test suites.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;TEST_SUITE(&amp;lt;suite name&amp;gt;) {}&lt;&#x2F;li&gt;
+&lt;li&gt;TEST_SUITE_BEGIN(&amp;lt;suite name&amp;gt;)&lt;&#x2F;li&gt;
+&lt;li&gt;TEST_SUITE_END()&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;decorators&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#decorators&quot; aria-label=&quot;Anchor link for: decorators&quot;&gt;Decorators&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Test cases can be decorated with additional attributes like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;TEST_CASE&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;name&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;doctest&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;description&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;shouldn&amp;#39;t take more than 500ms&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;doctest&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;timeout&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0.5&lt;&#x2F;span&gt;&lt;span&gt;))
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Multiple decorators can be used at the same time.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;skip(bool = true)&lt;&#x2F;li&gt;
+&lt;li&gt;no_breaks(bool = true)&lt;&#x2F;li&gt;
+&lt;li&gt;no_output(bool = true)&lt;&#x2F;li&gt;
+&lt;li&gt;may_fail(bool = true) doesn&#x27;t fail the test case if any given assertion fails(but still report it)&lt;&#x2F;li&gt;
+&lt;li&gt;should_fail(bool = true)&lt;&#x2F;li&gt;
+&lt;li&gt;expected_failures(int)&lt;&#x2F;li&gt;
+&lt;li&gt;timeout(double) fails the test case if its execution exceeds this limit (in seconds) - but doesn&#x27;t terminate it - that would require subprocess support&lt;&#x2F;li&gt;
+&lt;li&gt;test_suite(&amp;quot;name&amp;quot;)&lt;&#x2F;li&gt;
+&lt;li&gt;description(&amp;quot;text&amp;quot;)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>Cpp Iterator</title>
+        <published>2022-12-22T16:39:52+00:00</published>
+        <updated>2022-12-22T16:39:52+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/iterator-cpp/" type="text/html"/>
+        <id>https://wendajiang.github.io/iterator-cpp/</id>
+        <content type="html">&lt;p&gt;C++17 has deprecated a few components that has been in C++ since its beginning, and std::iterator is one of them.&lt;&#x2F;p&gt;
+&lt;p&gt;首先看一下如何使用 std::iterator ，以及为什么要废弃，然后替代品是什么&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;iterator-traits&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#iterator-traits&quot; aria-label=&quot;Anchor link for: iterator-traits&quot;&gt;Iterator traits&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;generic code 使用 iterator，比如 STL 算法强依赖 iterator，需要其中的信息，比如 value_type&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span&gt;std&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;vector&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; numbers &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;4&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;5&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;std&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;cout &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;lt;&amp;lt; &lt;&#x2F;span&gt;&lt;span&gt;std&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;reduce&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;begin&lt;&#x2F;span&gt;&lt;span&gt;(numbers), &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;end&lt;&#x2F;span&gt;&lt;span&gt;(numbers)) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;lt;&amp;lt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;std::reduce&lt;&#x2F;code&gt;使用两个 iterator， 然后输出这个区间中元素的求和。那么 &lt;code&gt;std::reduce&lt;&#x2F;code&gt; 如何获取 iterator 元素的类型呢。事实上，这与 &lt;code&gt;std::vector&lt;&#x2F;code&gt; 没有关系，iterator 中有 value_type 表示元素类型。然后 iterator 还需要表示是不是可以随机访问，是不是只能递增不能递减等，通过 tag dispatch 实现 iterator_category:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;std::input_iterator_tag&lt;&#x2F;li&gt;
+&lt;li&gt;std::forward_iterator_tag&lt;&#x2F;li&gt;
+&lt;li&gt;std::bidirectional_iterator_tag&lt;&#x2F;li&gt;
+&lt;li&gt;std::random_access_iterator_tag&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;最后，STL iterator 还需要&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;difference_type: - 操作结果的类型&lt;&#x2F;li&gt;
+&lt;li&gt;pointer： 元素的指针类型&lt;&#x2F;li&gt;
+&lt;li&gt;reference：元素的引用类型&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;如果元素就是指针呢，所以还需要 &lt;code&gt;std::iterator_traits&amp;lt;Iterator&amp;gt;::value_type&lt;&#x2F;code&gt; 消除指针&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;std-iterator&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#std-iterator&quot; aria-label=&quot;Anchor link for: std-iterator&quot;&gt;std::iterator&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;It is a helper to define the iterator traits of an iterator.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;template&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typename&lt;&#x2F;span&gt;&lt;span&gt; Category,
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typename&lt;&#x2F;span&gt;&lt;span&gt; T,
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typename&lt;&#x2F;span&gt;&lt;span&gt; Distance &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; std&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;ptrdiff_t&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typename&lt;&#x2F;span&gt;&lt;span&gt; Pointer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typename&lt;&#x2F;span&gt;&lt;span&gt; Reference &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;iterator;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;比如可以这样用&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;MyIterator&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;font-style:italic;color:#8be9fd;&quot;&gt;std&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;font-style:italic;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;font-style:italic;color:#8be9fd;&quot;&gt;iterator&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;std&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;random_access_iterator, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;wei-shi-yao-fei-qi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#wei-shi-yao-fei-qi&quot; aria-label=&quot;Anchor link for: wei-shi-yao-fei-qi&quot;&gt;为什么废弃&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;至少有一个问题，使用上是不明确的&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;MyIterator&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;font-style:italic;color:#8be9fd;&quot;&gt;std&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;font-style:italic;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;font-style:italic;color:#8be9fd;&quot;&gt;iterator&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;std&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;random_acess_iterator, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;并不能清晰表明，哪里是 value_type，哪里是 reference_type&lt;&#x2F;p&gt;
+&lt;p&gt;更清晰的方式是直接这样写&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;MyIterator &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;using &lt;&#x2F;span&gt;&lt;span&gt;iterator_category &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; std&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;forward_iterator_tag;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;using &lt;&#x2F;span&gt;&lt;span&gt;value_type &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;using &lt;&#x2F;span&gt;&lt;span&gt;difference_type &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;using &lt;&#x2F;span&gt;&lt;span&gt;pointer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;using &lt;&#x2F;span&gt;&lt;span&gt;reference &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这个原因已经可以说服委员会废弃，不过还有一个缺陷，你无法直接访问 base struct 中的 value_type&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;MyIterator&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;font-style:italic;color:#8be9fd;&quot;&gt;std&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;font-style:italic;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;font-style:italic;color:#8be9fd;&quot;&gt;iterator&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;std&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;random_acess_iterator, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  base_type a; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; error
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;reference&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#reference&quot; aria-label=&quot;Anchor link for: reference&quot;&gt;reference&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;https:&#x2F;&#x2F;www.fluentcpp.com&#x2F;2018&#x2F;05&#x2F;08&#x2F;std-iterator-deprecated&#x2F;&lt;&#x2F;p&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>pimpl</title>
+        <published>2022-11-28T10:20:07+00:00</published>
+        <updated>2024-01-05T10:20:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/pimpl/" type="text/html"/>
+        <id>https://wendajiang.github.io/pimpl/</id>
+        <content type="html">&lt;p&gt;from &lt;a href=&quot;https:&#x2F;&#x2F;herbsutter.com&#x2F;gotw&#x2F;_100&#x2F;&quot;&gt;GotW100&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;1-what-is-the-pimpl-idiom-and-why-is-it-useful&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#1-what-is-the-pimpl-idiom-and-why-is-it-useful&quot; aria-label=&quot;Anchor link for: 1-what-is-the-pimpl-idiom-and-why-is-it-useful&quot;&gt;1. What is the Pimpl Idiom, and why is it useful ?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;C++ 中，头文件中类定义的改变会导致所有用到这个类的地方重新编译--即使修改只涉及到私有成员。这是因为 C++ 的编译模型基于文本包含，以及 C++ 假设调用者知道有关类的两个主要信息，这些信息可能会受到私有成员的影响：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;尺寸和布局：调用代码必须知道类的尺寸和布局，包含私有数据成员。这种总是能看到的约束增加了调用者和被调者的耦合成本，但是这是 C++ 对象模型和哲学的核心，因为编译器默认可以直接访问对象是时 C++ 可以实现高度优化效率的保证&lt;&#x2F;li&gt;
+&lt;li&gt;函数：调用者必须可以 resolve 到类的成员函数，包括被非私有函数重载的不可访问的私有函数--如果私有函数匹配度更高，调用代码会编译失败（C++ 采用了慎重的设计决策由于安全原因在访问性检查之前执行重载解决。比如，将函数的属性从私有改为公有不能改变调用代码的合法性）&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;为了减少这些编译依赖，常用的方法就是使用一个 opaque 指针来隐藏这些实现细节：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; Pimpl idiom - basic idea
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;widget &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; :::
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;private&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;impl;
+&lt;&#x2F;span&gt;&lt;span&gt;  impl&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt; pimpl_;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这种 idiom 的一个好处就是打破了编译时间的依赖。首先，系统构建能运行的更快。其次，可以将代码修改的影响局部化，pimpl 可以自由修改--成员可以自由增加或者删除--不需要重新编译使用端代码。因为对于消除编译级联影响如此有用，所以也经常被称为 compilation firewall.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;2-what-is-the-best-way-to-express-the-basic-pimpl-idiom-in-c-11&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#2-what-is-the-best-way-to-express-the-basic-pimpl-idiom-in-c-11&quot; aria-label=&quot;Anchor link for: 2-what-is-the-best-way-to-express-the-basic-pimpl-idiom-in-c-11&quot;&gt;2. What is the best way to express the basic Pimpl Idiom in C++11?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;避免使用原始指针以及显式的 delete。pimpl 使用 &lt;em&gt;unique_ptr&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; .h
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;widget &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;widget&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;~widget&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;private&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;impl&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  unique_ptr&amp;lt;impl&amp;gt; pimpl;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; .cc
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span&gt;widget&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;impl &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;widget&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;widget&lt;&#x2F;span&gt;&lt;span&gt;()&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;pimpl&lt;&#x2F;span&gt;&lt;span&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;new &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;impl&lt;&#x2F;span&gt;&lt;span&gt;{}} &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{}
+&lt;&#x2F;span&gt;&lt;span&gt;widget&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;~widget&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这个模式有一些需要注意的：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;使用 unique_ptr 而不是 shared_ptr，可以正确表达 pimpl 对象不能被分享&lt;&#x2F;li&gt;
+&lt;li&gt;在实现的 cc 文件中定义和使用 pimpl 对象&lt;&#x2F;li&gt;
+&lt;li&gt;显式使用构造器，分配 pimpl 对象&lt;&#x2F;li&gt;
+&lt;li&gt;显式声明 destructor ，即使与编译器生成的一样。因为即使 unique_ptr 和 shared_ptr 都可以使用 incomplete type 实例，unique_ptr 析构需要 complete type 来调用 delete（不像 shared_ptr 在构造时可以获得更多信息）。通过在实现文件中显式定义，强制 impl 也定义了，可以成功避免编译器试图自动生成析构时 impl 没有定义&lt;&#x2F;li&gt;
+&lt;li&gt;以上的模式 class 没有默认的拷贝和移动语义，因为 C++ 倾向于不默认生成拷贝和移动语义。因为我们显示声明了析构，所以拷贝和移动被关闭了，如果需要有，你需要自己添加定义。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Pimpl 在 C++11 中又了新的优势，就是使用更方便了。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;3-what-parts-of-the-class-should-go-into-the-impl-object-some-potential-options-include&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#3-what-parts-of-the-class-should-go-into-the-impl-object-some-potential-options-include&quot; aria-label=&quot;Anchor link for: 3-what-parts-of-the-class-should-go-into-the-impl-object-some-potential-options-include&quot;&gt;3. What parts of the class should go into the &lt;em&gt;impl&lt;&#x2F;em&gt; object? Some potential options include:&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;put all private data(but not functions) into impl;&lt;&#x2F;p&gt;
+&lt;p&gt;需要把 function 也加入&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;put all private members into impl;&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;不能在 pimpl 中隐藏 virtual member function，即使 virtual function 是私有的。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;put all private and protected members into impl; ❌&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;put all private non virtual members into impl; ✅&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;put everything into impl, and write the public class itself as only the public interface, each implemented as a simple forwarding function(a handle&#x2F;body variant)&lt;&#x2F;p&gt;
+&lt;p&gt;有些情况可以这样用，避免了 back pointer。主要的缺点是要求一个额外的 wrapper function&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;关键信息是，在任何 OO 语言中有三个部分：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;interface for callers = public members. 外部可以访问&lt;&#x2F;li&gt;
+&lt;li&gt;interface for derivers = protected or virtual members. 派生类可以看到&lt;&#x2F;li&gt;
+&lt;li&gt;everything else = private and nonvirtual members. &lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;第三个部分可以放到 pimpl 中隐藏。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;4-does-the-impl-require-a-back-pointer-to-the-public-object-if-yes-what-is-the-best-way-to-provide-it-if-not-why-not&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#4-does-the-impl-require-a-back-pointer-to-the-public-object-if-yes-what-is-the-best-way-to-provide-it-if-not-why-not&quot; aria-label=&quot;Anchor link for: 4-does-the-impl-require-a-back-pointer-to-the-public-object-if-yes-what-is-the-best-way-to-provide-it-if-not-why-not&quot;&gt;4. Does the impl require a back pointer to the public object? If yes, what is the best way to provide it? If not, why not?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ol&gt;
+&lt;li&gt;在 impl 中存储 back pointer&lt;&#x2F;li&gt;
+&lt;li&gt;建议：pass &lt;em&gt;this&lt;&#x2F;em&gt; 作为参数给 pimpl function。这只会增加栈的消耗&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;hr &#x2F;&gt;
+&lt;p&gt;2024-1-5 更新&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;5-guan-yu-xian-shi-ding-yi-deconstrctor-de-bu-chong-shuo-ming&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#5-guan-yu-xian-shi-ding-yi-deconstrctor-de-bu-chong-shuo-ming&quot; aria-label=&quot;Anchor link for: 5-guan-yu-xian-shi-ding-yi-deconstrctor-de-bu-chong-shuo-ming&quot;&gt;5. 关于显式定义 deconstrctor 的补充说明&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;default-shi-bu-ke-yi-de&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#default-shi-bu-ke-yi-de&quot; aria-label=&quot;Anchor link for: default-shi-bu-ke-yi-de&quot;&gt;default 是不可以的&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;通过声明 &lt;code&gt;~T() = default&lt;&#x2F;code&gt; 在 pimpl 惯用法中是不可行的，会出现编译报错 &lt;code&gt;incomplete type&lt;&#x2F;code&gt; &lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zai-desconstructor-zhong-xian-shi-diao-yong-impl-t-fei-fa&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#zai-desconstructor-zhong-xian-shi-diao-yong-impl-t-fei-fa&quot; aria-label=&quot;Anchor link for: zai-desconstructor-zhong-xian-shi-diao-yong-impl-t-fei-fa&quot;&gt;在 desconstructor 中显式调用 &lt;code&gt;impl_-&amp;gt;~T()&lt;&#x2F;code&gt; 非法&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;这样会出现两次调用 deconstructor，如果有指针操作就可能会出现 double free&lt;&#x2F;p&gt;
+&lt;p&gt;Destructor is meant to be called when an object goes out of scope if the object is in the stack as in this case or called when it is explicitly destructed with delete when the object is created on the heap with new operator at the first place.&lt;&#x2F;p&gt;
+&lt;p&gt;There is no way for the compiler or the run time system to keep track whether the destructor is called by you manually or not. Also it is a very bad practice to make a call to the destructor. Except, the &lt;em&gt;placement new&lt;&#x2F;em&gt;, when it should be invoked manually.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;reference&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#reference&quot; aria-label=&quot;Anchor link for: reference&quot;&gt;reference&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;isocpp.org&#x2F;wiki&#x2F;faq&#x2F;dtors&quot;&gt;dtors-faq&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;stackoverflow.com&#x2F;a&#x2F;14188066&#x2F;6885532&quot;&gt;explicit calling dtor&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;copyprogramming.com&#x2F;howto&#x2F;how-to-call-destructor-in-c-manually&quot;&gt;Manually invoking the dtor in C++: A guide&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+</feed>

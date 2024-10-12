@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - compiler</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/compiler/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-07-31T11:50:08+00:00</updated>
+    <id>https://wendajiang.github.io/tags/compiler/atom.xml</id>
+    <entry xml:lang="en">
+        <title>faster compile</title>
+        <published>2024-07-31T11:50:08+00:00</published>
+        <updated>2024-07-31T11:50:08+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/faster-compile/" type="text/html"/>
+        <id>https://wendajiang.github.io/faster-compile/</id>
+        <content type="html">&lt;h1 id=&quot;profile&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#profile&quot; aria-label=&quot;Anchor link for: profile&quot;&gt;profile&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;clang -ftime-trace would output one json file, that can generate flame graph&lt;&#x2F;li&gt;
+&lt;li&gt;gcc -ftime-report would output the phase time and percent&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h1 id=&quot;speed-up&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#speed-up&quot; aria-label=&quot;Anchor link for: speed-up&quot;&gt;speed up&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;do-not-change-the-code&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#do-not-change-the-code&quot; aria-label=&quot;Anchor link for: do-not-change-the-code&quot;&gt;do not change the code&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ol&gt;
+&lt;li&gt;faster linker 
+lld faster than gnu bsd linker&lt;&#x2F;li&gt;
+&lt;li&gt;PCH(pre-compiled header)
+&lt;code&gt;target_precompile_headers(&amp;lt;target&amp;gt; PUBLIC &amp;lt;headers&amp;gt;)&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;cache compile result
+&lt;ul&gt;
+&lt;li&gt;ccache&lt;&#x2F;li&gt;
+&lt;li&gt;sccache(cache shareing)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;unity builds
+&lt;code&gt;cmake -DCMAKE_UNITY_BUILD=ON&lt;&#x2F;code&gt; when cmake 3.16+&lt;&#x2F;li&gt;
+&lt;li&gt;LTO (link time optimization)
+&lt;code&gt;cmake -DLLVM_ENABLE_LTO=Thin&lt;&#x2F;code&gt; for clang&lt;&#x2F;li&gt;
+&lt;li&gt;PGO(profile guided optimization)&lt;pre data-lang=&quot;markdown&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-markdown &quot;&gt;&lt;code class=&quot;language-markdown&quot; data-lang=&quot;markdown&quot;&gt;&lt;span&gt;build clang with cmake -DLLVM_BUILD_INSTRUMENTED=IR
+&lt;&#x2F;span&gt;&lt;span&gt;use this to train the compiler
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span&gt;we build some application
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span&gt; generate a profraw file
+&lt;&#x2F;span&gt;&lt;span&gt;merge all profraw files with llvm-prodata
+&lt;&#x2F;span&gt;&lt;span&gt;feed output to clang cmake with -DLLVM_PROFDATA_FILE=&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;path&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;combine with LTO for best results
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;Post link optimization
+&lt;ul&gt;
+&lt;li&gt;LLVM-BOLT&lt;&#x2F;li&gt;
+&lt;li&gt;LLVM-Propeller&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h2 id=&quot;grab-bag&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#grab-bag&quot; aria-label=&quot;Anchor link for: grab-bag&quot;&gt;Grab bag&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ol&gt;
+&lt;li&gt;-fvisibility=hidden&lt;&#x2F;li&gt;
+&lt;li&gt;-fexperimental-new-pass-manager&lt;&#x2F;li&gt;
+&lt;li&gt;distcc&lt;&#x2F;li&gt;
+&lt;li&gt;LTO on your code&lt;&#x2F;li&gt;
+&lt;li&gt;-ftime-trace&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;google&#x2F;bloaty&quot;&gt;bloaty&lt;&#x2F;a&gt; a size profiler for binaries&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;change-the-code&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#change-the-code&quot; aria-label=&quot;Anchor link for: change-the-code&quot;&gt;change the code&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ol&gt;
+&lt;li&gt;split one large file into many small file , so that is benefit from parallel compiling&lt;&#x2F;li&gt;
+&lt;li&gt;PIMPL&lt;&#x2F;li&gt;
+&lt;li&gt;fwd class instead of include header&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h1 id=&quot;reference&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#reference&quot; aria-label=&quot;Anchor link for: reference&quot;&gt;reference&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=X4pyOtawqjg&quot;&gt;youtube&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;onqtam.com&#x2F;programming&#x2F;2019-12-20-pch-unity-cmake-3-16&#x2F;&quot;&gt;cmake3.16 introduce and something&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>compiler optimization</title>
+        <published>2024-06-01T20:37:02+00:00</published>
+        <updated>2024-06-01T20:37:02+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/cscd70/" type="text/html"/>
+        <id>https://wendajiang.github.io/cscd70/</id>
+        <content type="html">&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.cs.toronto.edu&#x2F;~pekhimenko&#x2F;courses&#x2F;cscd70-w19&#x2F;content.html&quot;&gt;course&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;introduction&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#introduction&quot; aria-label=&quot;Anchor link for: introduction&quot;&gt;Introduction&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;what-do-compiler-do&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-do-compiler-do&quot; aria-label=&quot;Anchor link for: what-do-compiler-do&quot;&gt;What do compiler do?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Translate one language into another&lt;&#x2F;li&gt;
+&lt;li&gt;Improve(&amp;quot;Optimization&amp;quot;) the code (&lt;em&gt;Execution time = Operation count product Machine cycles per operation&lt;&#x2F;em&gt;)
+&lt;ul&gt;
+&lt;li&gt;Minimize the number of operations&lt;&#x2F;li&gt;
+&lt;li&gt;Replace expensive operations with simpler ones&lt;&#x2F;li&gt;
+&lt;li&gt;Minimize cache misses&lt;&#x2F;li&gt;
+&lt;li&gt;Perform work in parallel&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;ingredients-in-a-compiler-optimization&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#ingredients-in-a-compiler-optimization&quot; aria-label=&quot;Anchor link for: ingredients-in-a-compiler-optimization&quot;&gt;Ingredients in a compiler optimization&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Formulate optimization problem&lt;&#x2F;li&gt;
+&lt;li&gt;Representation&lt;&#x2F;li&gt;
+&lt;li&gt;Analysis&lt;&#x2F;li&gt;
+&lt;li&gt;Code Transformation&lt;&#x2F;li&gt;
+&lt;li&gt;Expreimental evaluation&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;basic-block&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#basic-block&quot; aria-label=&quot;Anchor link for: basic-block&quot;&gt;Basic block&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;a sequence of 3-address statements&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;flow-graphs&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#flow-graphs&quot; aria-label=&quot;Anchor link for: flow-graphs&quot;&gt;Flow graphs&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Nodes: basic blocks&lt;&#x2F;li&gt;
+&lt;li&gt;Edges: Bi -&amp;gt; Bj, iff Bj can follow Bi immediately in some execution&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;sources-of-optimization&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#sources-of-optimization&quot; aria-label=&quot;Anchor link for: sources-of-optimization&quot;&gt;Sources of optimization&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;algorithm-optimization&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#algorithm-optimization&quot; aria-label=&quot;Anchor link for: algorithm-optimization&quot;&gt;Algorithm optimization&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;h3 id=&quot;algebraic-optimization&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#algebraic-optimization&quot; aria-label=&quot;Anchor link for: algebraic-optimization&quot;&gt;Algebraic optimization&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;h3 id=&quot;local-optimizations&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#local-optimizations&quot; aria-label=&quot;Anchor link for: local-optimizations&quot;&gt;local optimizations&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;within a basic block -- across instructions
+like examples:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;local common subexpression elimination&lt;&#x2F;li&gt;
+&lt;li&gt;constant folding or elimination&lt;&#x2F;li&gt;
+&lt;li&gt;dead code elimination&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;global-intraprocedural-optimization&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#global-intraprocedural-optimization&quot; aria-label=&quot;Anchor link for: global-intraprocedural-optimization&quot;&gt;Global(intraprocedural) optimization&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;within a flow graph -- across basic blocks&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;global versions of local optimizations
+&lt;ul&gt;
+&lt;li&gt;global common subexpression elimination&lt;&#x2F;li&gt;
+&lt;li&gt;global constant folding or elimination&lt;&#x2F;li&gt;
+&lt;li&gt;dead code elimination&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;loop optimizations
+&lt;ul&gt;
+&lt;li&gt;reduce code to be executed in each iteration&lt;&#x2F;li&gt;
+&lt;li&gt;code motion&lt;&#x2F;li&gt;
+&lt;li&gt;induction variable elimination&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;other control structures
+&lt;ul&gt;
+&lt;li&gt;code hoisting&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;interprocedural-analysis&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#interprocedural-analysis&quot; aria-label=&quot;Anchor link for: interprocedural-analysis&quot;&gt;Interprocedural analysis&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;within a program -- across procedures (flow graphs)&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;dataflow&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#dataflow&quot; aria-label=&quot;Anchor link for: dataflow&quot;&gt;Dataflow&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>Data flow analysis</title>
+        <published>2024-04-25T17:07:42+00:00</published>
+        <updated>2024-04-25T17:07:42+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/data-flow-analysis-info/" type="text/html"/>
+        <id>https://wendajiang.github.io/data-flow-analysis-info/</id>
+        <content type="html">&lt;h1 id=&quot;purpose-of-data-flow-analysis&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#purpose-of-data-flow-analysis&quot; aria-label=&quot;Anchor link for: purpose-of-data-flow-analysis&quot;&gt;Purpose of data flow analysis&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;It is a static analysis technique that proves facts about a program or its fragment. It can make conclusions about all paths through the program, while takeing control flow into account and scaling to large programs. The basic idea is propagating facts about the program through the edges of the control flow graph (CFG) until a fixpoint is reached.&lt;&#x2F;p&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>pointers are complicated</title>
+        <published>2023-12-21T14:46:37+00:00</published>
+        <updated>2023-12-21T14:46:37+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/pointers-are-complicated/" type="text/html"/>
+        <id>https://wendajiang.github.io/pointers-are-complicated/</id>
+        <content type="html">&lt;p&gt;Provenance notion for LLVM IR is important when implementing compiler which has pointer(e.g. Rust, C, C++).&lt;&#x2F;p&gt;
+&lt;p&gt;Otherwise, compiler optimization would cause error result.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;reference&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#reference&quot; aria-label=&quot;Anchor link for: reference&quot;&gt;reference&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.ralfj.de&#x2F;blog&#x2F;2020&#x2F;12&#x2F;14&#x2F;provenance.html&quot;&gt;src&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.open-std.org&#x2F;jtc1&#x2F;sc22&#x2F;wg14&#x2F;www&#x2F;docs&#x2F;n3005.pdf&quot;&gt;open-std Aprovenance-aware Memory Object Model for C&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;gcc.gnu.org&#x2F;bugzilla&#x2F;show_bug.cgi?id=82282s&quot;&gt;gcc(6.4.0) bug report&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+</feed>

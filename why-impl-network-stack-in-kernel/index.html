@@ -1,0 +1,77 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>【翻译】为什么协议栈在内核中实现 | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/why-impl-network-stack-in-kernel/ rel=canonical><meta content=【翻译】为什么协议栈在内核中实现 property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/why-impl-network-stack-in-kernel/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta property=og:updated_time><meta content=【翻译】为什么协议栈在内核中实现 property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/why-impl-network-stack-in-kernel/"
+      },
+      "headline": "【翻译】为什么协议栈在内核中实现",
+      "image": ,
+      "datePublished": "2021-10-20T17:39:41",
+      "dateModified": "",
+      "author": {
+        "@type": "Organization",
+        "name": "【翻译】为什么协议栈在内核中实现"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "【翻译】为什么协议栈在内核中实现",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Why Impl Network Stack In Kernel",
+            "item": "https://wendajiang.github.io/why-impl-network-stack-in-kernel/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><script>function initMermaid(){var a={startOnLoad:true,theme:"neutral",flowchart:{useMaxWidth:true,htmlLabels:true}};mermaid.initialize(a);window.mermaid.init(undefined,document.querySelectorAll('.mermaid'))}</script><script async onload=initMermaid() src=https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/why-impl-network-stack-in-kernel/#yong-hu-kong-jian-de-wang-luo>用户空间的网络</a><li><a href=https://wendajiang.github.io/why-impl-network-stack-in-kernel/#kernel-bypass-at-cloudflare>Kernel bypass at CloudFlare</a><li><a href=https://wendajiang.github.io/why-impl-network-stack-in-kernel/#wan-zheng-de-yong-hu-kong-jian-wang-luo-xie-yi-zhan-ni>完整的用户空间网络协议栈呢</a><li><a href=https://wendajiang.github.io/why-impl-network-stack-in-kernel/#jie-lun>结论</a></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>【翻译】为什么协议栈在内核中实现</h1><p><small>Posted 2021-10-20 17:39:41 ‐ <strong>10 min read</strong></small><p></div><p>为什么TCP协议栈实现在Linux内核中<p>https://blog.cloudflare.com/why-we-use-the-linux-kernels-tcp-stack<p>CloudFlare提出工作经验在于大量的生产环境的机器，尝试在这个角度给出理解。<p>从一个更广泛的问题切入---操作系统运行的意义是什么？如果是计划运行一个应用程序，必须使用数百万行代码组成内核，似乎是负担。但是事实上，我们会运行某种类型的OS，有两个理由：<ul><li>操作系统层提供了更容易使用的硬件抽象API，可以专注于写机器无关的代码<li>操作系统增加了时分系统，使得同一个时间可以运行多个应用，比如运行HTTP服务器和Bash session，在多个进程共享资源的能力是很重要的，纳入操作系统管理的资源可以被多个进程共享</ul><h3 id=yong-hu-kong-jian-de-wang-luo><a aria-label="Anchor link for: yong-hu-kong-jian-de-wang-luo" class=zola-anchor href=#yong-hu-kong-jian-de-wang-luo>用户空间的网络</a></h3><p>对于协议栈来说没有什么不同，通过操作系统网络协议栈的通用性，我们可以获得运行多个网络应用的能力。如果将网卡硬件运行用户空间的网络协议栈专用于运行单个应用，这个能力就没了。通过一个进程获取网卡，你将失去与服务同时运行比如SSH会话的能力<p>听起来很疯狂，这正是大多数现成的用户空间网络协议栈提出的。通用术语是“完全内核旁路（full kernel by pass）”，这个想法是绕过内核，直接从用户空间进程使用网络硬件。<p>在Linux生态系统中，有一些可用技术，并非全部都是开源的：<ul><li><a href=http://www.ntop.org/products/packet-capture/pf_ring/>PF_RING</a><li><a href=https://github.com/snabbco/snabb>Snabbswitch</a><li><a href=http://dpdk.org/>DPDK</a><li><a href=http://info.iet.unipi.it/~luigi/netmap/>Netmap</a></ul><p>在之前的文章中已经写过 <a href=https://blog.cloudflare.com/kernel-bypass/>kernelbypass</a>，所有的这些技术都需要将整个网卡移交给一个进程，换句话说：完全可以编写自己的网络协议栈，使其出色，专注于超级功能，并针对性进行性能优化。但是这会产生很大的成本---你将被限制为每个网卡最多运行一个进程。<p>关于虚拟化网卡（VFs），让我们专门提一下---这不起作用，在这篇文章中<a href=https://blog.cloudflare.com/kernel-bypass/#virtualizationapproach>the "Virtualization approach" paragraph</a>提到过。<p>但是即使有些障碍，我还是不能忽略kernel bypass的好处，许多人确实运行自定义的网络协议栈，因为两个原因：<ul><li>时延<li>性能（更低的CPU开销，更好的吞吐量）</ul><p>延迟对于HFT（高频交易）人员非常重要，交易者可以负担起定制硬件和专有的网络协议栈。运行封闭的TCP堆栈会让其非常不舒服<h3 id=kernel-bypass-at-cloudflare><a aria-label="Anchor link for: kernel-bypass-at-cloudflare" class=zola-anchor href=#kernel-bypass-at-cloudflare>Kernel bypass at CloudFlare</a></h3><p>就像已经说过的，CloudFlare使用旁路内核技术（kernel bypass）。我们属于第二个群体，关注性能。更具体地说，我们遭受IRQ风暴的影响。Linux网络协议栈有一个每秒处理多少包的限制。当达到限制后，所有的CPU变得忙，仅接受数据包。在这种情况下，要不丢弃数据包，要不应用程序卡死（CPU被占满）。一般我们不需要处理IRQ风暴，但是当受到L3层的DDos攻击时，确实会发生这种情况。这种攻击充斥着不属于有效连接的数据包，典型的欺骗数据包。<p>在受到攻击期间，我们被洪泛到每秒3M数据包量。Linux的iptables的通用规则可以处理1Mbps的包速很好，并且可以继续提供足够的CPU给应用使用。这个数字还可以通过调优有所提升。<p>当攻击的规模变大，Linux内核能力不足以应付时，我们必须能够处理这种情况，但是我们不采用前面提到的“full kernel bypass”，使用我们叫做"partial kernel bypass"。在内核拥有网络硬件的同时，允许我们处理仅通过一个“RX queue”旁路出来的数据包。我们在Solarflare NIC上使用Solarflare's EFVI API。为了支持Intel NIC，我们在<a href=https://blog.cloudflare.com/single-rx-queue-kernel-bypass-with-netmap/>Netmap</a>中添加了部分旁路内核的功能。通过这种技术，可以将防御DDoS iptables卸载到非常快速的用户空间进程中，这种可以避免Linux内核处理攻击数据包，从而避免IRQ风暴。<h3 id=wan-zheng-de-yong-hu-kong-jian-wang-luo-xie-yi-zhan-ni><a aria-label="Anchor link for: wan-zheng-de-yong-hu-kong-jian-wang-luo-xie-yi-zhan-ni" class=zola-anchor href=#wan-zheng-de-yong-hu-kong-jian-wang-luo-xie-yi-zhan-ni>完整的用户空间网络协议栈呢</a></h3><p>我的同事经常问我：为什么我们不适用快速用户空间TCP协议栈运行带有Solarflare OpenOnLoad框架的Nginx？是的，那将很快，但是没有证据表明它会产生多大的实际差异。我们服务器上的CPU大部分都用于运行用户空间的Nginx，操作系统并没有使用多少。CPU主要用于常规的Nginx记录和Lua应用逻辑，而不是网络处理。我估计使用旁路可以节省大约5~10%的CPU，但是这目前并不值得<p>其次，为了Nginx使用旁路内核技术将是的我们常用的调试工具失效。Linux netstat统计将停止记录，tcpdump也将失效。<p>然后缓解DDoS的部分旁路协议栈也存在一些问题，我们重度依赖iptables，。自定义的TCP协议栈没有类似'hashlimits'和'ipsets'这种功能。<p>而且不仅是防火墙功能，Linux TCP协议栈还提供了一些RFC4821 sys.net.ipv4.tcp_mut_probing sysctl 的非平凡支持。这些支持对于党用户位于ICMP黑洞后面时非常有用。（<a href=https://blog.cloudflare.com/path-mtu-discovery-in-practice/>PMTU</a>）<p>最后，每种TCP协议栈都有一些自己实现上的bug和quirks。我们已经整理了三种Linux协议栈中不明显的quirks：<ul><li>垃圾收集器插入读取缓冲区（https://blog.cloudflare.com/the-story-of-one-latency-spike/）<li>当太多的监听socket时的问题<li>套接字可写意味着什么（https://blog.cloudflare.com/the-curious-case-of-slow-downloads/）</ul><p>想象一下在封闭的源码或者年轻的TCP协议栈中调试问题。<h2 id=jie-lun><a aria-label="Anchor link for: jie-lun" class=zola-anchor href=#jie-lun>结论</a></h2><p>有两个主要话题：<p>首先，没有稳定开源的partial kernel bypass技术，我们希望Netmap能填补这个空白。其次，Linux内核TCP协议栈有许多重要特性和良好的debug能力。这个丰富的生态系统竞争将需要多年。<p>有很多理由用户空间协议栈不会成为主流，事实上，我只能想到有限应用需要旁路内核功能：<ul><li>软件交换机和路由器。这里你希望直接处理网络硬件的原始数据包，绕过内核<li>专用负载均衡器。相似地，如果机器只需要处理数据包，绕过内核就很有用<li>部分旁路为了挑选出来的高吞吐/低延迟的应用。这是我们对于DDoS的调整。不幸的是，我不知道其他的适合此场景的其他的开源TCP协议栈</ul><p>对于大多数用户Linux内核协议栈就是很好的选择。尽管没有重写TCP协议栈那么让人兴奋，we should focus on <a href=https://blog.cloudflare.com/how-to-achieve-low-latency/>understanding the Linux stack performance</a> and fixing its problems.There are some <a href=http://lists.openwall.net/netdev/2016/01/15/51>serious initiatives underway</a> to improve the performance of the good old Linux TCP stack.<p>@todo其中的链接看一下</article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'【翻译】为什么协议栈在内核中实现',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

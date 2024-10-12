@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - open source</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/open source/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2021-06-21T17:44:16+00:00</updated>
+    <id>https://wendajiang.github.io/tags/open source/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Rust is not company 读后感</title>
+        <published>2021-06-21T17:44:16+00:00</published>
+        <updated>2021-06-21T17:44:16+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/essay/rust-is-not-company/" type="text/html"/>
+        <id>https://wendajiang.github.io/essay/rust-is-not-company/</id>
+        <content type="html">&lt;!--
+mermaid example:
+&lt;div class=&quot;mermaid&quot;&gt;
+    mermaid program
+&lt;&#x2F;div&gt;
+--&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;blog.m-ou.se&#x2F;rust-is-not-a-company&#x2F;&quot;&gt;文章链接&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;关于项目的组织，结构&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;bu-shi-yi-ge-gong-si&quot;&gt;不是一个公司&lt;&#x2F;h2&gt;
+&lt;p&gt;在大多数公司中，有领导，股东；组织是树状的，从上到下的，上面制定目标，一层一层将目标分解细化为任务&lt;&#x2F;p&gt;
+&lt;p&gt;但是 Rust 这种开源项目完全不是这种结构，并且&lt;strong&gt;结构是反转的&lt;&#x2F;strong&gt;，目标和任务不是来自上层，而是每个贡献者&lt;&#x2F;p&gt;
+&lt;p&gt;比如，对于 &lt;code&gt;std::fmt&lt;&#x2F;code&gt; 这个库，应该重写一下以更高的性能，占用更少的内存，但是目标制定了，并没有人来做，毕竟不是公司，这行不通。通常如果一个贡献者对于格式化算法很有动力，并且做了一些工作。&lt;strong&gt;库团队的工作是授权给这个开发者，确保他的工作在主线上，review 修改并且给出行之有效的反馈，如果有太多人对同一个主题有兴趣，那么成立一个工作组来协调组织他们等&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;公司不会随机让新人去负责什么工作，但是如果做得好，开源组织就是这样的&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;ge-ren-mu-biao&quot;&gt;个人目标&lt;&#x2F;h2&gt;
+&lt;p&gt;开源项目比如 Rust，每个人参与进来是带着自己的目标和想法，甚至会存在冲突的目标。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;这也是为什么开源组织也需要管理团队&lt;&#x2F;strong&gt;，简单将数百人的目标叠加起来不可能工作。所以管理做的是，梳理所有人的目标到一些更确切的主题，并且努力将开发者引导到这条道路上。这就是为什么要经常组织讨论来确保所有人的想法互相不冲突。这与公司的模式显然不同，不是来自上层的目标，然后逐层分解&lt;&#x2F;p&gt;
+&lt;p&gt;同时很多开源项目，包括 Rust， 有一个全局的演进路线(roadmap)，但是这些必须基于所有个人贡献者才能成功。比如说“我们再 2021 年的目标是改进标准库中的格式化机制”可以授权给正在做相关主题的开发者，也能吸引想要在这个主题贡献的开发者。这会帮助贡献者，因为这意味管理会优先这方面管理的决策和代码 review。这有助于人们聚焦并且做得更多。但是如果没有贡献者，任何目标都没有意义。不像公司，开源项目不能强制人们花时间做事情，也不会雇佣人来分配任务&lt;&#x2F;p&gt;
+&lt;p&gt;这是好事，也是人们为什么想要给 Rust 提出贡献&lt;&#x2F;p&gt;
+&lt;p&gt;所以要将个人目标和总体路线结合的很巧妙才能使开源项目茁壮成长&lt;&#x2F;p&gt;
+&lt;p&gt;有些语言比如 Go 是由大公司从上到下管理的，并且也发展的很好，但是 Rust 不是，每个参与的开发者都是想要提升 Rust 而来，这是一件很美妙的事&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;fa-zhan-kong-jian-fa-li-ling-yu&quot;&gt;发展空间（发力领域）&lt;&#x2F;h2&gt;
+&lt;p&gt;不同的贡献者有着非常不同的目标，并且工作习惯，工作方式也大大不同，所以管理也需要不同的部分&lt;&#x2F;p&gt;
+&lt;p&gt;比如，有些想要开发语言的新特性，提交 RFC，并且与库团队进行讨论；有些想要进行编译器实现，提交 MCP(major change proposal) 并且与编译器团队进行讨论；有些想要给标准库提交 bugfix，可以提交 PR，然后请熟悉上下文的开发者 review 他们的代码&lt;&#x2F;p&gt;
+&lt;p&gt;换句话说，我们要为每位贡献者提供发力空间。工作空间，反馈空间，获取帮助的途径，获得认可的空间，任何贡献者需要的空间&lt;&#x2F;p&gt;
+&lt;p&gt;并且尽可能细化各个领域都组成团队进行管理，比如 库实现团队，库 API 设计团队&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;bao-chi-bian-hua&quot;&gt;保持变化&lt;&#x2F;h2&gt;
+&lt;p&gt;2018 年 Rust 的 crate 生态系统统一了包管理是为了努力去保证生态的一致性&lt;&#x2F;p&gt;
+&lt;p&gt;每个人的 Rust 愿望清单都有没有实现的事情，这不是一家有需要 ddl 和什么任务必须完成的公司。开源项目聚合的是一群多元且瞬息万变的人，想要实现自己的清单，并包括一群热情试图管理这一切的人，试图为实现的开发者提供良好空间的人&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;这就是所谓的社区管理？&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;所以要拥抱不断的变化，彼此赋予权力，每一步都朝着正确的方向迈出，开发者与项目一起成长&lt;&#x2F;p&gt;
+</content>
+    </entry>
+</feed>

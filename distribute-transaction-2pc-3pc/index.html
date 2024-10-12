@@ -1,0 +1,151 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>分布式事务:两阶段提交与三阶段提交 | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/distribute-transaction-2pc-3pc/ rel=canonical><meta content=分布式事务:两阶段提交与三阶段提交 property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/distribute-transaction-2pc-3pc/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta property=og:updated_time><meta content=分布式事务:两阶段提交与三阶段提交 property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/distribute-transaction-2pc-3pc/"
+      },
+      "headline": "分布式事务:两阶段提交与三阶段提交",
+      "image": ,
+      "datePublished": "2021-03-16T15:32:32",
+      "dateModified": "",
+      "author": {
+        "@type": "Organization",
+        "name": "分布式事务:两阶段提交与三阶段提交"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "分布式事务:两阶段提交与三阶段提交",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Distribute Transaction 2pc 3pc",
+            "item": "https://wendajiang.github.io/distribute-transaction-2pc-3pc/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><script>function initMermaid(){var a={startOnLoad:true,theme:"neutral",flowchart:{useMaxWidth:true,htmlLabels:true}};mermaid.initialize(a);window.mermaid.init(undefined,document.querySelectorAll('.mermaid'))}</script><script async onload=initMermaid() src=https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/distribute-transaction-2pc-3pc/#liang-jie-duan-ti-jiao-xie-yi-2pc-two-phase-commit>两阶段提交协议 (2PC: Two-Phase Commit )</a></li><ul><li><a href=https://wendajiang.github.io/distribute-transaction-2pc-3pc/#di-yi-jie-duan-tou-piao>第一阶段:投票</a><li><a href=https://wendajiang.github.io/distribute-transaction-2pc-3pc/#di-er-jie-duan-shi-wu-ti-jiao>第二阶段:事务提交</a></ul><li><a href=https://wendajiang.github.io/distribute-transaction-2pc-3pc/#san-jie-duan-ti-jiao-xie-yi-3pc-three-phase-commit>三阶段提交协议 (3PC: Three-Phase Commit)</a></li><ul><li><a href=https://wendajiang.github.io/distribute-transaction-2pc-3pc/#di-yi-jie-duan-yu-xun-pan>第一阶段:预询盘</a><li><a href=https://wendajiang.github.io/distribute-transaction-2pc-3pc/#di-er-jie-duan-yu-ti-jiao>第二阶段:预提交</a><li><a href=https://wendajiang.github.io/distribute-transaction-2pc-3pc/#di-san-jie-duan-shi-wu-ti-jiao>第三阶段:事务提交</a></ul></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>分布式事务:两阶段提交与三阶段提交</h1><p><small>Posted 2021-03-16 15:32:32 ‐ <strong>22 min read</strong></small><p><div class=category-area>「 <a href=https://wendajiang.github.io/tags/reprint> <div class=category>reprint</div> </a><a href="https://wendajiang.github.io/tags/distribute transaction"> <div class=category>distribute transaction</div> </a> 」</div></div><p><a href=https://segmentfault.com/a/1190000012534071>转载</a><p>在分布式系统中著有 CAP 理论，该理论由加州大学伯克利分校的 <a href=https://en.wikipedia.org/wiki/Eric_Brewer_(scientist)>Eric Brewer</a> 教授提出，阐述了在一个分布式系统中不可能同时满足一致性（ <strong>C</strong> onsistency）、可用性（ <strong>A</strong> vailability），以及分区容错性（ <strong>P</strong> artition Tolerance）。<ul><li><strong>一致性:</strong> 在分布式系统中数据往往存在多个副本，一致性描述的是这些副本中的数据在内容和组织上的一致。<li><strong>可用性:</strong> 描述系统对用户的服务能力，所谓可用是指在用户能够容忍的时间范围内返回用户期望的结果。<li><strong>分区容错性:</strong> 分布式系统通常由多个节点构成，由于网络是不可靠的，所以存在分布式集群中的节点因为网络通信故障导致被孤立成一个个小集群的可能性，即网络分区，分区容错性要求在出现网络分区时系统仍然能够对外提供一致性的可用服务。</ul><p>对于一个分布式系统而言，我们要始终假设网络是不可靠的，因此分区容错性是对一个分布式系统最基本的要求，我们的切入点更多的是尝试在可用性和一致性之间寻找一个平衡点，但这也并非要求我们在系统设计时一直建立在网络出现分区的前提之上，然后对一致性和可用性在选择时非此即彼。<p>Eric Brewer 教授在 2012 年就曾指出 <strong>CAP 理论证明不能同时满足一致性、可用性，以及分区容错性的观点在实际系统设计指导上存在一定的误导性。</strong> 传统对于 CAP 理论的理解认为在设计分布式系统时必须满足 P，然后在 C 和 A 之间进行取舍，这是片面的。实际中网络出现分区的可能性还是比较小的，尤其是目前网络环境正在变得越来越好，甚至许多系统都拥有专线支撑，所以在网络未出现分区时，还是应该兼顾 A 和 C。另外就是对于一致性、可用性，以及分区容错性三者在度量上也应该有一个评定范围，最简单的以可用性来说，当有多少占比请求出现响应超时才可以被认为是不满足可用性，而不是一出现超时就认为是不可用的。最后我们需要考虑的一点就是分布式系统一般都是一个比较大且复杂的系统，我们应该从更小的粒度上对各个子系统进行评估和设计，而不是简单的从整体上武断决策。<p>让分布式集群始终对外提供可用的一致性服务一直是富有挑战和趣味的任务。暂且抛开可用性，拿一致性来说，对于关系型数据库我们通常利用事务来保证数据的强一致性，但是当我们的数据量越来越大，大到单库已经无法承担时，我们不得不采取分库分表的策略对数据库实现水平拆分，或者引入 NoSQL 技术，构建分布式数据库集群以分摊读写压力，从而提升数据库的存储和响应能力，但是多个数据库实例也为我们使用数据库带来了许多的限制，比如主键的全局唯一、联表查询、数据聚合等等，另外一个相当棘手的问题就是数据库的事务由原先的单库事务变成了现在的分布式事务。<p>分布式事务的实现并不是无解的，比如下文要展开的两阶段提交（2PC:Two-Phase Commit）和三阶段提交（3PC:Three-Phase Commit）都给我们提供了思路，但是在分布式环境下如何保证数据的强一致性，并对外提供高可用的服务还是相当棘手的，因此很多分布式系统对于数据强一致性都敬而远之。<h2 id=liang-jie-duan-ti-jiao-xie-yi-2pc-two-phase-commit><a aria-label="Anchor link for: liang-jie-duan-ti-jiao-xie-yi-2pc-two-phase-commit" class=zola-anchor href=#liang-jie-duan-ti-jiao-xie-yi-2pc-two-phase-commit>两阶段提交协议 (2PC: Two-Phase Commit )</a></h2><p>两阶段提交协议的目标是在于为分布式系统保证数据的一致性，许多分布式协议采用该协议提供对分布式事务的支持。顾名思义，该协议将一个分布式的事务过程拆分为两个阶段:<strong>投票</strong>和<strong>事务提交</strong>。为了让整个数据库集群能够正常运营，改协议指定了一个<strong>协调者</strong>单点，用于协调整个数据库集群各节点的运行。为了简化描述，我们将数据库集群中的各个节点称为参与者，三阶段提交协议中同样包含协调者和参与者这两个角色定义。<h3 id=di-yi-jie-duan-tou-piao><a aria-label="Anchor link for: di-yi-jie-duan-tou-piao" class=zola-anchor href=#di-yi-jie-duan-tou-piao>第一阶段:投票</a></h3><p>该阶段的主要目的是在于打探数据库集群中的各个参与者是否能够正常执行事务，具体步骤如下:<ol><li>协调者向所有的参与者发送事务执行请求，并等待参与者反馈事务执行结果<li>事务参与者收到请求后，执行事务但是不提交，并记录事务日志<li>参与者将自己事务执行情况反馈给协调者，同时阻塞等待协调者的后续指令</ol><h3 id=di-er-jie-duan-shi-wu-ti-jiao><a aria-label="Anchor link for: di-er-jie-duan-shi-wu-ti-jiao" class=zola-anchor href=#di-er-jie-duan-shi-wu-ti-jiao>第二阶段:事务提交</a></h3><p>经过第一阶段的协调者询问之后，各个参与者回复自己事务的执行情况，存在三种可能:<ol><li>所有参与者都回复能正常执行事务<li>一个或者多个参与者回复事务执行失败<li>协调者等待超时</ol><p>对于第一种情况，协调者向所有参与者发出提交事务的通知，具体步骤如下:<pre class=mermaid>
+  sequenceDiagram;
+  协调者 ->> 参与者集群:1. 询问各参与者事务是否可以正常执行;
+  参与者集群 ->> 参与者集群:1.1 执行事务，但不提交;
+  参与者集群 ->> 协调者:1.2 所有参与者均能成功执行事务;
+  协调者 ->> 参与者集群:2. 向所有参与者发起事务提交通知;
+  参与者集群 ->> 参与者集群:2.1 提交事务，并释放资源;
+  参与者集群 ->> 协调者:2.2 反馈事务提交结果;
+</pre><p>对于第二或者第三种情况，协调者认为参与者无法成功执行事务，为了整个集群的数据一致性，所以要向各个参与者发送事务回滚通知，具体步骤如下:<pre class=mermaid>
+  sequenceDiagram;
+  协调者 ->> 参与者集群:1. 询问各参与者事务是否可以正常执行;
+  参与者集群 ->> 参与者集群:1.1 执行事务，但不提交;
+  参与者集群 ->> 协调者:1.2 一个或者多个事务为成功执行，或者未在约定时间内返回结果;
+  协调者 ->> 参与者集群:2. 向所有参与者发起事务回滚通知;
+  参与者集群 ->> 参与者集群:2.1 回滚事务，并释放资源;
+  参与者集群 ->> 协调者:2.2 反馈事务回滚结果;
+</pre><p>两阶段提交协议是为了解决分布式数据库的强一致性问题，实际应用中更多用来解决事务操作的原子性，下图描绘了协调者参与者的状态转换:</p><center> <pre class=mermaid>
+  stateDiagram-v2
+    S --> WAIT: vote request
+    WAIT --> ROLLBACK: some fail
+    WAIT --> COMMIT: all success
+    ROLLBACK --> E
+    COMMIT --> E
+</pre> 协调者状态转换 </center><center> <pre class=mermaid>
+  stateDiagram-v2
+    S --> READY: vote response
+    S --> ROLLBACK: timeout
+    READY --> ROLLBACK: do rollback
+    READY --> COMMIT: do commit
+    ROLLBACK --> E
+    COMMIT --> E
+</pre> 参与者状态转换 </center> 站在协调者的角度，在发起投票之后就进入了 WAIT 状态，等待所有参与者回复各自事务执行状态，并在收到所有参与者的回复后决策下一步是发送 commit 或 rollback 信息。站在参与者的角度，当回复完协调者的投票请求之后便进入 READY 状态（能够正常执行事务），接下去就是等待协调者最终的决策通知，一旦收到通知便可依据决策执行 commit 或 rollback 操作。 <p>两阶段提交协议原理简单、易于实现，但是缺点也是显而易见的，包含如下:<ul><li><strong>单点问题</strong></ul><p>协调者在整个两阶段提交过程中扮演着举足轻重的作用，一旦协调者所在服务器宕机，就会影响整个数据库集群的正常运行。比如在第二阶段中，如果协调者因为故障不能正常发送事务提交或回滚通知，那么参与者们将一直处于阻塞状态，整个数据库集群将无法提供服务。<ul><li><strong>同步阻塞</strong></ul><p>两阶段提交执行过程中，所有的参与者都需要听从协调者的统一调度，期间处于阻塞状态而不能从事其他操作，这样效率极其低下。<ul><li><strong>数据不一致性</strong></ul><p>两阶段提交协议虽然是分布式数据强一致性所设计，但仍然存在数据不一致性的可能性。比如在第二阶段中，假设协调者发出了事务 commit 通知，但是因为网络问题该通知仅被一部分参与者所收到并执行了 commit 操作，其余的参与者则因为没有收到通知一直处于阻塞状态，这时候就产生了数据的不一致性。<p>针对上述问题可以引入 <strong>超时机制</strong> 和 <strong>互询机制</strong> 在很大程度上予以解决。<p>对于协调者来说如果在指定时间内没有收到所有参与者的应答，则可以自动退出 WAIT 状态，并向所有参与者发送 rollback 通知。对于参与者来说如果位于 READY 状态，但是在指定时间内没有收到协调者的第二阶段通知，则不能武断地执行 rollback 操作，因为协调者可能发送的是 commit 通知，这个时候执行 rollback 就会导致数据不一致。<p>此时，我们可以介入互询机制，让参与者 A 去询问其他参与者 B 的执行情况。如果 B 执行了 rollback 或 commit 操作，则 A 可以大胆的与 B 执行相同的操作；如果 B 此时还没有到达 READY 状态，则可以推断出协调者发出的肯定是 rollback 通知；如果 B 同样位于 READY 状态，则 A 可以继续询问另外的参与者。只有当所有的参与者都位于 READY 状态时，此时两阶段提交协议无法处理，将陷入长时间的阻塞状态。<h2 id=san-jie-duan-ti-jiao-xie-yi-3pc-three-phase-commit><a aria-label="Anchor link for: san-jie-duan-ti-jiao-xie-yi-3pc-three-phase-commit" class=zola-anchor href=#san-jie-duan-ti-jiao-xie-yi-3pc-three-phase-commit>三阶段提交协议 (3PC: Three-Phase Commit)</a></h2><p>针对两阶段提交存在的问题，三阶段提交协议通过引入一个 <strong>预询盘</strong> 阶段，以及超时策略来减少整个集群的阻塞时间，提升系统性能。三阶段提交的三个阶段分别为:预询盘（can_commit）、预提交（pre_commit），以及事务提交（do_commit）。<h4 id=di-yi-jie-duan-yu-xun-pan><a aria-label="Anchor link for: di-yi-jie-duan-yu-xun-pan" class=zola-anchor href=#di-yi-jie-duan-yu-xun-pan>第一阶段:预询盘</a></h4><p>该阶段协调者会去询问各个参与者是否能够正常执行事务，参与者根据自身情况回复一个预估值，相对于真正的执行事务，这个过程是轻量的，具体步骤如下:<ol><li>协调者向各个参与者发送事务询问通知，询问是否可以执行事务操作，并等待回复；<li>各个参与者依据自身状况回复一个预估值，如果预估自己能够正常执行事务就返回确定信息，并进入预备状态，否则返回否定信息。</ol><h4 id=di-er-jie-duan-yu-ti-jiao><a aria-label="Anchor link for: di-er-jie-duan-yu-ti-jiao" class=zola-anchor href=#di-er-jie-duan-yu-ti-jiao>第二阶段:预提交</a></h4><p>本阶段协调者会根据第一阶段的询盘结果采取相应操作，询盘结果主要有 3 种:<ol><li>所有的参与者都返回确定信息。<li>一个或多个参与者返回否定信息。<li>协调者等待超时。</ol><p>针对第 1 种情况，协调者会向所有参与者发送事务执行请求，具体步骤如下:<ol><li>协调者向所有的事务参与者发送事务执行通知；<li>参与者收到通知后执行事务但不提交；<li>参与者将事务执行情况返回给客户端。</ol><p><strong>在上述步骤中，如果参与者等待超时，则会中断事务。</strong> 针对第 2 和第 3 种情况，协调者认为事务无法正常执行，于是向各个参与者发出 abort 通知，请求退出预备状态，具体步骤如下:<ol><li>协调者向所有事务参与者发送 abort 通知；<li>参与者收到通知后中断事务。</ol><pre class=mermaid>
+  sequenceDiagram;
+  协调者 ->> 参与者集群:1. 向各个参与者发送 can_commit 请求，询问是否可以执行事务;
+  参与者集群 ->> 协调者:1.1 如果存在一个或者多个参与者返回不能执行事务，或者超时;
+  协调者 ->> 参与者集群:2. 向各个参与者发送 abort 通知;
+  参与者集群 ->> 参与者集群:2.1 收到通知或者等待超时，执行中断事务操作;
+</pre><h4 id=di-san-jie-duan-shi-wu-ti-jiao><a aria-label="Anchor link for: di-san-jie-duan-shi-wu-ti-jiao" class=zola-anchor href=#di-san-jie-duan-shi-wu-ti-jiao>第三阶段:事务提交</a></h4><p>如果第二阶段事务未中断，那么本阶段协调者将会依据事务执行返回的结果来决定提交或回滚事务，分为 3 种情况:<ol><li>所有的参与者都能正常执行事务。<li>一个或多个参与者执行事务失败。<li>协调者等待超时。</ol><p>针对第 1 种情况，协调者向各个参与者发起事务提交请求，具体步骤如下:<ol><li>协调者向所有参与者发送事务 commit 通知；<li>所有参与者在收到通知之后执行 commit 操作，并释放占有的资源；<li>参与者向协调者反馈事务提交结果。</ol><pre class=mermaid>
+  sequenceDiagram;
+  协调者 ->> 参与者集群:1. 向各个参与者发送 can_commit 请求，询问是否可以执行事务;
+  参与者集群 ->> 协调者:1.1 如果存在一个或者多个参与者返回不能执行事务，或者超时;
+  协调者 ->> 参与者集群:2. 向各个参与者发送 pre_commit 请求;
+  参与者集群 ->> 参与者集群:2.1 执行事务操作，但不提交;
+  参与者集群 ->> 协调者:2.2 返回事务执行结果;
+  协调者 ->> 协调者:3. 所有参与者均能执行正常事务;
+  协调者 ->> 参与者集群:4. 向各个参与者发送提交通知;
+  参与者集群 ->> 参与者集群:4.1 收到提交通知，提交事务;
+  协调者 ->> 参与者集群:4.2 返回事务提交结果;
+</pre><p>针对第 2 和 3 种情况，协调者认为事务无法成功执行，于是向各个参与者发送事务回滚请求，具体步骤如下:<ol><li>协调者向所有参与者发送事务 rollback 通知<li>所有参与者在收到通知之后执行 rollback 操作，并释放占有的资源<li>参与者向协调者反馈事务回滚操作</ol><pre class=mermaid>
+  sequenceDiagram
+  协调者 ->> 参与者集群:1. 向各个参与者发送 can_commit 请求，询问是否可以执行事务
+  参与者集群 ->> 协调者:1.1 各个参与者都能执行事务，返回确定信息
+  协调者 ->> 参与者集群:2. 向各个参与者发送 pre_commit 请求
+  参与者集群 ->> 参与者集群:2.1 执行事务操作，但不提交
+  参与者集群 ->> 协调者:2.2 返回事务执行结果
+  协调者 ->> 协调者:3. 如果存在一个或者多个事务不能正常执行，或者等待超时
+  协调者 ->> 参与者集群:4. 向各个参与者发送回滚通知
+  参与者集群 ->> 参与者集群:4.1 收到回滚通知，执行回滚操作
+  协调者 ->> 参与者集群:4.2 返回事务回滚结果
+</pre><p>在本阶段如果协调者或者网络问题，导致参与者迟迟不能收到来自协调者的 commit 或者 rollback 请求，那么参与者将不会如两阶段提交中那样陷入阻塞，而是等待超时后继续 commit，相对于两阶段提交虽然降低了同步阻塞，但是还是无法完全避免数据的不一致</p><center> <pre class=mermaid>
+  stateDiagram-v2
+    S --> WAIT: vote request
+    WAIT --> ABORT: some fail
+    WAIT --> PRE_COMMIT: all success
+    PRE_COMMIT --> ROLLBACK: some fail
+    PRE_COMMIT --> COMMIT: all success
+    ABORT --> E
+    ROLLBACK --> E
+    COMMIT --> E
+</pre> 协调者状态转换 </center><center> <pre class=mermaid>
+  stateDiagram-v2
+    S --> READY: vote response
+    S --> ABORT: timeout
+    READY --> ABORT: do rollback
+    READY --> PRE_COMMIT: do commit
+    PRE_COMMIT --> ROLLBACK: some failed
+    PRE_COMMIT --> COMMIT: all success
+    ABORT --> E
+    ROLLBACK --> E
+    COMMIT --> E
+</pre> 参与者状态转换 </center><p>两阶段提交中存在的长时间阻塞状态发生的状态还是非常低，所以虽然三阶段提交协议相对于两阶段提交协议对于数据强一致性更有保障，但是因为效率问题，两阶段提交协议在实际系统中反而更加受宠。</article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'分布式事务:两阶段提交与三阶段提交',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

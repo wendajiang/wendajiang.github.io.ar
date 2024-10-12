@@ -1,0 +1,726 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - linux</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/linux/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-02-23T19:25:01+00:00</updated>
+    <id>https://wendajiang.github.io/tags/linux/atom.xml</id>
+    <entry xml:lang="en">
+        <title>How to check the port if used in unix&#x2F;linux</title>
+        <published>2024-02-23T19:25:01+00:00</published>
+        <updated>2024-02-23T19:25:01+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/check-port-if-used-in-linux/" type="text/html"/>
+        <id>https://wendajiang.github.io/check-port-if-used-in-linux/</id>
+        <content type="html">&lt;h2 id=&quot;how-to-check-if-port-is-in-use&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#how-to-check-if-port-is-in-use&quot; aria-label=&quot;Anchor link for: how-to-check-if-port-is-in-use&quot;&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.cyberciti.biz&#x2F;faq&#x2F;unix-linux-check-if-port-is-in-use-command&#x2F;&quot;&gt;How to check if port is in use&lt;&#x2F;a&gt;&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;To check the listening ports and applications on Linux:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Open a terminal application i.e. shell prompt.&lt;&#x2F;li&gt;
+&lt;li&gt;Run any one of the following command on Linux to see open ports:&lt;pre data-lang=&quot;shell&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-shell &quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span&gt;$ sudo lsof -i -P -n | grep LISTEN
+&lt;&#x2F;span&gt;&lt;span&gt;$ sudo netstat -tulpn | grep LISTEN
+&lt;&#x2F;span&gt;&lt;span&gt;$ sudo ss -tulpn | grep LISTEN
+&lt;&#x2F;span&gt;&lt;span&gt;$ sudo lsof -i:22 ## see a specific port such as 22 ##
+&lt;&#x2F;span&gt;&lt;span&gt;$ sudo nmap -sTU -O IP-address-Here
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;For the latest version of Linux use the ss command. For example, &lt;code&gt;ss -tulwnp&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;Let us see commands and its output in details.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;option-1-lsof-command&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#option-1-lsof-command&quot; aria-label=&quot;Anchor link for: option-1-lsof-command&quot;&gt;Option #1: lsof command&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;The syntax is:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;shell&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-shell &quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span&gt;$ sudo lsof -i -P -n
+&lt;&#x2F;span&gt;&lt;span&gt;$ sudo lsof -i -P -n | grep LISTEN
+&lt;&#x2F;span&gt;&lt;span&gt;$ doas lsof -i -P -n | grep LISTEN # OpenBSD #
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;option-2-netstat-or-ss-command&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#option-2-netstat-or-ss-command&quot; aria-label=&quot;Anchor link for: option-2-netstat-or-ss-command&quot;&gt;Option #2: netstat or ss command&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;You can check the listening ports and applications with netstat as follows.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;linux-netstat-syntax&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#linux-netstat-syntax&quot; aria-label=&quot;Anchor link for: linux-netstat-syntax&quot;&gt;Linux netstat syntax&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;strong&gt;Prerequisite&lt;&#x2F;strong&gt;
+By default, &lt;code&gt;netstat&lt;&#x2F;code&gt; command may not be installed on your system. Hence, use the &lt;a href=&quot;https:&#x2F;&#x2F;www.cyberciti.biz&#x2F;faq&#x2F;10-alpine-linux-apk-command-examples&#x2F;&quot;&gt;apk command&lt;&#x2F;a&gt; on Alpine Linux, dnf command&#x2F;&lt;a href=&quot;https:&#x2F;&#x2F;www.cyberciti.biz&#x2F;faq&#x2F;rhel-centos-fedora-linux-yum-command-howto&#x2F;&quot;&gt;yum command&lt;&#x2F;a&gt; on RHEL &amp;amp; co, &lt;a href=&quot;https:&#x2F;&#x2F;www.cyberciti.biz&#x2F;faq&#x2F;ubuntu-lts-debian-linux-apt-command-examples&#x2F;&quot;&gt;apt command&lt;&#x2F;a&gt;&#x2F;&lt;a href=&quot;https:&#x2F;&#x2F;www.cyberciti.biz&#x2F;tips&#x2F;linux-debian-package-management-cheat-sheet.html&quot;&gt;apt-get command&lt;&#x2F;a&gt; on Debian, Ubuntu &amp;amp; co, zypper command on SUSE&#x2F;OpenSUSE, pacman command on Arch Linux to install the &lt;code&gt;netstat&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Run the netstat command along with &lt;a href=&quot;https:&#x2F;&#x2F;www.cyberciti.biz&#x2F;faq&#x2F;howto-use-grep-command-in-linux-unix&#x2F;&quot;&gt;grep command&lt;&#x2F;a&gt; to filter out port in LISTEN state:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;shell&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-shell &quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span&gt;$ netstat -tulpn | grep LISTEN
+&lt;&#x2F;span&gt;&lt;span&gt;$ netstat -tulpn | more
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;OR filter out specific TCP port such as 443:
+&lt;code&gt;$ netstat -tulpn | grep &#x27;:443&#x27;&lt;&#x2F;code&gt;
+Where netstat command options are:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;-t&lt;&#x2F;strong&gt; : Select all TCP ports&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;-u&lt;&#x2F;strong&gt; : Select all UDP ports&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;-l&lt;&#x2F;strong&gt; : Show listening server sockets (open TCP and UDP ports in listing state)&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;-p&lt;&#x2F;strong&gt; : Display PID&#x2F;Program name for sockets. In other words, this option tells who opened the TCP or UDP port. For example, on my system, Nginx opened TCP port 80&#x2F;443, so I will &#x2F;usr&#x2F;sbin&#x2F;nginx or its PID.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;-n&lt;&#x2F;strong&gt; : Don’t resolve name (avoid dns lookup, this speed up the netstat on busy Linux&#x2F;Unix servers)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;The netstat command deprecated for some time on Linux. Therefore, you need to use the ss command as follows:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;shell&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-shell &quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span&gt;$ sudo ss -tulw
+&lt;&#x2F;span&gt;&lt;span&gt;$ sudo ss -tulwn
+&lt;&#x2F;span&gt;&lt;span&gt;$ sudo ss -tulwn | grep LISTEN
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Where, ss command options are as follows:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;-t&lt;&#x2F;strong&gt; : Show only TCP sockets on Linux&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;-u&lt;&#x2F;strong&gt; : Display only UDP sockets on Linux&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;-l&lt;&#x2F;strong&gt; : Show listening sockets. For example, TCP port 22 is opened by SSHD server.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;-p&lt;&#x2F;strong&gt; : List process name that opened sockets&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;-n&lt;&#x2F;strong&gt; : Don’t resolve service names i.e. don’t use DNS&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Related: &lt;a href=&quot;https:&#x2F;&#x2F;www.cyberciti.biz&#x2F;faq&#x2F;what-process-has-open-linux-port&#x2F;&quot;&gt;Linux Find Out Which Process Is Listening Upon a Port&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;freebsd-macos-os-x-netstat-syntax&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#freebsd-macos-os-x-netstat-syntax&quot; aria-label=&quot;Anchor link for: freebsd-macos-os-x-netstat-syntax&quot;&gt;FreeBSD&#x2F;macOS (OS X) netstat syntax&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;The syntax is as follows:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;shell&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-shell &quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span&gt;$ netstat -anp tcp | grep LISTEN
+&lt;&#x2F;span&gt;&lt;span&gt;$ netstat -anp udp | grep LISTEN
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You can use the sockstat command on macOS or &lt;a href=&quot;https:&#x2F;&#x2F;www.cyberciti.biz&#x2F;faq&#x2F;freebsd-unix-find-the-process-pid-listening-on-a-certain-port-commands&#x2F;&quot;&gt;FreeBSD to display open TCP or UDP ports&lt;&#x2F;a&gt; too. For example:
+&lt;code&gt;{vivek@freebsd13-server:~}$ sudo sockstat -4 -6 -l&lt;&#x2F;code&gt;
+Outputs from my &lt;a href=&quot;https:&#x2F;&#x2F;www.cyberciti.biz&#x2F;faq&#x2F;how-to-find-out-freebsd-version-and-patch-level-number&#x2F;&quot;&gt;FreeBSD server version&lt;&#x2F;a&gt; 13.xx:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;USER     COMMAND    PID   FD PROTO  LOCAL ADDRESS         FOREIGN ADDRESS      
+&lt;&#x2F;span&gt;&lt;span&gt;root     master     1723  13 tcp4   127.0.0.1:25          *:*
+&lt;&#x2F;span&gt;&lt;span&gt;root     master     1723  14 tcp4   192.168.2.20:25       *:*
+&lt;&#x2F;span&gt;&lt;span&gt;root     sshd       1627  3  tcp6   *:22                  *:*
+&lt;&#x2F;span&gt;&lt;span&gt;root     sshd       1627  4  tcp4   *:22                  *:*
+&lt;&#x2F;span&gt;&lt;span&gt;ntpd     ntpd       1615  20 udp6   *:123                 *:*
+&lt;&#x2F;span&gt;&lt;span&gt;ntpd     ntpd       1615  21 udp4   *:123                 *:*
+&lt;&#x2F;span&gt;&lt;span&gt;ntpd     ntpd       1615  22 udp4   192.168.2.20:123      *:*
+&lt;&#x2F;span&gt;&lt;span&gt;ntpd     ntpd       1615  23 udp6   ::1:123               *:*
+&lt;&#x2F;span&gt;&lt;span&gt;ntpd     ntpd       1615  24 udp6   fe80::1%lo0:123       *:*
+&lt;&#x2F;span&gt;&lt;span&gt;ntpd     ntpd       1615  25 udp4   127.0.0.1:123         *:*
+&lt;&#x2F;span&gt;&lt;span&gt;ntpd     ntpd       1615  26 udp4   172.16.0.5:123        *:*
+&lt;&#x2F;span&gt;&lt;span&gt;root     syslogd    1085  6  udp6   *:514                 *:*
+&lt;&#x2F;span&gt;&lt;span&gt;root     syslogd    1085  7  udp4   *:514                 *:*
+&lt;&#x2F;span&gt;&lt;span&gt;?        ?          ?     ?  udp4   *:17890               *:*
+&lt;&#x2F;span&gt;&lt;span&gt;?        ?          ?     ?  udp6   *:17890               *:*
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;option-3-nmap-command&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#option-3-nmap-command&quot; aria-label=&quot;Anchor link for: option-3-nmap-command&quot;&gt;Option #3: nmap command&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;The syntax is:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;shell&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-shell &quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span&gt;$ sudo nmap -sT -O localhost# search for open port IP address 192.168.2.13
+&lt;&#x2F;span&gt;&lt;span&gt;$ sudo nmap -sU -O 192.168.2.13 ##[ list open UDP ports ]
+&lt;&#x2F;span&gt;&lt;span&gt;$ sudo nmap -sT -O 192.168.2.13 ##[ list open TCP ports ]
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You can combine TCP&#x2F;UDP scan in a single command:
+&lt;code&gt;$ sudo nmap -sTU -O 192.168.2.13&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;testing-if-a-port-is-open-from-a-bash-script&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#testing-if-a-port-is-open-from-a-bash-script&quot; aria-label=&quot;Anchor link for: testing-if-a-port-is-open-from-a-bash-script&quot;&gt;Testing if a port is open from a bash script&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;One can use the “&lt;code&gt;&#x2F;dev&#x2F;tcp&#x2F;{HostName}_OR_{IPAddrress}&amp;gt;&#x2F;{port}&lt;&#x2F;code&gt;” syntax to check if a TCP port is open on a Linux or Unix machine when using Bash. In other words, the following is Bash specific feature. Let us see if TCP port 22 is open on localhost and 192.168.2.20:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;shell&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-shell &quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span&gt;$ (echo &amp;gt;&#x2F;dev&#x2F;tcp&#x2F;localhost&#x2F;23) &amp;amp;&amp;gt;&#x2F;dev&#x2F;null &amp;amp;&amp;amp; echo &amp;quot;open&amp;quot; || echo &amp;quot;close&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;$ (echo &amp;gt;&#x2F;dev&#x2F;tcp&#x2F;192.168.2.20&#x2F;22) &amp;amp;&amp;gt;&#x2F;dev&#x2F;null &amp;amp;&amp;amp; echo &amp;quot;open&amp;quot; || echo &amp;quot;close&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Now we can build some logic as follows:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;#!&#x2F;bin&#x2F;bash
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;dest_box&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;aws-prod-server-42&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;Testing the ssh connectivity ... &amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;if ! &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;dev&#x2F;tcp&#x2F;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;dest_box&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;22) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;dev&#x2F;null
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;then
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt; cannot connect to the $&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;dest_box&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;. Check your vpn connectivity.&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;else
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;Running the ansible playboook ...&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;ansible-playbook&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -i&lt;&#x2F;span&gt;&lt;span&gt; hosts&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; --ask-vault-pass --extra-vars &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;#39;@cluster.data.yml&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt; main.yaml
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;fi
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;what-if-i-m-not-using-bash&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-if-i-m-not-using-bash&quot; aria-label=&quot;Anchor link for: what-if-i-m-not-using-bash&quot;&gt;What if I’m not using Bash…&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Try the nc command as follows:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;shell&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-shell &quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span&gt;$ nc -w {timeout} -zv {server_IP_hostname} {tcp_port} &amp;amp;&amp;gt;&#x2F;dev&#x2F;null &amp;amp;&amp;amp; echo &amp;quot;Open&amp;quot; || echo &amp;quot;Close&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;$ nc -w 5 -zv 192.168.2.20 23 &amp;amp;&amp;gt;&#x2F;dev&#x2F;null &amp;amp;&amp;amp; echo &amp;quot;TCP&#x2F;23 Open&amp;quot; || echo &amp;quot;TCP&#x2F;23 Close&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The updated Bash script:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;shell&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-shell &quot;&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span&gt;#!&#x2F;bin&#x2F;bash
+&lt;&#x2F;span&gt;&lt;span&gt;dest_box=&amp;quot;aws-prod-server-42&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;timeout=&amp;quot;5&amp;quot; # timeouts in seconds
+&lt;&#x2F;span&gt;&lt;span&gt;echo &amp;quot;Testing the ssh connectivity in $timeout seconds ... &amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;# make sure &amp;#39;nc&amp;#39; is installed, else die ..
+&lt;&#x2F;span&gt;&lt;span&gt;if ! type -a nc &amp;amp;&amp;gt;&#x2F;dev&#x2F;null
+&lt;&#x2F;span&gt;&lt;span&gt;then
+&lt;&#x2F;span&gt;&lt;span&gt;    echo &amp;quot;$0 - nc command not found. Please install nc and run the script again.&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    exit 1
+&lt;&#x2F;span&gt;&lt;span&gt;fi
+&lt;&#x2F;span&gt;&lt;span&gt;if !  nc -w &amp;quot;$timeout&amp;quot; -zv &amp;quot;${dest_box}&amp;quot; 22  &amp;amp;&amp;gt;&#x2F;dev&#x2F;null
+&lt;&#x2F;span&gt;&lt;span&gt;then
+&lt;&#x2F;span&gt;&lt;span&gt;    echo &amp;quot;$0 cannot connect to the $dest_box. Check your vpn connectivity.&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    exit 1
+&lt;&#x2F;span&gt;&lt;span&gt;else
+&lt;&#x2F;span&gt;&lt;span&gt;    echo &amp;quot;Running the ansible playboook ...&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;    ansible-playbook -i hosts --ask-vault-pass --extra-vars &amp;#39;@cluster.data.yml&amp;#39; main.yaml
+&lt;&#x2F;span&gt;&lt;span&gt;fi
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;using-perl-to-check-if-a-tcp-port-is-open-in-linux-or-unix&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#using-perl-to-check-if-a-tcp-port-is-open-in-linux-or-unix&quot; aria-label=&quot;Anchor link for: using-perl-to-check-if-a-tcp-port-is-open-in-linux-or-unix&quot;&gt;Using Perl to check if a TCP port is open in Linux or Unix&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Here is a Perl script to check if TCP port 22 for OpenSSH is open with a 5-second timeout using &lt;a href=&quot;https:&#x2F;&#x2F;perldoc.perl.org&#x2F;IO::Socket::INET&quot;&gt;IO::Socket::INET&lt;&#x2F;a&gt;:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;perl&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-perl &quot;&gt;&lt;code class=&quot;language-perl&quot; data-lang=&quot;perl&quot;&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;#!&#x2F;usr&#x2F;bin&#x2F;perl -w 
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;IO&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;Socket&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;INET&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt; 
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;# Set server name and port here
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;$my_server&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;192.168.2.20&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;$my_server_tcp_port&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;22&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt; 
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;# make a new object
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;my &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;$server_test &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;IO&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;Socket&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;INET&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;new&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;PeerAddr &lt;&#x2F;span&gt;&lt;span&gt;=&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;$my_server&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;PeerPort &lt;&#x2F;span&gt;&lt;span&gt;=&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;$my_server_tcp_port&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;Proto &lt;&#x2F;span&gt;&lt;span&gt;=&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;#39;tcp&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;Timeout &lt;&#x2F;span&gt;&lt;span&gt;=&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;5
+&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt; 
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;# test it and die or continue as per your needs
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;$server_test&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;print &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;TCP port &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;$my_server_tcp_port&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt; is open for the &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;$my_server&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;print &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;Now doing something ...&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;close &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;$server_test&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;} 
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;else &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;print &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;TCP port &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;$my_server_tcp_port&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt; is closed or timed out for the &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;$my_server&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;python-example-to-check-if-a-tcp-port-is-open-in-linux-or-unix&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#python-example-to-check-if-a-tcp-port-is-open-in-linux-or-unix&quot; aria-label=&quot;Anchor link for: python-example-to-check-if-a-tcp-port-is-open-in-linux-or-unix&quot;&gt;Python example to check if a TCP port is open in Linux or Unix&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Try thise simple code that uses &lt;a href=&quot;https:&#x2F;&#x2F;docs.python.org&#x2F;3&#x2F;library&#x2F;socket.html&quot;&gt;low level socket&lt;&#x2F;a&gt; networking feature. For example:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;python&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-python &quot;&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;#!&#x2F;usr&#x2F;bin&#x2F;python3
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;# Tested on Python 3.6.xx and 3.8.xx only (updated from Python 2.x)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;socket
+&lt;&#x2F;span&gt;&lt;span&gt; 
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;# Create a new function 
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ff79c6;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;check_server_tcp_port&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;my_host_ip_name&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;my_tcp_port&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;timeout&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;5&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;    s &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;socket&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;socket&lt;&#x2F;span&gt;&lt;span&gt;(socket&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;AF_INET&lt;&#x2F;span&gt;&lt;span&gt;, socket&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;SOCK_STREAM&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    s&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;settimeout&lt;&#x2F;span&gt;&lt;span&gt;(timeout)
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;try&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;        s&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;connect&lt;&#x2F;span&gt;&lt;span&gt;((my_host_ip_name, my_tcp_port))
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;print&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;TCP port &lt;&#x2F;span&gt;&lt;span&gt;{my_tcp_port}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt; is open for the &lt;&#x2F;span&gt;&lt;span&gt;{my_host_ip_name}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;.&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;        s&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;close&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;True
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;except &lt;&#x2F;span&gt;&lt;span&gt;socket.timeout:
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;print&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;TCP port &lt;&#x2F;span&gt;&lt;span&gt;{my_tcp_port}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt; is closed or timed out for the &lt;&#x2F;span&gt;&lt;span&gt;{my_host_ip_name}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;.&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;False
+&lt;&#x2F;span&gt;&lt;span&gt; 
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;# Test it 
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;check_server_tcp_port&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;localhost&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;22&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;check_server_tcp_port&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;192.168.2.20&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;22&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#conclusion&quot; aria-label=&quot;Anchor link for: conclusion&quot;&gt;Conclusion&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;This page explained command to determining if a port is in use on Linux or Unix-like server. For more information see the &lt;a href=&quot;https:&#x2F;&#x2F;www.cyberciti.biz&#x2F;networking&#x2F;nmap-command-examples-tutorials&#x2F;&quot;&gt;nmap command&lt;&#x2F;a&gt; and lsof command page &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;lsof-org&#x2F;lsof&quot;&gt;online here&lt;&#x2F;a&gt; or by typing the &lt;a href=&quot;https:&#x2F;&#x2F;bash.cyberciti.biz&#x2F;guide&#x2F;Man_command&quot;&gt;man command&lt;&#x2F;a&gt; as follows:
+&lt;code&gt;$ man lsof$ man ss$ man netstat$ man nmap$ man 5 services$ man nc&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;see-also&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#see-also&quot; aria-label=&quot;Anchor link for: see-also&quot;&gt;See also&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.cyberciti.biz&#x2F;faq&#x2F;ping-test-a-specific-port-of-machine-ip-address-using-linux-unix&#x2F;&quot;&gt;How to ping and test for a specific port from Linux or Unix command line&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.cyberciti.biz&#x2F;tips&#x2F;bash-aliases-mac-centos-linux-unix.html&quot;&gt;30 Handy Bash Shell Aliases For Linux &#x2F; Unix &#x2F; MacOS&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.cyberciti.biz&#x2F;faq&#x2F;linux-port-scanning&#x2F;&quot;&gt;Linux and Unix Port Scanning With netcat {nc} Command&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.cyberciti.biz&#x2F;security&#x2F;nmap-command-examples-tutorials&#x2F;&quot;&gt;Nmap Command Examples For Linux Users &#x2F; Admins&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>【翻译】零拷贝的意义</title>
+        <published>2021-10-18T21:14:37+00:00</published>
+        <updated>2021-10-18T21:14:37+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/zero-copy/" type="text/html"/>
+        <id>https://wendajiang.github.io/zero-copy/</id>
+        <content type="html">&lt;!--
+mermaid example:
+&lt;div class=&quot;mermaid&quot;&gt;
+    mermaid program
+&lt;&#x2F;div&gt;
+--&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.linuxjournal.com&#x2F;article&#x2F;6345&quot;&gt;原文&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;shi-yao-shi-ling-kao-bei&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#shi-yao-shi-ling-kao-bei&quot; aria-label=&quot;Anchor link for: shi-yao-shi-ling-kao-bei&quot;&gt;什么是零拷贝&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;为了更好地理解解决了什么问题，首先要理解问题本身。我们来看下下面的代码发生了什么&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;read&lt;&#x2F;span&gt;&lt;span&gt;(file, tmp_buf, len);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;write&lt;&#x2F;span&gt;&lt;span&gt;(socket, tmp_buf, len);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;看起来简单，你可能觉得两次系统调用也不是多大的开销。实际上，远比你想象中的大。这两次系统调用之下，&lt;strong&gt;数据拷贝了四次&lt;&#x2F;strong&gt;，并且还有内核态和用户态之间的上下文切换（实际上这个进程更复杂，但是先保持这种程度的简化）。为了更好地了解这个进程的调用，看下图&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;zero_copy&#x2F;image-20211019174214718.png&quot; alt=&quot;image-20211019174214718&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;第一步：read 系统调用发生了用户态到内核态的切换。第一次拷贝由DMA执行，从 disk 读取文件内容到内核空间的 buffer&lt;&#x2F;p&gt;
+&lt;p&gt;第二步：数据从内核空间的 buffer 拷贝到用户空间的 buffer，然后 read 系统调用 return。return 又发生了内核态到用户态的切换。现在数据存储在用户态的 buffer 中&lt;&#x2F;p&gt;
+&lt;p&gt;第三步：write 系统调用发生了用户态到内核态的切换。第三次拷贝从用户空间 buffer 到内核空间 buffer，这次内核空间的buffer 与 socket 关联&lt;&#x2F;p&gt;
+&lt;p&gt;第四步：write 系统调用 return，触发了第四次上下文切换。单独异步的拷贝由DMA控制将数据从内核空间的 buffer 拷贝到协议栈中。你可能会问“什么叫独立异步？数据不是在return的时候就传输完成了吗？”事实上，return 并不保证传输完成；甚至不保证传输开始。可能在这次调用之前队列中有很多包，除非硬件驱动实现了优先队列，并且本次数据在第一优先级的队列中&lt;&#x2F;p&gt;
+&lt;p&gt;正如你所看到的，很多数据拷贝实际本不必要发生。有些拷贝可以规避掉来减少开销提升程序性能。对一个驱动开发者，硬件实际有很多增强功能。有些硬件支持 bypass 主存，直接从将数据传输到其他设备。这个特性可以减少系统存储中的拷贝，但并不是所有硬件都支持。还有一个问题就是从disk得到数据需要为了网络重新封装，这带来了复杂性。为了减少开销，我们可以从减少内核空间和用户空间之间的拷贝开始。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;mmap&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#mmap&quot; aria-label=&quot;Anchor link for: mmap&quot;&gt;mmap&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;一个方法就是避免使用read，而使用 mmap&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span&gt;tmp_buf &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;mmap&lt;&#x2F;span&gt;&lt;span&gt;(file, len);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;write&lt;&#x2F;span&gt;&lt;span&gt;(socket, tmp_buf, len);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;为了更好地理解这个过程，看下图&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;zero_copy&#x2F;image-20211019192834679.png&quot; alt=&quot;image-20211019192834679&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;第一步：mmap 系统调用使得文件内容通过 DMA 从disk 拷贝到内核空间的buffer，这个buffer可以直接在用户空间访问，不需要拷贝到用户空间&lt;&#x2F;p&gt;
+&lt;p&gt;第二步：write 系统调用使得内核将内核空间buffer中的数据拷贝到 socket 关联的内核buffer中&lt;&#x2F;p&gt;
+&lt;p&gt;第三步：第三次拷贝是 DMA 将socket buffer中的数据拷贝到协议栈中&lt;&#x2F;p&gt;
+&lt;p&gt;通过使用 mmap，我们减少了一次使用 CPU 的拷贝。当大量数据传输时这比较有用，但并不是没有代价，有些隐藏的问题其实。当另一个进程也mmap到了同一个文件，然后对其进行了写入操作。上面代码的 write 就会被 SIGBUS 中断。这个信号默认的行为是杀死进程并coredump -- 这个操作对于网络服务器恨不能接受。有两种方法解决这个问题&lt;&#x2F;p&gt;
+&lt;p&gt;第一个是定义一下 SIGBUS 的信号处理程序，直接return。这样 write 系统调用就会返回中断前写入的字节数，然后 errno 被设置为成功。这是个垃圾方案，无视问题，因为 SIGBUS 实际表示进程发生了严重错误，不应该无视&lt;&#x2F;p&gt;
+&lt;p&gt;第二个是使用内核的文件租约（也叫“乐观锁”）。这是正确的解决方案。你可以从内核请求 read&#x2F;write lease，当另一个进程视图对同一个文件进行截断时，内核会发送 RT_SINGAL_LEASE信号给有租约的进程，告诉你内核正在打断你的租约。你的写请求就会在程序访问无效地址之前被中断而不会导致 SIGBUS。write的返回值就是已经写入的字节数，errno被设置为成功，代码如下&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;fcntl&lt;&#x2F;span&gt;&lt;span&gt;(fd, F_SETSIG, RT_SIGNAL_LEASE) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;== -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;perror&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;kernel lease set signal&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*l_type can be F_RDLCK F_WRLCK*&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;fcntl&lt;&#x2F;span&gt;&lt;span&gt;(fd, F_SETLEASE, l_type)) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;peror&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;kernel lease set type&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;你应该在 mmap file之前获取租约，然后完成写入后主动放弃租约。通过调用 fcntl(F_SETLEASE, F_UNLCK) &lt;&#x2F;p&gt;
+&lt;h3 id=&quot;sendfile&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#sendfile&quot; aria-label=&quot;Anchor link for: sendfile&quot;&gt;Sendfile&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;在内核2.1版本，sendfile 系统调用简化了将数据从文件传输到socket的方法，不仅减少了数据拷贝，还减少了内核与用户空间的上下文切换&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;sendfile&lt;&#x2F;span&gt;&lt;span&gt;(socket, file, len);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;为了更好地理解底层过程，如下图&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;zero_copy&#x2F;image-20211019194434427.png&quot; alt=&quot;image-20211019194434427&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;第一步：sendfile 系统调用使得文件内容通过 DMA 拷贝到内核buffer，然后数据被内核拷贝到 socket buffer&lt;&#x2F;p&gt;
+&lt;p&gt;第二步：第三次拷贝 DMA 控制从 socket buffer 拷贝到协议栈&lt;&#x2F;p&gt;
+&lt;p&gt;你可能想知道如果另一个进程截断了这个文件，sendfile会发生什么。如果没有注册信号处理函数，sendfile 调用会返回已经传输的字节，errno被设置为成功&lt;&#x2F;p&gt;
+&lt;p&gt;如果 sendfile 之前获取了文件租约，行为相同。同时sendfile return前会有 RT_SIGNAL_LEASE 信号&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;sendfile-gather-hardware&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#sendfile-gather-hardware&quot; aria-label=&quot;Anchor link for: sendfile-gather-hardware&quot;&gt;sendfile + gather(hardware)&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;如此说来，我们已经避免了内核进行多次拷贝，但是还有一次拷贝，可以也避免吗？当然，但是需要硬件的支持。为了消除内核的所有拷贝，需要网卡支持 gather 操作。内核2.4版本引入了socket对这种操作的支持，这种方法不需要内核态切换，也不需要处理器进行数据拷贝。同时用户代码不变&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;sendfile&lt;&#x2F;span&gt;&lt;span&gt;(socket, file, len);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;底层流程如下图&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;zero_copy&#x2F;image-20211019200216564.png&quot; alt=&quot;image-20211019200216564&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;第一步：sendfile 系统调用可以将文件内容通过 DMA 拷贝到内核 buffer&lt;&#x2F;p&gt;
+&lt;p&gt;第二步：没有数据被拷贝到 socket buffer。socket 文件描述符只有数据的长度信息。DMA 直接将数据从kernel buffer 拷贝到协议栈&lt;&#x2F;p&gt;
+&lt;p&gt;因为数据从 disk 到主存的拷贝和从主存到总线的拷贝，有些人觉得这也不是零拷贝。这只是从操作系统角度的零拷贝，因为在操作系统中只有一个buffer。当使用零拷贝时，性能提升还来自，比如更少的内核用户态切换，更少的 CPU cache 污染以及不需要 CPU 校验&lt;&#x2F;p&gt;
+&lt;p&gt;现在我们知道了什么是零拷贝，练习些代码吧。你可以下载&lt;a href=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;zero-copy&#x2F;%5Bwww.xalien.org&#x2F;articles&#x2F;source&#x2F;sfl-src.tgz%5D(http:&#x2F;&#x2F;www.xalien.org&#x2F;articles&#x2F;source&#x2F;sfl-src.tgz)&quot;&gt;完整代码&lt;&#x2F;a&gt;。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.uidaho.edu&#x2F;-&#x2F;media&#x2F;UIdaho-Responsive&#x2F;Files&#x2F;engr&#x2F;research&#x2F;csds&#x2F;publications&#x2F;2012&#x2F;Performance-Review-of-Zero-Copy-Techniques-2012.pdf?la=en&amp;amp;hash=B5F37435875AAD15C55C7DFC1FDA53DBF242C0E3&quot;&gt;论文&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;splice&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#splice&quot; aria-label=&quot;Anchor link for: splice&quot;&gt;splice&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;sendfile 只适用于将数据从文件拷贝到socket（依赖于具体实现，linux系统可以从文件到文件），而且使用 gather 需要硬件的支持。Linux 在2.6.17版本中实现了 splice 系统调用，不需要硬件支持，实现了两个文件描述符之间的数据零拷贝。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;Copysplice&lt;&#x2F;span&gt;&lt;span&gt;(fd_in, off_in, fd_out, off_out, len, flags);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;splice 系统调用在内核空间的 buffer 和 socket buffer 之间建立了管道，避免了两者之间的 CPU 拷贝操作&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;zero_copy&#x2F;image-20211020191755511.png&quot; alt=&quot;image-20211020191755511&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;基于 splice 系统调用的零拷贝方式，整个拷贝过程会发生 2 次上下文切换，0 次 CPU 拷贝以及 2 次 DMA 拷贝，用户程序读写数据的流程如下：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;用户进程通过 &lt;code&gt;splice()&lt;&#x2F;code&gt; 函数向内核(kernel)发起系统调用，上下文从用户态 (user space) 切换为内核态(kernel space)；&lt;&#x2F;li&gt;
+&lt;li&gt;CPU 利用 DMA 控制器将数据从主存或硬盘拷贝到内核空间 (kernel space) 的读缓冲区 (read buffer)；&lt;&#x2F;li&gt;
+&lt;li&gt;CPU 在内核空间的读缓冲区 (read buffer) 和网络缓冲区(socket buffer)之间建立管道 (pipeline)；&lt;&#x2F;li&gt;
+&lt;li&gt;CPU 利用 DMA 控制器将数据从网络缓冲区 (socket buffer) 拷贝到网卡进行数据传输；&lt;&#x2F;li&gt;
+&lt;li&gt;上下文从内核态 (kernel space) 切换回用户态 (user space)，splice 系统调用执行返回。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;splice 拷贝方式也同样存在用户程序不能对数据进行修改的问题。除此之外，它使用了 Linux 的管道缓冲机制，可以用于任意两个文件描述符中传输数据，但是它的两个文件描述符参数中有一个必须是管道设备。&lt;&#x2F;p&gt;
+&lt;h5 id=&quot;xie-shi-fu-zhi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#xie-shi-fu-zhi&quot; aria-label=&quot;Anchor link for: xie-shi-fu-zhi&quot;&gt;写时复制&lt;&#x2F;a&gt;&lt;&#x2F;h5&gt;
+&lt;p&gt;在某些情况下，内核缓冲区可能被多个进程所共享，如果某个进程想要这个共享区进行 write 操作，由于 write 不提供任何的锁操作，那么就会对共享区中的数据造成破坏，写时复制的引入就是 Linux 用来保护数据的。&lt;&#x2F;p&gt;
+&lt;p&gt;写时复制指的是当多个进程共享同一块数据时，如果其中一个进程需要对这份数据进行修改，那么就需要将其拷贝到自己的进程地址空间中。这样做并不影响其他进程对这块数据的操作，每个进程要修改的时候才会进行拷贝，所以叫写时拷贝。这种方法在某种程度上能够降低系统开销，如果某个进程永远不会对所访问的数据进行更改，那么也就永远不需要拷贝。&lt;&#x2F;p&gt;
+&lt;p&gt;缺点：&lt;&#x2F;p&gt;
+&lt;p&gt;需要 MMU 的支持，MMU 需要知道进程地址空间中哪些页面是只读的，当需要往这些页面写数据时，发出一个异常给操作系统内核，内核会分配新的存储空间来供写入的需求。&lt;&#x2F;p&gt;
+&lt;h5 id=&quot;huan-chong-qu-gong-xiang&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#huan-chong-qu-gong-xiang&quot; aria-label=&quot;Anchor link for: huan-chong-qu-gong-xiang&quot;&gt;缓冲区共享&lt;&#x2F;a&gt;&lt;&#x2F;h5&gt;
+&lt;p&gt;缓冲区共享方式完全改写了传统的 I&#x2F;O 操作，传统的 Linux I&#x2F;O 接口支持数据在应用程序地址空间和操作系统内核之间交换，这种交换操作导致所有的数据都需要进行拷贝。&lt;&#x2F;p&gt;
+&lt;p&gt;如果采用 fbufs 这种方法，需要交换的是包含数据的缓冲区，这样就消除了多余的拷贝操作。应用程序将 fbuf 传递给操作系统内核，这样就能减少传统的 write 系统调用所产生的数据拷贝开销。&lt;&#x2F;p&gt;
+&lt;p&gt;同样的应用程序通过 fbuf 来接收数据，这样也可以减少传统 read 系统调用所产生的数据拷贝开销。&lt;&#x2F;p&gt;
+&lt;p&gt;fbuf 的思想是每个进程都维护着一个缓冲区池，这个缓冲区池能被同时映射到用户空间 (user space) 和内核态 (kernel space)，内核和用户共享这个缓冲区池，这样就避免了一系列的拷贝操作。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;zero_copy&#x2F;007S8ZIlgy1ggj9hmikddj30gy0c4mys.png&quot; alt=&quot;12&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;缺点：&lt;&#x2F;p&gt;
+&lt;p&gt;缓冲区共享的难度在于管理共享缓冲区池需要应用程序、网络软件以及设备驱动程序之间的紧密合作，而且如何改写 API 目前还处于试验阶段并不成熟。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;linuxling-kao-bei-dui-bi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#linuxling-kao-bei-dui-bi&quot; aria-label=&quot;Anchor link for: linuxling-kao-bei-dui-bi&quot;&gt;Linux零拷贝对比&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;无论是传统 I&#x2F;O 拷贝方式还是引入零拷贝的方式，2 次 DMA Copy 是都少不了的，因为两次 DMA 都是依赖硬件完成的。下面从 CPU 拷贝次数、DMA 拷贝次数以及系统调用几个方面总结一下上述几种 I&#x2F;O 拷贝方式的差别。&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;拷贝方式&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: center&quot;&gt;CPU拷贝&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: center&quot;&gt;DMA拷贝&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: center&quot;&gt;系统调用&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: center&quot;&gt;上下文切换&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;传统方式(read + write)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;read &#x2F; write&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;4&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;内存映射(mmap + write)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;1&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;mmap &#x2F; write&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;4&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;sendfile&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;1&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;sendfile&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;sendfile + DMA gather copy&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;0&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;sendfile&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;splice&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;0&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;splice&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>Linux top</title>
+        <published>2021-04-02T14:41:56+00:00</published>
+        <updated>2021-04-02T14:41:56+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/top/" type="text/html"/>
+        <id>https://wendajiang.github.io/top/</id>
+        <content type="html">&lt;!--
+mermaid example:
+&lt;div class=&quot;mermaid&quot;&gt;
+    mermaid program
+&lt;&#x2F;div&gt;
+--&gt;
+&lt;h2 id=&quot;linux-topming-ling-virt-res-shr-datade-han-yi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#linux-topming-ling-virt-res-shr-datade-han-yi&quot; aria-label=&quot;Anchor link for: linux-topming-ling-virt-res-shr-datade-han-yi&quot;&gt;linux top命令VIRT,RES,SHR,DATA的含义&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;**VIRT：virtual memory usage 虚拟内存&lt;&#x2F;p&gt;
+&lt;p&gt;**1、进程“需要的”虚拟内存大小，包括进程使用的库、代码、数据等
+2、假如进程申请100m的内存，但实际只使用了10m，那么它会增长100m，而不是实际的使用量&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;RES：resident memory usage 常驻内存&lt;&#x2F;strong&gt;
+1、进程当前使用的内存大小，但不包括swap out
+2、包含其他进程的共享
+3、如果申请100m的内存，实际使用10m，它只增长10m，与VIRT相反
+4、关于库占用内存的情况，它只统计加载的库文件所占内存大小&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;SHR：shared memory 共享内存&lt;&#x2F;strong&gt;
+1、除了自身进程的共享内存，也包括其他进程的共享内存
+2、虽然进程只使用了几个共享库的函数，但它包含了整个共享库的大小
+3、计算某个进程所占的物理内存大小公式：RES – SHR
+4、swap out后，它将会降下来&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;DATA&lt;&#x2F;strong&gt;
+1、数据占用的内存。如果top没有显示，按f键可以显示出来。
+2、真正的该程序要求的数据空间，是真正在运行中要使用的。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;top 运行中可以通过 top 的内部命令对进程的显示方式进行控制。内部命令如下：&lt;&#x2F;strong&gt;
+s – 改变画面更新频率
+l – 关闭或开启第一部分第一行 top 信息的表示
+t – 关闭或开启第一部分第二行 Tasks 和第三行 Cpus 信息的表示
+m – 关闭或开启第一部分第四行 Mem 和 第五行 Swap 信息的表示
+N – 以 PID 的大小的顺序排列表示进程列表
+P – 以 CPU 占用率大小的顺序排列进程列表
+M – 以内存占用率大小的顺序排列进程列表
+h – 显示帮助
+n – 设置在进程列表所显示进程的数量
+q – 退出 top
+K - 终止一个进程。系统将提示用户输入需要终止的进程PID，以及需要发送给该进程什么样的信号。一般的终止进程可以使用15信号；如果不能正常结束那就使用信号9强制结束该进程。默认值是信号15。在安全模式中此命令被屏蔽。
+i - 忽略闲置和僵死进程。这是一个开关式命令。
+r - 重新安排一个进程的优先级别。系统提示用户输入需要改变的进程PID以及需要设置的进程优先级值。输入一个正值将使优先级降低，反之则可以使该进程拥有更高的优先权。默认值是10。
+S - 切换到累计模式。
+s - 改变两次刷新之间的延迟时间。系统将提示用户输入新的时间，单位为s。如果有小数，就换算成m s。输入0值则系统将不断刷新，默认值是5 s。需要注意的是如果设置太小的时间，很可能会引起不断刷新，从而根本来不及看清显示的情况，而且系统负载也会大大增加。
+f或者F - 从当前显示中添加或者删除项目。
+o或者O - 改变显示项目的顺序
+c - 切换显示命令名称和完整命令行。
+T - 根据时间&#x2F;累计时间进行排序。
+W - 将当前设置写入~&#x2F;.toprc文件中。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;&lt;u&gt;内存默认单位为KiB(kibibytes)&lt;&#x2F;u&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;顶部的内存信息可以在top运行时按E切换，每次切换转换率为1000，只是没有单位，切换的单位为 k,m,g,t,p&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;KiB = kibibyte = 1024 bytes
+MiB = mebibyte = 1024 KiB = 1,048,576 bytes
+GiB = gibibyte = 1024 MiB = 1,073,741,824 bytes
+TiB = tebibyte = 1024 GiB = 1,099,511,627,776 bytes
+PiB = pebibyte = 1024 TiB = 1,125,899,906,842,624 bytes
+EiB = exbibyte = 1024 PiB = 1,152,921,504,606,846,976 bytes&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;序号&lt;&#x2F;th&gt;&lt;th&gt;列名&lt;&#x2F;th&gt;&lt;th&gt;含义&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;a&lt;&#x2F;td&gt;&lt;td&gt;PID 进程id&lt;&#x2F;td&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;b&lt;&#x2F;td&gt;&lt;td&gt;PPID&lt;&#x2F;td&gt;&lt;td&gt;父进程id&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;c&lt;&#x2F;td&gt;&lt;td&gt;RUSER&lt;&#x2F;td&gt;&lt;td&gt;Real user name&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;d&lt;&#x2F;td&gt;&lt;td&gt;UID&lt;&#x2F;td&gt;&lt;td&gt;进程所有者的用户id&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;e&lt;&#x2F;td&gt;&lt;td&gt;USER&lt;&#x2F;td&gt;&lt;td&gt;进程所有者的用户名&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;f&lt;&#x2F;td&gt;&lt;td&gt;GROUP&lt;&#x2F;td&gt;&lt;td&gt;进程所有者的组名&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;g&lt;&#x2F;td&gt;&lt;td&gt;TTY&lt;&#x2F;td&gt;&lt;td&gt;启动进程的终端名。不是从终端启动的进程则显示为?&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;h&lt;&#x2F;td&gt;&lt;td&gt;PR&lt;&#x2F;td&gt;&lt;td&gt;优先级&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;i&lt;&#x2F;td&gt;&lt;td&gt;NI&lt;&#x2F;td&gt;&lt;td&gt;nice值。负值表示高优先级，正值表示低优先级&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;j&lt;&#x2F;td&gt;&lt;td&gt;P&lt;&#x2F;td&gt;&lt;td&gt;最后使用的CPU，仅在多CPU环境下有意义&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;k&lt;&#x2F;td&gt;&lt;td&gt;%CPU&lt;&#x2F;td&gt;&lt;td&gt;上次更新到现在的CPU时间占用百分比&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;l&lt;&#x2F;td&gt;&lt;td&gt;TIME&lt;&#x2F;td&gt;&lt;td&gt;进程使用的CPU时间总计，单位秒&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;m&lt;&#x2F;td&gt;&lt;td&gt;TIME+&lt;&#x2F;td&gt;&lt;td&gt;进程使用的CPU时间总计，单位1&#x2F;100秒&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;n&lt;&#x2F;td&gt;&lt;td&gt;%MEM&lt;&#x2F;td&gt;&lt;td&gt;进程使用的物理内存百分比&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;o&lt;&#x2F;td&gt;&lt;td&gt;VIRT&lt;&#x2F;td&gt;&lt;td&gt;进程使用的虚拟内存总量。VIRT=SWAP+RES&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;p&lt;&#x2F;td&gt;&lt;td&gt;SWAP&lt;&#x2F;td&gt;&lt;td&gt;进程使用的虚拟内存中，被换出的大小&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;q&lt;&#x2F;td&gt;&lt;td&gt;RES&lt;&#x2F;td&gt;&lt;td&gt;进程使用的、未被换出的物理内存大小。RES=CODE+DATA&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;r&lt;&#x2F;td&gt;&lt;td&gt;CODE&lt;&#x2F;td&gt;&lt;td&gt;可执行代码占用的物理内存大小&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;s&lt;&#x2F;td&gt;&lt;td&gt;DATA&lt;&#x2F;td&gt;&lt;td&gt;可执行代码以外的部分(数据段+栈)占用的物理内存大小&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;t&lt;&#x2F;td&gt;&lt;td&gt;SHR&lt;&#x2F;td&gt;&lt;td&gt;共享内存大小，单位kb&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;u&lt;&#x2F;td&gt;&lt;td&gt;nFLT&lt;&#x2F;td&gt;&lt;td&gt;页面错误次数&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;v&lt;&#x2F;td&gt;&lt;td&gt;nDRT&lt;&#x2F;td&gt;&lt;td&gt;最后一次写入到现在，被修改过的页面数。&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;w&lt;&#x2F;td&gt;&lt;td&gt;S&lt;&#x2F;td&gt;&lt;td&gt;进程状态。（D=不可中断的睡眠状态，R=运行，S=睡眠，T=跟踪&#x2F;停止，Z=僵尸进程）&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;x&lt;&#x2F;td&gt;&lt;td&gt;COMMAND&lt;&#x2F;td&gt;&lt;td&gt;命令名&#x2F;命令行&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;y&lt;&#x2F;td&gt;&lt;td&gt;WCHAN&lt;&#x2F;td&gt;&lt;td&gt;若该进程在睡眠，则显示睡眠中的系统函数名&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;z&lt;&#x2F;td&gt;&lt;td&gt;Flags&lt;&#x2F;td&gt;&lt;td&gt;任务标志，参考 sched.h&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;默认情况下仅显示比较重要的 PID、USER、PR、NI、VIRT、RES、SHR、S、%CPU、%MEM、TIME+、COMMAND 列。可以通过下面的快捷键来更改显示内容。&lt;&#x2F;p&gt;
+&lt;p&gt;通过 f 键可以选择显示的内容。按 f 键之后会显示列的列表，按 a-z 即可显示或隐藏对应的列，最后按回车键确定。
+按 o 键可以改变列的显示顺序。按小写的 a-z 可以将相应的列向右移动，而大写的 A-Z 可以将相应的列向左移动。最后按回车键确定。
+按大写的 F 或 O 键，然后按 a-z 可以将进程按照相应的列进行排序。而大写的 R 键可以将当前的排序倒转。&lt;&#x2F;p&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>Linux ulimit</title>
+        <published>2021-04-02T14:39:37+00:00</published>
+        <updated>2021-04-02T14:39:37+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/ulimit/" type="text/html"/>
+        <id>https://wendajiang.github.io/ulimit/</id>
+        <content type="html">&lt;!--
+mermaid example:
+&lt;div class=&quot;mermaid&quot;&gt;
+    mermaid program
+&lt;&#x2F;div&gt;
+--&gt;
+&lt;p&gt;命  令：ulimit&lt;&#x2F;p&gt;
+&lt;p&gt;功  能：控制shell程序的资源&lt;&#x2F;p&gt;
+&lt;p&gt;语　　法：&lt;code&gt;ulimit [-aHS][-c ][-d &amp;lt;数据节区大小&amp;gt;][-f &amp;lt;文件大 小&amp;gt;][-m &amp;lt;内存大小&amp;gt;][-n &amp;lt;文件数目&amp;gt;][-p &amp;lt;缓冲区大小&amp;gt;][-s &amp;lt;堆栈大小&amp;gt;][-t &amp;lt;CPU时间&amp;gt;][-u &amp;lt;程序数目&amp;gt;][-v &amp;lt;虚拟内存大小&amp;gt;]&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;补充说明：ulimit为shell内建指令，可用来控制shell执行程序的资源。 &lt;&#x2F;p&gt;
+&lt;p&gt;参　　数： &lt;&#x2F;p&gt;
+&lt;p&gt;-H 设置硬件资源限制,是管理员所设下的限制.&lt;&#x2F;p&gt;
+&lt;p&gt;-S 设置软件资源限制,是管理员所设下的限制.&lt;&#x2F;p&gt;
+&lt;p&gt;-a 显示当前所有的资源限制.&lt;&#x2F;p&gt;
+&lt;p&gt;-u 进程数目:用户最多可启动的进程数目.&lt;&#x2F;p&gt;
+&lt;p&gt;-c size:设置core文件的最大值.单位:blocks&lt;&#x2F;p&gt;
+&lt;p&gt;-d size:设置程序数据段的最大值.单位:kbytes&lt;&#x2F;p&gt;
+&lt;p&gt;-f size:设置shell创建文件的最大值.单位:blocks&lt;&#x2F;p&gt;
+&lt;p&gt;-l size:设置在内存中锁定进程的最大值.单位:kbytes&lt;&#x2F;p&gt;
+&lt;p&gt;-m size:设置可以使用的常驻内存的最大值.单位:kbytes&lt;&#x2F;p&gt;
+&lt;p&gt;-n size:设置内核可以同时打开的文件描述符的最大值.单位:n&lt;&#x2F;p&gt;
+&lt;p&gt;-p size:设置管道缓冲区的最大值.单位:kbytes&lt;&#x2F;p&gt;
+&lt;p&gt;-s size:设置堆栈的最大值.单位:kbytes&lt;&#x2F;p&gt;
+&lt;p&gt;-t size:设置CPU使用时间的最大上限.单位:seconds&lt;&#x2F;p&gt;
+&lt;p&gt;-v size:设置虚拟内存的最大值.单位:kbytes&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;xi-tong-diao-you&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#xi-tong-diao-you&quot; aria-label=&quot;Anchor link for: xi-tong-diao-you&quot;&gt;系统调优&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;如前所述， ulimit -a 用来显示当前的各种用户进程限制。&lt;&#x2F;p&gt;
+&lt;p&gt;Linux对于每个用户，系统限制其最大进程数。为提高性能，可以根据设备资源情况，&lt;&#x2F;p&gt;
+&lt;p&gt;设置各linux 用户的最大进程数，下面我把某linux用户的最大进程数设为10000个： &lt;&#x2F;p&gt;
+&lt;p&gt;ulimit -u 10000 &lt;&#x2F;p&gt;
+&lt;p&gt;对于需要做许多 socket 连接并使它们处于打开状态的 Java 应用程序而言，&lt;&#x2F;p&gt;
+&lt;p&gt;最好通过使用 ulimit -n xx 修改每个进程可打开的文件数，缺省值是 1024。 &lt;&#x2F;p&gt;
+&lt;p&gt;ulimit -n 4096 &lt;&#x2F;p&gt;
+&lt;p&gt;将每个进程可以打开的文件数目加大到4096，缺省为1024&lt;&#x2F;p&gt;
+&lt;p&gt;其他建议设置成无限制（unlimited）的一些重要设置是： &lt;&#x2F;p&gt;
+&lt;p&gt;数据段长度：ulimit -d unlimited &lt;&#x2F;p&gt;
+&lt;p&gt;最大内存大小：ulimit -m unlimited &lt;&#x2F;p&gt;
+&lt;p&gt;堆栈大小：ulimit -s unlimited &lt;&#x2F;p&gt;
+&lt;p&gt;CPU 时间：ulimit -t unlimited &lt;&#x2F;p&gt;
+&lt;p&gt;虚拟内存：ulimit -v unlimited &lt;&#x2F;p&gt;
+&lt;p&gt;　　&lt;&#x2F;p&gt;
+&lt;p&gt;暂时地，适用于通过 ulimit 命令登录 shell 会话期间。&lt;&#x2F;p&gt;
+&lt;p&gt;永久地，通过将一个相应的 ulimit 语句添加到由登录 shell 读取的文件中， 即特定于 shell 的用户资源文件，如： &lt;&#x2F;p&gt;
+&lt;h4 id=&quot;1-jie-chu-linux-xi-tong-de-zui-da-jin-cheng-shu-he-zui-da-wen-jian-da-kai-shu-xian-zhi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#1-jie-chu-linux-xi-tong-de-zui-da-jin-cheng-shu-he-zui-da-wen-jian-da-kai-shu-xian-zhi&quot; aria-label=&quot;Anchor link for: 1-jie-chu-linux-xi-tong-de-zui-da-jin-cheng-shu-he-zui-da-wen-jian-da-kai-shu-xian-zhi&quot;&gt;1) 解除 Linux 系统的最大进程数和最大文件打开数限制：&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;​    vi &#x2F;etc&#x2F;security&#x2F;limits.conf&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;​    \# 添加如下的行
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;​    \* soft noproc 11000
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;​    \* hard noproc 11000
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;​    \* soft nofile 4100
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;​    \* hard nofile 4100 
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;​    说明：* 代表针对所有用户&lt;&#x2F;p&gt;
+&lt;p&gt;​      noproc 是代表最大进程数&lt;&#x2F;p&gt;
+&lt;p&gt;​      nofile 是代表最大文件打开数 &lt;&#x2F;p&gt;
+&lt;h4 id=&quot;2-xiu-gai-suo-you-linux-yong-hu-de-huan-jing-bian-liang-wen-jian&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#2-xiu-gai-suo-you-linux-yong-hu-de-huan-jing-bian-liang-wen-jian&quot; aria-label=&quot;Anchor link for: 2-xiu-gai-suo-you-linux-yong-hu-de-huan-jing-bian-liang-wen-jian&quot;&gt;2) 修改所有 linux 用户的环境变量文件：&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;vi &#x2F;etc&#x2F;profile &lt;&#x2F;p&gt;
+&lt;p&gt;ulimit -u 10000&lt;&#x2F;p&gt;
+&lt;p&gt;ulimit -n 4096&lt;&#x2F;p&gt;
+&lt;p&gt;ulimit -d unlimited &lt;&#x2F;p&gt;
+&lt;p&gt;ulimit -m unlimited &lt;&#x2F;p&gt;
+&lt;p&gt;ulimit -s unlimited &lt;&#x2F;p&gt;
+&lt;p&gt;ulimit -t unlimited &lt;&#x2F;p&gt;
+&lt;p&gt;ulimit -v unlimited &lt;&#x2F;p&gt;
+&lt;p&gt;&#x2F;**************************************&lt;&#x2F;p&gt;
+&lt;p&gt;有时候在程序里面需要打开多个文件，进行分析，系统一般默认数量是1024，（用ulimit -a可以看到）对于正常使用是够了，但是对于程序来讲，就太少了。&lt;&#x2F;p&gt;
+&lt;p&gt;修改2个文件。&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;&#x2F;etc&#x2F;security&#x2F;limits.conf&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;vi &#x2F;etc&#x2F;security&#x2F;limits.conf&lt;&#x2F;p&gt;
+&lt;p&gt;加上：&lt;&#x2F;p&gt;
+&lt;p&gt;* soft nofile 8192&lt;&#x2F;p&gt;
+&lt;p&gt;* hard nofile 20480&lt;&#x2F;p&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;&#x2F;etc&#x2F;pam.d&#x2F;login&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;session required &#x2F;lib&#x2F;security&#x2F;pam_limits.so&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;p&gt;另外确保&#x2F;etc&#x2F;pam.d&#x2F;system-auth文件有下面内容&lt;&#x2F;p&gt;
+&lt;p&gt;session required &#x2F;lib&#x2F;security&#x2F;$ISA&#x2F;pam_limits.so&lt;&#x2F;p&gt;
+&lt;p&gt;这一行确保系统会执行这个限制。&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;ol start=&quot;3&quot;&gt;
+&lt;li&gt;一般用户的.bash_profile&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;#ulimit -n 1024&lt;&#x2F;p&gt;
+&lt;p&gt;重新登陆ok&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;3-procmu-lu&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#3-procmu-lu&quot; aria-label=&quot;Anchor link for: 3-procmu-lu&quot;&gt;3) &#x2F;proc目录：&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;1）&#x2F;proc目录里面包括很多系统当前状态的参数，例如：引用&lt;&#x2F;p&gt;
+&lt;p&gt;&#x2F;proc&#x2F;sys&#x2F;fs&#x2F;file-max&lt;&#x2F;p&gt;
+&lt;p&gt;&#x2F;proc&#x2F;sys&#x2F;fs&#x2F;inode-max&lt;&#x2F;p&gt;
+&lt;p&gt;是对整个系统的限制，并不是针对用户的；&lt;&#x2F;p&gt;
+&lt;p&gt;2）proc目录中的值可以进行动态的设置，若希望永久生效，可以修改&#x2F;etc&#x2F;sysctl.conf文件，并使用下面的命令确认：&lt;&#x2F;p&gt;
+&lt;p&gt;# sysctl -p&lt;&#x2F;p&gt;
+&lt;p&gt;ulimit 用于限制 shell 启动进程所占用的资源，支持以下各种类型的限制：&lt;&#x2F;p&gt;
+&lt;p&gt;所创建的内核文件的大小、&lt;&#x2F;p&gt;
+&lt;p&gt;进程数据块的大小、&lt;&#x2F;p&gt;
+&lt;p&gt;Shell 进程创建文件的大小、&lt;&#x2F;p&gt;
+&lt;p&gt;内存锁住的大小、&lt;&#x2F;p&gt;
+&lt;p&gt;常驻内存集的大小、&lt;&#x2F;p&gt;
+&lt;p&gt;打开文件描述符的数量、&lt;&#x2F;p&gt;
+&lt;p&gt;分配堆栈的最大大小、&lt;&#x2F;p&gt;
+&lt;p&gt;CPU 时间、&lt;&#x2F;p&gt;
+&lt;p&gt;单个用户的最大线程数、&lt;&#x2F;p&gt;
+&lt;p&gt;Shell 进程所能使用的最大虚拟内存。同时，它支持硬资源和软资源的限制。&lt;&#x2F;p&gt;
+&lt;p&gt;作为临时限制，ulimit 可以作用于通过使用其命令登录的 shell 会话，在会话终止时便结束限制，并不影响于其他 shell 会话。而对于长期的固定限制，ulimit 命令语句又可以被添加到由登录 shell 读取的文件中，作用于特定的 shell 用户。&lt;&#x2F;p&gt;
+&lt;p&gt;2、使用ulimit
+ulimit 通过一些参数选项来管理不同种类的系统资源。&lt;&#x2F;p&gt;
+&lt;p&gt;ulimit 命令的格式为：ulimit [options] [limit]&lt;&#x2F;p&gt;
+&lt;p&gt;主要关注两个：&lt;&#x2F;p&gt;
+&lt;p&gt;1）open files：– 用户可以打开文件的最大数目&lt;&#x2F;p&gt;
+&lt;p&gt;对应ulimit 的命令ulimit -n，可以使用ulimit -n 临时设置。&lt;&#x2F;p&gt;
+&lt;p&gt;对应&#x2F;etc&#x2F;security&#x2F;limits.conf的资源限制类型是：nofile&lt;&#x2F;p&gt;
+&lt;p&gt;* soft nofile 4096&lt;&#x2F;p&gt;
+&lt;p&gt;* hard nofile 4096&lt;&#x2F;p&gt;
+&lt;p&gt;2）max user processes – 用户可以开启进程&#x2F;线程的最大数目&lt;&#x2F;p&gt;
+&lt;p&gt;对应ulimit 的命令ulimit  -u 临时修改max user processes的值：ulimit  -u  8192。&lt;&#x2F;p&gt;
+&lt;p&gt;对应&#x2F;etc&#x2F;security&#x2F;limits.conf的资源限制类型是： noproc&lt;&#x2F;p&gt;
+&lt;p&gt;*      soft   nproc   8192&lt;&#x2F;p&gt;
+&lt;p&gt;具体的 options 含义以及简单示例可以参考以下表格。
+ulimit 参数说明&lt;&#x2F;p&gt;
+&lt;p&gt;选项 含义-a 显示当前系统所有的limit资源信息。 -H 设置硬资源限制，一旦设置不能增加。例如：ulimit – Hs 64；限制硬资源，线程栈大小为 64K。-S 设置软资源限制，设置后可以增加，但是不能超过硬资源设置。例如：ulimit – Sn 32；限制软资源，32 个文件描述符。-c 最大的core文件的大小，以 blocks 为单位。例如：ulimit – c unlimited； 对生成的 core 文件的大小不进行限制。-f 进程可以创建文件的最大值，以blocks 为单位.例如：ulimit – f 2048；限制进程可以创建的最大文件大小为 2048 blocks。-d 进程最大的数据段的大小，以Kbytes 为单位。例如：ulimit -d unlimited；对进程的数据段大小不进行限制。-m 最大内存大小，以Kbytes为单位。例如：ulimit – m unlimited；对最大内存不进行限制。-n 可以打开的最大文件描述符的数量。例如：ulimit – n 128；限制最大可以使用 128 个文件描述符-s 线程栈大小，以Kbytes为单位。例如:ulimit – s 512；限制线程栈的大小为 512 Kbytes。-p 管道缓冲区的大小，以Kbytes 为单位。例如ulimit – p 512；限制管道缓冲区的大小为 512 Kbytes。-u 用户最大可用的进程数。例如 limit – u 65536；限制用户最多可以使用 65536个进程。-v 进程最大可用的虚拟内存，以Kbytes 为单位。ulimit – v 200000；限制最大可用的虚拟内存为 200000 Kbytes。-t 最大CPU占用时间，以秒为单位。ulimit – t unlimited；对最大的 CPU 占用时间不进行限制。-l 最大可加锁内存大小，以Kbytes 为单位。
+1&lt;&#x2F;p&gt;
+&lt;p&gt;我们可以通过以下几种方式来使用 ulimit：&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;yi-zai-yong-hu-de-qi-dong-jiao-ben-zhong&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#yi-zai-yong-hu-de-qi-dong-jiao-ben-zhong&quot; aria-label=&quot;Anchor link for: yi-zai-yong-hu-de-qi-dong-jiao-ben-zhong&quot;&gt;一、在用户的启动脚本中&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;​    如果用户使用的是 bash，就可以在用户的目录下的 .bashrc 文件中，加入 ulimit – u 64，来限制用户最多可以使用 64 个进程。此外，可以在与 .bashrc 功能相当的启动脚本中加入 ulimt。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;er-zai-ying-yong-cheng-xu-de-qi-dong-jiao-ben-zhong&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#er-zai-ying-yong-cheng-xu-de-qi-dong-jiao-ben-zhong&quot; aria-label=&quot;Anchor link for: er-zai-ying-yong-cheng-xu-de-qi-dong-jiao-ben-zhong&quot;&gt;二、在应用程序的启动脚本中&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;如果用户要对某个应用程序 myapp 进行限制，可以写一个简单的脚本 startmyapp。&lt;&#x2F;p&gt;
+&lt;p&gt;ulimit – s 512
+myapp&lt;&#x2F;p&gt;
+&lt;p&gt;以后只要通过脚本 startmyapp 来启动应用程序，就可以限制应用程序 myapp 的线程栈大小为 512K。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;san-zhi-jie-zai-kong-zhi-tai-shu-ru&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#san-zhi-jie-zai-kong-zhi-tai-shu-ru&quot; aria-label=&quot;Anchor link for: san-zhi-jie-zai-kong-zhi-tai-shu-ru&quot;&gt;三、直接在控制台输入&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;ulimit – p 256 &lt;&#x2F;p&gt;
+&lt;p&gt;限制管道的缓冲区为 256K。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;si-xiu-gai-suo-you-linux-yong-hu-de-huan-jing-bian-liang-wen-jian&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#si-xiu-gai-suo-you-linux-yong-hu-de-huan-jing-bian-liang-wen-jian&quot; aria-label=&quot;Anchor link for: si-xiu-gai-suo-you-linux-yong-hu-de-huan-jing-bian-liang-wen-jian&quot;&gt;四、修改所有 linux 用户的环境变量文件：&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;vi &#x2F;etc&#x2F;profile&lt;&#x2F;p&gt;
+&lt;p&gt;ulimit -u 10000&lt;&#x2F;p&gt;
+&lt;p&gt;ulimit -n 4096&lt;&#x2F;p&gt;
+&lt;p&gt;ulimit -d unlimited&lt;&#x2F;p&gt;
+&lt;p&gt;ulimit -m unlimited&lt;&#x2F;p&gt;
+&lt;p&gt;ulimit -s unlimited&lt;&#x2F;p&gt;
+&lt;p&gt;ulimit -t unlimited&lt;&#x2F;p&gt;
+&lt;p&gt;ulimit -v unlimited&lt;&#x2F;p&gt;
+&lt;p&gt;保存后运行#source &#x2F;etc&#x2F;profile 使其生效&lt;&#x2F;p&gt;
+&lt;p&gt;四、也可以针对单个用户的.bash_profile设置：&lt;&#x2F;p&gt;
+&lt;p&gt;vi ~.&#x2F;.bash_profile&lt;&#x2F;p&gt;
+&lt;p&gt;#ulimit -n 1024
+重新登陆ok&lt;&#x2F;p&gt;
+&lt;p&gt;3、用户进程的有效范围
+ulimit 作为对资源使用限制的一种工作，是有其作用范围的。那么，它限制的对象是单个用户，单个进程，还是整个系统呢？事实上，ulimit 限制的是当前 shell 进程以及其派生的子进程。举例来说，如果用户同时运行了两个 shell 终端进程，只在其中一个环境中执行了 ulimit – s 100，则该 shell 进程里创建文件的大小收到相应的限制，而同时另一个 shell终端包括其上运行的子程序都不会受其影响：&lt;&#x2F;p&gt;
+&lt;p&gt;Shell 进程 1&lt;&#x2F;p&gt;
+&lt;p&gt;ulimit –s 100
+cat testFile &amp;gt; newFile
+File size limit exceeded&lt;&#x2F;p&gt;
+&lt;p&gt;Shell 进程 2&lt;&#x2F;p&gt;
+&lt;p&gt;cat testFile &amp;gt; newFile
+ls –s newFile
+323669 newFile&lt;&#x2F;p&gt;
+&lt;p&gt;针对用户永久生效：&lt;&#x2F;p&gt;
+&lt;p&gt;那么，是否有针对某个具体用户的资源加以限制的方法呢？答案是有的，方法是通过修改系统的 &#x2F;etc&#x2F;security&#x2F;limits.conf配置文件。该文件不仅能限制指定用户的资源使用，还能限制指定组的资源使用。该文件的每一行都是对限定的一个描述。&lt;&#x2F;p&gt;
+&lt;p&gt;limits.conf的格式如下：&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;domain&gt;          &lt;type&gt;    &lt;item&gt;   &lt;value&gt; &lt;&#x2F;p&gt;
+&lt;p&gt;username|@groupname    type    resource      limit&lt;&#x2F;p&gt;
+&lt;p&gt;domain：username|@groupname：设置需要被限制的用户名，组名前面加@和用户名区别。也可以用通配符*来做所有用户的限制。&lt;&#x2F;p&gt;
+&lt;p&gt;type：有 soft，hard 和 -，soft 指的是当前系统生效的设置值。hard 表明系统中所能设定的最大值。soft 的最大值不能超过hard的值。用 – 就表明同时设置了 soft 和 hard 的值。&lt;&#x2F;p&gt;
+&lt;p&gt;resource：
+core – 限制内核文件的大小
+date – 最大数据大小
+fsize – 最大文件大小
+memlock – 最大锁定内存地址空间
+nofile – 打开文件的最大数目
+rss – 最大持久设置大小
+stack – 最大栈大小
+cpu – 以分钟为单位的最多 CPU 时间
+noproc – 进程的最大数目（系统的最大进程数）
+as – 地址空间限制
+maxlogins – 此用户允许登录的最大数目&lt;&#x2F;p&gt;
+&lt;p&gt;要使 limits.conf 文件配置生效，必须要确保 pam_limits.so 文件被加入到启动文件中。&lt;&#x2F;p&gt;
+&lt;p&gt;查看 &#x2F;etc&#x2F;pam.d&#x2F;login 文件中有：
+session required &#x2F;lib&#x2F;security&#x2F;pam_limits.so&lt;&#x2F;p&gt;
+&lt;p&gt;例如：解除 Linux 系统的最大进程数和最大文件打开数限制：&lt;&#x2F;p&gt;
+&lt;p&gt;​    vi &#x2F;etc&#x2F;security&#x2F;limits.conf&lt;&#x2F;p&gt;
+&lt;p&gt;​    # 添加如下的行&lt;&#x2F;p&gt;
+&lt;p&gt;​    * soft noproc 20000 #软连接&lt;&#x2F;p&gt;
+&lt;p&gt;​    * hard noproc 20000  #硬连接&lt;&#x2F;p&gt;
+&lt;p&gt;​    * soft nofile 4096&lt;&#x2F;p&gt;
+&lt;p&gt;​    * hard nofile 4096&lt;&#x2F;p&gt;
+&lt;p&gt;​    说明：* 代表针对所有用户，noproc 是代表最大进程数，nofile 是代表最大文件打开数&lt;&#x2F;p&gt;
+&lt;p&gt;需要注意一点：&#x2F;etc&#x2F;security&#x2F;limits.d下也有noproc最大进参数的限制：&lt;&#x2F;p&gt;
+&lt;p&gt;即 &#x2F;etc&#x2F;security&#x2F;limits.d&#x2F;下的文件覆盖了&#x2F;etc&#x2F;security&#x2F;limits.conf设置的值 &lt;&#x2F;p&gt;
+&lt;p&gt;这个是官网答疑：https:&#x2F;&#x2F;access.redhat.com&#x2F;solutions&#x2F;406663&lt;&#x2F;p&gt;
+&lt;p&gt;# &#x2F;etc&#x2F;security&#x2F;limits.conf
+#This file sets the resource limits for the users logged in via PAM.
+#It does not affect resource limits of the system services.
+#Also note that configuration files in &#x2F;etc&#x2F;security&#x2F;limits.d directory,
+#That means for example that setting a limit for wildcard domain here&lt;&#x2F;p&gt;
+&lt;p&gt;[root@tr10-46-65-29 ~]# cat &#x2F;etc&#x2F;security&#x2F;limits.d&#x2F;20-nproc.conf 
+# Default limit for number of user&#x27;s processes to prevent
+# accidental fork bombs.
+# See rhbz #432903 for reasoning.&lt;&#x2F;p&gt;
+&lt;p&gt;*      soft   nproc   8192
+root    soft   nproc   unlimited&lt;&#x2F;p&gt;
+&lt;p&gt;现在已经可以对进程和用户分别做资源限制了，看似已经足够了，其实不然。很多应用需要对整个系统的资源使用做一个总的限制，这时候我们需要修改 &#x2F;proc 下的配置文件。&#x2F;proc 目录下包含了很多系统当前状态的参数，例如 &#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;pid_max，&#x2F;proc&#x2F;sys&#x2F;net&#x2F;ipv4&#x2F;ip_local_port_range 等等，从文件的名字大致可以猜出所限制的资源种类。&lt;&#x2F;p&gt;
+&lt;p&gt;注意：&lt;&#x2F;p&gt;
+&lt;p&gt;通过读取&#x2F;proc&#x2F;sys&#x2F;fs&#x2F;file-nr可以看到当前使用的文件描述符总数。另外，对于文件描述符的配置，需要注意以下几点：&lt;&#x2F;p&gt;
+&lt;p&gt;所有进程打开的文件描述符数不能超过&#x2F;proc&#x2F;sys&#x2F;fs&#x2F;file-max&lt;&#x2F;p&gt;
+&lt;p&gt;单个进程打开的文件描述符数不能超过user limit中nofile的soft limit&lt;&#x2F;p&gt;
+&lt;p&gt;nofile的soft limit不能超过其hard limit&lt;&#x2F;p&gt;
+&lt;p&gt;nofile的hard limit不能超过&#x2F;proc&#x2F;sys&#x2F;fs&#x2F;nr_open&lt;&#x2F;p&gt;
+&lt;p&gt;4、用户进程的有效范围
+问题1：su切换用户时提示：Resource temporarily unavailable&lt;&#x2F;p&gt;
+&lt;p&gt;或者通过进程跟踪 strace -p pid 看到:Resource temporarily unavailab&lt;&#x2F;p&gt;
+&lt;p&gt;通过ulimit -a，得到结果：&lt;&#x2F;p&gt;
+&lt;p&gt;core file size      (blocks, -c) 0
+data seg size      (kbytes, -d) unlimited
+scheduling priority       (-e) 0
+file size        (blocks, -f) unlimited
+pending signals         (-i) 63463
+max locked memory    (kbytes, -l) 64
+max memory size     (kbytes, -m) unlimited
+open files            (-n) 65535
+pipe size       (512 bytes, -p) 8
+POSIX message queues   (bytes, -q) 819200
+real-time priority        (-r) 0
+stack size        (kbytes, -s) 8192
+cpu time        (seconds, -t) unlimited
+max user processes        (-u) 4096
+virtual memory      (kbytes, -v) unlimited
+file locks            (-x) unlimited&lt;&#x2F;p&gt;
+&lt;p&gt;在上面这些参数中，通常我们关注得比较多:&lt;&#x2F;p&gt;
+&lt;p&gt;open files: 一个进程可打开的最大文件数.&lt;&#x2F;p&gt;
+&lt;p&gt;max user processes: 系统允许创建的最大进程数量.&lt;&#x2F;p&gt;
+&lt;p&gt;通过 ps -efL|grep java |wc -l&lt;&#x2F;p&gt;
+&lt;p&gt;#24001&lt;&#x2F;p&gt;
+&lt;p&gt;这个得到的线程数竟然是2万多，远远超过4096&lt;&#x2F;p&gt;
+&lt;p&gt;我们可以使用 ulimit -u 20000 修改max user processes的值，但是只能在当前终端的这个session里面生效，重新登录后仍然是使用系统默认值。&lt;&#x2F;p&gt;
+&lt;p&gt;正确的修改方式是修改&#x2F;etc&#x2F;security&#x2F;limits.d&#x2F;20-nproc.conf文件中的值。先看一下这个文件包含什么：&lt;&#x2F;p&gt;
+&lt;p&gt;$ cat &#x2F;etc&#x2F;security&#x2F;limits.d&#x2F;90-nproc.conf # Default limit for number of user&#x27;s processes to prevent# accidental fork bombs.# See rhbz #432903 for reasoning.*     soft  nproc  8192
+我们只要修改上面文件中的8192这个值，即可。&lt;&#x2F;p&gt;
+&lt;p&gt;问题2：linux 打开文件数 too many open files 解决方法
+在运行某些命令或者 tomcat等服务器持续运行 一段时间后可能遇到  too many open files。&lt;&#x2F;p&gt;
+&lt;p&gt;出现这句提示的原因是程序打开的文件&#x2F;socket连接数量超过系统设定值。&lt;&#x2F;p&gt;
+&lt;p&gt;java进程如果遇到java.net.SocketException: Too many open files，接着可能导致域名解析ava.net.UnknownHostException:&lt;&#x2F;p&gt;
+&lt;p&gt;原因是用户进程无法打开系统文件了。&lt;&#x2F;p&gt;
+&lt;p&gt;查看每个用户最大允许打开文件数量&lt;&#x2F;p&gt;
+&lt;p&gt;ulimit -a&lt;&#x2F;p&gt;
+&lt;p&gt;其中 open files (-n) 65535 表示每个用户最大允许打开的文件数量是65535 。 默认是1024。1024很容易不够用。&lt;&#x2F;p&gt;
+&lt;p&gt;永久修改open files 方法
+vim &#x2F;etc&#x2F;security&#x2F;limits.conf&lt;br &#x2F;&gt;
+在最后加入&lt;br &#x2F;&gt;
+* soft nofile 65535 
+* hard nofile 65535&lt;&#x2F;p&gt;
+&lt;p&gt;或者只加入&lt;&#x2F;p&gt;
+&lt;p&gt;* - nofile 65535&lt;&#x2F;p&gt;
+&lt;p&gt;最前的 * 表示所有用户，可根据需要设置某一用户，例如
+fdipzone soft nofile 8192&lt;br &#x2F;&gt;
+fdipzone hard nofile 8192&lt;&#x2F;p&gt;
+&lt;p&gt;注意&amp;quot;nofile&amp;quot;项有两个可能的限制措施。就是项下的hard和soft。 要使修改过得最大打开文件数生效，必须对这两种限制进行设定。 如果使用&amp;quot;-&amp;quot;字符设定, 则hard和soft设定会同时被设定。 
+改完后注销一下就能生效。&lt;&#x2F;p&gt;
+&lt;p&gt;通过 ulimit -n或者ulimit -a 查看系统的最大文件打开数已经生效了。但此时查看进程的最大文件打开数没有变，原因是这个值是在进程启动的时候设定的，要生效必须重启！&lt;&#x2F;p&gt;
+&lt;p&gt;ok，那就重启吧，重启完毕，结果发现依然没变！这奇了怪了，后来经过好久的排查，最终确认问题是，该程序是通过 supervisord来管理的，也就是这进程都是 supervisord 的子进程，而 supervisord 的最大文件打开数还是老的配置，此时必须重启 supervisord 才可以。&lt;&#x2F;p&gt;
+&lt;p&gt;当大家遇到limits修改不生效的时候，请查一下进程是否只是子进程，如果是，那就要把父进程也一并重启才可以。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;1-limitsshi-yi-ge-jin-cheng-de-zi-yuan-hui-bei-zi-jin-cheng-ji-cheng&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#1-limitsshi-yi-ge-jin-cheng-de-zi-yuan-hui-bei-zi-jin-cheng-ji-cheng&quot; aria-label=&quot;Anchor link for: 1-limitsshi-yi-ge-jin-cheng-de-zi-yuan-hui-bei-zi-jin-cheng-ji-cheng&quot;&gt;1. limits是一个进程的资源，会被子进程继承&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;h3 id=&quot;2-soft-limit-s-hard-limits-h&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#2-soft-limit-s-hard-limits-h&quot; aria-label=&quot;Anchor link for: 2-soft-limit-s-hard-limits-h&quot;&gt;2. soft limit -S, hard limits -H&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;hard limits只能被root用户修改，启动的时候会加载配置&#x2F;etc&#x2F;security&#x2F;limits.conf&lt;&#x2F;p&gt;
+&lt;p&gt;soft limits可以被任何用户修改，但不能超过hard limits&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;3-zai-linuxxia-mei-ge-jin-cheng-de-limitxin-xi-bao-cun-zai-proc-pid-limitswen-jian-zhong-linux-os-kenerl-2-6-24-di-yu-2-6-24ban-ben-de-kenerlxu-yao-shou-dong-tong-ji-proc-pid-fdxia-mian-you-duo-ge-shao-ge-wen-jian&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#3-zai-linuxxia-mei-ge-jin-cheng-de-limitxin-xi-bao-cun-zai-proc-pid-limitswen-jian-zhong-linux-os-kenerl-2-6-24-di-yu-2-6-24ban-ben-de-kenerlxu-yao-shou-dong-tong-ji-proc-pid-fdxia-mian-you-duo-ge-shao-ge-wen-jian&quot; aria-label=&quot;Anchor link for: 3-zai-linuxxia-mei-ge-jin-cheng-de-limitxin-xi-bao-cun-zai-proc-pid-limitswen-jian-zhong-linux-os-kenerl-2-6-24-di-yu-2-6-24ban-ben-de-kenerlxu-yao-shou-dong-tong-ji-proc-pid-fdxia-mian-you-duo-ge-shao-ge-wen-jian&quot;&gt;3. 在linux下，每个进程的limit信息保存在&#x2F;proc&#x2F;PID&#x2F;limits文件中(linux OS kenerl &amp;gt; 2.6.24)。低于2.6.24版本的kenerl需要手动统计 &#x2F;proc&#x2F;PID&#x2F;fd下面有多个少个文件。&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;h3 id=&quot;4-lsof-p-pidxian-shi-suo-you-de-da-kai-wen-jian-bao-gua-shared-library&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#4-lsof-p-pidxian-shi-suo-you-de-da-kai-wen-jian-bao-gua-shared-library&quot; aria-label=&quot;Anchor link for: 4-lsof-p-pidxian-shi-suo-you-de-da-kai-wen-jian-bao-gua-shared-library&quot;&gt;4. lsof -p pid显示所有的打开文件包括shared library&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;lsof 会统计一些duplicate的open file&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;5-system-wide-fd&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#5-system-wide-fd&quot; aria-label=&quot;Anchor link for: 5-system-wide-fd&quot;&gt;5. system-wide fd&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;sysctl -a&lt;&#x2F;p&gt;
+&lt;p&gt;vim &#x2F;etc&#x2F;sysctl.conf&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;6-max-open-file-on-the-system&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#6-max-open-file-on-the-system&quot; aria-label=&quot;Anchor link for: 6-max-open-file-on-the-system&quot;&gt;6. max open file on the system&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;cat &#x2F;proc&#x2F;sys&#x2F;fs&#x2F;file-max&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;7-stat-the-openning-file-from-the-kenerl-point-of-view&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#7-stat-the-openning-file-from-the-kenerl-point-of-view&quot; aria-label=&quot;Anchor link for: 7-stat-the-openning-file-from-the-kenerl-point-of-view&quot;&gt;7. stat the openning file from the kenerl point of view&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;cat&lt;&#x2F;span&gt;&lt;span&gt; &#x2F;proc&#x2F;sys&#x2F;fs&#x2F;file-nr 
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;864&lt;&#x2F;span&gt;&lt;span&gt;     0       3274116
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;have&lt;&#x2F;span&gt;&lt;span&gt; 864 out of max 3274116 open files
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;8-li-yong-lsoftong-ji-mei-ge-jin-cheng-da-kai-de-wen-jian-shu-mu&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#8-li-yong-lsoftong-ji-mei-ge-jin-cheng-da-kai-de-wen-jian-shu-mu&quot; aria-label=&quot;Anchor link for: 8-li-yong-lsoftong-ji-mei-ge-jin-cheng-da-kai-de-wen-jian-shu-mu&quot;&gt;8.利用lsof统计每个进程打开的文件数目&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;lsof -n |awk &amp;#39;{print $2}&amp;#39;|sort|uniq -c |sort -nr|more 
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;9-she-zhi-pu-tong-yong-hu-xia-da-kai-wen-jian-de-zui-da-zhi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#9-she-zhi-pu-tong-yong-hu-xia-da-kai-wen-jian-de-zui-da-zhi&quot; aria-label=&quot;Anchor link for: 9-she-zhi-pu-tong-yong-hu-xia-da-kai-wen-jian-de-zui-da-zhi&quot;&gt;9. 设置普通用户下打开文件的最大值&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;ulimit -n 4096
+-bash: ulimit: open files: cannot modify limit: Operation not permitted&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;9-1-zai-etc-security-limits-confzhong-tian-jia&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#9-1-zai-etc-security-limits-confzhong-tian-jia&quot; aria-label=&quot;Anchor link for: 9-1-zai-etc-security-limits-confzhong-tian-jia&quot;&gt;9.1 在&#x2F;etc&#x2F;security&#x2F;limits.conf中添加&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;ul&gt;
+&lt;li&gt;hard nofile 100000&lt;&#x2F;li&gt;
+&lt;li&gt;soft nofile 100000&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h4 id=&quot;9-2-etc-pam-d-login-tian-jia&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#9-2-etc-pam-d-login-tian-jia&quot; aria-label=&quot;Anchor link for: 9-2-etc-pam-d-login-tian-jia&quot;&gt;9.2 &#x2F;etc&#x2F;pam.d&#x2F;login 添加&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;session required     &#x2F;lib64&#x2F;security&#x2F;pam_limits.so&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;9-3-zhong-qi-ssh2he-rccron-zhe-yang-zhi-jin-cheng-jiu-zi-dong-ji-cheng-liao-nofile&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#9-3-zhong-qi-ssh2he-rccron-zhe-yang-zhi-jin-cheng-jiu-zi-dong-ji-cheng-liao-nofile&quot; aria-label=&quot;Anchor link for: 9-3-zhong-qi-ssh2he-rccron-zhe-yang-zhi-jin-cheng-jiu-zi-dong-ji-cheng-liao-nofile&quot;&gt;9.3 重启 ssh2和rccron，这样只进程就自动继承了nofile&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;&#x2F;etc&#x2F;init.d&#x2F;ssh2 restart
+rccron restart&lt;&#x2F;p&gt;
+</content>
+    </entry>
+</feed>

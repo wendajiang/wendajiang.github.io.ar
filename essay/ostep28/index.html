@@ -1,0 +1,205 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>threads-locks | 「靡不有初，鲜克有终」</title><meta content="ostep 28 chapter understand" name=description><link href=https://wendajiang.github.io/essay/ostep28/ rel=canonical><meta content=threads-locks property=og:title><meta content="ostep 28 chapter understand" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/essay/ostep28/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta content=2023-02-28T10:33:25 property=og:updated_time><meta content=threads-locks property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/essay/ostep28/"
+      },
+      "headline": "threads-locks",
+      "image": ,
+      "datePublished": "2023-02-28T10:33:25",
+      "dateModified": "2023-02-28T10:33:25",
+      "author": {
+        "@type": "Organization",
+        "name": "threads-locks"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "threads-locks",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "ostep 28 chapter understand"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Essay",
+            "item": "https://wendajiang.github.io/essay/"
+          },
+        
+      
+        
+        
+        
+        
+        
+        
+        
+        
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  3 ,
+            "name": "Ostep28",
+            "item": "https://wendajiang.github.io/essay/ostep28/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/essay/ostep28/#basic-idea>Basic Idea</a><li><a href=https://wendajiang.github.io/essay/ostep28/#how-to-build-a-spin-lock>How to build a Spin lock</a></li><ul><li><a href=https://wendajiang.github.io/essay/ostep28/#evaluating-locks>Evaluating Locks</a><li><a href=https://wendajiang.github.io/essay/ostep28/#controlling-interrputs>Controlling Interrputs</a><li><a href=https://wendajiang.github.io/essay/ostep28/#a-failed-attempt-just-using-loads-stores>A failed attempt: Just using loads/stores</a><li><a href=https://wendajiang.github.io/essay/ostep28/#building-working-spin-locks-with-test-and-set>Building working spin locks with test-and-set</a><li><a href=https://wendajiang.github.io/essay/ostep28/#evaluating-spin-locks>Evaluating Spin Locks</a><li><a href=https://wendajiang.github.io/essay/ostep28/#compare-and-swap>Compare-and-swap</a><li><a href=https://wendajiang.github.io/essay/ostep28/#load-linked-and-store-conditional>Load-linked and Store-conditional</a><li><a href=https://wendajiang.github.io/essay/ostep28/#fetch-and-add>Fetch-and-add</a></ul><li><a href=https://wendajiang.github.io/essay/ostep28/#how-to-avoid-spinning>How to avoid spinning</a></li><ul><li><a href=https://wendajiang.github.io/essay/ostep28/#simple-approach-just-yield>Simple approach: just yield</a><li><a href=https://wendajiang.github.io/essay/ostep28/#using-queues-sleeping-instead-of-spinning>Using queues: sleeping instead of spinning</a></li><ul><li><a href=https://wendajiang.github.io/essay/ostep28/#two-phase-locks>Two-phase locks</a></ul></ul></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>threads-locks</h1><p><small>Posted 2023-02-28 10:33:25 ‐ <strong>9 min read</strong></small><p><div class=category-area>「 <a href=https://wendajiang.github.io/tags/ostep> <div class=category>ostep</div> </a> 」</div></div><h1 id=basic-idea>Basic Idea</h1><p>We would like to execute a series of instructions atomically, but due to the presence of interrupts on a single processor (or multiple threads executing on multiple processors concurrently), we couldn't. So we need the lock. Programmers annotate source code with locks, putting them around critical sections, and thus ensure that any such critical section executes as if it were a single atomic instruction.<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span>lock_t mutex; </span><span style=color:#6272a4>// some globally-allocated lock 'mutex'
+</span><span style=color:#ff79c6>...
+</span><span style=color:#50fa7b>lock</span><span>(</span><span style=color:#ff79c6>&</span><span>mutex);
+</span><span>balance </span><span style=color:#ff79c6>=</span><span> balance </span><span style=color:#ff79c6>+ </span><span style=color:#bd93f9>1</span><span>;
+</span><span style=color:#50fa7b>unlock</span><span>(</span><span style=color:#ff79c6>&</span><span>mutex);
+</span></code></pre><h1 id=how-to-build-a-spin-lock>How to build a Spin lock</h1><p>By now, you should have some understanding of how a lock works, from the perspective of a programmer. But how should we build a lock? What hardware support is needed? What OS support?<h2 id=evaluating-locks>Evaluating Locks</h2><ul><li>The first is whether the lock does its basic task, which is to provide <strong>mutual exclusion</strong>.<li>The second is <strong>fairness</strong>. Does each thread contending for the lock get a fair shot at acquiring it once it is free?<li>The final criterion is <strong>performance</strong>, specifically the time overheads added by using the lock. <ul><li>no contention, when a single thread is running and grabs and releases the lock, what's the overhead?<li>multiple threads are contending for the lock on a single CPU<li>how does the lock perform when there are multiple CPUs involved, and threads on each contending for the lock?</ul></ul><h2 id=controlling-interrputs>Controlling Interrputs</h2><p>The earliest solutions used to provide mutual exclusion was to disable interrupts for critical sections. <em>This solution was invented for single-processor systems.</em><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>lock</span><span>() </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#50fa7b>DisableInterrupts</span><span>();
+</span><span style=color:#fff>}
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>unlock</span><span>() </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#50fa7b>EnableInterrupts</span><span>();
+</span><span style=color:#fff>}
+</span></code></pre><p>Positive:<ul><li>easy, don't have to scratch your head too hard to figure out why this works.</ul><p>Negatives:<ul><li>allow any calling thread to perform <em>privileged</em> operation(turning interrupts on and off) <ul><li>if one greedy program could call lock() at the beginning of its execution and thus monopolize the process<li>worse, call lock() and go into an endless loop, the OS can't regain the control of the system</ul><li>does not work on multiprocessors<li>turning off interrupts for extended periods of time can lead to interrupts becoming lost, which can lead to serious systems problems.<li>inefficient</ul><p>So this approach is not fact. Turning off interrupts is only used in limited contexts as a mutual-exclusion primitive.<h2 id=a-failed-attempt-just-using-loads-stores>A failed attempt: Just using loads/stores</h2><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>typedef struct</span><span> ___lock_t </span><span style=color:#fff>{ </span><span style=font-style:italic;color:#8be9fd>int</span><span> flag; </span><span style=color:#fff>} </span><span>lock_t;
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>init</span><span>(lock_t </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>mutex</span><span>) </span><span style=color:#fff>{
+</span><span>  mutex</span><span style=color:#ff79c6>-></span><span style=color:#fff>flag </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>lock</span><span>(lock_t </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>mutex</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>while</span><span>(mutex</span><span style=color:#ff79c6>-></span><span style=color:#fff>flag </span><span style=color:#ff79c6>== </span><span style=color:#bd93f9>1</span><span>);  </span><span style=color:#6272a4>// spin-wait (do nothing)
+</span><span>  mutex</span><span style=color:#ff79c6>-></span><span style=color:#fff>flag </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>1</span><span>;
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>unlock</span><span>(lock_t </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>mutex</span><span>) </span><span style=color:#fff>{
+</span><span>  mutex</span><span style=color:#ff79c6>-></span><span style=color:#fff>flag </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span style=color:#fff>}
+</span></code></pre><p>The idea is simple: use a simple variable to indicate whether some thread has possession of a lock.<p><img alt=image-20230228130631762 src=https://wendajiang.github.io/pics/ostep28/image-20230228130631762.png><p>But it's wrong. As you can see the above pic, both threads set the flag to 1 and both threads are thus bale to enter the critical secion.<h2 id=building-working-spin-locks-with-test-and-set>Building working spin locks with test-and-set</h2><p>As disabling interrupts does not work on multiple processors, and because simple approaches using loads and stores (as shown above) don't work, system designers started to invent hardware support for locking.<p><strong>test-and-set(atomic exchange)</strong> instruction. We use the follow cpp snippet code to describe:<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#50fa7b>TestAndSet</span><span>(</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>old_ptr</span><span>, </span><span style=font-style:italic;color:#8be9fd>int </span><span style=font-style:italic;color:#ffb86c>new</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>int</span><span> old </span><span style=color:#ff79c6>= *</span><span>old_ptr;
+</span><span>  </span><span style=color:#ff79c6>*</span><span>old_ptr </span><span style=color:#ff79c6>= new</span><span>;
+</span><span>  </span><span style=color:#ff79c6>return</span><span> old
+</span><span style=color:#fff>}
+</span></code></pre><p>What the test-and-set instruction does is as follows.<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>typedef struct</span><span> ___lock_t </span><span style=color:#fff>{ </span><span style=font-style:italic;color:#8be9fd>int</span><span> flag; </span><span style=color:#fff>} </span><span>lock_t;
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>init</span><span>(lock_t </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>lock</span><span>) </span><span style=color:#fff>{
+</span><span>  lock</span><span style=color:#ff79c6>-></span><span style=color:#fff>flag </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>lock</span><span>(lock_t </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>lock</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>while</span><span>(</span><span style=color:#50fa7b>TestAndSet</span><span>(</span><span style=color:#ff79c6>&</span><span>lock</span><span style=color:#ff79c6>-></span><span style=color:#fff>flag</span><span>, </span><span style=color:#bd93f9>1</span><span>) </span><span style=color:#ff79c6>== </span><span style=color:#bd93f9>1</span><span>);  
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>unlock</span><span>(lock_t </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>lock</span><span>) </span><span style=color:#fff>{
+</span><span>  lock</span><span style=color:#ff79c6>-></span><span style=color:#fff>flag </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span style=color:#fff>}
+</span></code></pre><p>Rethinking last section's problem, as the test-and-set is atomically operation, that problem never happen.<p>It's the simplest type of lock to build, and simply spins, using CPU cycles, until the lock becomes available. To work correctly on single processor, it requires a <strong>preemptive scheduler</strong>(i.e., one that will interrupt a thread via a timer, in order to run a different thread, from time to time).<h2 id=evaluating-spin-locks>Evaluating Spin Locks</h2><ul><li>Correctness. ✅<li>Fairness? ❌, spin locks don't provide any fairness guarantees.<li>Performance？ <ul><li>single processor: waste of CPU cycles<li>multiple CPUs, work reasonably well (if the number of threads roughly equals the number os CPUs). The critical section is short, and spin thread soon require the lock, avoid the thread context swap</ul></ul><h2 id=compare-and-swap>Compare-and-swap</h2><p>Another hardware primitive that some systems provide is known as the <strong>compare-and-swap</strong> instruction.(or <strong>compare-and-exchange</strong>). The C pseudocode is below:<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#50fa7b>CompareAndSwap</span><span>(</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>ptr</span><span>, </span><span style=font-style:italic;color:#8be9fd>int </span><span style=font-style:italic;color:#ffb86c>expected</span><span>, </span><span style=font-style:italic;color:#8be9fd>int </span><span style=font-style:italic;color:#ffb86c>new</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>int</span><span> original </span><span style=color:#ff79c6>= *</span><span>ptr;
+</span><span>  </span><span style=color:#ff79c6>if </span><span>(original </span><span style=color:#ff79c6>==</span><span> expected) </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>*</span><span>ptr </span><span style=color:#ff79c6>= new</span><span>;
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>return</span><span> original;
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>lock</span><span>(lock_t </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>lock</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>while</span><span>(</span><span style=color:#50fa7b>CompareAndSwap</span><span>(</span><span style=color:#ff79c6>&</span><span>lock</span><span style=color:#ff79c6>-></span><span style=color:#fff>flag</span><span>, </span><span style=color:#bd93f9>0</span><span>, </span><span style=color:#bd93f9>1</span><span>) </span><span style=color:#ff79c6>== </span><span style=color:#bd93f9>1</span><span>);
+</span><span style=color:#fff>}
+</span></code></pre><p>Although, compare-and-swap is more powerful instruction than test-and-set in the situation of <strong>lock-free synchronization</strong>. However, if we just build a simple spin lock with it, its behavior is identical to the spin lock we analyzed above.<h2 id=load-linked-and-store-conditional>Load-linked and Store-conditional</h2><p>MIPS architecture, for example, the <strong>load-linked</strong> and <strong>store-conditional</strong> instructions can be used in tandem to build locks and other concurrent structures. The C pseudocode for these instructions is as below. Alpha, PowerPC, and ARM provide similar instructions.<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#50fa7b>LoadLinked</span><span>(</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>ptr</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>return *</span><span>ptr;
+</span><span style=color:#fff>}
+</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#50fa7b>StoreConditional</span><span>(</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>ptr</span><span>, </span><span style=font-style:italic;color:#8be9fd>int </span><span style=font-style:italic;color:#ffb86c>value</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>if </span><span>(no update to </span><span style=color:#ff79c6>*</span><span>ptr since LoadLinked to </span><span style=color:#bd93f9>this</span><span> address) </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>*</span><span>ptr </span><span style=color:#ff79c6>=</span><span> value;
+</span><span>    </span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>1</span><span>;
+</span><span>  </span><span style=color:#fff>} </span><span style=color:#ff79c6>else </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>0</span><span>;
+</span><span>  </span><span style=color:#fff>}
+</span><span style=color:#fff>}
+</span></code></pre><p>The lock can be built as below.<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>lock</span><span>(lock_t </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>lock</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>while</span><span>(</span><span style=color:#bd93f9>1</span><span>) </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>while</span><span>(</span><span style=color:#50fa7b>LoadLinked</span><span>(</span><span style=color:#ff79c6>&</span><span>lock</span><span style=color:#ff79c6>-></span><span style=color:#fff>flag</span><span>) </span><span style=color:#ff79c6>== </span><span style=color:#bd93f9>1</span><span>); </span><span style=color:#6272a4>// spin until it's zero
+</span><span>    </span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#50fa7b>StoreConditional</span><span>(</span><span style=color:#ff79c6>&</span><span>lock</span><span style=color:#ff79c6>-></span><span style=color:#fff>flag</span><span>, </span><span style=color:#bd93f9>1</span><span>) </span><span style=color:#ff79c6>== </span><span style=color:#bd93f9>1</span><span>) </span><span style=color:#ff79c6>return</span><span>;
+</span><span>  </span><span style=color:#fff>}
+</span><span style=color:#fff>}
+</span></code></pre><p>Smart undergraduate student suggested a more concise form of the above.<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>lock</span><span>(lock_t </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>lock</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>while</span><span>(</span><span style=color:#50fa7b>LoadLinked</span><span>(</span><span style=color:#ff79c6>&</span><span>lock</span><span style=color:#ff79c6>-></span><span style=color:#fff>flag</span><span>) </span><span style=color:#ff79c6>|| !</span><span style=color:#50fa7b>StoreConditional</span><span>(</span><span style=color:#ff79c6>&</span><span>lock</span><span style=color:#ff79c6>-></span><span style=color:#fff>flag</span><span>, </span><span style=color:#bd93f9>1</span><span>)); 
+</span><span style=color:#fff>}
+</span></code></pre><h2 id=fetch-and-add>Fetch-and-add</h2><p>One final hardware primitive is the <strong>fetch-and-add</strong> instruction, which atomically increments a value while returning the old value at a particular address. The C pseudocode look like this:<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#50fa7b>FetchAndAdd</span><span>(</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>ptr</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>int</span><span> old </span><span style=color:#ff79c6>= *</span><span>ptr;
+</span><span>  </span><span style=color:#ff79c6>*</span><span>ptr </span><span style=color:#ff79c6>=</span><span> old </span><span style=color:#ff79c6>+ </span><span style=color:#bd93f9>1</span><span>;
+</span><span>  </span><span style=color:#ff79c6>return</span><span> old;
+</span><span style=color:#fff>}
+</span></code></pre><p>We can use fetch-and-add to build a more interesting <strong>ticket lock</strong>.<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>typedef struct</span><span> __lock_t </span><span style=color:#fff>{
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>int</span><span> ticket;
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>int</span><span> turn;
+</span><span style=color:#fff>} </span><span>lock_t;
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>lock_init</span><span>(lock_t </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>lock</span><span>) </span><span style=color:#fff>{
+</span><span>  lock</span><span style=color:#ff79c6>-></span><span style=color:#fff>ticket </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span>  lock</span><span style=color:#ff79c6>-></span><span style=color:#fff>turn </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span style=color:#fff>}
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>lock</span><span>(lock_t </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>lock</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>int</span><span> myturn </span><span style=color:#ff79c6>= </span><span style=color:#50fa7b>FetchAndAdd</span><span>(</span><span style=color:#ff79c6>&</span><span>lock</span><span style=color:#ff79c6>-></span><span style=color:#fff>ticket</span><span>);
+</span><span>  </span><span style=color:#ff79c6>while</span><span>(lock</span><span style=color:#ff79c6>-></span><span style=color:#fff>turn </span><span style=color:#ff79c6>!=</span><span> myturn); </span><span style=color:#6272a4>// spin
+</span><span style=color:#fff>}
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>unlock</span><span>(lock_t </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>lock</span><span>) </span><span style=color:#fff>{
+</span><span>  lock</span><span style=color:#ff79c6>-></span><span style=color:#fff>turn </span><span style=color:#ff79c6>=</span><span> lock</span><span style=color:#ff79c6>-></span><span style=color:#fff>turn </span><span style=color:#ff79c6>+ </span><span style=color:#bd93f9>1</span><span>;
+</span><span style=color:#fff>}
+</span></code></pre><p>Note one important difference with this solution versus our previous attempts: it ensures progress for all threads. Once a thread is assigned its ticket value, it will be scheduled at some point in the future(once those in front of it have passed through the critical section and released the lock).<h1 id=how-to-avoid-spinning>How to avoid spinning</h1><h2 id=simple-approach-just-yield>Simple approach: just yield</h2><p>Our first try is simple and friendly approach: when you are going to spin, instead give up the CPU to another thread.<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>init</span><span>() </span><span style=color:#fff>{
+</span><span>  flag </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span style=color:#fff>}
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>lock</span><span>() </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>while</span><span>(</span><span style=color:#50fa7b>TestAndSet</span><span>(</span><span style=color:#ff79c6>&</span><span>flag, </span><span style=color:#bd93f9>1</span><span>) </span><span style=color:#ff79c6>== </span><span style=color:#bd93f9>1</span><span>)
+</span><span>    </span><span style=color:#50fa7b>yield</span><span>();
+</span><span style=color:#fff>}
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>unlock</span><span>() </span><span style=color:#fff>{
+</span><span>  flag </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span style=color:#fff>}
+</span></code></pre><p>Yield is simply a system call that moves the caller from the <strong>running</strong> state to the <strong>ready</strong> state, and thus promotes another thread to running.<p>But, we have not tackled the starvation problem at all.<h2 id=using-queues-sleeping-instead-of-spinning>Using queues: sleeping instead of spinning</h2><p>The real problem with our previous approaches is that they leave too much to change. The scheduler determines which thread runs next; if the scheduler makes a bad choice, a thread runs that must either spin waiting for the lock (our first approach), or yield the CPU immediately (our second approach). Either way, there is potential for waste and no prevention of starvation.<p>Thus, we must explicitly exert some control over which thread next gets to acquire the lock after the current holder releases it. <strong>A queue to keep track of which threads are waiting to acquire the lock</strong><blockquote><p>​spin lock maybe cause priority inversion.<br> Assume T1, T2, and T1 has lower priority. T1 only runs when T2 is not able to do so(e.g. when T2 is blocked on I/O). Now the problem. Assume T2 is blocked for some reason. So T1 runs, grabs a spin lock, and enters a critical section. T2 now become unblocked, and the CPU scheduler immediately schedules it. Now T2 tries to acquire the lock, and it can't, it just keeps spinning. Because the lock is a spin lock, T2 spins forever, and the system is hung.<p>solution is: priority inheritance, more generally, a higer-priority thread waiting for a lower-priority thread can temporarily boost the lower thread's priority, thus enabling it to run and overcoming the inversion.</blockquote><p>Linux provides a <strong>futex</strong> which is similar to the Solaris interface but provides more in-kernel functionality. Specifically, each futex has associated witch it a specific physical memory location, as well as a per-futex in-kernal queue. Callers can use futex call to sleep and wake as need be.<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>mutex_lock</span><span>(</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>mutex</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>int</span><span> v;
+</span><span>  </span><span style=color:#6272a4>// bit 31 was clear, we got the mutex
+</span><span>  </span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#50fa7b>atomic_bit_test_set</span><span>(mutex, </span><span style=color:#bd93f9>31</span><span>) </span><span style=color:#ff79c6>== </span><span style=color:#bd93f9>0</span><span>) </span><span style=color:#ff79c6>return</span><span>;
+</span><span>  </span><span style=color:#50fa7b>atomic_increment</span><span>(mutex);
+</span><span>  </span><span style=color:#ff79c6>while</span><span>(</span><span style=color:#bd93f9>1</span><span>) </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#50fa7b>atomic_bit_test_set</span><span>(mutex, </span><span style=color:#bd93f9>31</span><span>) </span><span style=color:#ff79c6>== </span><span style=color:#bd93f9>0</span><span>) </span><span style=color:#fff>{
+</span><span>      </span><span style=color:#50fa7b>atomic_decrement</span><span>(mutex);
+</span><span>      </span><span style=color:#ff79c6>return</span><span>;
+</span><span>    </span><span style=color:#fff>}
+</span><span>    </span><span style=color:#6272a4>// we have to waitfirst make sure the futex value we monitoring is truly negative(locked)
+</span><span>    v </span><span style=color:#ff79c6>= *</span><span>mutex;
+</span><span>    </span><span style=color:#ff79c6>if </span><span>(v </span><span style=color:#ff79c6>>= </span><span style=color:#bd93f9>0</span><span>) </span><span style=color:#ff79c6>continue</span><span>;
+</span><span>    </span><span style=color:#50fa7b>futex_wait</span><span>(mutex, v);
+</span><span>  </span><span style=color:#fff>}
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>mutex_unlock</span><span>(</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>mutex</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#6272a4>// adding 0x80000000 to counter results in 0 if and only if there are not other intersted threads
+</span><span>  </span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#50fa7b>atomic_add_zero</span><span>(mutex, </span><span style=color:#bd93f9>0x80000000</span><span>)) </span><span style=color:#ff79c6>return</span><span>;
+</span><span>  </span><span style=color:#6272a4>// there are other threads waiting for this mutex, wake one of them up.
+</span><span>  </span><span style=color:#50fa7b>futex_wake</span><span>(</span><span style=color:#ff79c6>*</span><span>mutex);
+</span><span style=color:#fff>}
+</span></code></pre><h3 id=two-phase-locks>Two-phase locks</h3><p>One final note: the Linux approach has the flavor the an old approach , and is now referred to as a <strong>two-phase lock</strong>. A two-phase lock realizes that spinning can be useful, particularly if the lock is about to be released. So in the first phase, the lock spins for a while, hoping that is can acquire the lock.<p>However, if the lock is not acquired during the first spin phase, a second phase is entered, where the caller is put to sleep, and only woken up when the lock becomes free later. The Linux lock above is a form of such a lock, but it only pins once; a generalization of this could spin in a loop for a fixed amount of time before using futex support to sleep.<p>两阶段锁，是 hybrid 方法的一个很好实例，结合两个好想法变成更好的一个方法。当然这取决于很多因素，硬件环境，线程数量，工作负载情况。总之，做一个通用的适用于所有情况的锁仍然是一个挑战。</article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'threads-locks',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

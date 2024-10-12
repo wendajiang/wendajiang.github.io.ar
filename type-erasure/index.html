@@ -1,0 +1,229 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>Type Erasure | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/type-erasure/ rel=canonical><meta content="Type Erasure" property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/type-erasure/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta content=2024-02-20T08:58:12 property=og:updated_time><meta content="Type Erasure" property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/type-erasure/"
+      },
+      "headline": "Type Erasure",
+      "image": ,
+      "datePublished": "2024-02-20T08:58:12",
+      "dateModified": "2024-02-20T08:58:12",
+      "author": {
+        "@type": "Organization",
+        "name": "Type Erasure"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Type Erasure",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Type Erasure",
+            "item": "https://wendajiang.github.io/type-erasure/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><script>function initMermaid(){var a={startOnLoad:true,theme:"neutral",flowchart:{useMaxWidth:true,htmlLabels:true}};mermaid.initialize(a);window.mermaid.init(undefined,document.querySelectorAll('.mermaid'))}</script><script async onload=initMermaid() src=https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/type-erasure/#what-is-type-erasure>What is type erasure</a></li><ul><li><a href=https://wendajiang.github.io/type-erasure/#from-example-to-generalization>From example to generalization</a></ul><li><a href=https://wendajiang.github.io/type-erasure/#type-erasue-as-a-design-pattern>Type erasue as a design pattern?</a></li><ul><li><a href=https://wendajiang.github.io/type-erasure/#why-doesn-t-type-erasure-completely-replace-inheritance-in-c>Why doesn't type erasure completely replace inheritance in C++?</a></ul><li><a href=https://wendajiang.github.io/type-erasure/#type-erasure-as-an-implementation-technique>Type erasure as an implementation technique</a><li><a href=https://wendajiang.github.io/type-erasure/#how-is-type-erasure-implemented-in-c>How is type erasure implemented in C++?</a></li><ul><li><a href=https://wendajiang.github.io/type-erasure/#very-old-type-erasure>Very old type erasure</a><li><a href=https://wendajiang.github.io/type-erasure/#type-erasure-using-inheritance>Type erasure using inheritance</a></li><ul><li><a href=https://wendajiang.github.io/type-erasure/#type-erasue-without-memory-allocation>Type erasue without memory allocation</a></ul><li><a href=https://wendajiang.github.io/type-erasure/#type-erasure-without-inheritance>Type erasure without inheritance</a></ul><li><a href=https://wendajiang.github.io/type-erasure/#example-in-real-world>Example in real world</a><li><a href=https://wendajiang.github.io/type-erasure/#reference>reference</a></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>Type Erasure</h1><p><small>Posted 2024-02-20 08:58:12 ‐ <strong>7 min read</strong></small><p><div class=category-area>「 <a href="https://wendajiang.github.io/tags/design pattern"> <div class=category>design pattern</div> </a><a href=https://wendajiang.github.io/tags/cpp> <div class=category>cpp</div> </a><a href=https://wendajiang.github.io/tags/GoF> <div class=category>GoF</div> </a><a href=https://wendajiang.github.io/tags/llvm> <div class=category>llvm</div> </a> 」</div></div><h1 id=what-is-type-erasure><a aria-label="Anchor link for: what-is-type-erasure" class=zola-anchor href=#what-is-type-erasure>What is type erasure</a></h1><p>Type erasure, in general, is a programming technique by which the explicit type information is removed from the program. It is a type of abstraction that ensures that the program does not explicitly depend on some of the data types.<p>The aim here is to increase the level of abstraction -- instead of writing some type-specific code, perhaps serveral versions of it for different types, we can write just one version that is more abstract, and expressed the concept -- for example, instead of writing a function whose interface expresses the concept <em>sort an array of integers</em>, we want to write a more abstract function, <em>sort any array</em>.<h2 id=from-example-to-generalization><a aria-label="Anchor link for: from-example-to-generalization" class=zola-anchor href=#from-example-to-generalization>From example to generalization</a></h2><p>In c++, <code>std::function</code> is a general-purpose polymorphic function wrapper, or a general callable object. It's used to store any callable entity such as a function, a lambda expression, a functor(an object with the operator()), or a memeber function pointer.<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span>std</span><span style=color:#ff79c6>::</span><span>function<</span><span style=font-style:italic;color:#66d9ef>size_t</span><span>(</span><span style=color:#ff79c6>const</span><span> std</span><span style=color:#ff79c6>::</span><span>string</span><span style=color:#ff79c6>&</span><span>)> f;
+</span><span style=font-style:italic;color:#66d9ef>size_t </span><span style=color:#50fa7b>f1</span><span>(</span><span style=color:#ff79c6>const</span><span> std</span><span style=color:#ff79c6>::</span><span>string</span><span style=color:#ff79c6>& </span><span style=font-style:italic;color:#ffb86c>s</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>return</span><span> s</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>capacity</span><span>();
+</span><span style=color:#fff>}
+</span><span>f </span><span style=color:#ff79c6>=</span><span> f1;
+</span><span>std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#50fa7b>f</span><span>(</span><span style=color:#f1fa8c>"abcde"</span><span>); </span><span style=color:#6272a4>// 15
+</span><span style=font-style:italic;color:#8be9fd>char</span><span> c </span><span style=color:#ff79c6>= </span><span style=color:#f1fa8c>'b'</span><span>;
+</span><span>f </span><span style=color:#ff79c6>= </span><span>[</span><span style=color:#ff79c6>=</span><span>](</span><span style=color:#ff79c6>const</span><span> std</span><span style=color:#ff79c6>::</span><span>string</span><span style=color:#ff79c6>&</span><span> s) </span><span style=color:#fff>{ </span><span style=color:#ff79c6>return</span><span> s</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>find</span><span>(c); </span><span style=color:#fff>}
+</span><span>std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#50fa7b>f</span><span>(</span><span style=color:#f1fa8c>"abcde"</span><span>); </span><span style=color:#6272a4>// 1
+</span><span>f </span><span style=color:#ff79c6>= &</span><span>std</span><span style=color:#ff79c6>::</span><span>string</span><span style=color:#ff79c6>::</span><span>size;
+</span><span>std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#50fa7b>f</span><span>(</span><span style=color:#f1fa8c>"abcde"</span><span>); </span><span style=color:#6272a4>// 5
+</span></code></pre><p>We can now see type erasure in its more general form: it is an abstraction for many different implementations that all provide the same behavior.<h1 id=type-erasue-as-a-design-pattern><a aria-label="Anchor link for: type-erasue-as-a-design-pattern" class=zola-anchor href=#type-erasue-as-a-design-pattern>Type erasue as a design pattern?</a></h1><p>type erasure offers an non-intrusive way to separate the interface from the implementation. It's different from inheritance. We can say that type erasure provides "external polyorphism": there is no unifying hierarchy required, and the set of types that can be used to implement a particular abstraction is extensible, not limited to just classes derived from a common base.<h2 id=why-doesn-t-type-erasure-completely-replace-inheritance-in-c><a aria-label="Anchor link for: why-doesn-t-type-erasure-completely-replace-inheritance-in-c" class=zola-anchor href=#why-doesn-t-type-erasure-completely-replace-inheritance-in-c>Why doesn't type erasure completely replace inheritance in C++?</a></h2><ol><li>performance, high-performance implementations of type erasure became available only recently.<li>convenience.</ol><h1 id=type-erasure-as-an-implementation-technique><a aria-label="Anchor link for: type-erasure-as-an-implementation-technique" class=zola-anchor href=#type-erasure-as-an-implementation-technique>Type erasure as an implementation technique</a></h1><p>Type erasure is a great tool for breaking dependencies between components of a large system.<p>For example, we are building a large distributed software system, so one of our core components it the network communication layer:<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Network </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>...
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>send</span><span>(</span><span style=color:#ff79c6>const </span><span style=font-style:italic;color:#8be9fd>char</span><span style=color:#ff79c6>* </span><span style=font-style:italic;color:#ffb86c>data</span><span>);
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>receive</span><span>(</span><span style=color:#ff79c6>const </span><span style=font-style:italic;color:#8be9fd>char</span><span style=color:#ff79c6>* </span><span style=font-style:italic;color:#ffb86c>buffer</span><span>);
+</span><span>  </span><span style=color:#ff79c6>...
+</span><span style=color:#fff>}
+</span></code></pre><p>Now, in one specific application, we have a need to process the data packets before and after they are sent across the network:<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Network </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>...
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>bool</span><span> needs_processing;
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>send</span><span>(</span><span style=color:#ff79c6>const </span><span style=font-style:italic;color:#8be9fd>char</span><span style=color:#ff79c6>* </span><span style=font-style:italic;color:#ffb86c>data</span><span>) </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>if </span><span>(needs_processing) </span><span style=color:#50fa7b>apply_processing</span><span>(buffer);
+</span><span>    </span><span style=color:#ff79c6>...
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>...
+</span><span style=color:#fff>}
+</span></code></pre><p>Is it a dependency nightmare: the low-level library now has to built with the <code>apply_processing</code> function from the specific application. Even worse, all other programs that do not require this functionality must still be compiled and linked with this code, even if they never set <code>needs_processing</code>.<p>While this problem can be handled the 'old school' way - with some function pointer or (worse) global variables, type erasure offers an elegant solution:<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>Network </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>static const </span><span style=font-style:italic;color:#8be9fd>char</span><span style=color:#ff79c6>* </span><span style=color:#50fa7b>default_processor</span><span>(</span><span style=color:#ff79c6>const </span><span style=font-style:italic;color:#8be9fd>char</span><span style=color:#ff79c6>* </span><span style=font-style:italic;color:#ffb86c>data</span><span>) </span><span style=color:#fff>{
+</span><span>    std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"default processing" </span><span style=color:#ff79c6><<</span><span> std</span><span style=color:#ff79c6>::</span><span>endl;
+</span><span>    </span><span style=color:#ff79c6>return</span><span> data;
+</span><span>  </span><span style=color:#fff>}
+</span><span>  std</span><span style=color:#ff79c6>::</span><span>function<</span><span style=color:#ff79c6>const </span><span style=font-style:italic;color:#8be9fd>char</span><span style=color:#ff79c6>*</span><span>(</span><span style=color:#ff79c6>const </span><span style=font-style:italic;color:#8be9fd>char</span><span style=color:#ff79c6>*</span><span>)> processor </span><span style=color:#ff79c6>=</span><span> default_processor;
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>send</span><span>(</span><span style=color:#ff79c6>const </span><span style=font-style:italic;color:#8be9fd>char</span><span style=color:#ff79c6>* </span><span style=font-style:italic;color:#ffb86c>data</span><span>) </span><span style=color:#fff>{
+</span><span>    data </span><span style=color:#ff79c6>= </span><span style=color:#50fa7b>processor</span><span>(data);
+</span><span>    </span><span style=color:#ff79c6>...
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> F>
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>set_processor</span><span>(F</span><span style=color:#ff79c6>&& </span><span style=font-style:italic;color:#ffb86c>f</span><span>) </span><span style=color:#fff>{
+</span><span>    processor </span><span style=color:#ff79c6>=</span><span> f;
+</span><span>  </span><span style=color:#fff>}
+</span><span style=color:#fff>}</span><span>;
+</span></code></pre><p>This is an example of the strategy design pattern, where the implementation of a particular behavior can be chosen at run-time.<h1 id=how-is-type-erasure-implemented-in-c><a aria-label="Anchor link for: how-is-type-erasure-implemented-in-c" class=zola-anchor href=#how-is-type-erasure-implemented-in-c>How is type erasure implemented in C++?</a></h1><h2 id=very-old-type-erasure><a aria-label="Anchor link for: very-old-type-erasure" class=zola-anchor href=#very-old-type-erasure>Very old type erasure</a></h2><pre class=language-c data-lang=c style=background:#282a36;color:#f8f8f2><code class=language-c data-lang=c><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#50fa7b>less</span><span>(</span><span style=color:#ff79c6>const </span><span style=font-style:italic;color:#8be9fd>void</span><span style=color:#ff79c6>* </span><span style=font-style:italic;color:#ffb86c>a</span><span>, </span><span style=color:#ff79c6>const </span><span style=font-style:italic;color:#8be9fd>void</span><span style=color:#ff79c6>* </span><span style=font-style:italic;color:#ffb86c>b</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>return *</span><span>(</span><span style=color:#ff79c6>const </span><span style=font-style:italic;color:#8be9fd>int</span><span style=color:#ff79c6>*</span><span>)a </span><span style=color:#ff79c6>- *</span><span>(</span><span style=color:#ff79c6>const </span><span style=font-style:italic;color:#8be9fd>int</span><span style=color:#ff79c6>*</span><span>)b;
+</span><span style=color:#fff>}
+</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#50fa7b>main</span><span>() </span><span style=color:#fff>{
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>int</span><span> a[</span><span style=color:#bd93f9>10</span><span>] </span><span style=color:#ff79c6>= </span><span style=color:#fff>{</span><span style=color:#bd93f9>1</span><span>, </span><span style=color:#bd93f9>10</span><span>, </span><span style=color:#bd93f9>2</span><span>, </span><span style=color:#bd93f9>9</span><span>, </span><span style=color:#bd93f9>3</span><span>, </span><span style=color:#bd93f9>8</span><span>, </span><span style=color:#bd93f9>4</span><span>, </span><span style=color:#bd93f9>7</span><span>, </span><span style=color:#bd93f9>5</span><span>, </span><span style=color:#bd93f9>0</span><span style=color:#fff>}</span><span>;
+</span><span>  </span><span style=color:#8be9fd>qsort</span><span>(a, </span><span style=color:#bd93f9>10</span><span>, </span><span style=color:#ff79c6>sizeof</span><span>(</span><span style=font-style:italic;color:#8be9fd>int</span><span>), less);
+</span><span style=color:#fff>}
+</span><span style=color:#6272a4>// void qsort(void *base, size_t nmemb, size_t size, int (*compare)(const void*, const void*));
+</span></code></pre><p>The major downside of this C approach is that the programmer is wholly responsible for ensuring that all the pieces of the type-erased code are consistent.<p>In C++, we can do a lot better, but the idea is still the same: the erased type is reified by the implementation of some type-specific code that is invoked through the type-agnostic interface. The key difference is that we are going to force the compiler to generate this code for use. There are, fundamentally, two techniues that can be used. The first one relies on run-time polymorphism(inheritance), and the second one uses template magic.<h2 id=type-erasure-using-inheritance><a aria-label="Anchor link for: type-erasure-using-inheritance" class=zola-anchor href=#type-erasure-using-inheritance>Type erasure using inheritance</a></h2><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>smartptr </span><span style=color:#fff>{
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>struct </span><span>destroy_base </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>virtual </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>operator()</span><span>(</span><span style=font-style:italic;color:#8be9fd>void</span><span style=color:#ff79c6>*</span><span>) </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span>    </span><span style=color:#ff79c6>virtual </span><span style=color:#50fa7b>~destroy_base</span><span>() </span><span style=color:#fff>{}
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> Deleter>
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>struct </span><span>destory: </span><span style=color:#ff79c6>public </span><span style=text-decoration:underline;font-style:italic;color:#8be9fd>destory_base </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#50fa7b>destroy</span><span>(Deleter </span><span style=font-style:italic;color:#ffb86c>d</span><span>): </span><span style=color:#fff>d_</span><span>(d) </span><span style=color:#fff>{}
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>operator()</span><span>(</span><span style=font-style:italic;color:#8be9fd>void</span><span style=color:#ff79c6>* </span><span style=font-style:italic;color:#ffb86c>p</span><span>) </span><span style=color:#ff79c6>override </span><span style=color:#fff>{
+</span><span>      </span><span style=color:#50fa7b>d_</span><span>(</span><span style=color:#ff79c6>static_cast</span><span>&LTT</span><span style=color:#ff79c6>*</span><span>>(p));
+</span><span>    </span><span style=color:#fff>}
+</span><span>    Deleter d_;
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> Deleter> </span><span style=color:#50fa7b>smartptr</span><span>(T</span><span style=color:#ff79c6>* </span><span style=font-style:italic;color:#ffb86c>p</span><span>, Deleter </span><span style=font-style:italic;color:#ffb86c>d</span><span>):
+</span><span>    </span><span style=color:#fff>p_</span><span>(p), </span><span style=color:#fff>d_</span><span>(</span><span style=color:#ff79c6>new </span><span style=color:#50fa7b>destroy</span><span>&LTDeleter>(d)) </span><span style=color:#fff>{}
+</span><span>
+</span><span>    </span><span style=color:#50fa7b>~smartptr</span><span>() </span><span style=color:#fff>{
+</span><span>      (</span><span style=color:#ff79c6>*</span><span>d_)(p_); </span><span style=color:#ff79c6>delete</span><span> d_;
+</span><span>    </span><span style=color:#fff>}
+</span><span>    T</span><span style=color:#ff79c6>* </span><span style=color:#50fa7b>operator-></span><span>() </span><span style=color:#fff>{ </span><span style=color:#ff79c6>return</span><span> p_; </span><span style=color:#fff>}
+</span><span>    </span><span style=color:#ff79c6>const</span><span> T</span><span style=color:#ff79c6>* </span><span style=color:#50fa7b>operator-></span><span>() </span><span style=color:#ff79c6>const </span><span style=color:#fff>{</span><span style=color:#ff79c6>return</span><span> p_;</span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>private</span><span>:
+</span><span>  T</span><span style=color:#ff79c6>*</span><span> p_;
+</span><span>  destroy_base</span><span style=color:#ff79c6>*</span><span> d_;
+</span><span style=color:#fff>}
+</span></code></pre><p>Befor we learn the other (usually more efficient) way to implement type erasure, we have to address one glaringly obvious inefficiency in our design: every time we create or delete a shared pointer or a <code>std::function</code> object that is implemented as described above, we must allocate and deallocate memory for the derived object that conceals the erased type.<h3 id=type-erasue-without-memory-allocation><a aria-label="Anchor link for: type-erasue-without-memory-allocation" class=zola-anchor href=#type-erasue-without-memory-allocation>Type erasue without memory allocation</a></h3><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>smartptr </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>...
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> Deleter>
+</span><span>    </span><span style=color:#50fa7b>smartptr</span><span>(T</span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>p</span><span>, Deleter </span><span style=font-style:italic;color:#ffb86c>d</span><span>): </span><span style=color:#fff>p_</span><span>(p) </span><span style=color:#fff>{
+</span><span>      </span><span style=color:#ff79c6>static_assert</span><span>(</span><span style=color:#ff79c6>sizeof</span><span>(Deleter) </span><span style=color:#ff79c6><= sizeof</span><span>(buf_));
+</span><span>      </span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>new </span><span>(</span><span style=color:#ff79c6>static_cast</span><span><</span><span style=font-style:italic;color:#8be9fd>void</span><span style=color:#ff79c6>*</span><span>>(buf_)) </span><span style=color:#50fa7b>destroy</span><span>&LTDeleter>(d);
+</span><span>    </span><span style=color:#fff>}
+</span><span>    </span><span style=color:#50fa7b>~smartptr</span><span>() </span><span style=color:#fff>{
+</span><span>      destroy_base</span><span style=color:#ff79c6>*</span><span> d </span><span style=color:#ff79c6>= </span><span>(destroy_base</span><span style=color:#ff79c6>*</span><span>)buf_;
+</span><span>      (</span><span style=color:#ff79c6>*</span><span>d)(p_);
+</span><span>      d</span><span style=color:#ff79c6>-></span><span style=color:#50fa7b>~destroy_base</span><span>();
+</span><span>    </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>private</span><span>:
+</span><span>    T</span><span style=color:#ff79c6>*</span><span> p_;
+</span><span>    </span><span style=color:#ff79c6>alignas</span><span>(</span><span style=color:#bd93f9>8</span><span>) </span><span style=font-style:italic;color:#8be9fd>char</span><span> buf_[</span><span style=color:#bd93f9>16</span><span>];
+</span><span style=color:#fff>}
+</span></code></pre><h2 id=type-erasure-without-inheritance><a aria-label="Anchor link for: type-erasure-without-inheritance" class=zola-anchor href=#type-erasure-without-inheritance>Type erasure without inheritance</a></h2><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>smartptr_te_static </span><span style=color:#fff>{
+</span><span>  T</span><span style=color:#ff79c6>*</span><span> p_;
+</span><span>  </span><span style=color:#ff79c6>using </span><span>destroy_t </span><span style=color:#ff79c6>= </span><span style=font-style:italic;color:#8be9fd>void</span><span>(</span><span style=color:#ff79c6>*</span><span>)(T</span><span style=color:#ff79c6>*</span><span>, </span><span style=font-style:italic;color:#8be9fd>void</span><span style=color:#ff79c6>*</span><span>);
+</span><span>  destroy_t destroy_;
+</span><span>  </span><span style=color:#ff79c6>alignas</span><span>(</span><span style=color:#bd93f9>8</span><span>) </span><span style=font-style:italic;color:#8be9fd>char</span><span> buf_[</span><span style=color:#bd93f9>8</span><span>];
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> Deleter>
+</span><span>  </span><span style=color:#ff79c6>static </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>invoke_destroy</span><span>(T</span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>p</span><span>, </span><span style=font-style:italic;color:#8be9fd>void</span><span style=color:#ff79c6>* </span><span style=font-style:italic;color:#ffb86c>d</span><span>) </span><span style=color:#fff>{
+</span><span>    (</span><span style=color:#ff79c6>*static_cast</span><span>&LTDeleter</span><span style=color:#ff79c6>*</span><span>>(d))(p);
+</span><span>  </span><span style=color:#fff>}
+</span><span>
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> Deleter>
+</span><span>  </span><span style=color:#50fa7b>smartptr_te_static</span><span>(T</span><span style=color:#ff79c6>* </span><span style=font-style:italic;color:#ffb86c>p</span><span>, Deleter </span><span style=font-style:italic;color:#ffb86c>d</span><span>): </span><span style=color:#fff>p_</span><span>(p), </span><span style=color:#fff>destroy_</span><span>(invoke_destroy&LTDeleter>) </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>static_assert</span><span>(</span><span style=color:#ff79c6>sizeof</span><span>(Deleter) </span><span style=color:#ff79c6><= sizeof</span><span>(buf_));
+</span><span>    </span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>new </span><span>(</span><span style=color:#ff79c6>static_cast</span><span><</span><span style=font-style:italic;color:#8be9fd>void</span><span style=color:#ff79c6>*</span><span>>(buf_)) </span><span style=color:#50fa7b>Deleter</span><span>(d);
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#50fa7b>~smartptr_te_static</span><span>() </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#bd93f9>this</span><span style=color:#ff79c6>-></span><span style=color:#50fa7b>destroy_</span><span>(p_, buf_);
+</span><span>  </span><span style=color:#fff>}
+</span><span>  T</span><span style=color:#ff79c6>* </span><span style=color:#50fa7b>operator-></span><span>() </span><span style=color:#fff>{</span><span style=color:#ff79c6>return</span><span> p_;</span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>const</span><span> T</span><span style=color:#ff79c6>* </span><span style=color:#50fa7b>operator-></span><span>() </span><span style=color:#ff79c6>const </span><span style=color:#fff>{ </span><span style=color:#ff79c6>return</span><span> p_; </span><span style=color:#fff>}
+</span><span style=color:#fff>}</span><span>;
+</span></code></pre><p>The function template that remains the information about the erased type is <code>invoke_destroy()</code>, note that is a static function.<p>We can use <code>vtable</code> to sim inheritance to avoid the smartptr bloat.<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> T>
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>smartptr_te_vtable </span><span style=color:#fff>{
+</span><span>  T</span><span style=color:#ff79c6>*</span><span> p_;
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>struct </span><span>vtable_t </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>using </span><span>destroy_t </span><span style=color:#ff79c6>= </span><span style=font-style:italic;color:#8be9fd>void</span><span>(</span><span style=color:#ff79c6>*</span><span>)(T</span><span style=color:#ff79c6>*</span><span>, </span><span style=font-style:italic;color:#8be9fd>void</span><span style=color:#ff79c6>*</span><span>);
+</span><span>    </span><span style=color:#ff79c6>using </span><span>destructor_t </span><span style=color:#ff79c6>= </span><span style=font-style:italic;color:#8be9fd>void</span><span>(</span><span style=color:#ff79c6>*</span><span>)(</span><span style=font-style:italic;color:#8be9fd>void</span><span style=color:#ff79c6>*</span><span>);
+</span><span>    destroy_t destroy_;
+</span><span>    destructor_t dtor_;
+</span><span>  </span><span style=color:#fff>}</span><span>;
+</span><span>  </span><span style=color:#ff79c6>const</span><span> vtable_t</span><span style=color:#ff79c6>*</span><span> vtable_ </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>nullptr</span><span>;
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> Deleter>
+</span><span>  </span><span style=color:#ff79c6>constexpr static</span><span> vtable_t vtable </span><span style=color:#ff79c6>= </span><span style=color:#fff>{
+</span><span>    smartptr_te_vtable</span><span style=color:#ff79c6>::</span><span>template destroy&LTDeleter>,
+</span><span>    smartptr_te_vtable</span><span style=color:#ff79c6>::</span><span>template destructor&LTDeleter>
+</span><span>  </span><span style=color:#fff>}</span><span>;
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> Deleter>
+</span><span>  </span><span style=color:#ff79c6>static </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>destroy</span><span>(T</span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>p</span><span>, </span><span style=font-style:italic;color:#8be9fd>void</span><span style=color:#ff79c6>* </span><span style=font-style:italic;color:#ffb86c>d</span><span>) </span><span style=color:#fff>{
+</span><span>    (</span><span style=color:#ff79c6>*static_cast</span><span>&LTDeleter</span><span style=color:#ff79c6>*</span><span>>(d))(p);
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> Deleter>
+</span><span>  </span><span style=color:#ff79c6>static </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>destructor</span><span>(</span><span style=font-style:italic;color:#8be9fd>void</span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>d</span><span>) </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>static_cast</span><span>&LTDeleter</span><span style=color:#ff79c6>*</span><span>>(d)</span><span style=color:#ff79c6>-></span><span style=color:#50fa7b>~Deleter</span><span>();
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>alignas</span><span>(</span><span style=color:#bd93f9>8</span><span>) </span><span style=font-style:italic;color:#8be9fd>char</span><span> buf_[</span><span style=color:#bd93f9>8</span><span>];
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> Deleter>
+</span><span>  </span><span style=color:#50fa7b>smartptr_te_vtable</span><span>(T</span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>p</span><span>, Deleter </span><span style=font-style:italic;color:#ffb86c>d</span><span>): </span><span style=color:#fff>p_</span><span>(p), </span><span style=color:#fff>vtable_</span><span>(</span><span style=color:#ff79c6>&</span><span>vtable&LTDeleter>) </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#ff79c6>static_assert</span><span>(</span><span style=color:#ff79c6>sizeof</span><span>(Deleter) </span><span style=color:#ff79c6><= sizeof</span><span>(buf_));
+</span><span>    </span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>new </span><span>(</span><span style=color:#ff79c6>static_cast</span><span><</span><span style=font-style:italic;color:#8be9fd>void</span><span style=color:#ff79c6>*</span><span>>(buf_)) </span><span style=color:#50fa7b>Deleter</span><span>(d);
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#50fa7b>~smartptr_te_vtable</span><span>() </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#bd93f9>this</span><span style=color:#ff79c6>-></span><span style=color:#fff>vtable_</span><span style=color:#ff79c6>-></span><span style=color:#50fa7b>destroy_</span><span>(p_, buf_);
+</span><span>    </span><span style=color:#bd93f9>this</span><span style=color:#ff79c6>-></span><span style=color:#fff>vtable_</span><span style=color:#ff79c6>-></span><span style=color:#50fa7b>dtor_</span><span>(buf_);
+</span><span>  </span><span style=color:#fff>}
+</span><span>  T</span><span style=color:#ff79c6>* </span><span style=color:#50fa7b>operator-></span><span>() </span><span style=color:#fff>{</span><span style=color:#ff79c6>return</span><span> p_;</span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>const</span><span> T</span><span style=color:#ff79c6>* </span><span style=color:#50fa7b>operator-></span><span>() </span><span style=color:#ff79c6>const </span><span style=color:#fff>{</span><span style=color:#ff79c6>return</span><span> p_;</span><span style=color:#fff>}
+</span><span style=color:#fff>}
+</span></code></pre><h1 id=example-in-real-world><a aria-label="Anchor link for: example-in-real-world" class=zola-anchor href=#example-in-real-world>Example in real world</a></h1><p>LLVM new <code>PassManager</code> manage new pass (<code>PassInfoMixin</code> template pass) by type erase( concepts and model)<p>The code location is at<pre class=language-markdown data-lang=markdown style=background:#282a36;color:#f8f8f2><code class=language-markdown data-lang=markdown><span>llvm-project
+</span><span> └─llvm
+</span><span>    └─include
+</span><span>       └─llvm
+</span><span>          └─IR
+</span><span>             ├─PassManager.h
+</span><span>             ├─PassManagerInternal.h(passconcept and passmodel)
+</span><span>             └─PassManagerImpl.h (run or addPass)
+</span><span>
+</span></code></pre><h1 id=reference><a aria-label="Anchor link for: reference" class=zola-anchor href=#reference>reference</a></h1><ul><li><a href=https://davekilian.com/cpp-type-erasure.html>concepts and model(template) in one class that represent the concept</a><li>C++ template - the complete guide 2nd ediditon chapter 22<li>andrzej's series on type erasure <a href=https://akrzemi1.wordpress.com/2013/11/18/type-erasure-part-i/>part1</a> <a href=https://akrzemi1.wordpress.com/2013/12/06/type-erasure-part-ii/>part2</a> <a href=https://akrzemi1.wordpress.com/2013/12/11/type-erasure-part-iii/>part3</a> <a href=https://akrzemi1.wordpress.com/2014/01/13/type-erasure-part-iv/>part4</a></ul></article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'Type Erasure',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

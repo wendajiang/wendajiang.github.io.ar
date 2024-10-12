@@ -1,0 +1,88 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>Event-based Concurrency | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/essay/ostep33/ rel=canonical><meta content="Event-based Concurrency" property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/essay/ostep33/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta content=2023-03-09T11:00:08 property=og:updated_time><meta content="Event-based Concurrency" property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/essay/ostep33/"
+      },
+      "headline": "Event-based Concurrency",
+      "image": ,
+      "datePublished": "2023-03-09T11:00:08",
+      "dateModified": "2023-03-09T11:00:08",
+      "author": {
+        "@type": "Organization",
+        "name": "Event-based Concurrency"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Event-based Concurrency",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Essay",
+            "item": "https://wendajiang.github.io/essay/"
+          },
+        
+      
+        
+        
+        
+        
+        
+        
+        
+        
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  3 ,
+            "name": "Ostep33",
+            "item": "https://wendajiang.github.io/essay/ostep33/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><script>function initMermaid(){var a={startOnLoad:true,theme:"neutral",flowchart:{useMaxWidth:true,htmlLabels:true}};mermaid.initialize(a);window.mermaid.init(undefined,document.querySelectorAll('.mermaid'))}</script><script async onload=initMermaid() src=https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/essay/ostep33/#an-event-loop>An Event Loop</a></li><ul><li><a href=https://wendajiang.github.io/essay/ostep33/#import-api-select-poll-epoll>Import API: select/poll/epoll</a><li><a href=https://wendajiang.github.io/essay/ostep33/#why-simpler-no-locks-needed>Why simpler? No locks needed</a></ul><li><a href=https://wendajiang.github.io/essay/ostep33/#a-problem-blocking-system-calls>A problem: blocking system calls</a></li><ul><li><a href=https://wendajiang.github.io/essay/ostep33/#a-solution-asynchronous-i-o>A solution: asynchronous I/O</a><li><a href=https://wendajiang.github.io/essay/ostep33/#another-problem-state-management>Another problem: state management</a></ul><li><a href=https://wendajiang.github.io/essay/ostep33/#what-is-still-difficult-with-events>What is still difficult with events</a><li><a href=https://wendajiang.github.io/essay/ostep33/#reference>reference</a></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>Event-based Concurrency</h1><p><small>Posted 2023-03-09 11:00:08 ‐ <strong>4 min read</strong></small><p><div class=category-area>「 <a href=https://wendajiang.github.io/tags/ostep> <div class=category>ostep</div> </a> 」</div></div><p>Specifically, a different style of concurrent programming is often used in both GUI-based applications as well as some types of internet servers. This style, known as event-based concurrency.<p>The problem that event-based concurrency addresses is two-fold.<ul><li>Manageing concurrency correctly in multi-threaded applications. <ul><li>missing locks, deadlock, and so on.</ul><li>In a multi-threaded application, the developer has little or no control over what is scheduled at a given moment in time <ul><li>The programmer simply creates threads and then hopes that the underlying OS schedules them in a reasonable manner across avaiable CPUs.</ul></ul><blockquote><p>how to build concurrent servers without threads</blockquote><h1 id=an-event-loop>An Event Loop</h1><p>You simple wait for something(i.e., an "event") to occur; when it does, you check what type of event it is and do the small amout of work it requires.<p>Canonical event-based server pseudocode:<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=color:#ff79c6>while</span><span>(</span><span style=color:#bd93f9>1</span><span>) </span><span style=color:#fff>{
+</span><span>  events </span><span style=color:#ff79c6>= </span><span style=color:#50fa7b>get_events</span><span>();
+</span><span>  </span><span style=color:#ff79c6>for </span><span>(e in events) </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#50fa7b>process_event</span><span>(e);
+</span><span>  </span><span style=color:#fff>}
+</span><span style=color:#fff>}
+</span></code></pre><p>But this leaves us with a bigger question: how exactly does an event-based server determine which events are taking place?<h2 id=import-api-select-poll-epoll>Import API: select/poll/epoll</h2><p>These interfaces enable a program to do is simple: check whether there is any incomming I/O that should be attended to.<blockquote><p>Blocking vs. Non-Blocking Interfaces<p>Blocking(or synchronous) interface do all of their work before returning to the caller; non-blocking(or asynchronous) interfaces begin some work but return immediately, thus letting whatever work that needs to be doen get done in the background. Non-blocking interfces are essential in the event-based approach, as a call that blocks will halt all progress.</blockquote><h2 id=why-simpler-no-locks-needed>Why simpler? No locks needed</h2><p>With a single CPU and an event-based application, the problems found in concurrent programs are no longer present. Specifically, because only one event is being handled at a time, there is no need to acquire or release locks.<h1 id=a-problem-blocking-system-calls>A problem: blocking system calls</h1><p>With an event-based approach ,however, there are no other threads to run: just the main event loop. And this implies that if an event handler issues a call that blocks, the <em>entire</em> server will do just that: block until the call completes. When the event loop blocks, the system sits idle, and thus is a huge potential waste of resources. We thus have a rule that must be obeyed in event-based systems: no blocking calls are allowed.<h2 id=a-solution-asynchronous-i-o>A solution: asynchronous I/O</h2><p>loop check the asynchronous issue completed.<h2 id=another-problem-state-management>Another problem: state management</h2><p>Thread-based code is more simpler. Packaging up some program state for the next event handler is not needed in thread-based programs, as the state the program need is on the stack of the thread.<p>For example, within a thread-based server:<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>int</span><span> rc </span><span style=color:#ff79c6>= </span><span style=color:#50fa7b>read</span><span>(fd, buffer, size);
+</span><span>rc </span><span style=color:#ff79c6>= </span><span style=color:#50fa7b>write</span><span>(sd, buffer, size);
+</span></code></pre><p>Doing this kind of work is trivial. But in an event-based system, life is not so easy. You must manually manage the state of program.<p>The <a href=https://web.eecs.umich.edu/~mosharaf/Readings/Fibers-Coop-Tasks.pdf>solution</a> sounds complicated, the idea is rahter simple: basically, record the needed information to finish processing this event in some data structure; when the event happens(i.e., when the disk I/O complates), look up the needed information and process the event.<h1 id=what-is-still-difficult-with-events>What is still difficult with events</h1><ul><li>when systems moved from a single CPU to multiple CPUs, in order to utilize more than one CPU, the event server has to run multiple event handlers in parallel; when doing so, the usual syschronization problems(e.g., critical sections) arise.<li>implicit blcking. Event though the server has been structured to avoid explicit blocking, page faults is hard to avoid.<li>hard to manager over time<li>asynchronous disk I/O is never quite integrates with asynchronous network I/O in as simple and uniform a manaer. you maybe need some combination of select() for networking and the AIO calls for disk I/O</ul><h1 id=reference>reference</h1><ul><li><a href=http://www.sosp.org/2001/papers/welsh.pdf>staged event-based concurrency</a></ul></article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'Event-based Concurrency',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

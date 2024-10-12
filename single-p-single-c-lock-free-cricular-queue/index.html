@@ -1,0 +1,151 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>Lock-Free Single-Producer - Single Consumer Circular Queue[翻译] | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/ rel=canonical><meta content="Lock-Free Single-Producer - Single Consumer Circular Queue[翻译]" property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta content=2023-02-28T10:36:06 property=og:updated_time><meta content="Lock-Free Single-Producer - Single Consumer Circular Queue[翻译]" property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/single-p-single-c-lock-free-cricular-queue/"
+      },
+      "headline": "Lock-Free Single-Producer - Single Consumer Circular Queue[翻译]",
+      "image": ,
+      "datePublished": "2021-02-07T10:36:06",
+      "dateModified": "2023-02-28T10:36:06",
+      "author": {
+        "@type": "Organization",
+        "name": "Lock-Free Single-Producer - Single Consumer Circular Queue[翻译]"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Lock-Free Single-Producer - Single Consumer Circular Queue[翻译]",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Single P Single C Lock Free Cricular Queue",
+            "item": "https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/#part-i>Part I</a></li><ul><li><a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/#introduction>Introduction</a><li><a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/#background-circular-fifo-queue>Background: Circular FIFO Queue</a><li><a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/#background-article-rationale>Background: Article Rationale</a><li><a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/#disclaimer>Disclaimer</a><li><a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/#memory-model-sequential-or-relaxed-acquire-release>Memory model: sequential or relaxed/acquire/release?</a><li><a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/#using-the-code>Using the code</a><li><a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/#code-explained-circularfifo-type-size>Code Explained: Circularfifo‹Type, Size›</a><li><a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/#how-it-works>How it works</a></li><ul><li><a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/#empty>Empty</a><li><a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/#producer-adds-items>Producer adds items</a><li><a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/#consumer-retrieves-item>Consumer retrieves item</a><li><a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/#full>Full</a></ul><li><a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/#thread-safe-use-and-implementation>Thread Safe Use and Implementation</a></ul><li><a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/#part-ii>Part II</a></li><ul><li><a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/#making-it-work>Making It Work</a><li><a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/#atomic-operations-and-the-different-memory-models>Atomic operations and the different Memory Models</a></ul></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>Lock-Free Single-Producer - Single Consumer Circular Queue[翻译]</h1><p><small>Posted 2021-02-07 10:36:06 ‐ <strong>6 min read</strong></small><p><div class=category-area>「 <a href=https://wendajiang.github.io/tags/translate> <div class=category>translate</div> </a><a href=https://wendajiang.github.io/tags/queue> <div class=category>queue</div> </a><a href=https://wendajiang.github.io/tags/lock-free> <div class=category>lock-free</div> </a> 」</div></div><p><a href=https://www.codeproject.com/articles/43510/lock-free-single-producer-single-consumer-circular>原文链接</a><h1 id=part-i><a aria-label="Anchor link for: part-i" class=zola-anchor href=#part-i>Part I</a></h1><h2 id=introduction><a aria-label="Anchor link for: introduction" class=zola-anchor href=#introduction>Introduction</a></h2><p>对于时间和内存敏感的系统，wait-free 和 lock-free 循环队列是一种有用的技术。队列的 wait-free 特性使每个操作以固定次步骤完成。 lock-free 特性使得单生产线程和单消费线程通信不需要锁。<p>Wait-free 和 lock-free 的特性可以应用于广泛的领域，比如实时系统的中断和信号处理或者其他时间敏感软件。<h2 id=background-circular-fifo-queue><a aria-label="Anchor link for: background-circular-fifo-queue" class=zola-anchor href=#background-circular-fifo-queue>Background: Circular FIFO Queue</a></h2><p>这里的循环 FIFO 队列只能适用于最多两个线程的通信，这个场景一般是单生产者单消费者问题。<p><strong>问题描述</strong>：高优先级任务不能延迟处理，并且要求处理数据是按照开始的FIFO顺序产生结果。比如，中断/信号处理程序，GUI事件，数据记录。<p><strong>解决方案</strong>：使用FIFO队列将任务发送给另一个线程（消费者），当任务从生产者传递到消费者时，使用FIFO队列可以将使得异步委派和处理提供可预测的行为。 生产者可以在队列没有满时，将任务加入到队列中，消费者可以从队列中将任务取出。对队列执行添加和取出操作时，不需要等待。如果消费者处理完一个任务，可以继续执行其他任务，当队列已满，生产者也不会阻塞。 显然队列满对于生产者不是什么好的事情，所以必须仔细考虑其最大尺寸以及满队列的不良影响。涉及此问题的方法，比如覆盖旧数据、多个优先级队列或其他处理方式。<h2 id=background-article-rationale><a aria-label="Anchor link for: background-article-rationale" class=zola-anchor href=#background-article-rationale>Background: Article Rationale</a></h2><p>略<h2 id=disclaimer><a aria-label="Anchor link for: disclaimer" class=zola-anchor href=#disclaimer>Disclaimer</a></h2><p>【译者注：免责声明以及一些类似 lock-free guarante 的内容】略<h2 id=memory-model-sequential-or-relaxed-acquire-release><a aria-label="Anchor link for: memory-model-sequential-or-relaxed-acquire-release" class=zola-anchor href=#memory-model-sequential-or-relaxed-acquire-release>Memory model: sequential or relaxed/acquire/release?</a></h2><p>本文提供了两种内存模型的队列：<code>memory_order_seq_cst</code>默认的，还有结合了<code>memory_order_acquire, memory_order_release, memory_order_relaxed</code>三种的，然后讨论了默认的不仅简单而且在x86架构的服务器上还很快<h2 id=using-the-code><a aria-label="Anchor link for: using-the-code" class=zola-anchor href=#using-the-code>Using the code</a></h2><p>牢记：单生产者，单消费者<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span>CicularFifo&LTMessage, </span><span style=color:#bd93f9>128</span><span>> queue;
+</span><span>
+</span><span>Message m </span><span style=color:#ff79c6>= ...
+</span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#bd93f9>false </span><span style=color:#ff79c6>==</span><span> queue</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>push</span><span>(m)) </span><span style=color:#fff>{ </span><span style=color:#6272a4>/*false equals full queue */</span><span style=color:#fff>}
+</span><span>
+</span><span>Message m;
+</span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#bd93f9>false </span><span style=color:#ff79c6>==</span><span> queue</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>pop</span><span>(m)) </span><span style=color:#fff>{ </span><span style=color:#6272a4>/*false equals empty queue */</span><span style=color:#fff>}
+</span></code></pre><h2 id=code-explained-circularfifo-type-size><a aria-label="Anchor link for: code-explained-circularfifo-type-size" class=zola-anchor href=#code-explained-circularfifo-type-size>Code Explained: Circularfifo‹Type, Size›</a></h2><p>简化的代码如下：<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>template</span><span>‹</span><span style=color:#ff79c6>typename</span><span> Element, </span><span style=font-style:italic;color:#66d9ef>size_t Size</span><span>› 
+</span><span style=font-style:italic;color:#8be9fd>class </span><span style=color:#50fa7b>CircularFifo</span><span>{
+</span><span>public</span><span style=color:#ff79c6>:
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>enum </span><span style=color:#fff>{</span><span> Capacity </span><span style=color:#ff79c6>= </span><span style=font-style:italic;color:#66d9ef>Size</span><span style=color:#ff79c6>+</span><span style=color:#bd93f9>1 </span><span style=color:#fff>}</span><span>;
+</span><span>
+</span><span>  </span><span style=color:#50fa7b>CircularFifo</span><span>() </span><span style=color:#ff79c6>: </span><span style=color:#50fa7b>_tail</span><span>(</span><span style=color:#bd93f9>0</span><span>), </span><span style=color:#50fa7b>_head</span><span>(</span><span style=color:#bd93f9>0</span><span>)</span><span style=color:#fff>{}   
+</span><span>  </span><span style=color:#ff79c6>virtual ~</span><span style=color:#50fa7b>CircularFifo</span><span>() </span><span style=color:#fff>{}
+</span><span>
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>bool </span><span style=color:#50fa7b>push</span><span>(</span><span style=color:#ff79c6>const</span><span> Element</span><span style=color:#ff79c6>&</span><span> item); 
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>bool </span><span style=color:#50fa7b>pop</span><span>(Element</span><span style=color:#ff79c6>&</span><span> item);
+</span><span>
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>bool </span><span style=color:#50fa7b>wasEmpty</span><span>() </span><span style=color:#ff79c6>const</span><span>;
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>bool </span><span style=color:#50fa7b>wasFull</span><span>() </span><span style=color:#ff79c6>const</span><span>;
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>bool </span><span style=color:#50fa7b>isLockFree</span><span>() </span><span style=color:#ff79c6>const</span><span>;
+</span><span>
+</span><span>private</span><span style=color:#ff79c6>:
+</span><span>  </span><span style=font-style:italic;color:#66d9ef>size_t </span><span style=color:#50fa7b>increment</span><span>(</span><span style=font-style:italic;color:#66d9ef>size_t</span><span> idx) </span><span style=color:#ff79c6>const</span><span>; 
+</span><span>
+</span><span>  std</span><span style=color:#ff79c6>::</span><span>atomic‹</span><span style=font-style:italic;color:#66d9ef>size_t</span><span>›  _tail;  
+</span><span>  Element              _array[Capacity];
+</span><span>  std</span><span style=color:#ff79c6>::</span><span>atomic‹</span><span style=font-style:italic;color:#66d9ef>size_t</span><span>›  _head; 
+</span><span>};
+</span></code></pre><h2 id=how-it-works><a aria-label="Anchor link for: how-it-works" class=zola-anchor href=#how-it-works>How it works</a></h2><p>第一个版本使用默认顺序原子操作，顺序模型使得程序容易理解并轻松推断出原子操作在各个线程中的顺序。在硬件强内存序结构的x86和x64架构上，使用顺序原子操作相比后面提到的弱内存序是有开销的<p>在弱内存架构的处理器上，这个差异会更明显。<h3 id=empty><a aria-label="Anchor link for: empty" class=zola-anchor href=#empty>Empty</a></h3><p>队列为空，头尾相等<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>bool </span><span style=color:#50fa7b>wasEmpty</span><span>() </span><span style=color:#ff79c6>const 
+</span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>return </span><span>(_head</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>load</span><span>()) </span><span style=color:#ff79c6>== </span><span>(_tail</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>load</span><span>());
+</span><span style=color:#fff>}
+</span></code></pre><h3 id=producer-adds-items><a aria-label="Anchor link for: producer-adds-items" class=zola-anchor href=#producer-adds-items>Producer adds items</a></h3><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=color:#6272a4>/* Producer only: updates tail index after setting the element in place */
+</span><span style=font-style:italic;color:#8be9fd>bool </span><span style=color:#50fa7b>push</span><span>(Element</span><span style=color:#ff79c6>& </span><span style=font-style:italic;color:#ffb86c>item_</span><span>)
+</span><span style=color:#fff>{	
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>auto</span><span> current_tail </span><span style=color:#ff79c6>=</span><span> _tail</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>load</span><span>();            
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>auto</span><span> next_tail </span><span style=color:#ff79c6>= </span><span style=color:#50fa7b>increment</span><span>(current_tail);    
+</span><span>  </span><span style=color:#ff79c6>if</span><span>(next_tail </span><span style=color:#ff79c6>!=</span><span> _head</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>load</span><span>())                         
+</span><span>  </span><span style=color:#fff>{
+</span><span>    _array[current_tail] </span><span style=color:#ff79c6>=</span><span> item;               
+</span><span>    _tail</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>store</span><span>(next_tail);                    
+</span><span>    </span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>true</span><span>;
+</span><span>  </span><span style=color:#fff>}
+</span><span>  
+</span><span>  </span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>false</span><span>;  </span><span style=color:#6272a4>// full queue
+</span><span style=color:#fff>}
+</span></code></pre><h3 id=consumer-retrieves-item><a aria-label="Anchor link for: consumer-retrieves-item" class=zola-anchor href=#consumer-retrieves-item>Consumer retrieves item</a></h3><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=color:#6272a4>/* Consumer only: updates head index after retrieving the element */
+</span><span style=font-style:italic;color:#8be9fd>bool </span><span style=color:#50fa7b>pop</span><span>(Element</span><span style=color:#ff79c6>& </span><span style=font-style:italic;color:#ffb86c>item</span><span>)
+</span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>const </span><span style=font-style:italic;color:#8be9fd>auto</span><span> current_head </span><span style=color:#ff79c6>=</span><span> _head</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>load</span><span>();  
+</span><span>  </span><span style=color:#ff79c6>if</span><span>(current_head </span><span style=color:#ff79c6>==</span><span> _tail</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>load</span><span>())  
+</span><span>    </span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>false</span><span>;   </span><span style=color:#6272a4>// empty queue
+</span><span>
+</span><span>  item </span><span style=color:#ff79c6>=</span><span> _array[current_head]; 
+</span><span>  _head</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>store</span><span>(</span><span style=color:#50fa7b>increment</span><span>(current_head)); 
+</span><span>  </span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>true</span><span>;
+</span><span style=color:#fff>}
+</span></code></pre><h3 id=full><a aria-label="Anchor link for: full" class=zola-anchor href=#full>Full</a></h3><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>bool </span><span style=color:#50fa7b>wasFull</span><span>() </span><span style=color:#ff79c6>const
+</span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>const </span><span style=font-style:italic;color:#8be9fd>auto</span><span> next_tail </span><span style=color:#ff79c6>= </span><span style=color:#50fa7b>increment</span><span>(_tail</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>load</span><span>());
+</span><span>  </span><span style=color:#ff79c6>return </span><span>(next_tail </span><span style=color:#ff79c6>==</span><span> _head</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>load</span><span>());
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#66d9ef>size_t </span><span style=color:#50fa7b>increment</span><span>(</span><span style=font-style:italic;color:#66d9ef>size_t </span><span style=font-style:italic;color:#ffb86c>idx</span><span>) </span><span style=color:#ff79c6>const
+</span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>return </span><span>(idx </span><span style=color:#ff79c6>+ </span><span style=color:#bd93f9>1</span><span>) </span><span style=color:#ff79c6>%</span><span> Capacity;
+</span><span style=color:#fff>}
+</span></code></pre><h2 id=thread-safe-use-and-implementation><a aria-label="Anchor link for: thread-safe-use-and-implementation" class=zola-anchor href=#thread-safe-use-and-implementation>Thread Safe Use and Implementation</a></h2><p>略<h1 id=part-ii><a aria-label="Anchor link for: part-ii" class=zola-anchor href=#part-ii>Part II</a></h1><h2 id=making-it-work><a aria-label="Anchor link for: making-it-work" class=zola-anchor href=#making-it-work>Making It Work</a></h2><p>在元素被读取和写入（pop或者push）后马上更新头或者尾index是必要的。因此，任何对于头尾index的更新必须保证正确，所以这需要是原子操作并且不能被重排序。<h2 id=atomic-operations-and-the-different-memory-models><a aria-label="Anchor link for: atomic-operations-and-the-different-memory-models" class=zola-anchor href=#atomic-operations-and-the-different-memory-models>Atomic operations and the different Memory Models</a></h2><p>Below is described a subset of the functionality that you can get from the different C++11 memory models and atomic operations. It is in no way comprehensive but contains the necessary pieces to explain both types of the C++11 empowered wait-free, lock-free circular queue.<p>There are <strong>three different memory-ordering models</strong> in C++11 and with them six ordering options.<ol><li>Sequentially consistent model <ul><li><code>memory_order_seq_cst</code></ul><li>acquire-release model <ul><li><code>memory_order_consume</code><li><code>memory_order_acquire</code><li><code>memory_order_release</code><li><code>memory_order_acq_rel</code></ul><li>relaxed model <ul><li><code>memory_order_relaxed</code></ul></ol><p>Please refer to <a href=https://wendajiang.github.io/single-p-single-c-lock-free-cricular-queue/@atomic_and_memory_order.md>atomic and memory order</a></article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'Lock-Free Single-Producer - Single Consumer Circ…',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

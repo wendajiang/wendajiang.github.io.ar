@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - book note</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/book note/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2021-08-04T13:17:25+00:00</updated>
+    <id>https://wendajiang.github.io/tags/book note/atom.xml</id>
+    <entry xml:lang="en">
+        <title>读《程序员修炼之道(2)》</title>
+        <published>2021-08-04T13:17:25+00:00</published>
+        <updated>2021-08-04T13:17:25+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/essay/pp-fromjourneyman-to-master/" type="text/html"/>
+        <id>https://wendajiang.github.io/essay/pp-fromjourneyman-to-master/</id>
+        <content type="html">&lt;!--
+mermaid example:
+&lt;div class=&quot;mermaid&quot;&gt;
+    mermaid program
+&lt;&#x2F;div&gt;
+--&gt;
+&lt;h2 id=&quot;wu-shi-de-zhe-xue&quot;&gt;务实的哲学&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;团队信任对于创造力和协作至关重要，  关键时刻信任的破坏几乎无法修复 ( 跑路？&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;提供选择，别找借口 -- 小黄鸭编程&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;破窗理论 -- 不要因为一些危急的事情，造成附加伤害，尽可能控制软件的熵&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;人们都觉得，加入一个推进中的成功项目更容易一些 ( 煮石头汤的故事&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;永远审视项目，不要做温水青蛙
+先养成仔细观察周围环境的习惯，然后在项目中这样做&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;知识和经验是你最重要的专业资产，但是它们是时效资产&lt;&#x2F;strong&gt;
+&lt;strong&gt;学习新事物的能力是你最重要的战略资产&lt;&#x2F;strong&gt;
+知识组合：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;定期投资 -- 安排一个固定的时间和地点学习&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;每年学习一门新语言&lt;&#x2F;li&gt;
+&lt;li&gt;每月读一本技术书&lt;&#x2F;li&gt;
+&lt;li&gt;读非技术书&lt;&#x2F;li&gt;
+&lt;li&gt;上课 -- 了解公司之外的人都在做什么&lt;&#x2F;li&gt;
+&lt;li&gt;尝试不同的环境 -- makefile -&amp;gt; IDE&lt;&#x2F;li&gt;
+&lt;li&gt;与时俱进 -- 关心最新技术的进展&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;想法的交叉是很重要的
+批判性思维 -- 批判性思考读到的和听到的东西&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;多样化 -- 熟悉的技能越多越好&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;风险管理 -- 不同技术在从高风险高回报到低风险低回报区间均匀分布，不要把技术鸡蛋都放在一个篮子里&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;低买高卖 -- 在一项新兴技术流行之前就开始学习，不过这是押宝&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;重新评估调整 -- 不断刷新自己的知识库&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;批判性思维&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;五次为什么&lt;&#x2F;li&gt;
+&lt;li&gt;谁从中受益&lt;&#x2F;li&gt;
+&lt;li&gt;有什么背景&lt;&#x2F;li&gt;
+&lt;li&gt;什么时候在哪里工作可以工作起来&lt;&#x2F;li&gt;
+&lt;li&gt;为什么是这个问题&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;写一个大纲，问自己：这是否用正确的方式表达了我想表达的东西
+以及现在是表达这个东西的好时机吗？&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;wu-shi-de-fang-fa&quot;&gt;务实的方法&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;etc-easy-to-change&quot;&gt;ETC(easy to change)&lt;&#x2F;h3&gt;
+&lt;p&gt;核心指导思想&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;DRY (Don&#x27;t Repeat Yourself)&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;正交性
+良好设计中，数据库相关代码应该和用户界面保持正交
+当系统的组件相互之间高度依赖时，就没有局部修理这回事&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>Clean C++ 读书笔记1</title>
+        <published>2021-04-25T22:45:06+00:00</published>
+        <updated>2021-04-25T22:45:06+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/essay/clean-cpp-principle/" type="text/html"/>
+        <id>https://wendajiang.github.io/essay/clean-cpp-principle/</id>
+        <content type="html">&lt;!--
+mermaid example:
+&lt;div class=&quot;mermaid&quot;&gt;
+    mermaid program
+&lt;&#x2F;div&gt;
+--&gt;
+&lt;h2 id=&quot;yuan-ze&quot;&gt;原则&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;kiss&quot;&gt;KISS&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;strong&gt;Keep it Simple and stupid&lt;&#x2F;strong&gt; &lt;&#x2F;p&gt;
+&lt;p&gt;保持代码简单，不要为了炫技而炫技，代码的第一位永远是可读和可维护性&lt;&#x2F;p&gt;
+&lt;p&gt;控制代码的复杂度非常重要&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;yagni&quot;&gt;YAGNI&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;strong&gt;You Aren&#x27;t Gonna Need It!&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;不要写将来的代码，永远不要假设什么代码将来会需要，需要的时候再写即可&lt;&#x2F;p&gt;
+&lt;p&gt;记住重构的力量&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;dry&quot;&gt;DRY&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;strong&gt;Don&#x27;t repeat yourself&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;不要复制代码，否则修改代码要记住修改所有 copy 的位置，基本这就肯定会带来 bug&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;information-hiding&quot;&gt;Information Hiding&lt;&#x2F;h3&gt;
+&lt;p&gt;类或者什么暴露给其他人使用的内容尽可能隐藏内部实现，这样调整类或者 API 实现时用户代码尽可能少的修改&lt;&#x2F;p&gt;
+&lt;p&gt;优点：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;模块修改的影响&lt;&#x2F;li&gt;
+&lt;li&gt;提高模块可用性&lt;&#x2F;li&gt;
+&lt;li&gt;更易测试&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;信息隐藏于封装很容易混淆，但是两者不同。信息隐藏是一个设计原则，帮助开发者更好构建模块，原则可以应用于多个层次的抽象，尤其是大型系统&lt;&#x2F;p&gt;
+&lt;p&gt;封装是依赖语言的，比如在 C++ 中，你可以将方法使用 private 关键字使之于外部无法访问。封装是信息隐藏的一种实现方式，但是不能保证。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;strong-cohesion&quot;&gt;Strong Cohesion&lt;&#x2F;h3&gt;
+&lt;p&gt;强内聚，软件开发中一般建议是任何软件实体(module, component, unit, class, function ...)应该是强内聚的&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;loose-coupling&quot;&gt;Loose Coupling&lt;&#x2F;h3&gt;
+&lt;p&gt;低耦合，有个例子&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Lamp &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;on&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{}
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;off&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Switch &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;private&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    Lamp &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;lamp;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;bool&lt;&#x2F;span&gt;&lt;span&gt; state &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;false&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;Switch&lt;&#x2F;span&gt;&lt;span&gt;(Lamp &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;lamp&lt;&#x2F;span&gt;&lt;span&gt;): &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;lamp&lt;&#x2F;span&gt;&lt;span&gt;(lamp) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;toggle&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(state) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;            state &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;false&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;            lamp&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;off&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;else &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;            state &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;            lamp&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;on&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Lamp 与 Switch 是强耦合的&lt;&#x2F;p&gt;
+&lt;p&gt;可以拆解为：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Swithable &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;virtual &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;on&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;virtual &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;off&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Switch &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;private&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    Switchadble&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt; switchable;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;bool&lt;&#x2F;span&gt;&lt;span&gt; state &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;false&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;Switch&lt;&#x2F;span&gt;&lt;span&gt;(Switchable &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;sw&lt;&#x2F;span&gt;&lt;span&gt;): &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;switchable&lt;&#x2F;span&gt;&lt;span&gt;(sw) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{}
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;toggle&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(state) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;            state &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;false&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;            switchable&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;off&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;else &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;            state &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;            switchable&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;on&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Lamp&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;font-style:italic;color:#8be9fd;&quot;&gt;Switchable &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;on&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;override &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;off&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;override &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这样，Lamp 就与 Switch 进行了解耦，扩展比如 Fan Radiator 就变得非常简单&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;be-careful-with-optimizations&quot;&gt;Be Careful with Optimizations&lt;&#x2F;h3&gt;
+&lt;p&gt;不要过早优化，如果没有现象表明需要优化，那就不要优化&lt;&#x2F;p&gt;
+&lt;p&gt;如果一定要优化，不要凭借直觉进行优化，使用 Profile 工具(比如&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;brendangregg&#x2F;FlameGraph&quot;&gt;火焰图&lt;&#x2F;a&gt;)对代码进行性能测试，结果可能与你直觉迥然不同&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;principle-of-least-astonishment-pla&quot;&gt;Principle of Least Astonishment (PLA)&lt;&#x2F;h3&gt;
+&lt;p&gt;更知名的名称为 &lt;em&gt;Principle of Least Surprice(POLS)&lt;&#x2F;em&gt;，用户接口设计中，不要让用户吃惊，比如 Ctrl-C 通常是复制的意思，这已经被广泛接受，不要重定义为比如退出程序的逻辑&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;the-boy-scout-rule&quot;&gt;The Boy Scout Rule&lt;&#x2F;h3&gt;
+&lt;p&gt;这个原则是关于开发者的。表示只要你发现了不干净的代码，马上整理它。比如：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;重命名命名很失败的类，函数，方法，成员&lt;&#x2F;li&gt;
+&lt;li&gt;将大函数拆分成小的逻辑单位&lt;&#x2F;li&gt;
+&lt;li&gt;删除没必要的注释&lt;&#x2F;li&gt;
+&lt;li&gt;清理复杂的if-else&lt;&#x2F;li&gt;
+&lt;li&gt;删除重复代码&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;这与迭代重构是一个意思，一次重构一点，逐步重构整个系统，其中关键的是没一点修改都要经过单元测试&lt;&#x2F;p&gt;
+&lt;p&gt;实际中重要的一点，就是共有代码权限，所有人可以修改所有代码 ---- 这通常在国内的公司有部分实现不了:) 逃&lt;&#x2F;p&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>beyond feeling: a guide to critical thinking 读书笔记</title>
+        <published>2021-02-06T00:00:00+00:00</published>
+        <updated>2021-02-06T00:00:00+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/essay/beyond-feeling/" type="text/html"/>
+        <id>https://wendajiang.github.io/essay/beyond-feeling/</id>
+        <content type="html"></content>
+    </entry>
+</feed>

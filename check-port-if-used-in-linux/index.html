@@ -1,0 +1,187 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>How to check the port if used in unix/linux | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/check-port-if-used-in-linux/ rel=canonical><meta content="How to check the port if used in unix/linux" property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/check-port-if-used-in-linux/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta content=2024-02-23T19:25:01 property=og:updated_time><meta content="How to check the port if used in unix/linux" property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/check-port-if-used-in-linux/"
+      },
+      "headline": "How to check the port if used in unix&#x2F;linux",
+      "image": ,
+      "datePublished": "2024-02-23T19:25:01",
+      "dateModified": "2024-02-23T19:25:01",
+      "author": {
+        "@type": "Organization",
+        "name": "How to check the port if used in unix&#x2F;linux"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "How to check the port if used in unix&#x2F;linux",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Check Port If Used In Linux",
+            "item": "https://wendajiang.github.io/check-port-if-used-in-linux/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/check-port-if-used-in-linux/#how-to-check-if-port-is-in-use>How to check if port is in use</a><li><a href=https://wendajiang.github.io/check-port-if-used-in-linux/#option-1-lsof-command>Option #1: lsof command</a><li><a href=https://wendajiang.github.io/check-port-if-used-in-linux/#option-2-netstat-or-ss-command>Option #2: netstat or ss command</a></li><ul><li><a href=https://wendajiang.github.io/check-port-if-used-in-linux/#linux-netstat-syntax>Linux netstat syntax</a><li><a href=https://wendajiang.github.io/check-port-if-used-in-linux/#freebsd-macos-os-x-netstat-syntax>FreeBSD/macOS (OS X) netstat syntax</a></ul><li><a href=https://wendajiang.github.io/check-port-if-used-in-linux/#option-3-nmap-command>Option #3: nmap command</a><li><a href=https://wendajiang.github.io/check-port-if-used-in-linux/#testing-if-a-port-is-open-from-a-bash-script>Testing if a port is open from a bash script</a></li><ul><li><a href=https://wendajiang.github.io/check-port-if-used-in-linux/#what-if-i-m-not-using-bash>What if I’m not using Bash…</a></ul><li><a href=https://wendajiang.github.io/check-port-if-used-in-linux/#using-perl-to-check-if-a-tcp-port-is-open-in-linux-or-unix>Using Perl to check if a TCP port is open in Linux or Unix</a><li><a href=https://wendajiang.github.io/check-port-if-used-in-linux/#python-example-to-check-if-a-tcp-port-is-open-in-linux-or-unix>Python example to check if a TCP port is open in Linux or Unix</a><li><a href=https://wendajiang.github.io/check-port-if-used-in-linux/#conclusion>Conclusion</a><li><a href=https://wendajiang.github.io/check-port-if-used-in-linux/#see-also>See also</a></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>How to check the port if used in unix/linux</h1><p><small>Posted 2024-02-23 19:25:01 ‐ <strong>7 min read</strong></small><p><div class=category-area>「 <a href=https://wendajiang.github.io/tags/report> <div class=category>report</div> </a><a href=https://wendajiang.github.io/tags/linux> <div class=category>linux</div> </a><a href=https://wendajiang.github.io/tags/tool> <div class=category>tool</div> </a> 」</div></div><h2 id=how-to-check-if-port-is-in-use><a aria-label="Anchor link for: how-to-check-if-port-is-in-use" class=zola-anchor href=#how-to-check-if-port-is-in-use><a href=https://www.cyberciti.biz/faq/unix-linux-check-if-port-is-in-use-command/>How to check if port is in use</a></a></h2><p>To check the listening ports and applications on Linux:<ol><li>Open a terminal application i.e. shell prompt.<li>Run any one of the following command on Linux to see open ports:<pre class=language-shell data-lang=shell style=background:#282a36;color:#f8f8f2><code class=language-shell data-lang=shell><span>$ sudo lsof -i -P -n | grep LISTEN
+</span><span>$ sudo netstat -tulpn | grep LISTEN
+</span><span>$ sudo ss -tulpn | grep LISTEN
+</span><span>$ sudo lsof -i:22 ## see a specific port such as 22 ##
+</span><span>$ sudo nmap -sTU -O IP-address-Here
+</span></code></pre><li>For the latest version of Linux use the ss command. For example, <code>ss -tulwnp</code></ol><p>Let us see commands and its output in details.<h2 id=option-1-lsof-command><a aria-label="Anchor link for: option-1-lsof-command" class=zola-anchor href=#option-1-lsof-command>Option #1: lsof command</a></h2><p>The syntax is:<pre class=language-shell data-lang=shell style=background:#282a36;color:#f8f8f2><code class=language-shell data-lang=shell><span>$ sudo lsof -i -P -n
+</span><span>$ sudo lsof -i -P -n | grep LISTEN
+</span><span>$ doas lsof -i -P -n | grep LISTEN # OpenBSD #
+</span></code></pre><h2 id=option-2-netstat-or-ss-command><a aria-label="Anchor link for: option-2-netstat-or-ss-command" class=zola-anchor href=#option-2-netstat-or-ss-command>Option #2: netstat or ss command</a></h2><p>You can check the listening ports and applications with netstat as follows.<h3 id=linux-netstat-syntax><a aria-label="Anchor link for: linux-netstat-syntax" class=zola-anchor href=#linux-netstat-syntax>Linux netstat syntax</a></h3><p><strong>Prerequisite</strong> By default, <code>netstat</code> command may not be installed on your system. Hence, use the <a href=https://www.cyberciti.biz/faq/10-alpine-linux-apk-command-examples/>apk command</a> on Alpine Linux, dnf command/<a href=https://www.cyberciti.biz/faq/rhel-centos-fedora-linux-yum-command-howto/>yum command</a> on RHEL & co, <a href=https://www.cyberciti.biz/faq/ubuntu-lts-debian-linux-apt-command-examples/>apt command</a>/<a href=https://www.cyberciti.biz/tips/linux-debian-package-management-cheat-sheet.html>apt-get command</a> on Debian, Ubuntu & co, zypper command on SUSE/OpenSUSE, pacman command on Arch Linux to install the <code>netstat</code>.<p>Run the netstat command along with <a href=https://www.cyberciti.biz/faq/howto-use-grep-command-in-linux-unix/>grep command</a> to filter out port in LISTEN state:<pre class=language-shell data-lang=shell style=background:#282a36;color:#f8f8f2><code class=language-shell data-lang=shell><span>$ netstat -tulpn | grep LISTEN
+</span><span>$ netstat -tulpn | more
+</span></code></pre><p>OR filter out specific TCP port such as 443: <code>$ netstat -tulpn | grep ':443'</code> Where netstat command options are:<ul><li><strong>-t</strong> : Select all TCP ports<li><strong>-u</strong> : Select all UDP ports<li><strong>-l</strong> : Show listening server sockets (open TCP and UDP ports in listing state)<li><strong>-p</strong> : Display PID/Program name for sockets. In other words, this option tells who opened the TCP or UDP port. For example, on my system, Nginx opened TCP port 80/443, so I will /usr/sbin/nginx or its PID.<li><strong>-n</strong> : Don’t resolve name (avoid dns lookup, this speed up the netstat on busy Linux/Unix servers)</ul><p>The netstat command deprecated for some time on Linux. Therefore, you need to use the ss command as follows:<pre class=language-shell data-lang=shell style=background:#282a36;color:#f8f8f2><code class=language-shell data-lang=shell><span>$ sudo ss -tulw
+</span><span>$ sudo ss -tulwn
+</span><span>$ sudo ss -tulwn | grep LISTEN
+</span></code></pre><p>Where, ss command options are as follows:<ul><li><strong>-t</strong> : Show only TCP sockets on Linux<li><strong>-u</strong> : Display only UDP sockets on Linux<li><strong>-l</strong> : Show listening sockets. For example, TCP port 22 is opened by SSHD server.<li><strong>-p</strong> : List process name that opened sockets<li><strong>-n</strong> : Don’t resolve service names i.e. don’t use DNS</ul><p>Related: <a href=https://www.cyberciti.biz/faq/what-process-has-open-linux-port/>Linux Find Out Which Process Is Listening Upon a Port</a><h3 id=freebsd-macos-os-x-netstat-syntax><a aria-label="Anchor link for: freebsd-macos-os-x-netstat-syntax" class=zola-anchor href=#freebsd-macos-os-x-netstat-syntax>FreeBSD/macOS (OS X) netstat syntax</a></h3><p>The syntax is as follows:<pre class=language-shell data-lang=shell style=background:#282a36;color:#f8f8f2><code class=language-shell data-lang=shell><span>$ netstat -anp tcp | grep LISTEN
+</span><span>$ netstat -anp udp | grep LISTEN
+</span></code></pre><p>You can use the sockstat command on macOS or <a href=https://www.cyberciti.biz/faq/freebsd-unix-find-the-process-pid-listening-on-a-certain-port-commands/>FreeBSD to display open TCP or UDP ports</a> too. For example: <code>{vivek@freebsd13-server:~}$ sudo sockstat -4 -6 -l</code> Outputs from my <a href=https://www.cyberciti.biz/faq/how-to-find-out-freebsd-version-and-patch-level-number/>FreeBSD server version</a> 13.xx:<pre style=background:#282a36;color:#f8f8f2><code><span>USER     COMMAND    PID   FD PROTO  LOCAL ADDRESS         FOREIGN ADDRESS      
+</span><span>root     master     1723  13 tcp4   127.0.0.1:25          *:*
+</span><span>root     master     1723  14 tcp4   192.168.2.20:25       *:*
+</span><span>root     sshd       1627  3  tcp6   *:22                  *:*
+</span><span>root     sshd       1627  4  tcp4   *:22                  *:*
+</span><span>ntpd     ntpd       1615  20 udp6   *:123                 *:*
+</span><span>ntpd     ntpd       1615  21 udp4   *:123                 *:*
+</span><span>ntpd     ntpd       1615  22 udp4   192.168.2.20:123      *:*
+</span><span>ntpd     ntpd       1615  23 udp6   ::1:123               *:*
+</span><span>ntpd     ntpd       1615  24 udp6   fe80::1%lo0:123       *:*
+</span><span>ntpd     ntpd       1615  25 udp4   127.0.0.1:123         *:*
+</span><span>ntpd     ntpd       1615  26 udp4   172.16.0.5:123        *:*
+</span><span>root     syslogd    1085  6  udp6   *:514                 *:*
+</span><span>root     syslogd    1085  7  udp4   *:514                 *:*
+</span><span>?        ?          ?     ?  udp4   *:17890               *:*
+</span><span>?        ?          ?     ?  udp6   *:17890               *:*
+</span></code></pre><h2 id=option-3-nmap-command><a aria-label="Anchor link for: option-3-nmap-command" class=zola-anchor href=#option-3-nmap-command>Option #3: nmap command</a></h2><p>The syntax is:<pre class=language-shell data-lang=shell style=background:#282a36;color:#f8f8f2><code class=language-shell data-lang=shell><span>$ sudo nmap -sT -O localhost# search for open port IP address 192.168.2.13
+</span><span>$ sudo nmap -sU -O 192.168.2.13 ##[ list open UDP ports ]
+</span><span>$ sudo nmap -sT -O 192.168.2.13 ##[ list open TCP ports ]
+</span></code></pre><p>You can combine TCP/UDP scan in a single command: <code>$ sudo nmap -sTU -O 192.168.2.13</code><h2 id=testing-if-a-port-is-open-from-a-bash-script><a aria-label="Anchor link for: testing-if-a-port-is-open-from-a-bash-script" class=zola-anchor href=#testing-if-a-port-is-open-from-a-bash-script>Testing if a port is open from a bash script</a></h2><p>One can use the “<code>/dev/tcp/{HostName}_OR_{IPAddrress}>/{port}</code>” syntax to check if a TCP port is open on a Linux or Unix machine when using Bash. In other words, the following is Bash specific feature. Let us see if TCP port 22 is open on localhost and 192.168.2.20:<pre class=language-shell data-lang=shell style=background:#282a36;color:#f8f8f2><code class=language-shell data-lang=shell><span>$ (echo >/dev/tcp/localhost/23) &>/dev/null && echo "open" || echo "close"
+</span><span>$ (echo >/dev/tcp/192.168.2.20/22) &>/dev/null && echo "open" || echo "close"
+</span></code></pre><p>Now we can build some logic as follows:<pre class=language-bash data-lang=bash style=background:#282a36;color:#f8f8f2><code class=language-bash data-lang=bash><span style=color:#6272a4>#!/bin/bash
+</span><span style=color:#fff>dest_box</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>"aws-prod-server-42"
+</span><span style=color:#8be9fd>echo </span><span style=color:#f1fa8c>"Testing the ssh connectivity ... "
+</span><span style=color:#ff79c6>if ! </span><span>(</span><span style=color:#8be9fd>echo </span><span style=color:#ff79c6>></span><span>/dev/tcp/$</span><span style=color:#fff>dest_box</span><span>/22) </span><span style=color:#ff79c6>&></span><span>/dev/null
+</span><span style=color:#ff79c6>then
+</span><span>    </span><span style=color:#8be9fd>echo </span><span style=color:#f1fa8c>"$</span><span style=color:#fff>0</span><span style=color:#f1fa8c> cannot connect to the $</span><span style=color:#fff>dest_box</span><span style=color:#f1fa8c>. Check your vpn connectivity."
+</span><span style=color:#ff79c6>else
+</span><span>    </span><span style=color:#8be9fd>echo </span><span style=color:#f1fa8c>"Running the ansible playboook ..."
+</span><span>    </span><span style=color:#50fa7b>ansible-playbook</span><span style=font-style:italic;color:#ffb86c> -i</span><span> hosts</span><span style=font-style:italic;color:#ffb86c> --ask-vault-pass --extra-vars </span><span style=color:#f1fa8c>'@cluster.data.yml'</span><span> main.yaml
+</span><span style=color:#ff79c6>fi
+</span></code></pre><h3 id=what-if-i-m-not-using-bash><a aria-label="Anchor link for: what-if-i-m-not-using-bash" class=zola-anchor href=#what-if-i-m-not-using-bash>What if I’m not using Bash…</a></h3><p>Try the nc command as follows:<pre class=language-shell data-lang=shell style=background:#282a36;color:#f8f8f2><code class=language-shell data-lang=shell><span>$ nc -w {timeout} -zv {server_IP_hostname} {tcp_port} &>/dev/null && echo "Open" || echo "Close"
+</span><span>$ nc -w 5 -zv 192.168.2.20 23 &>/dev/null && echo "TCP/23 Open" || echo "TCP/23 Close"
+</span></code></pre><p>The updated Bash script:<pre class=language-shell data-lang=shell style=background:#282a36;color:#f8f8f2><code class=language-shell data-lang=shell><span>#!/bin/bash
+</span><span>dest_box="aws-prod-server-42"
+</span><span>timeout="5" # timeouts in seconds
+</span><span>echo "Testing the ssh connectivity in $timeout seconds ... "
+</span><span># make sure 'nc' is installed, else die ..
+</span><span>if ! type -a nc &>/dev/null
+</span><span>then
+</span><span>    echo "$0 - nc command not found. Please install nc and run the script again."
+</span><span>    exit 1
+</span><span>fi
+</span><span>if !  nc -w "$timeout" -zv "${dest_box}" 22  &>/dev/null
+</span><span>then
+</span><span>    echo "$0 cannot connect to the $dest_box. Check your vpn connectivity."
+</span><span>    exit 1
+</span><span>else
+</span><span>    echo "Running the ansible playboook ..."
+</span><span>    ansible-playbook -i hosts --ask-vault-pass --extra-vars '@cluster.data.yml' main.yaml
+</span><span>fi
+</span></code></pre><h2 id=using-perl-to-check-if-a-tcp-port-is-open-in-linux-or-unix><a aria-label="Anchor link for: using-perl-to-check-if-a-tcp-port-is-open-in-linux-or-unix" class=zola-anchor href=#using-perl-to-check-if-a-tcp-port-is-open-in-linux-or-unix>Using Perl to check if a TCP port is open in Linux or Unix</a></h2><p>Here is a Perl script to check if TCP port 22 for OpenSSH is open with a 5-second timeout using <a href=https://perldoc.perl.org/IO::Socket::INET>IO::Socket::INET</a>:<pre class=language-perl data-lang=perl style=background:#282a36;color:#f8f8f2><code class=language-perl data-lang=perl><span style=color:#6272a4>#!/usr/bin/perl -w 
+</span><span style=color:#ff79c6>use </span><span style=text-decoration:underline;color:#66d9ef>IO</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>Socket</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>INET</span><span>;
+</span><span> 
+</span><span style=color:#6272a4># Set server name and port here
+</span><span style=color:#fff>$my_server</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>"192.168.2.20"</span><span>;
+</span><span style=color:#fff>$my_server_tcp_port</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>"</span><span style=color:#bd93f9>22</span><span style=color:#f1fa8c>"</span><span>;
+</span><span> 
+</span><span style=color:#6272a4># make a new object
+</span><span style=font-style:italic;color:#8be9fd>my </span><span style=color:#fff>$server_test </span><span style=color:#ff79c6>= </span><span style=color:#66d9ef>IO</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=color:#66d9ef>Socket</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=color:#66d9ef>INET</span><span style=color:#ff79c6>-></span><span style=color:#50fa7b>new</span><span>(
+</span><span>  </span><span style=color:#bd93f9>PeerAddr </span><span>=> </span><span style=color:#f1fa8c>"</span><span style=color:#fff>$my_server</span><span style=color:#f1fa8c>"</span><span>,
+</span><span>  </span><span style=color:#bd93f9>PeerPort </span><span>=> </span><span style=color:#f1fa8c>"</span><span style=color:#fff>$my_server_tcp_port</span><span style=color:#f1fa8c>"</span><span>,
+</span><span>  </span><span style=color:#bd93f9>Proto </span><span>=> </span><span style=color:#f1fa8c>'tcp'</span><span>,
+</span><span>  </span><span style=color:#bd93f9>Timeout </span><span>=> </span><span style=color:#bd93f9>5
+</span><span>);
+</span><span> 
+</span><span style=color:#6272a4># test it and die or continue as per your needs
+</span><span style=color:#ff79c6>if </span><span>(</span><span style=color:#fff>$server_test</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#8be9fd>print </span><span style=color:#f1fa8c>"TCP port </span><span style=color:#fff>$my_server_tcp_port</span><span style=color:#f1fa8c> is open for the </span><span style=color:#fff>$my_server</span><span style=color:#f1fa8c>.</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>;
+</span><span>  </span><span style=color:#8be9fd>print </span><span style=color:#f1fa8c>"Now doing something ...</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>;
+</span><span>  </span><span style=color:#8be9fd>close </span><span style=color:#fff>$server_test</span><span>;
+</span><span style=color:#fff>} 
+</span><span style=color:#ff79c6>else </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#8be9fd>print </span><span style=color:#f1fa8c>"TCP port </span><span style=color:#fff>$my_server_tcp_port</span><span style=color:#f1fa8c> is closed or timed out for the </span><span style=color:#fff>$my_server</span><span style=color:#f1fa8c>.</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>;
+</span><span style=color:#fff>}
+</span></code></pre><h2 id=python-example-to-check-if-a-tcp-port-is-open-in-linux-or-unix><a aria-label="Anchor link for: python-example-to-check-if-a-tcp-port-is-open-in-linux-or-unix" class=zola-anchor href=#python-example-to-check-if-a-tcp-port-is-open-in-linux-or-unix>Python example to check if a TCP port is open in Linux or Unix</a></h2><p>Try thise simple code that uses <a href=https://docs.python.org/3/library/socket.html>low level socket</a> networking feature. For example:<pre class=language-python data-lang=python style=background:#282a36;color:#f8f8f2><code class=language-python data-lang=python><span style=color:#6272a4>#!/usr/bin/python3
+</span><span style=color:#6272a4># Tested on Python 3.6.xx and 3.8.xx only (updated from Python 2.x)
+</span><span style=color:#ff79c6>import </span><span>socket
+</span><span> 
+</span><span style=color:#6272a4># Create a new function 
+</span><span style=font-style:italic;color:#ff79c6>def </span><span style=color:#50fa7b>check_server_tcp_port</span><span>(</span><span style=font-style:italic;color:#ffb86c>my_host_ip_name</span><span>, </span><span style=font-style:italic;color:#ffb86c>my_tcp_port</span><span>, </span><span style=font-style:italic;color:#ffb86c>timeout</span><span style=color:#ff79c6>=</span><span style=color:#bd93f9>5</span><span>):
+</span><span>    s </span><span style=color:#ff79c6>= </span><span>socket</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>socket</span><span>(socket</span><span style=color:#ff79c6>.</span><span style=color:#fff>AF_INET</span><span>, socket</span><span style=color:#ff79c6>.</span><span style=color:#fff>SOCK_STREAM</span><span>)
+</span><span>    s</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>settimeout</span><span>(timeout)
+</span><span>    </span><span style=color:#ff79c6>try</span><span>:
+</span><span>        s</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>connect</span><span>((my_host_ip_name, my_tcp_port))
+</span><span>        </span><span style=color:#8be9fd>print</span><span>(</span><span style=font-style:italic;color:#8be9fd>f</span><span style=color:#f1fa8c>"TCP port </span><span>{my_tcp_port}</span><span style=color:#f1fa8c> is open for the </span><span>{my_host_ip_name}</span><span style=color:#f1fa8c>."</span><span>)
+</span><span>        s</span><span style=color:#ff79c6>.</span><span style=color:#50fa7b>close</span><span>()
+</span><span>        </span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>True
+</span><span>    </span><span style=color:#ff79c6>except </span><span>socket.timeout:
+</span><span>        </span><span style=color:#8be9fd>print</span><span>(</span><span style=font-style:italic;color:#8be9fd>f</span><span style=color:#f1fa8c>"TCP port </span><span>{my_tcp_port}</span><span style=color:#f1fa8c> is closed or timed out for the </span><span>{my_host_ip_name}</span><span style=color:#f1fa8c>."</span><span>)
+</span><span>        </span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>False
+</span><span> 
+</span><span style=color:#6272a4># Test it 
+</span><span style=color:#50fa7b>check_server_tcp_port</span><span>(</span><span style=color:#f1fa8c>"localhost"</span><span>, </span><span style=color:#bd93f9>22</span><span>)
+</span><span style=color:#50fa7b>check_server_tcp_port</span><span>(</span><span style=color:#f1fa8c>"192.168.2.20"</span><span>, </span><span style=color:#bd93f9>22</span><span>)
+</span></code></pre><h2 id=conclusion><a aria-label="Anchor link for: conclusion" class=zola-anchor href=#conclusion>Conclusion</a></h2><p>This page explained command to determining if a port is in use on Linux or Unix-like server. For more information see the <a href=https://www.cyberciti.biz/networking/nmap-command-examples-tutorials/>nmap command</a> and lsof command page <a href=https://github.com/lsof-org/lsof>online here</a> or by typing the <a href=https://bash.cyberciti.biz/guide/Man_command>man command</a> as follows: <code>$ man lsof$ man ss$ man netstat$ man nmap$ man 5 services$ man nc</code><h2 id=see-also><a aria-label="Anchor link for: see-also" class=zola-anchor href=#see-also>See also</a></h2><ul><li><a href=https://www.cyberciti.biz/faq/ping-test-a-specific-port-of-machine-ip-address-using-linux-unix/>How to ping and test for a specific port from Linux or Unix command line</a><li><a href=https://www.cyberciti.biz/tips/bash-aliases-mac-centos-linux-unix.html>30 Handy Bash Shell Aliases For Linux / Unix / MacOS</a><li><a href=https://www.cyberciti.biz/faq/linux-port-scanning/>Linux and Unix Port Scanning With netcat {nc} Command</a><li><a href=https://www.cyberciti.biz/security/nmap-command-examples-tutorials/>Nmap Command Examples For Linux Users / Admins</a></ul></article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'How to check the port if used in unix&#x2F;linux',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

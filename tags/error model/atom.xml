@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - error model</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/error model/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2023-07-19T16:22:51+00:00</updated>
+    <id>https://wendajiang.github.io/tags/error model/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Error modle and handle</title>
+        <published>2023-07-19T16:21:51+00:00</published>
+        <updated>2023-07-19T16:22:51+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/error-model-or-handle/" type="text/html"/>
+        <id>https://wendajiang.github.io/error-model-or-handle/</id>
+        <content type="html">&lt;h1 id=&quot;the-origin&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#the-origin&quot; aria-label=&quot;Anchor link for: the-origin&quot;&gt;The origin&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;strong&gt;原文&lt;&#x2F;strong&gt;
+&lt;a href=&quot;http:&#x2F;&#x2F;joeduffyblog.com&#x2F;2016&#x2F;02&#x2F;07&#x2F;the-error-model&#x2F;&quot;&gt;The Error Model&lt;&#x2F;a&gt; and &lt;a href=&quot;https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;55835404&quot;&gt;知乎翻译&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;summary&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#summary&quot; aria-label=&quot;Anchor link for: summary&quot;&gt;summary&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;h2 id=&quot;error-codes&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#error-codes&quot; aria-label=&quot;Anchor link for: error-codes&quot;&gt;Error Codes&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; err &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;foo&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(err)  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; error! deal with it
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Many functional languages use return codes disguised in monads and names things like Option&lt;T&gt;, Maybe&lt;T&gt;, Error&lt;T&gt;, which, when coupled with ad dataflow-style of programming and pattern matching, feel far more natural. This approach removes several majar drawbacks to return codes that we&#x27;re about to discuss, especially compared to C. Rust has largely adopted this model but has some exciting things with it for system programmers.&lt;&#x2F;p&gt;
+&lt;p&gt;Dispite theis simplicity, return codes do some with some baggage; in summary:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;performance can suffer (branch that compiler can&#x27;t optimize)&lt;&#x2F;li&gt;
+&lt;li&gt;Programming model usabiliry can be poor&lt;&#x2F;li&gt;
+&lt;li&gt;The biggie: you can accidentally forget to check for errors (&lt;strong&gt;Rust guaratee by compiler&lt;&#x2F;strong&gt;)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;上面文章也提到 Rust 在除了性能之外的方面已经做的很好 (pattern matching and try! macro)&lt;&#x2F;p&gt;
+&lt;p&gt;But we need fail-fast -&amp;gt; exception&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;exception&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#exception&quot; aria-label=&quot;Anchor link for: exception&quot;&gt;Exception&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.open-std.org&#x2F;jtc1&#x2F;sc22&#x2F;wg21&#x2F;docs&#x2F;papers&#x2F;2010&#x2F;n3051.html&quot;&gt;cpp deprecate exception specifications&lt;&#x2F;a&gt;, so &lt;code&gt;noexcept&lt;&#x2F;code&gt; is also bad. &lt;a href=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;cpp-exception&#x2F;&quot;&gt;cpp exception&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;recap&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#recap&quot; aria-label=&quot;Anchor link for: recap&quot;&gt;recap&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;&lt;&#x2F;th&gt;&lt;th&gt;the good&lt;&#x2F;th&gt;&lt;th&gt;the bad&lt;&#x2F;th&gt;&lt;th&gt;the ugly&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;Error Code&lt;&#x2F;td&gt;&lt;td&gt;1. All function that can fail are explicit annotated&lt;br &#x2F;&gt;2. All error handling at callsites is explicit&lt;&#x2F;td&gt;&lt;td&gt;1. you can forget to check them&lt;br &#x2F;&gt;2. Performance of success paths suffers&lt;&#x2F;td&gt;&lt;td&gt;usability is often subpar&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;All Excpetions&lt;&#x2F;td&gt;&lt;td&gt;first class language support&lt;&#x2F;td&gt;&lt;td&gt;1. Performance is typically worse than it could be&lt;br &#x2F;&gt;2. handling is often done in a non-local manner, where less information about an error is known(goto-like)&lt;&#x2F;td&gt;&lt;td&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Unchecked Exceptions&lt;&#x2F;td&gt;&lt;td&gt;conducive to rapid development where dealing with errors reliably isn&#x27;t critical&lt;&#x2F;td&gt;&lt;td&gt;Anything can fail without warning from the language&lt;&#x2F;td&gt;&lt;td&gt;reliability is as bad as it gets&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Checked Exceptions&lt;&#x2F;td&gt;&lt;td&gt;all function that can fail are explicitly annotated&lt;&#x2F;td&gt;&lt;td&gt;1. callsites aren&#x27;t explicit about can fail and error propagation&lt;br &#x2F;&gt;2. systems that let some subset of exceptions go unchecked poison the well(not all errors are explicit)&lt;&#x2F;td&gt;&lt;td&gt;people hate them(in java, at least)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;Wouldn&#x27;t it be great if we could take all of the Goods and leave out the Bads and The Uglies?&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;bugs-aren-t-recoverable-errors&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#bugs-aren-t-recoverable-errors&quot; aria-label=&quot;Anchor link for: bugs-aren-t-recoverable-errors&quot;&gt;Bugs aren&#x27;t recoverable errors&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;A recoverable error is usually the result of programmatic data validation.&lt;&#x2F;li&gt;
+&lt;li&gt;A bug is a kind of error the programmer didn&#x27;t expect.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The wrong point: Exceptions and return codes are equally expressive, they should however not be used to describe errors. For example, the return codes contained definitions like ARRAY_INDEX_OUT_OF_RANGE. It cannot be handled or fixed at runtime, it can only be fixed by its developer. Thus there should be no according return code, but instead there should be assert.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;reliabiliry-fault-tolerance-and-isolation&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#reliabiliry-fault-tolerance-and-isolation&quot; aria-label=&quot;Anchor link for: reliabiliry-fault-tolerance-and-isolation&quot;&gt;Reliabiliry, Fault-Tolerance, and Isolation&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;to-build-a-reliable-system&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#to-build-a-reliable-system&quot; aria-label=&quot;Anchor link for: to-build-a-reliable-system&quot;&gt;To build a reliable system&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;As with most distributed systems, our architecture assumed process failure was inevitable. We went to great length to defend aginst cascading failures, journal regularly, and to enable restartability of programs and services.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;abandonment&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#abandonment&quot; aria-label=&quot;Anchor link for: abandonment&quot;&gt;Abandonment&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Perhaps the most important technique is regularly journaling and checkpointing precious persistent state. Jim Gray’s 1985 paper, &lt;a href=&quot;http:&#x2F;&#x2F;citeseerx.ist.psu.edu&#x2F;viewdoc&#x2F;download?doi=10.1.1.110.9127&amp;amp;rep=rep1&amp;amp;type=pdf&quot;&gt;Why Do Computers Stop and What Can Be Done About It?&lt;&#x2F;a&gt;, describes this concept nicely.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;recoverable-errors-type-directed-exceptions&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#recoverable-errors-type-directed-exceptions&quot; aria-label=&quot;Anchor link for: recoverable-errors-type-directed-exceptions&quot;&gt;Recoverable errors: type-directed exceptions&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;For example, file I&#x2F;O, network I&#x2F;O, parsing data, validating user data.&lt;&#x2F;p&gt;
+&lt;p&gt;The exception has good performance on the good path, it&#x27;s zero-cost.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;restrospective-and-conslusion&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#restrospective-and-conslusion&quot; aria-label=&quot;Anchor link for: restrospective-and-conslusion&quot;&gt;Restrospective and conslusion&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;The final model in the article featured:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;An architecture that assumed fine-grained isolation and recoverability from failure.&lt;&#x2F;li&gt;
+&lt;li&gt;Distinguishing between bugs and recoverable errors.&lt;&#x2F;li&gt;
+&lt;li&gt;Assertions, abandonment for all bugs&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;p&gt;So next, we should look at the C++ system. And if we do not use exception, how to introduce the Rust smell code into C++.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;boost-outcome-std-expected-and-boost-leaf&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#boost-outcome-std-expected-and-boost-leaf&quot; aria-label=&quot;Anchor link for: boost-outcome-std-expected-and-boost-leaf&quot;&gt;Boost.outcome , std::expected, and boost.leaf&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;code&gt;Boost.outcome.result&lt;&#x2F;code&gt; is more like &lt;code&gt;std::variant&lt;&#x2F;code&gt;, and &lt;code&gt;std::expected(C++23)&lt;&#x2F;code&gt; is more like &lt;code&gt;std::optional&lt;&#x2F;code&gt; extension. The detail in reference [how std::expected interacts with boost.outcome].Dissimilarities section.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;rust-error-handling&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#rust-error-handling&quot; aria-label=&quot;Anchor link for: rust-error-handling&quot;&gt;Rust error handling&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;doc.rust-lang.org&#x2F;book&#x2F;ch09-02-recoverable-errors-with-result.html&quot;&gt;rust book&lt;&#x2F;a&gt; show rust how to modle the error and handle it. Recommend &lt;a href=&quot;https:&#x2F;&#x2F;doc.rust-lang.org&#x2F;book&#x2F;ch09-03-to-panic-or-not-to-panic.html#guidelines-for-error-handling&quot;&gt;the guidelines for error handling&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Unrecoverable error with panic!
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;panic!&lt;&#x2F;code&gt; can record the backtrace&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;Recoverable errors with Result
+&lt;ul&gt;
+&lt;li&gt;pattern matching&lt;&#x2F;li&gt;
+&lt;li&gt;Propagating error with &lt;code&gt;?&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;result-either-in-c&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#result-either-in-c&quot; aria-label=&quot;Anchor link for: result-either-in-c&quot;&gt;Result (Either) in C++&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;I personally like the Rust abstract, instead of error code, it propose the &lt;code&gt;Reulst&amp;lt;T, E&amp;gt;&lt;&#x2F;code&gt;, and outcome.result can be used in c++.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;leaf-comfortable-scenoria&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#leaf-comfortable-scenoria&quot; aria-label=&quot;Anchor link for: leaf-comfortable-scenoria&quot;&gt;Leaf comfortable scenoria&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;If you need an error handling framework which has predictable sad path overhead unlike C++ exceptions, but you otherwise want similar syntax and use experience to C++ exceptions, LEAF is a very solid choice. &lt;del&gt;Do not use in my ray-like project, i do not like the exception when should support API for application user.&lt;&#x2F;del&gt;&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;reference&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#reference&quot; aria-label=&quot;Anchor link for: reference&quot;&gt;reference&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;https:&#x2F;&#x2F;www.boost.org&#x2F;doc&#x2F;libs&#x2F;develop&#x2F;libs&#x2F;outcome&#x2F;doc&#x2F;html&#x2F;index.html
+&lt;ul&gt;
+&lt;li&gt;https:&#x2F;&#x2F;www.boost.org&#x2F;doc&#x2F;libs&#x2F;develop&#x2F;libs&#x2F;outcome&#x2F;doc&#x2F;html&#x2F;reference&#x2F;types&#x2F;basic_result.html&lt;&#x2F;li&gt;
+&lt;li&gt;https:&#x2F;&#x2F;www.boost.org&#x2F;doc&#x2F;libs&#x2F;develop&#x2F;libs&#x2F;outcome&#x2F;doc&#x2F;html&#x2F;alternatives&#x2F;leaf.html&lt;&#x2F;li&gt;
+&lt;li&gt;https:&#x2F;&#x2F;boostorg.github.io&#x2F;leaf&#x2F;#_reporting_errors&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.open-std.org&#x2F;jtc1&#x2F;sc22&#x2F;wg21&#x2F;docs&#x2F;papers&#x2F;2022&#x2F;p0323r12.html#cool-story&quot;&gt;std::expected proposal&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.open-std.org&#x2F;jtc1&#x2F;sc22&#x2F;wg21&#x2F;docs&#x2F;papers&#x2F;2017&#x2F;p0762r0.pdf&quot;&gt;how std::expected interacts with boost.outcome&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;open-std.org&#x2F;JTC1&#x2F;SC22&#x2F;WG21&#x2F;docs&#x2F;papers&#x2F;2020&#x2F;p2125r0.pdf&quot;&gt;what is vocabulary type?&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;builtin.com&#x2F;software-engineering-perspectives&#x2F;monads&quot;&gt;What is a monad?&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+</feed>

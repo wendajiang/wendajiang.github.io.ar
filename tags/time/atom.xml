@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - time</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/time/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2021-04-06T21:13:52+00:00</updated>
+    <id>https://wendajiang.github.io/tags/time/atom.xml</id>
+    <entry xml:lang="en">
+        <title>时间，时间同步</title>
+        <published>2021-04-06T21:13:52+00:00</published>
+        <updated>2021-04-06T21:13:52+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/time-utc-timesync-etc/" type="text/html"/>
+        <id>https://wendajiang.github.io/time-utc-timesync-etc/</id>
+        <content type="html">&lt;!--
+mermaid example:
+&lt;div class=&quot;mermaid&quot;&gt;
+    mermaid program
+&lt;&#x2F;div&gt;
+--&gt;
+&lt;h2 id=&quot;1-qian-yan&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#1-qian-yan&quot; aria-label=&quot;Anchor link for: 1-qian-yan&quot;&gt;1.前言&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;由计算机网络系统组成的&lt;code&gt;分布式系统&lt;&#x2F;code&gt;，若想协调一致进行：IT行业的“整点开拍”、“秒杀”、“Leader选举”，通信行业的“同步组网”之类业务处理，毫秒级甚至微秒级的&lt;code&gt;时间同步&lt;&#x2F;code&gt;是重要基础之一。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;pre2-shi-jian&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#pre2-shi-jian&quot; aria-label=&quot;Anchor link for: pre2-shi-jian&quot;&gt;pre2 时间&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Unix时间戳(Unix timestamp)，或称Unix时间(Unix time)、POSIX时间(POSIX time)，是一种时间表示方式，定义为从格林威治时间1970年01月01日00时00分00秒起至现在的总秒数。Unix时间戳不仅被使用在Unix 系统、类Unix系统中，也在许多其他操作系统中被广告采用。&lt;&#x2F;p&gt;
+&lt;p&gt;目前相当一部分操作系统使用32位二进制数字表示时间。此类系统的Unix时间戳最多可以使用到格林威治时间2038年01月19日03时14分07秒（二进制：&lt;em&gt;01111111 11111111 11111111 11111111&lt;&#x2F;em&gt;）。其后一秒，二进制数字会变为&lt;em&gt;10000000 00000000 00000000 00000000&lt;&#x2F;em&gt;，发生溢出错误，造成系统将时间误解为1901年12月13日20时45分52秒。这很可能会引起软件故障，甚至是系统瘫痪。使用64位二进制数字表示时间的系统（最多可以使用到格林威治时间292,277,026,596年12月04日15时30分08秒）则基本不会遇到这类溢出问题。&lt;&#x2F;p&gt;
+&lt;p&gt;首先我们了解一下时间的相关概念，以及之间的区别，需要了解的时间概念有：
+&lt;strong&gt;本地时间&lt;&#x2F;strong&gt;(locale time)
+&lt;strong&gt;格林威治时间&lt;&#x2F;strong&gt;（Greenwich Mean Time &lt;strong&gt;GMT&lt;&#x2F;strong&gt;）
+&lt;strong&gt;时间协调时间&lt;&#x2F;strong&gt; （Universal Time Coordinated &lt;strong&gt;UTC&lt;&#x2F;strong&gt;）&lt;&#x2F;p&gt;
+&lt;p&gt;本地时间，显而易见不用解释了
+先看看时间的标准：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;世界时
+世界时是最早的时间标准。在1884年，国际上将1s确定为全年内每日平均长度的1&#x2F;8.64×104。以此标准形成的时间系统，称为世界是，即UT1。1972年国际上开始使用国际原子时标，从那以后，经过格林威治老天文台本初子午线的时间便被称为世界时，即UT2，或称格林威治时间（GMT），是对地球转速周期性差异进行校正后的世界时。&lt;&#x2F;li&gt;
+&lt;li&gt;原子时
+1967年，人们利用铯原子振荡周期极为规律的特性，研制出了高精度的原子时钟，将铯原子能级跃迁辐射9192631770周所经历的时间定为1s。现在用的时间就是1971年10月定义的国际原子时，是通过世界上大约200多台原子钟进行对比后，再由国际度量衡局时间所进行数据处理，得出的统一的原子时，简称TAI。&lt;&#x2F;li&gt;
+&lt;li&gt;世界协调时
+&lt;strong&gt;世界协调时是以地球自转为基础的时间标准&lt;&#x2F;strong&gt;。由于地球自转速度并不均匀，并非每天都是精确的86400原子s，因而导致了自转时间与世界时之间存在18个月有1s的误差。为纠正这种误差，国际地球自转研究所根据地球自转的实际情况对&lt;strong&gt;格林威治时间&lt;&#x2F;strong&gt;进行增减闰s的调整，与国际度量衡局时间所联合向全世界发布标准时间，这就是所谓的世界协调时（UTC:CoordinatdeUniversalTime）。UTC的表示方式为：年（y）、月（m）、日（d）、时（h）、分（min）、秒（s），均用数字表示。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;GPS 系统中有两种时间区分，一为UTC，另一为LT（地方时）两者的区别为时区不同，UTC就是0时区的时间，地方时为本地时间，如北京为早上八点（东八区），UTC时间就为零点，时间比北京时晚八小时，以此计算即可
+通过上面的了解，我们可以认为格林威治时间就是时间协调时间（GMT=UTC），格林威治时间和UTC时间均用秒数来计算的。&lt;&#x2F;p&gt;
+&lt;p&gt;而在我们平时工作当中看到的计算机日志里面写的时间大多数是用UTC时间来计算的，那么我们该怎么将UTC时间转化为本地时间便于查看日志，那么在作程序开发时又该怎么将本地时间转化为UTC时间呢？&lt;&#x2F;p&gt;
+&lt;p&gt;下面就介绍一个简单而使用的工具，就是使用linux&#x2F;unix命令date来进行本地时间和local时间的转化。
+大家都知道，在计算机中看到的utc时间都是从（1970年01月01日 0:00:00)开始计算秒数的。所看到的UTC时间那就是从1970年这个时间点起到具体时间共有多少秒。&lt;&#x2F;p&gt;
+&lt;p&gt;我们在编程中可能会经常用到时间，比如取得系统的时间（获取系统的年、月、日、时、分、秒，星期等），或者是隔一段时间去做某事，那么我们就用到一些时间函数。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;linux-zhong-de-shi-jian-han-shu&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#linux-zhong-de-shi-jian-han-shu&quot; aria-label=&quot;Anchor link for: linux-zhong-de-shi-jian-han-shu&quot;&gt;Linux 中的时间函数&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;linux下存储时间常见的有两种存储方式，一个是从&lt;strong&gt;1970年到&lt;&#x2F;strong&gt;现在经过了多少秒，一个是用一个结构来分别存储年月日时分秒的。
+&lt;strong&gt;time_t 这种类型就是用来存储从1970年到现在经过了多少秒&lt;&#x2F;strong&gt;，要想更精确一点，可以用结构struct timeval，它精确到微妙。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;timeval &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;long&lt;&#x2F;span&gt;&lt;span&gt; tv_sec; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;秒
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;long&lt;&#x2F;span&gt;&lt;span&gt; tv_usec; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;微秒
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;而直接存储年月日的是一个结构：&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;tm
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; tm_sec;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*秒，正常范围0-59， 但允许至61*&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; tm_min;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*分钟，0-59*&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; tm_hour; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*小时， 0-23*&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; tm_mday; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*日，即一个月中的第几天，1-31*&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; tm_mon;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*月， 从一月算起，0-11*&#x2F;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span&gt;p&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;tm_mon&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; tm_year;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*年， 从1900至今已经多少年*&#x2F;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1900&lt;&#x2F;span&gt;&lt;span&gt;＋ p&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;tm_year&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; tm_wday; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*星期，一周中的第几天， 从星期日算起，0-6*&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; tm_yday; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*从今年1月1日到目前的天数，范围0-365*&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; tm_isdst; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*日光节约时间的旗标*&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*需要特别注意的是，年份是从1900年起至今多少年，而不是直接存储如2011年，月份从0开始的，0表示一月，星期也是从0开始的， 0表示星期日，1表示星期一。*&#x2F;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;下面介绍常用时间函数&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;lt;time.h&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;char &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;asctime&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct&lt;&#x2F;span&gt;&lt;span&gt; tm&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;timeptr&lt;&#x2F;span&gt;&lt;span&gt;); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;将结构中的信息转换为真实世界的时间，以字符串的形式显示
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;char &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;ctime&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;time_t &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;timep&lt;&#x2F;span&gt;&lt;span&gt;); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;将timep转换为真是世界的时间，以字符串显示，它和asctime不同就在于传入的参数形式不一样
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;double &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;difftime&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;time_t &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;time1&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;time_t &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;time2&lt;&#x2F;span&gt;&lt;span&gt;);&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;返回两个时间相差的秒数
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;gettimeofday&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct&lt;&#x2F;span&gt;&lt;span&gt; timeval &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;tv&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct&lt;&#x2F;span&gt;&lt;span&gt; timezone &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;tz&lt;&#x2F;span&gt;&lt;span&gt;); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;返回当前距离1970年的秒数和微妙数，后面的tz是时区，一般不用
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct&lt;&#x2F;span&gt;&lt;span&gt; tm&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;gmtime&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;time_t &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;timep&lt;&#x2F;span&gt;&lt;span&gt;); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;将time_t表示的时间转换为没有经过时区转换的UTC时间，是一个struct tm结构指针
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct&lt;&#x2F;span&gt;&lt;span&gt; tm&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;localtime&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;time_t &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;timep&lt;&#x2F;span&gt;&lt;span&gt;); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;和gmtime类似，但是它是经过时区转换的时间。
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;time_t &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;mktime&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct&lt;&#x2F;span&gt;&lt;span&gt; tm&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;timeptr&lt;&#x2F;span&gt;&lt;span&gt;); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;将struct tm 结构的时间转换为从1970年至今的秒数
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;time_t &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;time&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;time_t &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;t&lt;&#x2F;span&gt;&lt;span&gt;); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;取得从1970年1月1日至今的秒数。
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;yi-xie-li-zi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#yi-xie-li-zi&quot; aria-label=&quot;Anchor link for: yi-xie-li-zi&quot;&gt;一些例子：&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;lt;time.h&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;lt;stdio.h&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;time_t&lt;&#x2F;span&gt;&lt;span&gt; timep;
+&lt;&#x2F;span&gt;&lt;span&gt;   
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;time&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;timep); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*获取time_t类型的当前时间*&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*用gmtime将time_t类型的时间转换为struct tm类型的时间按，／／没有经过时区转换的UTC时间
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;      然后再用asctime转换为我们常见的格式 Fri Jan 11 17:25:24 2008
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;    *&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;%s&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;asctime&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;gmtime&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;timep)));
+&lt;&#x2F;span&gt;&lt;span&gt;  	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;%s&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;ctime&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;timep));
+&lt;&#x2F;span&gt;&lt;span&gt;		
+&lt;&#x2F;span&gt;&lt;span&gt;  	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;time, gmtime, asctime 所表示的时间都是UTC时间，只是数据类型不一样，
+&lt;&#x2F;span&gt;&lt;span&gt;		&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; 而localtime, ctime 所表示的时间都是经过时区转换后的时间，它和你用系统命令date所表示的CST时间应该保持一致。
+&lt;&#x2F;span&gt;&lt;span&gt;  	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;char &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;wday[] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;sun&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;mon&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;tue&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;wed&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;thu&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;fri&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;sat&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct&lt;&#x2F;span&gt;&lt;span&gt; tm &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;p;
+&lt;&#x2F;span&gt;&lt;span&gt;  	p &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;gmtime&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;timep);
+&lt;&#x2F;span&gt;&lt;span&gt;  	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1900 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span&gt; p&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;tm_year&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span&gt; p&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;tm_mon&lt;&#x2F;span&gt;&lt;span&gt;, p&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;tm_day&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;%s %d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, wday[p&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;tm_day&lt;&#x2F;span&gt;&lt;span&gt;], p&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;tm_hour&lt;&#x2F;span&gt;&lt;span&gt;, p&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;tm_min&lt;&#x2F;span&gt;&lt;span&gt;, p&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;tm_sec&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  	
+&lt;&#x2F;span&gt;&lt;span&gt;  	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; 这里面把UTC时间按转换为本地时间，然后再把本地时间转换为UTC时间，它们转换的结果保持一致。
+&lt;&#x2F;span&gt;&lt;span&gt;  	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;time():&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;,timep);
+&lt;&#x2F;span&gt;&lt;span&gt;    p &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;localtime&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;timep); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*转换为本地的tm结构的时间按*&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;    timep &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;mktime&lt;&#x2F;span&gt;&lt;span&gt;(p); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*重新转换为time_t类型的UTC时间，这里有一个时区的转换*&#x2F; &#x2F;&#x2F;by lizp 错误，没有时区转换， 将struct tm 结构的时间转换为从1970年至p的秒数
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;time()-&amp;gt;localtime()-&amp;gt;mktime(): &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, timep);
+&lt;&#x2F;span&gt;&lt;span&gt;  	
+&lt;&#x2F;span&gt;&lt;span&gt;  
+&lt;&#x2F;span&gt;&lt;span&gt;  	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; 从这里面我们可以看出，转换后时间不一致了，计算一下，整整差了8个小时( (1200075192-1200046392)&#x2F;3600 = 8)，说明mktime会把本地时间转换为UTC时间，这里面本来就是UTC时间，于是再弄个时区转换，结果差了8个小时，用的时候应该注意。
+&lt;&#x2F;span&gt;&lt;span&gt;  	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;time():&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;,timep);
+&lt;&#x2F;span&gt;&lt;span&gt;    p &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;gmtime&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;timep); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*得到tm结构的UTC时间*&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;    timep &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;mktime&lt;&#x2F;span&gt;&lt;span&gt;(p); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*转换，这里会有时区的转换*&#x2F; &#x2F;&#x2F;by lizp 错误，没有时区转换， 将struct tm 结构的时间转换为从1970年至p的秒数
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;time()-&amp;gt;gmtime()-&amp;gt;mktime(): &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, timep);
+&lt;&#x2F;span&gt;&lt;span&gt;  
+&lt;&#x2F;span&gt;&lt;span&gt;  	
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;strftime() 函数将时间格式化
+我们可以使用strftime（）函数将时间格式化为我们想要的格式。它的原型如下：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;size_t &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;strftime&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;char &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;strDest&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;size_t &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;maxsize&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;char &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;format&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct&lt;&#x2F;span&gt;&lt;span&gt; tm &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;timeptr
+&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;我们可以根据format指向字符串中格式命令把timeptr中保存的时间信息放在strDest指向的字符串中，最多向strDest中存放maxsize个字符。该函数返回向strDest指向的字符串中放置的字符数。
+函数strftime()的操作有些类似于sprintf()：识别以百分号(%)开始的格式命令集合，格式化输出结果放在一个字符串中。格式化命令说明串 strDest中各种日期和时间信息的确切表示方法。格式串中的其他字符原样放进串中。格式命令列在下面，它们是区分大小写的。&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;符号&lt;&#x2F;th&gt;&lt;th&gt;含义&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;%a&lt;&#x2F;td&gt;&lt;td&gt;星期几的简写&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%A&lt;&#x2F;td&gt;&lt;td&gt;星期几的全称&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%b&lt;&#x2F;td&gt;&lt;td&gt;月分的简写&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%B&lt;&#x2F;td&gt;&lt;td&gt;月份的全称&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%c&lt;&#x2F;td&gt;&lt;td&gt;标准的日期的时间串&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%C&lt;&#x2F;td&gt;&lt;td&gt;年份的后两位数字&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%d&lt;&#x2F;td&gt;&lt;td&gt;十进制表示的每月的第几天&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%D&lt;&#x2F;td&gt;&lt;td&gt;月&#x2F;天&#x2F;年&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%e&lt;&#x2F;td&gt;&lt;td&gt;在两字符域中，十进制表示的每月的第几天&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%F&lt;&#x2F;td&gt;&lt;td&gt;年-月-日&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%g&lt;&#x2F;td&gt;&lt;td&gt;年份的后两位数字，使用基于周的年&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%G&lt;&#x2F;td&gt;&lt;td&gt;年分，使用基于周的年&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%h&lt;&#x2F;td&gt;&lt;td&gt;简写的月份名&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%H&lt;&#x2F;td&gt;&lt;td&gt;24小时制的小时&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%I&lt;&#x2F;td&gt;&lt;td&gt;12小时制的小时&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%j&lt;&#x2F;td&gt;&lt;td&gt;十进制表示的每年的第几天&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%m&lt;&#x2F;td&gt;&lt;td&gt;十进制表示的月份&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%M&lt;&#x2F;td&gt;&lt;td&gt;十时制表示的分钟数&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%n&lt;&#x2F;td&gt;&lt;td&gt;新行符&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%p&lt;&#x2F;td&gt;&lt;td&gt;本地的AM或PM的等价显示&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%r&lt;&#x2F;td&gt;&lt;td&gt;12小时的时间&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%R&lt;&#x2F;td&gt;&lt;td&gt;显示小时和分钟：hh:mm&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%S&lt;&#x2F;td&gt;&lt;td&gt;十进制的秒数&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%t&lt;&#x2F;td&gt;&lt;td&gt;水平制表符&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%T&lt;&#x2F;td&gt;&lt;td&gt;显示时分秒：hh:mm:ss&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%u&lt;&#x2F;td&gt;&lt;td&gt;每周的第几天，星期一为第一天 （值从0到6，星期一为0）&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%U&lt;&#x2F;td&gt;&lt;td&gt;第年的第几周，把星期日做为第一天（值从0到53）&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%V&lt;&#x2F;td&gt;&lt;td&gt;每年的第几周，使用基于周的年&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%w&lt;&#x2F;td&gt;&lt;td&gt;十进制表示的星期几（值从0到6，星期天为0）&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%W&lt;&#x2F;td&gt;&lt;td&gt;每年的第几周，把星期一做为第一天（值从0到53）&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%x&lt;&#x2F;td&gt;&lt;td&gt;标准的日期串&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%X&lt;&#x2F;td&gt;&lt;td&gt;标准的时间串&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%y&lt;&#x2F;td&gt;&lt;td&gt;不带世纪的十进制年份（值从0到99）&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%Y&lt;&#x2F;td&gt;&lt;td&gt;带世纪部分的十制年份&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%z&lt;&#x2F;td&gt;&lt;td&gt;，%Z 时区名称，如果不能得到时区名称则返回空字符。&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;%%&lt;&#x2F;td&gt;&lt;td&gt;百分号&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;例子 &lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;time.h&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#include &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;stdio.h&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct&lt;&#x2F;span&gt;&lt;span&gt; tm &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;ptr;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;time_t&lt;&#x2F;span&gt;&lt;span&gt; lt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span&gt; str[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;80&lt;&#x2F;span&gt;&lt;span&gt;];
+&lt;&#x2F;span&gt;&lt;span&gt;    lt&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;time&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;NULL&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;    ptr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;localtime&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;lt);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;strftime&lt;&#x2F;span&gt;&lt;span&gt;(str,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;sizeof&lt;&#x2F;span&gt;&lt;span&gt;(str),&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;It is now %I &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;%p&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;,ptr);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(str);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;其运行结果为：
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; It is now 4PM
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; 而下面的程序则显示当前的完整日期：
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#include&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;lt;stdio.h&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#include&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;lt;string.h&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#include&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;lt;time.h&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;( &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct&lt;&#x2F;span&gt;&lt;span&gt; tm &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;newtime;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span&gt; tmpbuf[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;128&lt;&#x2F;span&gt;&lt;span&gt;];
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;time_t&lt;&#x2F;span&gt;&lt;span&gt; lt1;
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;time&lt;&#x2F;span&gt;&lt;span&gt;( &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;lt1 );
+&lt;&#x2F;span&gt;&lt;span&gt;  newtime&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;localtime&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;lt1);
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;strftime&lt;&#x2F;span&gt;&lt;span&gt;( tmpbuf, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;sizeof&lt;&#x2F;span&gt;&lt;span&gt;(tmpbuf), &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;Today is &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;%A&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;, day &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;%d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt; of %B in the year %Y.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;\n&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, newtime);
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;printf&lt;&#x2F;span&gt;&lt;span&gt;(tmpbuf);
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;2-zhu-yu-miao-shu&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#2-zhu-yu-miao-shu&quot; aria-label=&quot;Anchor link for: 2-zhu-yu-miao-shu&quot;&gt;2.术语描述&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;2-0-shi-jie-shi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#2-0-shi-jie-shi&quot; aria-label=&quot;Anchor link for: 2-0-shi-jie-shi&quot;&gt;2.0 世界时&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;世界时UT&lt;&#x2F;code&gt;，可以简单理解为按照地球自转一周来计量24小时的时间标准，由于地球自转速率的变化，世界时的秒长会有微小的变化，每天的快慢可以达到千分之几秒。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;2-1-taishi-jian&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#2-1-taishi-jian&quot; aria-label=&quot;Anchor link for: 2-1-taishi-jian&quot;&gt;2.1 TAI时间&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;世界时不准，因此国际组织定义了&lt;code&gt;TAI时间&lt;&#x2F;code&gt;,即国际原子时（ International Atomic Time），其起点是1958年的开始（世界时UT），以铯原子钟走秒连续计时的时间。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;2-2-utcshi-jian&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#2-2-utcshi-jian&quot; aria-label=&quot;Anchor link for: 2-2-utcshi-jian&quot;&gt;2.2 UTC时间&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;计算机网络普遍使用的&lt;code&gt;UTC时间（协调世界时,Coordinated Universal Time）&lt;&#x2F;code&gt;，由国际计量局BIPM综合全世界多个守时实验室的钟组计算得到，为了使UTC时间与地球自转1天的时间（世界时UT）协调一致，每隔1到2年， BIPM会通告在UTC时间6月30日或12月31日最后一分钟“加一秒”或“减一秒”等闰秒调整。也就是说，UTC时间会出现60秒或少了59秒的情况。&lt;&#x2F;p&gt;
+&lt;p&gt;最近一次闰秒是UTC时间2015年6月底：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;2015 年6月30日，23时 59分 59秒
+2015 年6月30日，23时 59分 60秒
+2015 年7月 1日， 0时 0分 0秒&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;由于存在闰秒，UTC时间与TAI时间是有差别的，UTC = TAI - n，这个n现在（2016年1月）是36秒，也就是说UTC时间比TAI时间慢了36秒。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;2-3-bei-jing-shi-jian&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#2-3-bei-jing-shi-jian&quot; aria-label=&quot;Anchor link for: 2-3-bei-jing-shi-jian&quot;&gt;2.3 北京时间&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;北京时间也就是&lt;code&gt;东八区时间&lt;&#x2F;code&gt;，在UTC时间基础上加8小时，中国的北京标准时间由位于陕西的国家授时中心发播。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;2-4-gpsshi-jian&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#2-4-gpsshi-jian&quot; aria-label=&quot;Anchor link for: 2-4-gpsshi-jian&quot;&gt;2.4 GPS时间&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;由GPS系统通过卫星信号发播的&lt;code&gt;原子时间&lt;&#x2F;code&gt;，GPS时间用自1980年1月6日零点（UTC时间）起的星期数和该星期内内的秒数来表示。&lt;&#x2F;p&gt;
+&lt;p&gt;工程上，GPS接收机会根据闰秒数将GPS时间换算为我们通常使用的UTC时间。GPS时间的源头是美国海军天文台的守时原子钟组。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;2-5-bei-dou-bds-shi-jian&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#2-5-bei-dou-bds-shi-jian&quot; aria-label=&quot;Anchor link for: 2-5-bei-dou-bds-shi-jian&quot;&gt;2.5 北斗（BDS）时间&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;由北斗卫星导航系统通过卫星信号发播的&lt;code&gt;原子时间&lt;&#x2F;code&gt;，同样，北斗接收机会根据闰秒数将北斗时间换算为我们通常使用的UTC时间。&lt;&#x2F;p&gt;
+&lt;p&gt;北斗时间的时钟源是位于北京的解放军&lt;code&gt;时频中心&lt;&#x2F;code&gt;的守时原子钟组，陕西的国家授时中心好尴尬:(。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;2-6-pin-lu&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#2-6-pin-lu&quot; aria-label=&quot;Anchor link for: 2-6-pin-lu&quot;&gt;2.6 频率&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;时间的导数就是&lt;code&gt;频率&lt;&#x2F;code&gt;，机械发条、石英晶体振荡器、原子钟等各种时钟源通过产生频率信号，按照频率均匀打拍计数，模拟时间的等间隔流逝，就有了可见的“时间”。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;2-7-pin-lu-zhun-que-du&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#2-7-pin-lu-zhun-que-du&quot; aria-label=&quot;Anchor link for: 2-7-pin-lu-zhun-que-du&quot;&gt;2.7 频率准确度&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;手表有准和不准的，反映的就是频率准不准，时钟频率和标准频率的偏差可以用&lt;code&gt;频率准确度&lt;&#x2F;code&gt;来衡量。1E-9量级表示1秒会差1ns，我们使用的个人电脑，它的守时时钟是个32. 768kHz的石英晶振，准确度大概只有2E-5量级（20ppm），也就是说1秒会差0.02ms，1天会跑偏大概2秒。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;2-8-shi-jian-tong-bu&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#2-8-shi-jian-tong-bu&quot; aria-label=&quot;Anchor link for: 2-8-shi-jian-tong-bu&quot;&gt;2.8 时间同步&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;广义的“时间同步”包括的&lt;code&gt;时间和频率&lt;&#x2F;code&gt;的同步。上级时钟将时间频率信号通过各种有线（以太网、SDH数字网、同轴电缆、电话等）、无线（卫星、长波、电台、微波、WIFI、Zigbee等）链路传递给下级时钟，下级时钟接受时间频率信息后，与上级时钟保持相位、频率的一致。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;3-shi-jian-tong-bu-yuan-li&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#3-shi-jian-tong-bu-yuan-li&quot; aria-label=&quot;Anchor link for: 3-shi-jian-tong-bu-yuan-li&quot;&gt;3.时间同步原理&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;3-1-dan-xiang-shou-shi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#3-1-dan-xiang-shou-shi&quot; aria-label=&quot;Anchor link for: 3-1-dan-xiang-shou-shi&quot;&gt;3.1 单向授时&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;上级时钟主动发播时间信息，下级用户端被动接受时间信息，并调整本地时钟使时差控制在一定范围内。&lt;&#x2F;p&gt;
+&lt;p&gt;要想提高授时精度，用户端必须计算出时间信息在传播链路中的延时，GPS&#x2F;北斗等卫星授时，可以通过用户端定位与卫星之间距离确定电磁传输延时，消除大部分误差，而电缆、网络等如果是单向授时方式就无法准确计算单向链路时延了。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;3-2-shuang-xiang-shou-shi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#3-2-shuang-xiang-shou-shi&quot; aria-label=&quot;Anchor link for: 3-2-shuang-xiang-shou-shi&quot;&gt;3.2 双向授时&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;用户端将接受的时间信息原路返回给上级时钟服务端，服务端将往返时间除以二即得到单向链路时延，再把单向时延告诉客户端，在此基础上，客户端得到服务端更准确的时间信息。比如：北斗单向卫星授时精度100ns，双向卫星授时精度可做到20ns。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;3-3-wang-luo-shi-jian-tong-bu&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#3-3-wang-luo-shi-jian-tong-bu&quot; aria-label=&quot;Anchor link for: 3-3-wang-luo-shi-jian-tong-bu&quot;&gt;3.3 网络时间同步&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;网络时间同步，特指在计算机网络内的服务器与客户端之间利用&lt;code&gt;网络报文&lt;&#x2F;code&gt;交换实现的时间同步。&lt;&#x2F;p&gt;
+&lt;p&gt;鉴于计算机网络传输路径的不确定性和中间路由交换设备转发报文时间的不确定性，通过单播或多播实现的单向网络授时是不可靠的。因此，前辈们发明的网络时间同步技术NTP&#x2F;PTP等，基本原理都是通过对网络报文打时间戳（标记），往返交换报文计算传输时延和同步误差。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;3-4-pin-lu-tong-bu&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#3-4-pin-lu-tong-bu&quot; aria-label=&quot;Anchor link for: 3-4-pin-lu-tong-bu&quot;&gt;3.4 频率同步&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;频率同步&lt;&#x2F;code&gt;指的是主从时钟的频率误差保持在一定范围内，频率同步有2种类型:&lt;&#x2F;p&gt;
+&lt;p&gt;第1种是直接传递模拟频率信号，比如用电缆或光缆传递10MHz、5Mhz、2.048MHz等标准频率，或者传递bit位宽脉冲；&lt;&#x2F;p&gt;
+&lt;p&gt;第2种是通过测量得到的主从时钟时差，通过锁定主从相差实现频率锁定（PLL），或者间接计算频率偏差，完成频率修正。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;4-ji-suan-ji-wang-luo-shi-jian-tong-bu&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#4-ji-suan-ji-wang-luo-shi-jian-tong-bu&quot; aria-label=&quot;Anchor link for: 4-ji-suan-ji-wang-luo-shi-jian-tong-bu&quot;&gt;4.计算机网络时间同步&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;计算机网络时间同步只是时间同步的一种应用场景，其时间传递的链路可能是SDH网、以太网、WIFI无线网络等。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;4-1-ntp&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#4-1-ntp&quot; aria-label=&quot;Anchor link for: 4-1-ntp&quot;&gt;4.1 NTP&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Network_Time_Protocol&quot;&gt;NTP&lt;&#x2F;a&gt;（Network Time Protocol）从1985年诞生来，目前仍在在大部分的计算机网络中起着同步系统时间的作用。&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;基本原理&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;服务器和客户端之间通过二次报文交换，确定主从时间误差，客户端校准本地计算机时间，完成时间同步，有条件的话进一步校准本地时钟频率。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;时间同步过程&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;服务器在UDP的132端口提供授时服务，客户端发送附带T1时间戳（Timestamp）的查询报文给服务器，服务器在该报文上添加到达时刻T2和响应报文发送时刻T3，客户端记录响应报到达时刻T4。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;贴个维基的图：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;time_utc_timesync_etc&#x2F;image-20210406211933550.png&quot; alt=&quot;image-20210406211933550&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;时差计算&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;维基这个图中用蓝色标注了主从直接来回链路的&lt;code&gt;时延Sigma&lt;&#x2F;code&gt;：
+&lt;code&gt;Sigma = (t4-t1)-(t3-t2)&lt;&#x2F;code&gt;
+因此，假设来回网络链路是对称的，即传输时延相等，那么可以计算客户端与服务器之间的&lt;code&gt;时间误差Delta&lt;&#x2F;code&gt;为：
+&lt;code&gt;Delta = t2-t1-Sigma&#x2F;2=((t2-t1)+(t3-t4))&#x2F;2&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;客户端调整自身的时间Delta，即可完成一次时间同步。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;计时方式&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;NTP采用UTC时间计时，&lt;code&gt;NTP时间戳&lt;&#x2F;code&gt;包括自1900-01-01 00:00:00开始的UTC总秒数，当前秒的亚秒数。&lt;&#x2F;p&gt;
+&lt;p&gt;当正闰秒时，60秒和下一分钟的0秒的NTP总秒数一致的，因此NTP报文专门定义了闰秒指示域来提示。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;误差分析&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;局域网内计算机利用NTP协议进行时间同步，时间同步精度在5ms左右，主要误差包括：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;1）计算机打时间戳的位置在应用层，受协议栈缓存、任务调度等影响，不能在网络报文到来时马上打戳；
+2）各种中间网络传输设备带来的传输时延不确定性以及链路的不对称性，将进一步降低NTP时间同步精度。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;4-2-ptp&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#4-2-ptp&quot; aria-label=&quot;Anchor link for: 4-2-ptp&quot;&gt;4.2 PTP&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;为克服NTP的各种缺点，PTP(Precision Time Protocol，精确时间同步协议)应运而生，最新协议是&lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Precision_Time_Protocol&quot;&gt;IEEE1588v2&lt;&#x2F;a&gt;，可实现亚微秒量级的时间同步精度。&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;基本原理&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;主从节点在网络链路层打时间戳，利用支持IEEE1588协议的PHY片，精准记录时间同步网络报文接受或发送的时刻。交换机、路由器等网络中间节点准确记录时间同步报文在其中停留的时间，实现对链路时延的准确计算。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;时间同步过程&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;PTP默认使用&lt;code&gt;组播&lt;&#x2F;code&gt;协议，二层或四层UDP组播都可以，一般我们使用基于UDP组播，使用319和320两个端口。&lt;&#x2F;p&gt;
+&lt;p&gt;PTP定义了三种角色：&lt;code&gt;OC、BC和TC&lt;&#x2F;code&gt;。我们一般接触的是OC：主时钟和从时钟，交换机、路由器一般是BC或TC。&lt;&#x2F;p&gt;
+&lt;p&gt;由于硬件性能有限，网络报文发送时记录的时刻信息，可以在随后的Follow_Up跟随报文中发出，这就是PTP的双步模式(Two-step)。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;下图是两OC主从时钟之间的同步过程：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;time_utc_timesync_etc&#x2F;image-20210406211952436.png&quot; alt=&quot;image-20210406211952436&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;a.主时钟向从时钟发送Sync报文，并在本地记录发送时间t1；从时钟收到该报文后，记录接收时间t2。&lt;&#x2F;li&gt;
+&lt;li&gt;b.时钟发送Sync报文之后，紧接着发送一个携带有t1的Follow_Up报文。&lt;&#x2F;li&gt;
+&lt;li&gt;c.从时钟向主时钟发送Delay_Req报文，用于发起反向传输延时的计算，并在本地记录发送时间t3；主时钟收到该报文后，记录接收时间t4。&lt;&#x2F;li&gt;
+&lt;li&gt;d.主时钟收到Delay_Req报文之后，回复一个携带有t4的Delay_Resp报文。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;时差计算&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;与NTP一样的原理，从时钟根据拥有的t1～t4这四个时间戳，由此可计算出主、从时钟间的往返总延时为：
+&lt;code&gt;Sigma = (t4-t1)-(t3-t2)&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;假设网络是对称的，从时钟相对于主时钟的时钟偏差为：
+&lt;code&gt;Delta = t2-t1-Sigma&#x2F;2=((t2-t1)+(t3-t4))&#x2F;2&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;计时方式&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;与NTP不同，PTP采用TAI世界原子时间计时，而且PTP计时的起点与unix时间一致，即UTC时间1970年1月1日0点。&lt;&#x2F;p&gt;
+&lt;p&gt;PTP主钟会告知从钟，当前UTC相对于TAI的累计偏移量，从钟据此计算当前准确的UTC时间。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;误差分析&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;PTP能准确记录报文发送和接受的时间，也能计算中间链路的延时，剩下影响最大的就是&lt;code&gt;网络链路的不对称性&lt;&#x2F;code&gt;了。&lt;&#x2F;p&gt;
+&lt;p&gt;在实际工程中，网络中间链路设备不支持PTP协议，大大降低了PTP的同步精度。目前，PTP主要应用在通信同步网、电力同步网等行业网络系统里。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;同步拓扑&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;PTP域中所有的时钟节点都按一定层次组织在一起，可通过BMC（Best Master Clock，最佳主时钟）协议动态选举出最优时钟，最优时钟的时间最终将被同步到整个PTP域中。&lt;&#x2F;p&gt;
+&lt;p&gt;BMC算法与STP（Spaning Tree Protocl）生成树协议类似，最终形成&lt;code&gt;无环路&lt;&#x2F;code&gt;的树形网络拓扑，且都是动态选举，能适应最佳主时钟切换的变化。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;扩展应用——PTP over SDH&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;充分利用各行业已有的SDH通信网络，利用&lt;code&gt;PTP-E1信号&lt;&#x2F;code&gt;转换设备，架设PTP同步网络，除了需要考虑链路倒换问题之外，SDH网络的时延稳定性可大幅提升网络时间同步精度。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;4-3-syncetong-bu-yi-tai-wang&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#4-3-syncetong-bu-yi-tai-wang&quot; aria-label=&quot;Anchor link for: 4-3-syncetong-bu-yi-tai-wang&quot;&gt;4.3 SyncE同步以太网&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;以太网最早只能传输数据信号，有另外独立的频率同步网络，随着以太网的快速发展，SyncE（Synchronized Ethernet）&lt;a href=&quot;http:&#x2F;&#x2F;www.embedded.com&#x2F;design&#x2F;prototyping-and-development&#x2F;4008244&#x2F;An-introduction-to-Synchronized-Ethernet&quot;&gt;同步以太网&lt;&#x2F;a&gt;技术诞生后，企业们有了新的选择。&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;基本原理&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;时钟节点利用以太网（1000M、1G、10G等）物理层的空闲间隙，传递&lt;code&gt;位宽时钟信号&lt;&#x2F;code&gt;，实现时钟频率信号（25M、125M等）的自上而下传递。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;协议控制&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;类似于SDH网络等时间间隔传递的SSM同步状态信息，同步以太网（Sync-E）利用链路层&lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Synchronous_Ethernet&quot;&gt;ESMC协议&lt;&#x2F;a&gt;封装传递SSM信息，SSM信息包含时钟质量信息，接收端据此选择合适的上级网络时钟。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;应用&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;一般商业PHY片提供SyncE功能选项，开启该功能模式，即可利用PHY恢复出来的频率信号，校准本地时钟频率或分频后用于本地计时。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;ntpyuan-li-ji-gong-zuo-mo-shi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#ntpyuan-li-ji-gong-zuo-mo-shi&quot; aria-label=&quot;Anchor link for: ntpyuan-li-ji-gong-zuo-mo-shi&quot;&gt;NTP原理及工作模式&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;NTP（Network Time Protocol，网络时间协议）是由RFC 1305定义的时间同步协议，用来在分布式时间服务器和客户端之间进行时间同步。NTP基于UDP报文进行传输，使用的UDP端口号为123。&lt;&#x2F;p&gt;
+&lt;p&gt;使用NTP的目的是对网络内所有具有时钟的设备进行时钟同步，使网络内所有设备的时钟保持一致，从而使设备能够提供基于统一时间的多种应用。&lt;&#x2F;p&gt;
+&lt;p&gt;对于运行NTP的本地系统，既可以接收来自其他时钟源的同步，又可以作为时钟源同步其他的时钟，并且可以和其他设备互相同步。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ntpgong-zuo-yuan-li&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#ntpgong-zuo-yuan-li&quot; aria-label=&quot;Anchor link for: ntpgong-zuo-yuan-li&quot;&gt;NTP工作原理&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;NTP的基本工作原理如图所示。Device A和Device B通过网络相连，它们都有自己独立的系统时钟，需要通过NTP实现各自系统时钟的自动同步。为便于理解，作如下假设：&lt;&#x2F;p&gt;
+&lt;p&gt;在Device A和Device B的系统时钟同步之前，Device A的时钟设定为10:00:00am，Device B的时钟设定为11:00:00am。&lt;&#x2F;p&gt;
+&lt;p&gt;Device B作为NTP时间服务器，即Device A将使自己的时钟与Device B的时钟同步。&lt;&#x2F;p&gt;
+&lt;p&gt;NTP报文在Device A和Device B之间单向传输所需要的时间为1秒。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;time_utc_timesync_etc&#x2F;v2-2640ead977cc734e8f2f3052c4dd615f_720w.jpg&quot; alt=&quot;img&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;系统时钟同步的工作过程如下：&lt;&#x2F;p&gt;
+&lt;p&gt;Device A发送一个NTP报文给Device B，该报文带有它离开Device A时的时间戳，该时间戳为10:00:00am（T1）。&lt;&#x2F;p&gt;
+&lt;p&gt;当此NTP报文到达Device B时，Device B加上自己的时间戳，该时间戳为11:00:01am（T2）。&lt;&#x2F;p&gt;
+&lt;p&gt;当此NTP报文离开Device B时，Device B再加上自己的时间戳，该时间戳为11:00:02am（T3）。&lt;&#x2F;p&gt;
+&lt;p&gt;当Device A接收到该响应报文时，Device A的本地时间为10:00:03am（T4）。&lt;&#x2F;p&gt;
+&lt;p&gt;至此，Device A已经拥有足够的信息来计算两个重要的参数：&lt;&#x2F;p&gt;
+&lt;p&gt;NTP报文的往返时延Delay=（T4-T1）-（T3-T2）=2秒。&lt;&#x2F;p&gt;
+&lt;p&gt;Device A相对Device B的时间差offset=（（T2-T1）+（T3-T4））&#x2F;2=1小时。&lt;&#x2F;p&gt;
+&lt;p&gt;这样，Device A就能够根据这些信息来设定自己的时钟，使之与Device B的时钟同步。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ntpde-bao-wen-ge-shi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#ntpde-bao-wen-ge-shi&quot; aria-label=&quot;Anchor link for: ntpde-bao-wen-ge-shi&quot;&gt;NTP的报文格式&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;NTP有两种不同类型的报文，一种是时钟同步报文，另一种是控制报文。控制报文仅用于需要网络管理的场合，它对于时钟同步功能来说并不是必需的，这里不做介绍。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;time_utc_timesync_etc&#x2F;v2-ec990f14b5b5c75e3e36492af4f091be_720w.jpg&quot; alt=&quot;img&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;主要字段的解释如下：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;LI（Leap Indicator）：长度为2比特，值为“11”时表示告警状态，时钟未被同步。为其他值时NTP本身不做处理。
+VN（Version Number）：长度为3比特，表示NTP的版本号，目前最新版本为3。
+Mode：长度为3比特，表示NTP的工作模式。不同的值所表示的含义别是：0未定义、1表示主动对等体模式、2表示被动对等体模式、3表示户模式、4表示服务器模式、5表示广播模式或组播模式、6表示此报文为TP控制报文、7预留给内部使用。
+Stratum：系统时钟的层数，取值范围为1～16，它定义了时钟的准度。层数为1的时钟准确度最高，准确度从1到16依次递减，层数为16时钟处于未同步状态，不能作为参考时钟。
+Poll：轮询时间，即两个连续NTP报文之间的时间间隔。
+Precision：系统时钟的精度。
+Root Delay：本地到主参考时钟源的往返时间。
+Root Dispersion：系统时钟相对于主参考时钟的最大误差。
+Reference Identifier：参考时钟源的标识。
+Reference Timestamp：系统时钟最后一次被设定或更新的时间。
+Originate Timestamp：NTP请求报文离开发送端时发送端的本时间。
+Receive Timestamp：NTP请求报文到达接收端时接收端的本地间。
+Transmit Timestamp：应答报文离开应答者时应答者的本地时间。
+Authenticator：验证信息。&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;ntpde-gong-zuo-mo-shi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#ntpde-gong-zuo-mo-shi&quot; aria-label=&quot;Anchor link for: ntpde-gong-zuo-mo-shi&quot;&gt;NTP的工作模式&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;设备可以采用多种NTP工作模式进行时间同步：&lt;&#x2F;p&gt;
+&lt;p&gt;客户端&#x2F;服务器模式&lt;&#x2F;p&gt;
+&lt;p&gt;对等体模式&lt;&#x2F;p&gt;
+&lt;p&gt;广播模式&lt;&#x2F;p&gt;
+&lt;p&gt;组播模式&lt;&#x2F;p&gt;
+&lt;p&gt;用户可以根据需要选择合适的工作模式。在不能确定服务器或对等体IP地址、网络中需要同步的设备很多等情况下，可以通过广播或组播模式实现时钟同步；客户端&#x2F;服务器和对等体模式中，设备从指定的服务器或对等体获得时钟同步，增加了时钟的可靠性。&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;客户端&#x2F;服务器模式&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;time_utc_timesync_etc&#x2F;v2-d694ec05c9ab0b41ba3e6177b6686807_720w.jpg&quot; alt=&quot;img&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;在客户端&#x2F;服务器模式中，客户端向服务器发送时钟同步报文，报文中的Mode字段设置为3（客户模式）。服务器端收到报文后会自动工作在服务器模式，并发送应答报文，报文中的Mode字段设置为4（服务器模式）。客户端收到应答报文后，进行时钟过滤和选择，并同步到优选的服务器。&lt;&#x2F;p&gt;
+&lt;p&gt;在该模式下，客户端能同步到服务器，而服务器无法同步到客户端。&lt;&#x2F;p&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;对等体模式&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;time_utc_timesync_etc&#x2F;v2-1406d1e675183feb54d77e7b1e38766a_720w.jpg&quot; alt=&quot;img&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;在对等体模式中，主动对等体和被动对等体之间首先交互Mode字段为3（客户端模式）和4（服务器模式）的NTP报文。之后，主动对等体向被动对等体发送时钟同步报文，报文中的Mode字段设置为1（主动对等体），被动对等体收到报文后自动工作在被动对等体模式，并发送应答报文，报文中的Mode字段设置为2（被动对等体）。经过报文的交互，对等体模式建立起来。主动对等体和被动对等体可以互相同步。如果双方的时钟都已经同步，则以层数小的时钟为准&lt;&#x2F;p&gt;
+&lt;ol start=&quot;3&quot;&gt;
+&lt;li&gt;广播模式&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;time_utc_timesync_etc&#x2F;v2-633b0a85f12b403f2ea2c688172b9070_720w.jpg&quot; alt=&quot;img&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;在广播模式中，服务器端周期性地向广播地址255.255.255.255发送时钟同步报文，报文中的Mode字段设置为5（广播模式）。客户端侦听来自服务器的广播报文。当客户端接收到第一个广播报文后，客户端与服务器交互Mode字段为3（客户模式）和4（服务器模式）的NTP报文，以获得客户端与服务器间的网络延迟。之后，客户端就进入广播客户端模式，继续侦听广播报文的到来，根据到来的广播报文对系统时钟进行同步。&lt;&#x2F;p&gt;
+&lt;ol start=&quot;4&quot;&gt;
+&lt;li&gt;组播模式&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;time_utc_timesync_etc&#x2F;v2-2990d3f0489bbef18aacc8b7a6b409d6_720w.jpg&quot; alt=&quot;img&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;在组播模式中，服务器端周期性地向用户配置的组播地址（若用户没有配置组播地址，则使用默认的NTP组播地址224.0.1.1）发送时钟同步报文，报文中的Mode字段设置为5（组播模式）。客户端侦听来自服务器的组播报文。当客户端接收到第一个组播报文后，客户端与服务器交互Mode字段为3（客户模式）和4（服务器模式）的NTP报文，以获得客户端与服务器间的网络延迟。之后，客户端就进入组播客户模式，继续侦听组播报文的到来，根据到来的组播报文对系统时钟进行同步。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ntp-xiang-jie&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#ntp-xiang-jie&quot; aria-label=&quot;Anchor link for: ntp-xiang-jie&quot;&gt;NTP 详解&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;yi-ntpxie-yi-jian-jie&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#yi-ntpxie-yi-jian-jie&quot; aria-label=&quot;Anchor link for: yi-ntpxie-yi-jian-jie&quot;&gt;一、NTP协议简介&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;strong&gt;网络时间协议&lt;&#x2F;strong&gt;NTP(Network Time Protocol)的主要开发者是美国特拉华大学的MILLS David L教授设计实现的，由时间协议、ICMP时间戳消息及IP时间戳选项发展而来。NTP用于将计算机客户或服务器的时间与另一服务器同步，使用层次式时间分布模型。在配置时，NTP可以利用冗余服务器和多条网络路径来获得时间的高准确性和高可靠性。即使客户机在长时间无法与某一时间服务器相联系的情况下,仍可提供高准确度时间。&lt;&#x2F;p&gt;
+&lt;p&gt;实际应用中，还有确保秒级精度的简单的网络时间协议SNTP(Simple Network Time Protocol)。SNTP是NTP的一个子集,主要用于那些不需要NTP的精度以较高实现复杂性的网络时间同步客户机。SNTP协议已减少了网络延时对校对准确的影响，但没有冗余服务器和校正时钟频率误差功能。&lt;&#x2F;p&gt;
+&lt;p&gt;一般的计算机和嵌入式设备在时钟度方面没有明确的指标要求, 时钟精度只有10-4～10-5，每天可能误差达十几秒或更多，如果不及时校正，其累积时间误差不可忽视。许多工业控制过程需要高准确度时间，如：电力系统内众多的计算机监控系统、保护装置、故障录波器等时间同步要在ms级以内。&lt;&#x2F;p&gt;
+&lt;p&gt;联网计算机同步时钟最简便的方法是网络授时。网络授时分为广域网授时和局域网授时。广域网授时精度通常能达50ms级，但有时超过500ms，这是因为每次经过的路由器路径可能不相同。现在还没有更好的办法将这种不同路径延迟的时间误差完全消除。局域网授时不存在路由器路径延迟问题，因而授时精度理论上可以提到亚毫秒级。Windows内置NTP服务，在局域网内其最高授时精度也只能达10ms级。因此，提高局域网NTP&lt;strong&gt;授时精度&lt;&#x2F;strong&gt;成为一个迫切需要解决的问题。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;er-ntpshou-shi-yuan-li&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#er-ntpshou-shi-yuan-li&quot; aria-label=&quot;Anchor link for: er-ntpshou-shi-yuan-li&quot;&gt;二、NTP授时原理&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;NTP最典型的授时方式是Client&#x2F;Server方式。如下图1所示，客户机首先向服务器发送一个NTP 包，其中包含了该包离开客户机的时间戳T1，当服务器接收到该包时，依次填入包到达的时间戳T2、包离开的时间戳T3，然后立即把包返回给客户机。客户机在接收到响应包时，记录包返回的时间戳T4。客户机用上述4个时间参数就能够计算出2个关键参数：NTP包的往返延迟d和客户机与服务器之间的时钟偏差t。客户机使用时钟偏差来调整本地时钟，以使其时间与服务器时间一致。&lt;&#x2F;p&gt;
+&lt;p&gt;如图：Client&#x2F;Server方式下NTP授时原理&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;time_utc_timesync_etc&#x2F;ntp1.png&quot; alt=&quot;image-20200807200121018&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;T1为客户发送NTP请求时间戳(以客户时间为参照)；T2为服务器收到NTP请求时间戳(以服务器时间为参照)；T3为服务器回复NTP请求时间戳(以服务器时间为参照)；T4为客户收到NTP回复包时间戳(以客户时间为参照)；d1为NTP请求包传送延时，d2为NTP回复包传送延时；t为服务器和客户端之间的时间偏差，d为NTP包的往返时间。&lt;&#x2F;p&gt;
+&lt;p&gt;$\left{               \begin{array}{&lt;strong&gt;lr&lt;&#x2F;strong&gt;}               T2 = T1 + t + d1 &amp;amp;  \               T4 = T3 - t + d2 \               d = d1 + d2                 \end{array}   \right.  $&lt;&#x2F;p&gt;
+&lt;p&gt;假设NTP请求和回复包传送延迟相等，即$$d1 = d2$$，可以得到&lt;&#x2F;p&gt;
+&lt;p&gt;$\left{               \begin{array}{&lt;strong&gt;lr&lt;&#x2F;strong&gt;}              t = \frac{(T2 - T1) - (T4 - T3)}{2}  \               d = (T2 - T1) + (T4 - T3)                \end{array}   \right.  $&lt;&#x2F;p&gt;
+&lt;p&gt;=&amp;gt; $$t = (T2 - T1) + d1 = (T2 - T1) + \frac{d}{2}$$&lt;&#x2F;p&gt;
+&lt;p&gt;可以得出，t、d只与T2、T1差值及T3、T4差值相关，而与T2、T3差值无关，即最终结果与服务器处理请求时间所需时间无关。因此，客户端可以根据差值计算时差来调整本地时钟。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;san-ntpshou-shi-jing-du-fen-xi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#san-ntpshou-shi-jing-du-fen-xi&quot; aria-label=&quot;Anchor link for: san-ntpshou-shi-jing-du-fen-xi&quot;&gt;三、NTP授时精度分析&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;strong&gt;NTP授时精度&lt;&#x2F;strong&gt;与NTP服务器与用户间的网络状况有关，主要取决于NTP包往返路由的延时对称程度，往返路由的延时不对称值最大不超过网络延时。式(2)是在假设NTP请求和回复包在网上传送延时相等，即d1=d2=d&#x2F;2的情况下得出的，而d1、d2的取值范围在(0...d)间，由式(3)可以得出最大授时误差是±d&#x2F;2。一般广域网的网络延时在10 ms～500ms之间;局域网的网络延时在计时操作系统内核处理延迟的情况下通常小于1ms。&lt;&#x2F;p&gt;
+&lt;p&gt;假定局域网内NTP延时小于1ms，理论上授时误差小于0.5ms，但对于Windows操作系统内置的NTP客户和NTP服务，并不能达到此精度。Windows NTP时钟分辨率因操作系统和硬件不同而有所不同，时钟分辨率通常为10ms或15ms。基于Windows操作系统内置的NTP授时精度最高不超过10ms。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;si-ji-yu-ntpjian-shao-ji-suan-ji-shi-zhong-pian-chai&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#si-ji-yu-ntpjian-shao-ji-suan-ji-shi-zhong-pian-chai&quot; aria-label=&quot;Anchor link for: si-ji-yu-ntpjian-shao-ji-suan-ji-shi-zhong-pian-chai&quot;&gt;四、基于NTP减少计算机时钟偏差&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;01、计算机时钟偏差分析&lt;&#x2F;p&gt;
+&lt;p&gt;通用PC机自带两类时钟源：硬件时钟和软件时钟(或称为系统时钟)。不论是硬件时钟还是软件时钟，都是由石英晶体振荡器驱动的，通过累计石英晶体振荡器输出脉冲数，换算出时间。所以计算机时钟的准确度取决于晶振频率准确度。受温度变化、电压、芯片老化等因素影响，晶振频率会发生小幅度波动，其中温度对晶振频影响最大。&lt;&#x2F;p&gt;
+&lt;p&gt;由于工艺和材料的原因，同一生产线上标称频率相同的石英晶体，其实际频率是不同的，实际频率与标称频率偏差率从10-4量级到10-9量级不等。以10-4量级为例，时钟每天至少误差8.64 s。&lt;&#x2F;p&gt;
+&lt;p&gt;02、基于NTP减少计算机时钟频率偏差&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;时钟频率偏差&lt;&#x2F;strong&gt;是时钟长期计时累积误差的主要原因，要提高时钟长期计时精度，必须补偿时钟频率偏差。联网的计算机可采用NTP方式,可非常方便地校准时钟频率偏差。以NTP服务器时钟为标准时间，在某一时刻设置NTP客户机时间为NTP服务器当前时间T0，经过一段时间后，NTP服务器时间为T0+tsn，NTP客户端时间为T0+tcn。因为存在时钟频率偏差，tsn与tcn并不相等。NTP客户端时间tcn需乘以时钟频率偏差系数k才等于tsn，即tsn=k×tcn，所以k=tsn&#x2F;tcn。&lt;&#x2F;p&gt;
+&lt;p&gt;任何晶振实际工作频率都是不稳定的，只是程度不同而已。即使温度补偿的晶振，在常温范围内(摄氏10℃～35℃)也有大约5×10-7～2×10-6的误差。晶振实际频率是受外界多种因素(温度、电压、老化等)影响而改变的。因此，时钟频率偏差系数k并非恒定不变的。每隔一定时间，NTP客户机要对时钟频率偏差系数k进行校正，才能保证计时精度。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;wu-jin-yi-bu-ti-gao-ntpshou-shi-jing-du-de-fang-fa&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#wu-jin-yi-bu-ti-gao-ntpshou-shi-jing-du-de-fang-fa&quot; aria-label=&quot;Anchor link for: wu-jin-yi-bu-ti-gao-ntpshou-shi-jing-du-de-fang-fa&quot;&gt;五、进一步提高NTP授时精度的方法&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;局域网络延相对较大的原因在于时间戳一般都是在应用层加盖。为减少操作系统内核处理延时的影响提高NTP授时精度，发&#x2F;收NTP包时间戳应尽量接近主机真实发&#x2F;收包时刻。在不改变硬件的条件下，一个可行的办法是修改网卡驱动程序，将记录NTP包发&#x2F;收时间戳从应用程序移至网卡驱动程序处，可消除操作系统内核处理延时不确定而引入的误差。这种方法在局域网中可大幅提高NTP授时精度至μs级。&lt;&#x2F;p&gt;
+&lt;p&gt;为了减少温度引起晶振频率漂移对时钟准确度的影响，可以采用数字温漂补偿方法，提高时钟长期计时准确度。先测出工作温度范围内温度对应的温漂补偿系数，工作时每隔一定时间，根据实际温度查出对应补偿系数动态地修正时间。&lt;&#x2F;p&gt;
+&lt;p&gt;时钟频率偏差和时钟分辨率低是局域网NTP授时精度不高的主要原因。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;geng-xin-ji-lu&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#geng-xin-ji-lu&quot; aria-label=&quot;Anchor link for: geng-xin-ji-lu&quot;&gt;更新记录&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;2021-05-07 增加 pre2 一节&lt;&#x2F;p&gt;
+&lt;p&gt;2021-05-07 增加单独的  NTP 工作原理与工作模式 一节&lt;&#x2F;p&gt;
+</content>
+    </entry>
+</feed>

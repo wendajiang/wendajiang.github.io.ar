@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - pattern</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/pattern/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-01-05T11:25:24+00:00</updated>
+    <id>https://wendajiang.github.io/tags/pattern/atom.xml</id>
+    <entry xml:lang="en">
+        <title>parallel patterns</title>
+        <published>2024-01-05T11:25:24+00:00</published>
+        <updated>2023-01-05T11:25:24+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/parallel-patterns/" type="text/html"/>
+        <id>https://wendajiang.github.io/parallel-patterns/</id>
+        <content type="html">&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;parallel_patterns&#x2F;parallel_patterns.drawio.png&quot; alt=&quot;parallel_patterns.drawio&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;reference&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#reference&quot; aria-label=&quot;Anchor link for: reference&quot;&gt;reference&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;patterns.eecs.berkeley.edu&#x2F;&quot;&gt;Our Pattern Language&lt;&#x2F;a&gt; Kurt Keutzer (EECS UC Berkeley) and Tim Mattson (Intel) 合著&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;kernel.googlesource.com&#x2F;pub&#x2F;scm&#x2F;linux&#x2F;kernel&#x2F;git&#x2F;paulmck&#x2F;perfbook&#x2F;&quot;&gt;perfbook&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+</feed>

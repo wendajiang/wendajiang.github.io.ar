@@ -1,0 +1,779 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - capn proto</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/capn proto/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2022-01-20T17:26:39+00:00</updated>
+    <id>https://wendajiang.github.io/tags/capn proto/atom.xml</id>
+    <entry xml:lang="en">
+        <title>protobuffer etc.</title>
+        <published>2022-01-20T17:26:39+00:00</published>
+        <updated>2022-01-20T17:26:39+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/protoetc/" type="text/html"/>
+        <id>https://wendajiang.github.io/protoetc/</id>
+        <content type="html">&lt;!--
+mermaid example:
+&lt;div class=&quot;mermaid&quot;&gt;
+    mermaid program
+&lt;&#x2F;div&gt;
+--&gt;
+&lt;h1 id=&quot;protobuf2-yu-yan&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#protobuf2-yu-yan&quot; aria-label=&quot;Anchor link for: protobuf2-yu-yan&quot;&gt;protobuf2 语言&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;developers.google.com&#x2F;protocol-buffers&#x2F;docs&#x2F;proto&quot;&gt;原文&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;ding-yi-message&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#ding-yi-message&quot; aria-label=&quot;Anchor link for: ding-yi-message&quot;&gt;定义 message&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;san-chong-biao-shi-fu&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#san-chong-biao-shi-fu&quot; aria-label=&quot;Anchor link for: san-chong-biao-shi-fu&quot;&gt;三种标识符&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;required&lt;&#x2F;li&gt;
+&lt;li&gt;optional&lt;&#x2F;li&gt;
+&lt;li&gt;repeated&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;历史原因，&lt;code&gt;repeated&lt;&#x2F;code&gt; 类型不能高效编码，[packed=true] 新代码可以使用这个选项使得编码更高效&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span&gt;repeated int32 samples = 4 [packed=true];
+&lt;&#x2F;span&gt;&lt;span&gt;repeated ProtoEnum results = 5 [packed=true];
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;reserved-field&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#reserved-field&quot; aria-label=&quot;Anchor link for: reserved-field&quot;&gt;reserved field&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;如果删除了 field 或者注释掉，未来可能会重用，这很危险，所以使用 &lt;code&gt;reserved&lt;&#x2F;code&gt; 来避免这个问题&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Foo &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;reserved &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;15&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;9 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;to &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;11&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;reserved &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;foo&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;bar&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;scalar-value-types&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#scalar-value-types&quot; aria-label=&quot;Anchor link for: scalar-value-types&quot;&gt;Scalar Value Types&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;A scalar message field can have one of the following types – the table shows the type specified in the &lt;code&gt;.proto&lt;&#x2F;code&gt; file, and the corresponding type in the automatically generated class:&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;.proto Type&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;Notes&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;C++ Type&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;Java Type&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;Python Type[2]&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;Go Type&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;double&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;double&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;double&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;float&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;*float64&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;float&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;float&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;float&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;float&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;*float32&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;int32&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead.&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int32&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;*int32&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;int64&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead.&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int64&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;long&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int&#x2F;long[3]&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;*int64&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;uint32&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Uses variable-length encoding.&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;uint32&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int[1]&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int&#x2F;long[3]&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;*uint32&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;uint64&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Uses variable-length encoding.&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;uint64&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;long[1]&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int&#x2F;long[3]&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;*uint64&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;sint32&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s.&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int32&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;*int32&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;sint64&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s.&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int64&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;long&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int&#x2F;long[3]&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;*int64&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;fixed32&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Always four bytes. More efficient than uint32 if values are often greater than 228.&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;uint32&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int[1]&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int&#x2F;long[3]&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;*uint32&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;fixed64&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Always eight bytes. More efficient than uint64 if values are often greater than 256.&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;uint64&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;long[1]&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int&#x2F;long[3]&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;*uint64&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;sfixed32&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Always four bytes.&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int32&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;*int32&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;sfixed64&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Always eight bytes.&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int64&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;long&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int&#x2F;long[3]&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;*int64&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;bool&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;bool&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;boolean&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;bool&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;*bool&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;string&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;A string must always contain UTF-8 encoded or 7-bit ASCII text.&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;string&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;String&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;unicode (Python 2) or str (Python 3)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;*string&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;bytes&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;May contain any arbitrary sequence of bytes.&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;string&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;ByteString&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;bytes&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;[]byte&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h2 id=&quot;optional-fields-and-default-values&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#optional-fields-and-default-values&quot; aria-label=&quot;Anchor link for: optional-fields-and-default-values&quot;&gt;Optional Fields and Default Values&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;如果 optional field 没有被设置，序列化会被设置一个默认值，默认值可以定义时写好&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span&gt;optional int32 result_per_page = 3 [default = 10];
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;如果没有设置：对于 string，默认是空串。对于 bytes，默认也是空。对于 bools， 默认是 false。对于整型，默认是 0。对于 enums，默认是第一个。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;enumerations&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#enumerations&quot; aria-label=&quot;Anchor link for: enumerations&quot;&gt;Enumerations&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;SearchRequest &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;required &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;query &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int32 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;page_number &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int32 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;result_per_page &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;3 &lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;default &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;10&lt;&#x2F;span&gt;&lt;span&gt;];
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;enum &lt;&#x2F;span&gt;&lt;span&gt;Corpus {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;UNIVERSAL &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;WEB &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;IMAGES &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;LOCAL &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;NEWS &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;4&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;PRODUCTS &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;5&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;VIDEO &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;6&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;Corpus &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;corpus &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;4 &lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;default &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;UNIVERSAL&lt;&#x2F;span&gt;&lt;span&gt;];
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;可以对于不同的 enum 定义相同的值，但是要声明 &lt;code&gt;allow_alias = true&lt;&#x2F;code&gt;,如果没有声明，protoc 就会报错&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;enum &lt;&#x2F;span&gt;&lt;span&gt;EnumAllowingAlias {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;option &lt;&#x2F;span&gt;&lt;span&gt;allow_alias &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;UNKNOWN &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;STARTED &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;RUNNING &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;enum &lt;&#x2F;span&gt;&lt;span&gt;EnumNotAllowingAlias {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;UNKNOWN &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;STARTED &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; RUNNING = 1;  &#x2F;&#x2F; Uncommenting this line will cause a compile error inside Google and a warning message outside.
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;enum 内容必须是&lt;strong&gt;32位整数&lt;&#x2F;strong&gt;。因为 enum 类型使用 varint encoding，负数的编码效率很低，所以不推荐使用负数&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;reserved-values&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#reserved-values&quot; aria-label=&quot;Anchor link for: reserved-values&quot;&gt;Reserved Values&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;如果你要删除一些 enum value 或者注释，也要使用 reverved 声明保留，以免后人重用引发问题&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;enum &lt;&#x2F;span&gt;&lt;span&gt;Foo {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;reserved 2&lt;&#x2F;span&gt;&lt;span&gt;, 15, 9 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;to 11&lt;&#x2F;span&gt;&lt;span&gt;, 40 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;to max&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;reserved&lt;&#x2F;span&gt;&lt;span&gt; &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;FOO&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;, &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;BAR&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;import&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#import&quot; aria-label=&quot;Anchor link for: import&quot;&gt;Import&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;将 PB3 的 message import 到 PB2 的文件中使用是可行的，反之亦然。但是 PB2 的 enum 不能用在 PB3 中&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;lei-xing-qian-tao&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#lei-xing-qian-tao&quot; aria-label=&quot;Anchor link for: lei-xing-qian-tao&quot;&gt;类型嵌套&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;SearchResponse &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Result &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;required &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;url &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;title &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;repeated &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;snippets &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;repeated &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;Result &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;result &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;SomeOtherMessage &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span&gt;SearchResponse&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;Result &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;result &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;groups&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#groups&quot; aria-label=&quot;Anchor link for: groups&quot;&gt;Groups&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;不要用这个特性，同样 required 最好也不要用，这两个特性 PB3 中移除了&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;geng-xin-message&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#geng-xin-message&quot; aria-label=&quot;Anchor link for: geng-xin-message&quot;&gt;更新 Message&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;这里请看&lt;a href=&quot;https:&#x2F;&#x2F;developers.google.com&#x2F;protocol-buffers&#x2F;docs&#x2F;proto#updating&quot;&gt;原文&lt;&#x2F;a&gt;，这是更新一个 message 尽可能遵守的原则&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;extensions&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#extensions&quot; aria-label=&quot;Anchor link for: extensions&quot;&gt;Extensions&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;extensions 可以让你在 message 声明一些 field numbers 给第三方 extensions 使用。extensions 是占位符，field number 没有在本 .proto 文件中定义。允许其他 .proto 文件定义这些 field number，看个例子：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Foo &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; ...
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;extensions &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;100 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;to &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;199&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这表明 [100,199] 保留给 extensions 使用。其他用户可以通过 import 这个文件定义 Foo 的 field number，比如&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;extend &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;Foo &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int32 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;bar &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;126&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;在访问 extend 的字段时，代码与一般定义的不同，比如 C++ 中&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span&gt;Foo foo;
+&lt;&#x2F;span&gt;&lt;span&gt;foo&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;SetExtension&lt;&#x2F;span&gt;&lt;span&gt;(bar, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;15&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Extensions 可以是已经提到任意类型，不能是后面提到的 oneof 或者 map&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;qian-tao&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#qian-tao&quot; aria-label=&quot;Anchor link for: qian-tao&quot;&gt;嵌套&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Baz &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;extend &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;Foo &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int32 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;bar &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;126&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;  ...
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;代码使用类似这样:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span&gt;Foo foo;
+&lt;&#x2F;span&gt;&lt;span&gt;foo&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;SetExtensino&lt;&#x2F;span&gt;&lt;span&gt;(Baz&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;bar, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;15&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;影响就是 Foo 的扩展定义位于 message 的 scope，C++ 就是名字空间加了限制&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Baz &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  ...
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; This can even be in a different file.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;extend &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;Foo &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;Baz &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;foo_baz_ext &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;127&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这样的写法可能更清晰&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;xuan-ze-kuo-zhan-shu-zi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#xuan-ze-kuo-zhan-shu-zi&quot; aria-label=&quot;Anchor link for: xuan-ze-kuo-zhan-shu-zi&quot;&gt;选择扩展数字&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Foo &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;extensions &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1000 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;to &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;max&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;max 是 $2^{29} - 1$，或者 536,870,911&lt;&#x2F;p&gt;
+&lt;p&gt;与一般选择 field number 一样，也要避免使用 19000 到 10000（FieldDescriptor :: kFirstReservedNumber到FieldDescriptor :: kLastReservedNumber）这是为 PB 实现保留的。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;oneof&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#oneof&quot; aria-label=&quot;Anchor link for: oneof&quot;&gt;Oneof&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;如果你的 message 中有很多 optional 的字段，并且同时最多只有一个 optional 的字段会被 set，那么可以使用 oneof 特性来提升编码效率，进一步压缩空间。类似 CPP 中 UNION&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;shi-yong-oneof&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#shi-yong-oneof&quot; aria-label=&quot;Anchor link for: shi-yong-oneof&quot;&gt;使用 Oneof&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;SampleMessage &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;oneof &lt;&#x2F;span&gt;&lt;span&gt;test_oneof {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;4&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;SubMessage &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;sub_message &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;9&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;oneof 中定义的字段不能使用 required, optional, repeated 标识关键字。如果需要增加一个 repeated 字段，需要使用 Message 包裹起来&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;oneof-te-xing&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#oneof-te-xing&quot; aria-label=&quot;Anchor link for: oneof-te-xing&quot;&gt;Oneof 特性&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;set 其中一个字段，其他字段都被清空，所以只会最后一个 set 的生效&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span&gt;SampleMessage message;
+&lt;&#x2F;span&gt;&lt;span&gt;message&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;set_name&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;name&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;CHECK&lt;&#x2F;span&gt;&lt;span&gt;(message&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;has_name&lt;&#x2F;span&gt;&lt;span&gt;());
+&lt;&#x2F;span&gt;&lt;span&gt;message&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;mutable_sub_message&lt;&#x2F;span&gt;&lt;span&gt;();   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; Will clear name field.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;CHECK&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;!&lt;&#x2F;span&gt;&lt;span&gt;message&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;has_name&lt;&#x2F;span&gt;&lt;span&gt;());
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;如果解析器看到 oneof 中有多个字段，解析出来的 message 只会是最后一个&lt;&#x2F;li&gt;
+&lt;li&gt;Extensions 不支持 oneof&lt;&#x2F;li&gt;
+&lt;li&gt;反射 API 也可以用于 oneof&lt;&#x2F;li&gt;
+&lt;li&gt;可以设置一个 oneof 字段默认值，然后最后一个被序列化&lt;&#x2F;li&gt;
+&lt;li&gt;如果使用 C++，注意代码不要 crash。下面的代码就会 crash，因为 sub_message 已经被删除了，当调用 set_name 时&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span&gt;SampleMessage message;
+&lt;&#x2F;span&gt;&lt;span&gt;Submessage &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;sub_message &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; message&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;mutable_sub_message&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;message&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;set_name&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;name&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; will delete sub_message
+&lt;&#x2F;span&gt;&lt;span&gt;sub_message&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;set_&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;... &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; crash here
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;还是 C++，如果你 Swap 两个有 oneof 特性的 message，会有对方最后一个 oneof，例子中， msg1 有 sub_message， msg2 有 name&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span&gt;SampleMessage msg1;
+&lt;&#x2F;span&gt;&lt;span&gt;msg1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;set_name&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;name&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;SampleMessage msg2;
+&lt;&#x2F;span&gt;&lt;span&gt;msg2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;mutable_sub_message&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;msg1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;swap&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;msg2);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;CHECK&lt;&#x2F;span&gt;&lt;span&gt;(msg1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;has_sub_message&lt;&#x2F;span&gt;&lt;span&gt;());
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;CHECK&lt;&#x2F;span&gt;&lt;span&gt;(msg2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;has_name&lt;&#x2F;span&gt;&lt;span&gt;());
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;hou-xiang-jian-rong-wen-ti&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#hou-xiang-jian-rong-wen-ti&quot; aria-label=&quot;Anchor link for: hou-xiang-jian-rong-wen-ti&quot;&gt;后向兼容问题&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;注意增加，删除 oneof 字段时，如果 check 返回 None&#x2F;NOT_SET，意味着 oneof 没有被 set 或者设置其他版本的 oneof。无法区分&lt;&#x2F;p&gt;
+&lt;p&gt;所以 ！！！ 就认为 oneof 没有兼容性&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;maps&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#maps&quot; aria-label=&quot;Anchor link for: maps&quot;&gt;Maps&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span&gt;map&amp;lt;key_type, value_type&amp;gt; map_field = N;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;key_type 任意整数类型或者字符串类型。注意 enum 不能作为 key_type。value_type 可以是出了 map 之外的任何类型&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;map API 现在支持所有 PB2 的语言&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;te-xing&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#te-xing&quot; aria-label=&quot;Anchor link for: te-xing&quot;&gt;特性&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Extensions 不支持 map&lt;&#x2F;li&gt;
+&lt;li&gt;maps 不使用 repeated, optional, required&lt;&#x2F;li&gt;
+&lt;li&gt;Wire format 顺序和 map 迭代是不确定的&lt;&#x2F;li&gt;
+&lt;li&gt;生成文本格式时，map 通过 key 排序，数字 key 以数字顺序&lt;&#x2F;li&gt;
+&lt;li&gt;从 wire 格式解析，或者 merging，如果有重复 map key，使用后面的值。解析文本格式，如果有重复 key 就会报错&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;jian-rong&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#jian-rong&quot; aria-label=&quot;Anchor link for: jian-rong&quot;&gt;兼容&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;map 只是一个语法糖，实际上与下面的定义相等，所以即使 PB 实现不支持 map，也可以处理数据&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;MapFieldEntry &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;key_type &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;key &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;value_type &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;value &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;repeated MapFieldEntry map_field = N;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;ding-yi-fu-wu&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#ding-yi-fu-wu&quot; aria-label=&quot;Anchor link for: ding-yi-fu-wu&quot;&gt;定义服务&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;service &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;SearchService &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;rpc &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;Search&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;SearchRequest&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;returns &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;SearchResponse&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;默认，PB 编译器会生成抽象接口 &lt;code&gt;SearchService&lt;&#x2F;code&gt; 以及关联 stub 实现。stub 传递所有的调用为 RpcChannel，是一个抽象接口，你需要自己定义接口逻辑。比如，你可以将 RpcChannel 实现为序列化一个 message 然后通过 HTTP 发送到一个服务端。换句话说，生成的 stub 提供了一个类型安全的接口，并没有限制你做任何实现。所以，C++代码的例子如下：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;using&lt;&#x2F;span&gt;&lt;span&gt; google&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;protobuf;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;protobuf&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;RpcChannel&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt; channel;
+&lt;&#x2F;span&gt;&lt;span&gt;protobuf&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;RpcController&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt; controller;
+&lt;&#x2F;span&gt;&lt;span&gt;SearchService&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt; service;
+&lt;&#x2F;span&gt;&lt;span&gt;SearchRequest request;
+&lt;&#x2F;span&gt;&lt;span&gt;SearchResponse response;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;DoSearch&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; You provide classes MyRpcChannel and MyRpcController, which implement
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; the abstract interfaces protobuf::RpcChannel and protobuf::RpcController.
+&lt;&#x2F;span&gt;&lt;span&gt;  channel &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= new &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;MyRpcChannel&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;somehost.example.com:1234&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  controller &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= new&lt;&#x2F;span&gt;&lt;span&gt; MyRpcController;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; The protocol compiler generates the SearchService class based on the
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; definition given above.
+&lt;&#x2F;span&gt;&lt;span&gt;  service &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= new &lt;&#x2F;span&gt;&lt;span&gt;SearchService&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;Stub&lt;&#x2F;span&gt;&lt;span&gt;(channel);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; Set up the request.
+&lt;&#x2F;span&gt;&lt;span&gt;  request&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;set_query&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;protocol buffers&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; Execute the RPC.
+&lt;&#x2F;span&gt;&lt;span&gt;  service&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;Search&lt;&#x2F;span&gt;&lt;span&gt;(controller, request, response, protobuf&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;NewCallback&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;Done));
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;Done&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;delete&lt;&#x2F;span&gt;&lt;span&gt; service;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;delete&lt;&#x2F;span&gt;&lt;span&gt; channel;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;delete&lt;&#x2F;span&gt;&lt;span&gt; controller;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;所有的 service 类实现 Service 接口，这样提供了编译器不知道方法名称或者输入输出类型的进行调用的方法。服务端，可以这样实现：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;using&lt;&#x2F;span&gt;&lt;span&gt; google&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;protobuf;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;ExampleSearchService &lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;font-style:italic;color:#8be9fd;&quot;&gt;SearchService &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;Search&lt;&#x2F;span&gt;&lt;span&gt;(protobuf&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;RpcController&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;controller&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;              &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const&lt;&#x2F;span&gt;&lt;span&gt; SearchRequest&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;request&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;              SearchResponse&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;response&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;              protobuf&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Closure&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;done&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(request&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;query&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;google&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;      response&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;add_result&lt;&#x2F;span&gt;&lt;span&gt;()&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;set_url&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;http:&#x2F;&#x2F;www.google.com&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;} &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;else if &lt;&#x2F;span&gt;&lt;span&gt;(request&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;query&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;protocol buffers&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;      response&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;add_result&lt;&#x2F;span&gt;&lt;span&gt;()&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;set_url&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;http:&#x2F;&#x2F;protobuf.googlecode.com&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;    done&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;Run&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; You provide class MyRpcServer.  It does not have to implement any
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; particular interface; this is just an example.
+&lt;&#x2F;span&gt;&lt;span&gt;  MyRpcServer server;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  protobuf&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Service&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt; service &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= new&lt;&#x2F;span&gt;&lt;span&gt; ExampleSearchService;
+&lt;&#x2F;span&gt;&lt;span&gt;  server&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;ExportOnPort&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1234&lt;&#x2F;span&gt;&lt;span&gt;, service);
+&lt;&#x2F;span&gt;&lt;span&gt;  server&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;Run&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;delete&lt;&#x2F;span&gt;&lt;span&gt; service;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;如果不想实现你自己的 RPC 系统，可以直接使用 gRPC。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;options&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#options&quot; aria-label=&quot;Anchor link for: options&quot;&gt;Options&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;code&gt;.proto&lt;&#x2F;code&gt;文件可以通过 &lt;em&gt;options&lt;&#x2F;em&gt; 来 annotate，会影响处理的上下文。所有的 &lt;em&gt;options&lt;&#x2F;em&gt; 定义在 &lt;code&gt;google.protobuf&#x2F;descriptor.proto&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;file-level options &lt;&#x2F;li&gt;
+&lt;li&gt;Message-level options&lt;&#x2F;li&gt;
+&lt;li&gt;filed-level options&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;比如：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;java_package (file option) &lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;option &lt;&#x2F;span&gt;&lt;span&gt;java_package &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;com.example.foo&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;生成的 java 代码 package &lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;optimize_for (file option) SPEED(default), CODE_SIZE, LITE_RUNTIME
+会影响 C++ 和 Java 代码的生成&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;message_set_wire_format (message option) 对于C++代码开启 arena allocation &lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Foo &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;option &lt;&#x2F;span&gt;&lt;span&gt;message_set_wire_format &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;extensions &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;4 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;to &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;max&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;只是例子，Google 之外的开发者不需要这个&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;packed (field option)：如果在 repeated numeric type 上开启，encode 更加紧凑，这个 option 没有坏处，pb3 默认开启&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span&gt;repeated int32 samples = 4 [packed = true];
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;deprecated (filed option): 开启表明这个 filed 废弃，Java 中会加上 @Deprecated 注解&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;custom-options&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#custom-options&quot; aria-label=&quot;Anchor link for: custom-options&quot;&gt;custom options&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;还可以自定义 options&lt;&#x2F;p&gt;
+&lt;p&gt;example: &lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;google&#x2F;protobuf&#x2F;descriptor.proto&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;extend &lt;&#x2F;span&gt;&lt;span&gt;google&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;protobuf&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;MessageOptions &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;my_option &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;51234&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;MyMessage &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional&lt;&#x2F;span&gt;&lt;span&gt; (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;my_option&lt;&#x2F;span&gt;&lt;span&gt;) = &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;Hello &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;world&lt;&#x2F;span&gt;&lt;span&gt;!&amp;quot;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; 这样我们定义了 message-level option
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;然后 C++ 中可以这样使用&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span&gt;string value &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;MyMessage&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;descriptor&lt;&#x2F;span&gt;&lt;span&gt;()&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;options&lt;&#x2F;span&gt;&lt;span&gt;()&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;GetExtension&lt;&#x2F;span&gt;&lt;span&gt;(my_option);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;google&#x2F;protobuf&#x2F;descriptor.proto&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;extend &lt;&#x2F;span&gt;&lt;span&gt;google&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;protobuf&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;FileOptions &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;my_file_option &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;50000&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;extend &lt;&#x2F;span&gt;&lt;span&gt;google&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;protobuf&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;MessageOptions &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int32 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;my_message_option &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;50001&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;extend &lt;&#x2F;span&gt;&lt;span&gt;google&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;protobuf&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;FieldOptions &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;float &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;my_field_option &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;50002&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;extend &lt;&#x2F;span&gt;&lt;span&gt;google&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;protobuf&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;OneofOptions &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int64 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;my_oneof_option &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;50003&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;extend &lt;&#x2F;span&gt;&lt;span&gt;google&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;protobuf&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;EnumOptions &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;bool &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;my_enum_option &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;50004&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;extend &lt;&#x2F;span&gt;&lt;span&gt;google&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;protobuf&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;EnumValueOptions &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;uint32 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;my_enum_value_option &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;50005&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;extend &lt;&#x2F;span&gt;&lt;span&gt;google&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;protobuf&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;ServiceOptions &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;MyEnum &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;my_service_option &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;50006&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;extend &lt;&#x2F;span&gt;&lt;span&gt;google&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;protobuf&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;MethodOptions &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;MyMessage &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;my_method_option &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;50007&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;option &lt;&#x2F;span&gt;&lt;span&gt;(my_file_option) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;Hello world!&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;MyMessage &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;option &lt;&#x2F;span&gt;&lt;span&gt;(my_message_option) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1234&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int32 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;foo &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1 &lt;&#x2F;span&gt;&lt;span&gt;[(my_field_option) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;4.5&lt;&#x2F;span&gt;&lt;span&gt;];
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;bar &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;oneof &lt;&#x2F;span&gt;&lt;span&gt;qux {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;option&lt;&#x2F;span&gt;&lt;span&gt; (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;my_oneof_option&lt;&#x2F;span&gt;&lt;span&gt;) = 42;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;quux &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;enum &lt;&#x2F;span&gt;&lt;span&gt;MyEnum {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;option &lt;&#x2F;span&gt;&lt;span&gt;(my_enum_option) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;FOO &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1 &lt;&#x2F;span&gt;&lt;span&gt;[(my_enum_value_option) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;321&lt;&#x2F;span&gt;&lt;span&gt;];
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;BAR &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;RequestType &lt;&#x2F;span&gt;&lt;span&gt;{}
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;ResponseType &lt;&#x2F;span&gt;&lt;span&gt;{}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;service &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;MyService &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;option &lt;&#x2F;span&gt;&lt;span&gt;(my_service_option) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;FOO&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;rpc &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;MyMethod&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;RequestType&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;returns&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;ResponseType&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; Note:  my_method_option has type MyMessage.  We can set each field
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;   within it using a separate &amp;quot;option&amp;quot; line.
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;option &lt;&#x2F;span&gt;&lt;span&gt;(my_method_option)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;foo &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;567&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;option &lt;&#x2F;span&gt;&lt;span&gt;(my_method_option)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;bar &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;Some string&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h1 id=&quot;protobuf3-yu-yan&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#protobuf3-yu-yan&quot; aria-label=&quot;Anchor link for: protobuf3-yu-yan&quot;&gt;protobuf3 语言&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;developers.google.com&#x2F;protocol-buffers&#x2F;docs&#x2F;proto3&quot;&gt;原文&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;syntax = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;proto3&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;SearchRequest &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;query &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int32 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;page_number &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int32 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;result_per_page &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;需要声明 syntax = &amp;quot;proto3&amp;quot;&lt;&#x2F;p&gt;
+&lt;p&gt;同 PB2 一样，tag number 范围 $1 到 2^{29} - 1$，并且不能使用 19000 到 19999&lt;&#x2F;p&gt;
+&lt;p&gt;PB3 默认是 optional，没有 required 关键字，还有 repeated，并且 repeated 默认使用 packed 特性编码&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;define-a-message-type&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#define-a-message-type&quot; aria-label=&quot;Anchor link for: define-a-message-type&quot;&gt;define a message type&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;syntax = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;proto3&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;SearchRequest &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;query &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int32 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;page_number &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int32 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;result_per_page &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; 默认是 optional , repeated 才需要声明
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;reverse-field&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#reverse-field&quot; aria-label=&quot;Anchor link for: reverse-field&quot;&gt;Reverse field&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;同 pb2 中的内容&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;scalar-value-types-1&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#scalar-value-types-1&quot; aria-label=&quot;Anchor link for: scalar-value-types-1&quot;&gt;Scalar Value Types&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;与 PB2 基本一样，不过 string 和 bytes 加了最长限制 &lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;string 不能超过 $2^{32}$&lt;&#x2F;li&gt;
+&lt;li&gt;bytes 不能超过 $2^{32}$&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;mo-ren-zhi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#mo-ren-zhi&quot; aria-label=&quot;Anchor link for: mo-ren-zhi&quot;&gt;默认值&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;string，默认空串&lt;&#x2F;li&gt;
+&lt;li&gt;bytes，默认空序列&lt;&#x2F;li&gt;
+&lt;li&gt;bool，默认 false&lt;&#x2F;li&gt;
+&lt;li&gt;整型，默认 0&lt;&#x2F;li&gt;
+&lt;li&gt;enum，默认第一个，必须是0&lt;&#x2F;li&gt;
+&lt;li&gt;message 字段，看特定语言 API&lt;&#x2F;li&gt;
+&lt;li&gt;repeated，默认没有&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;enumerations-1&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#enumerations-1&quot; aria-label=&quot;Anchor link for: enumerations-1&quot;&gt;Enumerations&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;PB3 中第一是0，作为默认值&lt;&#x2F;li&gt;
+&lt;li&gt;0 必须是第一个元素，为了与 PB2 兼容，作为默认值&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;PB2 不要求 0 是第一个值&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;unknown-fields&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#unknown-fields&quot; aria-label=&quot;Anchor link for: unknown-fields&quot;&gt;Unknown Fields&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;老代码解析新数据，可能有不认识的 field&lt;&#x2F;p&gt;
+&lt;p&gt;最开始，pb3 在碰到不识别的 field，简单丢弃，在 version 3.5 我们为了匹配 pb2 行为重新引入了保护机制。在 version 3.5 或者更新，在解析过程中不认识的 field 被保留，不会删除&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;any&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#any&quot; aria-label=&quot;Anchor link for: any&quot;&gt;Any&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;特性开发中，有点类似 pb2 中的 message extensions 机制&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;json-mapping&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#json-mapping&quot; aria-label=&quot;Anchor link for: json-mapping&quot;&gt;JSON mapping&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;PB3 支持了官方的对 JSON 的编码，方便与系统之间共享数据。&lt;&#x2F;p&gt;
+&lt;p&gt;If a value is missing in the JSON-encoded data or if its value is &lt;code&gt;null&lt;&#x2F;code&gt;, it will be interpreted as the appropriate &lt;a href=&quot;https:&#x2F;&#x2F;developers.google.com&#x2F;protocol-buffers&#x2F;docs&#x2F;proto3#default&quot;&gt;default value&lt;&#x2F;a&gt; when parsed into a protocol buffer. If a field has the default value in the protocol buffer, it will be omitted in the JSON-encoded data by default to save space. An implementation may provide options to emit fields with default values in the JSON-encoded output.&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;proto3&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;JSON&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;JSON example&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;Notes&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;message&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;object&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;{&amp;quot;fooBar&amp;quot;: v, &amp;quot;g&amp;quot;: null, …}&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Generates JSON objects. Message field names are mapped to lowerCamelCase and become JSON object keys. If the &lt;code&gt;json_name&lt;&#x2F;code&gt; field option is specified, the specified value will be used as the key instead. Parsers accept both the lowerCamelCase name (or the one specified by the &lt;code&gt;json_name&lt;&#x2F;code&gt; option) and the original proto field name. &lt;code&gt;null&lt;&#x2F;code&gt; is an accepted value for all field types and treated as the default value of the corresponding field type.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;enum&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;string&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;&amp;quot;FOO_BAR&amp;quot;&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;The name of the enum value as specified in proto is used. Parsers accept both enum names and integer values.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;map&amp;lt;K,V&amp;gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;object&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;{&amp;quot;k&amp;quot;: v, …}&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;All keys are converted to strings.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;repeated V&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;array&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;[v, …]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;null&lt;&#x2F;code&gt; is accepted as the empty list &lt;code&gt;[]&lt;&#x2F;code&gt;.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;bool&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;true, false&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;true, false&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;string&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;string&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;&amp;quot;Hello World!&amp;quot;&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;bytes&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;base64 string&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;&amp;quot;YWJjMTIzIT8kKiYoKSctPUB+&amp;quot;&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;JSON value will be the data encoded as a string using standard base64 encoding with paddings. Either standard or URL-safe base64 encoding with&#x2F;without paddings are accepted.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;int32, fixed32, uint32&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;number&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;1, -10, 0&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;JSON value will be a decimal number. Either numbers or strings are accepted.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;int64, fixed64, uint64&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;string&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;&amp;quot;1&amp;quot;, &amp;quot;-10&amp;quot;&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;JSON value will be a decimal string. Either numbers or strings are accepted.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;float, double&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;number&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;1.1, -10.0, 0, &amp;quot;NaN&amp;quot;, &amp;quot;Infinity&amp;quot;&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;JSON value will be a number or one of the special string values &amp;quot;NaN&amp;quot;, &amp;quot;Infinity&amp;quot;, and &amp;quot;-Infinity&amp;quot;. Either numbers or strings are accepted. Exponent notation is also accepted. -0 is considered equivalent to 0.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;Any&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;object&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;{&amp;quot;@type&amp;quot;: &amp;quot;url&amp;quot;, &amp;quot;f&amp;quot;: v, … }&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;If the Any contains a value that has a special JSON mapping, it will be converted as follows: &lt;code&gt;{&amp;quot;@type&amp;quot;: xxx, &amp;quot;value&amp;quot;: yyy}&lt;&#x2F;code&gt;. Otherwise, the value will be converted into a JSON object, and the &lt;code&gt;&amp;quot;@type&amp;quot;&lt;&#x2F;code&gt; field will be inserted to indicate the actual data type.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;Timestamp&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;string&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;&amp;quot;1972-01-01T10:00:20.021Z&amp;quot;&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Uses RFC 3339, where generated output will always be Z-normalized and uses 0, 3, 6 or 9 fractional digits. Offsets other than &amp;quot;Z&amp;quot; are also accepted.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;Duration&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;string&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;&amp;quot;1.000340012s&amp;quot;, &amp;quot;1s&amp;quot;&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Generated output always contains 0, 3, 6, or 9 fractional digits, depending on required precision, followed by the suffix &amp;quot;s&amp;quot;. Accepted are any fractional digits (also none) as long as they fit into nano-seconds precision and the suffix &amp;quot;s&amp;quot; is required.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;Struct&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;object&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;{ … }&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Any JSON object. See &lt;code&gt;struct.proto&lt;&#x2F;code&gt;.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;Wrapper types&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;various types&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;2, &amp;quot;2&amp;quot;, &amp;quot;foo&amp;quot;, true, &amp;quot;true&amp;quot;, null, 0, …&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Wrappers use the same representation in JSON as the wrapped primitive type, except that &lt;code&gt;null&lt;&#x2F;code&gt; is allowed and preserved during data conversion and transfer.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;FieldMask&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;string&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;&amp;quot;f.fooBar,h&amp;quot;&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;See &lt;code&gt;field_mask.proto&lt;&#x2F;code&gt;.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;ListValue&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;array&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;[foo, bar, …]&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;Value&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;value&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Any JSON value. Check &lt;a href=&quot;https:&#x2F;&#x2F;developers.google.com&#x2F;protocol-buffers&#x2F;docs&#x2F;reference&#x2F;google.protobuf#google.protobuf.Value&quot;&gt;google.protobuf.Value&lt;&#x2F;a&gt; for details.&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;NullValue&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;null&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;JSON null&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;Empty&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;object&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;code&gt;{}&lt;&#x2F;code&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;An empty JSON object&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h3 id=&quot;json-options&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#json-options&quot; aria-label=&quot;Anchor link for: json-options&quot;&gt;JSON options&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;A proto3 JSON implementation may provide the following options:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Emit fields with default values&lt;&#x2F;strong&gt;: Fields with default values are omitted by default in proto3 JSON output. An implementation may provide an option to override this behavior and output fields with their default values.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Ignore unknown fields&lt;&#x2F;strong&gt;: Proto3 JSON parser should reject unknown fields by default but may provide an option to ignore unknown fields in parsing.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Use proto field name instead of lowerCamelCase name&lt;&#x2F;strong&gt;: By default proto3 JSON printer should convert the field name to lowerCamelCase and use that as the JSON name. An implementation may provide an option to use proto field name as the JSON name instead. Proto3 JSON parsers are required to accept both the converted lowerCamelCase name and the proto field name.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Emit enum values as integers instead of strings&lt;&#x2F;strong&gt;: The name of an enum value is used by default in JSON output. An option may be provided to use the numeric value of the enum value instead.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h1 id=&quot;protobuf-style&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#protobuf-style&quot; aria-label=&quot;Anchor link for: protobuf-style&quot;&gt;protobuf style&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;developers.google.com&#x2F;protocol-buffers&#x2F;docs&#x2F;style&quot;&gt;原文&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;请注意，PB 已经随着时间而发展，因此你可能会看到不同风格编写的 .proto 文件，修改这些文件时，请尊重现有风格，一致性是关键。但是创建新的 .proto 文件时，请采用当前的最新风格&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;biao-zhun-wen-jian-ge-shi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#biao-zhun-wen-jian-ge-shi&quot; aria-label=&quot;Anchor link for: biao-zhun-wen-jian-ge-shi&quot;&gt;标准文件格式&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;每行不超过 80 字符&lt;&#x2F;li&gt;
+&lt;li&gt;使用 2 空格缩进&lt;&#x2F;li&gt;
+&lt;li&gt;最好对字符串使用双引号&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;wen-jian-jie-gou&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#wen-jian-jie-gou&quot; aria-label=&quot;Anchor link for: wen-jian-jie-gou&quot;&gt;文件结构&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;文件命名 &lt;code&gt;lower_snake_case.proto&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;所有文件应该以下列顺序排布：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;License header (if applicable)&lt;&#x2F;li&gt;
+&lt;li&gt;File overview&lt;&#x2F;li&gt;
+&lt;li&gt;Syntax&lt;&#x2F;li&gt;
+&lt;li&gt;Package&lt;&#x2F;li&gt;
+&lt;li&gt;Imports (sorted)&lt;&#x2F;li&gt;
+&lt;li&gt;File options&lt;&#x2F;li&gt;
+&lt;li&gt;Everything else &lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h2 id=&quot;packages&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#packages&quot; aria-label=&quot;Anchor link for: packages&quot;&gt;Packages&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Packages 名称应该小写，还应该匹配文件层级。比如如果文件在 &lt;code&gt;my&#x2F;package&#x2F;&lt;&#x2F;code&gt;，package 名称应该为 &lt;code&gt;my.package&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;message-he-field-names&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#message-he-field-names&quot; aria-label=&quot;Anchor link for: message-he-field-names&quot;&gt;Message 和 field names&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;使用 CamelCase 命名 message -- 比如，&lt;code&gt;SongServerRequest&lt;&#x2F;code&gt;，使用 underscore_separated_names 命名 field name，比如 &lt;code&gt;song_name&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;SongServerRequest &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;song_name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这种命名约定，语言生成为&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; cpp
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const&lt;&#x2F;span&gt;&lt;span&gt; string&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;song_name&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;...&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;set_song_name&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const&lt;&#x2F;span&gt;&lt;span&gt; string&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp; &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;x&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;...&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;java&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-java &quot;&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; java
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;String &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;getSongName&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;...&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;public &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Builder &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;setSongName&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;String&lt;&#x2F;span&gt;&lt;span&gt; v) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;...&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;如果你的 field name 包含一个数字，不需要加下划线，比如应该是 &lt;code&gt;song_name1&lt;&#x2F;code&gt; 而不是 &lt;code&gt;song_name_1&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;repeated-fields&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#repeated-fields&quot; aria-label=&quot;Anchor link for: repeated-fields&quot;&gt;Repeated fields&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;使用复数命名这种 field&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span&gt;repeated string keys = 1;
+&lt;&#x2F;span&gt;&lt;span&gt;...
+&lt;&#x2F;span&gt;&lt;span&gt;repeated MyMessage accounts = 17;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;enums&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#enums&quot; aria-label=&quot;Anchor link for: enums&quot;&gt;Enums&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;使用 CamelCase 命名 enum type name，使用 CPPITALS_WITH_UNDERSOCRES 命名 value name&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;enum &lt;&#x2F;span&gt;&lt;span&gt;FooBar {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;FOO_BAR_UNSPECIFIED &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;FOO_BAR_FIRST_VALUE &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;FOO_BAR_SECOND_VALUE &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;每个 enum 应该以分号结尾而不是逗号。需要为 enum 值添加前缀，因为历史代码的兼容，没有引入 C++11 的 enum class scope，零 enum 值应该有后缀&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;services&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#services&quot; aria-label=&quot;Anchor link for: services&quot;&gt;Services&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;如果你的 .proto 文件定义 RPC 服务，应该使用 CamelCase 风格，同时应用于服务名和任何RPC方法名&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;service &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;FooService &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;rpc &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;GetSomething&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;FooRequest&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;returns &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;FooResponse&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;things-to-avoid&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#things-to-avoid&quot; aria-label=&quot;Anchor link for: things-to-avoid&quot;&gt;Things to avoid&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;只有 proto2 存在 required field&lt;&#x2F;li&gt;
+&lt;li&gt;只有 proto2 存在 Groups&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h1 id=&quot;bian-ma&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#bian-ma&quot; aria-label=&quot;Anchor link for: bian-ma&quot;&gt;编码&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;developers.google.com&#x2F;protocol-buffers&#x2F;docs&#x2F;encoding&quot;&gt;原文&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;这篇文档阐述了 protobuf 的 message 二进制编码的原理。你在应用中使用 pb 时不需要理解这个，但是知道这些可以更好地帮助你了解使用 pb 编码之后的消息大小&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;a-simple-message&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#a-simple-message&quot; aria-label=&quot;Anchor link for: a-simple-message&quot;&gt;A simple Message&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;来看下这个简单的 message 定义：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Test1 &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int32 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;a &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;应用中，你可以创建 &lt;code&gt;Test1&lt;&#x2F;code&gt; message 然后 &lt;code&gt;set a &lt;&#x2F;code&gt; 为 150，然后序列化这个 message 作为输出流。如果打印这个流，你可以看到三个字节的内容：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;08&lt;&#x2F;span&gt;&lt;span&gt; 96 01
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;哇哦，如此小，这意味着什么？且慢慢往下读&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;base-128-varints&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#base-128-varints&quot; aria-label=&quot;Anchor link for: base-128-varints&quot;&gt;Base 128 Varints&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;为了理解简单的 protocol buffer 编码，首先你需要理解 &lt;em&gt;&lt;strong&gt;varints&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt;，Varints 是一种使用一个或者更多字节序列化整数的方法，越小的数字使用越少的字节数。&lt;&#x2F;p&gt;
+&lt;p&gt;除了最后一个字节外，varint 每个字节都有最高有效位（msb），这表明还有更多的字节在后面。这个字节的低 7 位为一组来存储数字的补码表示，&lt;strong&gt;最低有效组在前&lt;&#x2F;strong&gt;。&lt;&#x2F;p&gt;
+&lt;p&gt;比如，这有一个数字 1，简单一个字节：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;0000&lt;&#x2F;span&gt;&lt;span&gt; 0001 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;# 1
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;300 就要复杂一些：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;1010&lt;&#x2F;span&gt;&lt;span&gt; 1100 0000 0010 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;# 300
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;你如何认出这是 300 呢，首先丢掉每个字节的最高有效位（只是表示是不是最后一个字节）&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;1010&lt;&#x2F;span&gt;&lt;span&gt; 1100 0000 0010
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;010&lt;&#x2F;span&gt;&lt;span&gt; 1100  000 0010
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;然后以 7 位一组反向整个二进制序列，就像前面所述，varints 保存数字式，&lt;strong&gt;最小有效组在前&lt;&#x2F;strong&gt;，然后你可以按照补码的正常计算方式来计算数字（正数的补码就是直接转化的二进制）&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;000&lt;&#x2F;span&gt;&lt;span&gt; 0010  010 1100
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;→&lt;&#x2F;span&gt;&lt;span&gt;  000 0010 ++ 010 1100
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;→&lt;&#x2F;span&gt;&lt;span&gt;  100101100
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;→&lt;&#x2F;span&gt;&lt;span&gt;  256 + 32 + 8 + 4 = 300
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;message-structure&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#message-structure&quot; aria-label=&quot;Anchor link for: message-structure&quot;&gt;Message Structure&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;如你所知，一个 pb message 就是一系列的 key-value 对，序列化为二进制后的 message 使用域号 (field number) 作为 key--每个字段的名称和声明的类型只能在解码端通过引用消息类型的定义来确定。&lt;&#x2F;p&gt;
+&lt;p&gt;当 message 编码时，keys 和 values 被连接成字节流。当 message 解码时，解析器需要跳过不认识的域。这样的话，新的域才能在不影响老程序的情况下添加到 message 的后面。最终，编码后的 message 中每对 key-value 取决于两个值--&lt;strong&gt;&lt;code&gt;.proto&lt;&#x2F;code&gt;文件中的域号（field number)，声明的类型（为了了解信息的字节长度）&lt;&#x2F;strong&gt;。在大多数的语言实现中，key 也被称为 tag。&lt;&#x2F;p&gt;
+&lt;p&gt;有效的类型声明如下表：&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;Type&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;Meaning&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;Used For&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;0&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Varint&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;int32, int64, uint32, uint64, sint32, sint64, bool, enum&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;1&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;64-bit&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;fixed64, sfixed64, double&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;2&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Length-delimited&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;string, bytes, embedded messages, packed repeated fields&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;3&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Start group&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;groups (deprecated)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;4&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;End group&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;groups (deprecated)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;5&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;32-bit&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;fixed32, sfixed32, float&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;字节流里的每个 key 的 value 都是&lt;code&gt;(field_number &amp;lt;&amp;lt; 3) | wire_type&lt;&#x2F;code&gt;这样组成，换句话说，最后三位存储声明类型&lt;&#x2F;p&gt;
+&lt;p&gt;现在，让我们再次看那个简单的例子。你已经知道第一个第一个数字总是 varint key，这里就是&lt;code&gt;08&lt;&#x2F;code&gt;，或者丢掉最高标志位：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;000&lt;&#x2F;span&gt;&lt;span&gt; 1000
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;你可以通过获取最后三位得到声明的类型（0），然后右移三位获得域号（1）。现在你知道了域号是 1，接下来的字节还是 varint。使用前面知道的解码知识，你可以看到后面两个字节存储了 150 这个值&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;96&lt;&#x2F;span&gt;&lt;span&gt; 01 = 1001 0110  0000 0001
+&lt;&#x2F;span&gt;&lt;span&gt;       &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;→&lt;&#x2F;span&gt;&lt;span&gt; 000 0001  ++  001 0110 (drop the msb and reverse the groups of 7 bits)
+&lt;&#x2F;span&gt;&lt;span&gt;       &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;→&lt;&#x2F;span&gt;&lt;span&gt; 10010110
+&lt;&#x2F;span&gt;&lt;span&gt;       &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;→&lt;&#x2F;span&gt;&lt;span&gt; 128 + 16 + 4 + 2 = 150
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;more-value-types&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#more-value-types&quot; aria-label=&quot;Anchor link for: more-value-types&quot;&gt;More Value Types&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;signed-integers&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#signed-integers&quot; aria-label=&quot;Anchor link for: signed-integers&quot;&gt;Signed Integers&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;如同在前面小节看到，所有的 pb 类型为 0 的都被编码为 varints。但是在有符号整形（sint32&#x2F;sint64），和标准整形（int32&#x2F;int64）之间如果编码负数存在巨大区别。如果使用标准整形编码负数，varints 的结果&lt;em&gt;总是是个字节长度&lt;&#x2F;em&gt;，实际上，它被看做一个非常大的无符号整数，如果使用有符号整形，varint 使用 ZigZag 编码方式，这更有效率。&lt;&#x2F;p&gt;
+&lt;p&gt;ZigZag 编码将有符号整数映射为无符号整数，使得具有较小绝对值的数字（比如-1）也具有较短的 varint 编码值。正是通过正数和负数&amp;quot;zig-zags&amp;quot;的方式，使得 -1 被编码为 1， 1 被编码为 2， -2 被编码为 3，以此类推，如同下面表格展示：&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;Signed Original&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;Encoded As&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;0&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;0&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;-1&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;1&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;1&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;2&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;-2&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;3&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;2147483647&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;4294967294&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;-2147483648&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;4294967295&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;换句话说，n 会这样编码：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;n &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;lt;&amp;lt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;) ^ (n &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;31&lt;&#x2F;span&gt;&lt;span&gt;)   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;# for sint32
+&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;n &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;lt;&amp;lt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;) ^ (n &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;63&lt;&#x2F;span&gt;&lt;span&gt;)   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;# for sint64
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;注意第二个位右移--&lt;code&gt;(n &amp;gt;&amp;gt; 31)&lt;&#x2F;code&gt;是算术移位的。换句话说，移位的结果不是全 0（n 为正数），就是全 1（n 为负数）。&lt;&#x2F;p&gt;
+&lt;p&gt;当&lt;code&gt;sint32&#x2F;sint64&lt;&#x2F;code&gt;被解析时，其值将解码回原始的带符号版本。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;non-varint-number&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#non-varint-number&quot; aria-label=&quot;Anchor link for: non-varint-number&quot;&gt;Non-Varint Number&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;非 varint 数字类型就简单的两种&lt;code&gt;double 和 fixed64&lt;&#x2F;code&gt;，域类型为 1，告诉解析器是一个固定的 64 位的数据块；类似的&lt;code&gt;float 和 fixed32&lt;&#x2F;code&gt;，域类型为 5，告诉解析器固定为 32 位。这两种情况都被存储为小端字节序。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;strings&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#strings&quot; aria-label=&quot;Anchor link for: strings&quot;&gt;Strings&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;域类型 2（长度受限）表示该值是 varint 编码的长度，后面跟着指定长度的字节。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Test2 &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;b &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;设置值为&amp;quot;testing&amp;quot;编码为：（TLV）&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;12&lt;&#x2F;span&gt;&lt;span&gt; 07 74 65 73 74 69 6e 67
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这是&amp;quot;testing&amp;quot;的 UTF-8。key 是 0x12 -&amp;gt;&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;0001&lt;&#x2F;span&gt;&lt;span&gt; 0010 
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;00010&lt;&#x2F;span&gt;&lt;span&gt; 010
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;得到 field_number = 2，wire_type = 2。varint 的中的值长度为 7，lo 且为 0，我们在其后找到七个字节---我们的字符串。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;embedded-messages&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#embedded-messages&quot; aria-label=&quot;Anchor link for: embedded-messages&quot;&gt;Embedded Messages&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;有一个 message 定义中包含了之前的 Test1：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Test3 &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;optional &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;Test1 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;c &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这是将 Test1 的 a 设置为 150 的编码版本：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;1a&lt;&#x2F;span&gt;&lt;span&gt; 03 08 96 01
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;正如你所看到的，最后三个字节跟我们第一个例子中一样（&lt;code&gt;08 96 01&lt;&#x2F;code&gt;），在数字 3 后面 - 内嵌的 message 跟 strings 的方式是一样的。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;optional-and-repeated-elements&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#optional-and-repeated-elements&quot; aria-label=&quot;Anchor link for: optional-and-repeated-elements&quot;&gt;Optional and Repeated Elements&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;如果 proto2 的 message 定义中有&lt;code&gt;repeated&lt;&#x2F;code&gt;类型元素（没有包含参数&lt;code&gt;[packed=true]&lt;&#x2F;code&gt;），编码后的 message 具有零个或者多个具有相同字段编号的 key-value 对。这些重复的值不必要连续，可能跟其他域交叉出现。解析时，元素之间的顺序会保留下来，尽管其他字段的顺序会丢失。在 proto3 中，&lt;code&gt;repeated&lt;&#x2F;code&gt;声明使用&lt;code&gt;packed encoding&lt;&#x2F;code&gt;（下面的 packed repeated fields 节阐述）。&lt;&#x2F;p&gt;
+&lt;p&gt;对于任意 proto3 非&lt;code&gt;repeated&lt;&#x2F;code&gt;域，和 proto2 中的&lt;code&gt;optional&lt;&#x2F;code&gt;域，编码后的 message 可能有也可能没有该字段编号的 key-value 对。&lt;&#x2F;p&gt;
+&lt;p&gt;通常，编码后的 message 不会有一个以上非&lt;code&gt;repeated&lt;&#x2F;code&gt;域。但是解析器必须能够处理这种情况。对于数字和字符串类型，如果同一个域出现了多次，解析器取最后一个值。对于内嵌的 message 域，解析器合并同一个域的多个实例，就像使用&lt;code&gt;Message::MergeFrom&lt;&#x2F;code&gt;方法，表现为所有的奇异域都会被后面的实例替代，奇异内嵌 message 都会被递归式合并，&lt;code&gt;repeated&lt;&#x2F;code&gt;域会被串联起来。这些规则的结果就是，解码两个串联起来的编码 message 提供了解码两条 message 得到相同的结果，例如：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span&gt;MyMessage message;
+&lt;&#x2F;span&gt;&lt;span&gt;message&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;ParseFromString&lt;&#x2F;span&gt;&lt;span&gt;(str1 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span&gt; str2);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&#x2F;&#x2F; 等于下面的 &lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span&gt;MyMessage message, message2;
+&lt;&#x2F;span&gt;&lt;span&gt;message&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;ParseFromString&lt;&#x2F;span&gt;&lt;span&gt;(str1);
+&lt;&#x2F;span&gt;&lt;span&gt;message2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;ParseFromString&lt;&#x2F;span&gt;&lt;span&gt;(str2);
+&lt;&#x2F;span&gt;&lt;span&gt;message&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;MergeFrom&lt;&#x2F;span&gt;&lt;span&gt;(message2);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这个特性非常有用，允许你合并两条你不知道类型的 message。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;packed-repeated-fields&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#packed-repeated-fields&quot; aria-label=&quot;Anchor link for: packed-repeated-fields&quot;&gt;Packed Repeated Fields&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;版本 2.1.0 引入了&lt;code&gt;packed repeated field&lt;&#x2F;code&gt;，在 proto2 中声明为&lt;code&gt;repeated&lt;&#x2F;code&gt;域而且具有&lt;code&gt;[packed=ture]&lt;&#x2F;code&gt;参数的，在 proto3 中，&lt;code&gt;repeated&lt;&#x2F;code&gt;默认使用 packed 打包标量数字类型。这些功能类似&lt;code&gt;repeated fields&lt;&#x2F;code&gt;，但是编码方式不同。&lt;code&gt;packed repeated field&lt;&#x2F;code&gt;包含 0 的元素不会出现在编码后的 message 中。另外，该域的所有元素都打包成域类型为 2 的单个 key-value 对。每个元素的编码方式与之前相同，除了在前面没有 key。&lt;&#x2F;p&gt;
+&lt;p&gt;比如说，假设有一个 message type：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Test4 &lt;&#x2F;span&gt;&lt;span&gt;{	
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;repeated &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int32 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;d &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;4 &lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;packed &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;];
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;让我们现在构造一个 Test4，提供 field d 的值为 3270 和 86942。然后编码后的形式如下：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;22        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; key (field number 4, wire type 2)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;06        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; payload size (6 bytes)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;03        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; first element (varint 3)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;8&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;E &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;02     &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; second element (varint 270)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;9&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;E&lt;&#x2F;span&gt;&lt;span&gt; A7 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;05  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; third element (varint 86942)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;只有&lt;code&gt;repeated&lt;&#x2F;code&gt;的数字类型（使用 varint，32&#x2F;64 位的 wire-type）会被打包编码。&lt;&#x2F;p&gt;
+&lt;p&gt;值得注意的是尽管没有理由为一个&lt;code&gt;repeated field&lt;&#x2F;code&gt;编码超多一个 key-value 对，编码器必须能够接受多个 key-value 对。这种情况下，payload 应该串联起来。每个对必须包含一整个元素。&lt;&#x2F;p&gt;
+&lt;p&gt;pb 解析器必须能够解析通过&lt;code&gt;packed&lt;&#x2F;code&gt;编码的&lt;code&gt;repeated&lt;&#x2F;code&gt;域，就好像没有使用&lt;code&gt;packed&lt;&#x2F;code&gt;一样，反之亦然。这才能使得有没有加&lt;code&gt;[packed = true]&lt;&#x2F;code&gt;的前后兼容的方式添加新字段。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;field-order&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#field-order&quot; aria-label=&quot;Anchor link for: field-order&quot;&gt;Field Order&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;域号（Field Number）可以在&lt;code&gt;.proto&lt;&#x2F;code&gt;文件中以任何顺序使用。顺序的选择不会影响 message 的序列化。&lt;&#x2F;p&gt;
+&lt;p&gt;当 message 序列化时，对于如何写入已知或者未知域没有顺序保证。序列化顺序是一个实现细节，将来任何实现的细节可能都会改变。因此 protobuf 的解析器必须能够解析任意顺序域的编码。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;implications-han-yi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#implications-han-yi&quot; aria-label=&quot;Anchor link for: implications-han-yi&quot;&gt;Implications 含义&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;不要假定序列化之后的 message 字节输出是稳定的，对于那些表示其他 pb 序列化消息的传递性字节域尤其是。&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;默认情况下，在同一个 pb message 实例上多次调用序列化方法可能会得到不同的输出；即，默认序列化输出是不确定性的&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;确定性序列化只能保证相同的二进制字节序列。字节输出可能在不通的版本之间有变化&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;下列检查对于 pb message 实例 foo 可能是失败的：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;foo.SerializeAsString() == foo.SerializeAsString()&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;Hash(foo.SerializeAsString()) == Hash(foo.SerializeAsString())&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;CRC(foo.SerializeAsString()) == CRC(foo.SerializeAsString())&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;FingerPrint(foo.SerializeAsString()) == FingerPrint(foo.SerializeAsString())&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;有一些逻辑等效的 pb message 实例&lt;code&gt;foo&lt;&#x2F;code&gt;和&lt;code&gt;bar&lt;&#x2F;code&gt;可能序列化输出不同的场景：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;bar&lt;&#x2F;code&gt;被老服务器序列化表示有些域是未知的&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;bar&lt;&#x2F;code&gt;被序列化时是不同语言实现的导致序列化域号顺序不同&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;bar&lt;&#x2F;code&gt;存在不确定性序列化的域&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;bar&lt;&#x2F;code&gt;有一个域，用于存储 pb message 的序列化字节输出，该 message 的序列化输出不同&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;bar&lt;&#x2F;code&gt;使用新的服务器序列化，实现不通导致输出不同&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;foo&lt;&#x2F;code&gt;和&lt;code&gt;bar&lt;&#x2F;code&gt;被单独的 message 以不通顺序串联起来&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;h1 id=&quot;xu-lie-hua-yuan-li&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#xu-lie-hua-yuan-li&quot; aria-label=&quot;Anchor link for: xu-lie-hua-yuan-li&quot;&gt;序列化原理&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;Protocol Buffers 是一种轻便高效的结构化数据存储格式，可以用于结构化数据串行化，或者说序列化。它很适合做数据存储或数据交换格式。可用于通讯协议、数据存储等领域的语言无关、平台无关、可扩展的序列化结构数据格式&lt;&#x2F;p&gt;
+&lt;p&gt;protobuf2 中修饰符：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;required : 不可以增加或删除的字段，必须初始化；&lt;&#x2F;li&gt;
+&lt;li&gt;optional :  可选字段，可删除，可以不初始化；&lt;&#x2F;li&gt;
+&lt;li&gt;repeated : 可重复字段， 对应到 java 文件里，生成的是 List。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;protobuf-de-shi-yong&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#protobuf-de-shi-yong&quot; aria-label=&quot;Anchor link for: protobuf-de-shi-yong&quot;&gt;protobuf 的使用&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;protoc&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; -I&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt;SRC_DIR&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt; --cpp_out&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt;DST_DIR person.proto
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;bian-ma-yuan-li-zhong-dian-shi-lei-xing-he-yu-hao&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#bian-ma-yuan-li-zhong-dian-shi-lei-xing-he-yu-hao&quot; aria-label=&quot;Anchor link for: bian-ma-yuan-li-zhong-dian-shi-lei-xing-he-yu-hao&quot;&gt;编码原理（重点是类型和域号）&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;protobuf 中的 message 中有很多字段，每个字段的格式：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span&gt;修饰符 字段类型 字段名 = 域号；
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;在序列化时，protobuf 按照&lt;code&gt;TLV&lt;&#x2F;code&gt;的格式序列化每一个字段，T 即 Tag，L 是 value 的长度, V 是该字段对应的 value，。如果字段是一个整形，L 部分会省略。&lt;&#x2F;p&gt;
+&lt;p&gt;序列化后的 Value 按照原样保存在字符串或者文件中，Tag 按照一定转换条件保存起来，序列化之后的结果就是：TagValueTagValue...&lt;&#x2F;p&gt;
+&lt;p&gt;Tag 的格式化序列是按照 message 中字段后面的域号和字段类型类转换的，转换公式为：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span&gt;(field_number &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;lt;&amp;lt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;|&lt;&#x2F;span&gt;&lt;span&gt; write_type
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;wire_type&lt;&#x2F;th&gt;&lt;th&gt;meaning&lt;&#x2F;th&gt;&lt;th&gt;type&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;0&lt;&#x2F;td&gt;&lt;td&gt;Vaint&lt;&#x2F;td&gt;&lt;td&gt;int32、int64、uint32、uint64、sint32、sint64、bool、enum&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;1&lt;&#x2F;td&gt;&lt;td&gt;64-bit&lt;&#x2F;td&gt;&lt;td&gt;fixed、sfixed64、double&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;2&lt;&#x2F;td&gt;&lt;td&gt;Length-delimi&lt;&#x2F;td&gt;&lt;td&gt;string、bytes、embedded、messages、packed repeated fields&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;3&lt;&#x2F;td&gt;&lt;td&gt;Start group&lt;&#x2F;td&gt;&lt;td&gt;Groups(deprecated)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;4&lt;&#x2F;td&gt;&lt;td&gt;End group&lt;&#x2F;td&gt;&lt;td&gt;Groups(deprecated)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;5&lt;&#x2F;td&gt;&lt;td&gt;32-bit&lt;&#x2F;td&gt;&lt;td&gt;fixed32、sfixed32、float&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;protobuf 协议使用二进制格式表示 Tag 字段；对 value 而言，不同的类型采用的编码方式也不同，如果是整型，采用二进制表示；如果是字符，会直接原样写入文件或者字符串（即不编码）。&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;cap-n-proto&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#cap-n-proto&quot; aria-label=&quot;Anchor link for: cap-n-proto&quot;&gt;cap&#x27;n proto&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;capnproto.org&#x2F;index.html&quot;&gt;官网&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;cpp-serializers-dui-bi-benchmark&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#cpp-serializers-dui-bi-benchmark&quot; aria-label=&quot;Anchor link for: cpp-serializers-dui-bi-benchmark&quot;&gt;cpp-serializers 对比 benchmark&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;thekvs&#x2F;cpp-serializers&quot;&gt;github&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;geng-xin-ji-lu&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#geng-xin-ji-lu&quot; aria-label=&quot;Anchor link for: geng-xin-ji-lu&quot;&gt;更新记录&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;2021-05-07 init 翻译 protobuffer 官网 encode 的文档&lt;&#x2F;p&gt;
+&lt;p&gt;2022-01-20 补充增加了 Options 和 custom options 部分&lt;&#x2F;p&gt;
+</content>
+    </entry>
+</feed>

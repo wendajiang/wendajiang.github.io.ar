@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - Rust</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/Rust/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2022-02-16T09:20:44+00:00</updated>
+    <id>https://wendajiang.github.io/tags/Rust/atom.xml</id>
+    <entry xml:lang="en">
+        <title>【翻译】async what is blocking</title>
+        <published>2022-02-16T09:20:44+00:00</published>
+        <updated>2022-02-16T09:20:44+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/async-what-is-blocking/" type="text/html"/>
+        <id>https://wendajiang.github.io/async-what-is-blocking/</id>
+        <content type="html">&lt;!--
+mermaid example:
+&lt;div class=&quot;mermaid&quot;&gt;
+    mermaid program
+&lt;&#x2F;div&gt;
+--&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;ryhl.io&#x2F;blog&#x2F;async-what-is-blocking&#x2F;&quot;&gt;The Post&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Rust 中的 async&#x2F;await 特性使用被称为协作调度的机制实现，这对编写 Rust async 代码的开发者有些重要影响。&lt;&#x2F;p&gt;
+&lt;p&gt;这篇 post 的用户是 async 代码的新手。我会使用  &lt;a href=&quot;https:&#x2F;&#x2F;tokio.rs&#x2F;&quot;&gt;Tokio&lt;&#x2F;a&gt; 运行时作为例子，但是这里提出的观点适合任何异步运行时。&lt;&#x2F;p&gt;
+&lt;p&gt;如果你只需要从这篇 post 记住一点，就是：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;async 代码在不运行 .await 不能花费过长的时间&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h2 id=&quot;blocking-vs-non-blocking-code&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#blocking-vs-non-blocking-code&quot; aria-label=&quot;Anchor link for: blocking-vs-non-blocking-code&quot;&gt;Blocking vs. non-blocking code&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;The naive way to write an application that works on many things at the same time is to spawn a new thread for every task. If the number of tasks is small, this is a perfectly fine solution, but as the number of tasks becomes large, you will eventually run into problems due to the large number of threads. There are various solutions to this problem in different programming languages, but they all boil down to the same thing: very quickly swap out the currently running task on each thread, such that all of the tasks get an opportunity to run. In Rust, this swapping happens when you &lt;code&gt;.await&lt;&#x2F;code&gt; something.&lt;&#x2F;p&gt;
+&lt;p&gt;When writing async Rust, the phrase “blocking the thread” means “preventing the runtime from swapping the current task”. This can be a major issue because it means that other tasks on the same runtime will stop running until the thread is no longer being blocked. To prevent this, we should write code that can be swapped quickly, which you do by never spending a long time away from an &lt;code&gt;.await&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s take an example:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;std&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;time&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Duration;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;#[tokio::main]
+&lt;&#x2F;span&gt;&lt;span&gt;async &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    println!(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;Hello World!&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; No .await here!
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;std&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;thread&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;sleep(&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;Duration&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;from_secs(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;5&lt;&#x2F;span&gt;&lt;span&gt;));
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    println!(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;Five seconds later...&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The above code looks correct, and if you run it, it will appear to work. But it has a fatal flaw: it is blocking the thread. In this case, there are no other tasks, so it&#x27;s not a problem, but this wont be the case in real programs. To illustrate this point, consider the following example:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;std&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;time&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Duration;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;async &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;sleep_then_print&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;timer&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;i32&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    println!(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;Start timer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;.&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, timer);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; No .await here!
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;std&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;thread&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;sleep(&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;Duration&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;from_secs(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;));
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    println!(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;Timer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt; done.&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, timer);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;#[tokio::main]
+&lt;&#x2F;span&gt;&lt;span&gt;async &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; The join! macro lets you run multiple things concurrently.
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;tokio&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;join&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;!&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;sleep_then_print&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;sleep_then_print&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;sleep_then_print&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;    );
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; result
+&lt;&#x2F;span&gt;&lt;span&gt;Start timer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1.
+&lt;&#x2F;span&gt;&lt;span&gt;Timer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt; done&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;span&gt;Start timer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2.
+&lt;&#x2F;span&gt;&lt;span&gt;Timer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt; done&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;span&gt;Start timer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;3.
+&lt;&#x2F;span&gt;&lt;span&gt;Timer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt; done&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The example will take three seconds to run, and the timers will run one after the other with no concurrency whatsoever. The reason is simple: the Tokio runtime was not able to swap one task for another, because such a swap can only happen at an &lt;code&gt;.await&lt;&#x2F;code&gt;. Since there is no &lt;code&gt;.await&lt;&#x2F;code&gt; in &lt;code&gt;sleep_then_print&lt;&#x2F;code&gt;, no swapping can happen while it is running.&lt;&#x2F;p&gt;
+&lt;p&gt;However if we instead use Tokio&#x27;s &lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;tokio&#x2F;1&#x2F;tokio&#x2F;time&#x2F;fn.sleep.html&quot;&gt;&lt;code&gt;sleep&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; function, which uses an &lt;code&gt;.await&lt;&#x2F;code&gt; to sleep, the function will behave correctly:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;tokio&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;time&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Duration;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;async &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;sleep_then_print&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;timer&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;i32&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    println!(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;Start timer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;.&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, timer);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;tokio&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;time&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;sleep(&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;Duration&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;from_secs(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;))&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;await;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;                                            ^ execution can be paused here
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    println!(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;Timer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt; done.&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, timer);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;#[tokio::main]
+&lt;&#x2F;span&gt;&lt;span&gt;async &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; The join! macro lets you run multiple things concurrently.
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;tokio&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;join&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;!&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;sleep_then_print&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;sleep_then_print&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;sleep_then_print&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;    );
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;Start timer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1.
+&lt;&#x2F;span&gt;&lt;span&gt;Start timer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2.
+&lt;&#x2F;span&gt;&lt;span&gt;Start timer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;3.
+&lt;&#x2F;span&gt;&lt;span&gt;Timer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt; done&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;span&gt;Timer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt; done&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;span&gt;Timer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt; done&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The code runs in just one second, and properly runs all three functions at the same time as desired.&lt;&#x2F;p&gt;
+&lt;p&gt;Be aware that it is not always this obvious. By using &lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;tokio&#x2F;1&#x2F;tokio&#x2F;macro.join.html&quot;&gt;&lt;code&gt;tokio::join!&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;, all three tasks are guaranteed to run on the same thread, but if you replace it with &lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;tokio&#x2F;1&#x2F;tokio&#x2F;fn.spawn.html&quot;&gt;&lt;code&gt;tokio::spawn&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; and use a multi-threaded runtime, you &lt;em&gt;will&lt;&#x2F;em&gt; be able to run multiple blocking tasks until you run out of threads. The default Tokio runtime spawns one thread per CPU core, and you will typically have around 8 CPU cores. This is enough that you can miss the issue when testing locally, but sufficiently few that you will very quickly run out of threads when running the code for real.&lt;&#x2F;p&gt;
+&lt;p&gt;To give a sense of scale of how much time is too much, a good rule of thumb is no more than 10 to 100 microseconds between each &lt;code&gt;.await&lt;&#x2F;code&gt;. That said, this depends on the kind of application you are writing.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;what-if-i-want-to-block&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#what-if-i-want-to-block&quot; aria-label=&quot;Anchor link for: what-if-i-want-to-block&quot;&gt;What if I want to block?&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Sometimes we just want to block the thread. This is completely normal. There are two common reasons for this:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Expensive CPU-bound computation.&lt;&#x2F;li&gt;
+&lt;li&gt;Synchronous IO.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;In both cases, we are dealing with an operation that prevents the task from reaching an &lt;code&gt;.await&lt;&#x2F;code&gt; for an extended period of time. To solve this issue, we must move the blocking operation to a thread outside of Tokio&#x27;s thread pool. There are three variations on this:&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;Use the &lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;tokio&#x2F;1&#x2F;tokio&#x2F;task&#x2F;fn.spawn_blocking.html&quot;&gt;&lt;code&gt;tokio::task::spawn_blocking&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; function.&lt;&#x2F;li&gt;
+&lt;li&gt;Use the &lt;a href=&quot;https:&#x2F;&#x2F;lib.rs&#x2F;crates&#x2F;rayon&quot;&gt;&lt;code&gt;rayon&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; crate.&lt;&#x2F;li&gt;
+&lt;li&gt;Spawn a dedicated thread with &lt;a href=&quot;https:&#x2F;&#x2F;doc.rust-lang.org&#x2F;stable&#x2F;std&#x2F;thread&#x2F;fn.spawn.html&quot;&gt;&lt;code&gt;std::thread::spawn&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;.&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;Let us go through each solution to see when we should use it.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;the-spawn-blocking-function&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#the-spawn-blocking-function&quot; aria-label=&quot;Anchor link for: the-spawn-blocking-function&quot;&gt;The &lt;code&gt;spawn_blocking&lt;&#x2F;code&gt; function&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;The Tokio runtime includes a separate thread pool specifically for running blocking functions, and you can spawn tasks on it using &lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;tokio&#x2F;1&#x2F;tokio&#x2F;task&#x2F;fn.spawn_blocking.html&quot;&gt;&lt;code&gt;spawn_blocking&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;. This thread pool has an upper limit of around 500 threads, so you can spawn quite a lot of blocking operations on this thread pool.&lt;&#x2F;p&gt;
+&lt;p&gt;Since the thread pool has so many threads, it is best suited for blocking IO such as interacting with the file system or using a blocking database library such as &lt;a href=&quot;https:&#x2F;&#x2F;lib.rs&#x2F;crates&#x2F;diesel&quot;&gt;&lt;code&gt;diesel&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;The thread pool is poorly suited for expensive CPU-bound computations, since it has many more threads than you have CPU cores on your computer. CPU-bound computations run most efficiently if the number of threads is equal to the number of CPU cores. That said, if you only need a few CPU-bound computations, I wont blame you for running them on &lt;code&gt;spawn_blocking&lt;&#x2F;code&gt; as it is quite simple to do so.&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span&gt;#[tokio::main]
+&lt;&#x2F;span&gt;&lt;span&gt;async &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; This is running on Tokio. We may not block here.
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; blocking_task &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;tokio&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;task&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;spawn_blocking(|| &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; This is running on a thread where blocking is fine.
+&lt;&#x2F;span&gt;&lt;span&gt;        println!(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;Inside spawn_blocking&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; We can wait for the blocking task like this:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; If the blocking task panics, the unwrap below will propagate the
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; panic.
+&lt;&#x2F;span&gt;&lt;span&gt;    blocking_task&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;await&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;unwrap&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;the-rayon-crate&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#the-rayon-crate&quot; aria-label=&quot;Anchor link for: the-rayon-crate&quot;&gt;The &lt;code&gt;rayon&lt;&#x2F;code&gt; crate&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;The &lt;a href=&quot;https:&#x2F;&#x2F;lib.rs&#x2F;crates&#x2F;rayon&quot;&gt;&lt;code&gt;rayon&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; crate is a well known library that provides a thread pool specifically intended for expensive CPU-bound computations, and you can use it for this purpose together with Tokio. Unlike &lt;code&gt;spawn_blocking&lt;&#x2F;code&gt;, the &lt;code&gt;rayon&lt;&#x2F;code&gt; thread pool has a small maximum number of threads, which is why it is suitable for expensive computations.&lt;&#x2F;p&gt;
+&lt;p&gt;We will use the sum of a large list as an example of an expensive computation, but note that in practice, unless the array is very very large, just computing a sum is probably cheap enough that you can just do it directly in Tokio.&lt;&#x2F;p&gt;
+&lt;p&gt;The main danger of using &lt;code&gt;rayon&lt;&#x2F;code&gt; is that you must be careful not to block the thread while waiting for rayon to complete. To do this, combine &lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;rayon&#x2F;1&#x2F;rayon&#x2F;fn.spawn.html&quot;&gt;&lt;code&gt;rayon::spawn&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; with &lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;tokio&#x2F;1&#x2F;tokio&#x2F;sync&#x2F;oneshot&#x2F;index.html&quot;&gt;&lt;code&gt;tokio::sync::oneshot&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span&gt;async &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;parallel_sum&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;nums&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Vec&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;i32&lt;&#x2F;span&gt;&lt;span&gt;&amp;gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;i32 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;let &lt;&#x2F;span&gt;&lt;span&gt;(send, recv) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;tokio&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;sync&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;oneshot&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;channel();
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; Spawn a task on rayon.
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;rayon&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;spawn(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;move || &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; Perform an expensive computation.
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;let &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;mut&lt;&#x2F;span&gt;&lt;span&gt; sum &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span&gt; num &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;in&lt;&#x2F;span&gt;&lt;span&gt; nums &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;            sum &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;+=&lt;&#x2F;span&gt;&lt;span&gt; num;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; Send the result back to Tokio.
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;let &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;_ =&lt;&#x2F;span&gt;&lt;span&gt; send&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;send&lt;&#x2F;span&gt;&lt;span&gt;(sum);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; Wait for the rayon task.
+&lt;&#x2F;span&gt;&lt;span&gt;    recv&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;await&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;expect&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;Panic in rayon::spawn&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;#[tokio::main]
+&lt;&#x2F;span&gt;&lt;span&gt;async &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; nums &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;vec![&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1024 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1024&lt;&#x2F;span&gt;&lt;span&gt;];
+&lt;&#x2F;span&gt;&lt;span&gt;    println!(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;parallel_sum&lt;&#x2F;span&gt;&lt;span&gt;(nums)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span&gt;await);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This uses the rayon thread pool to run the expensive operation. Be aware that the above example uses only one thread in the rayon thread pool per call to &lt;code&gt;parallel_sum&lt;&#x2F;code&gt;. This makes sense if you have many calls to &lt;code&gt;parallel_sum&lt;&#x2F;code&gt; in your application, but it is also possible to use rayon&#x27;s parallel iterators to compute the sum on several threads:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;rayon&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;prelude&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; Spawn a task on rayon.
+&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;rayon&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;spawn(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;move || &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; Compute the sum on multiple threads.
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; sum &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; nums&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;par_iter&lt;&#x2F;span&gt;&lt;span&gt;()&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;sum&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; Send the result back to Tokio.
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;let &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;_ =&lt;&#x2F;span&gt;&lt;span&gt; send&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;send&lt;&#x2F;span&gt;&lt;span&gt;(sum);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Note that you still need the &lt;code&gt;rayon::spawn&lt;&#x2F;code&gt; call when you use parallel iterators, because parallel iterators are blocking.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;spawn-a-dedicated-thread&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#spawn-a-dedicated-thread&quot; aria-label=&quot;Anchor link for: spawn-a-dedicated-thread&quot;&gt;Spawn a dedicated thread&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;If a blocking operation keeps running forever, you should run it on a dedicated thread. For example consider a thread that manages a database connection using a channel to receive database operations to perform. Since this thread is listening on that channel in a loop, it never exits.&lt;&#x2F;p&gt;
+&lt;p&gt;Running such a task on either of the two other thread pools is a problem, because it essentially takes away a thread from the pool permanently. Once you&#x27;ve done that a few times, you have no more threads in the thread pool and all other blocking tasks fail to get executed.&lt;&#x2F;p&gt;
+&lt;p&gt;Of course you can also use dedicated threads for shorter lived purposes if you are okay with paying the cost of spawning a new thread every time you start a new one.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;summary&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#summary&quot; aria-label=&quot;Anchor link for: summary&quot;&gt;Summary&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;In case you forgot, here&#x27;s the main thing you need to remember:&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Async code should never spend a long time without reaching an &lt;code&gt;.await&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;Below you will find a cheat sheet of what methods you can use when you want to block:&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;CPU-bound computation&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;Synchronous IO&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: left&quot;&gt;Running forever&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;&lt;code&gt;spawn_blocking&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;Suboptimal&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;OK&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;No&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;&lt;code&gt;rayon&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;OK&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;No&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;No&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;&lt;strong&gt;Dedicated thread&lt;&#x2F;strong&gt;&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;OK&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;OK&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: left&quot;&gt;OK&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;Finally, I recommend checking out &lt;a href=&quot;https:&#x2F;&#x2F;tokio.rs&#x2F;tokio&#x2F;tutorial&#x2F;shared-state&quot;&gt;the chapter on shared state&lt;&#x2F;a&gt; from the Tokio tutorial. This chapter explains how you can correctly use &lt;a href=&quot;https:&#x2F;&#x2F;doc.rust-lang.org&#x2F;stable&#x2F;std&#x2F;sync&#x2F;struct.Mutex.html&quot;&gt;&lt;code&gt;std::sync::Mutex&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; in async code, and goes more in-depth with why this is okay even though locking a mutex is blocking. (Spoiler: if you block for a short time, is it really blocking?)&lt;&#x2F;p&gt;
+&lt;p&gt;I also strongly recommend the article &lt;a href=&quot;https:&#x2F;&#x2F;tokio.rs&#x2F;blog&#x2F;2020-04-preemption&quot;&gt;Reducing tail latencies with automatic cooperative task yielding&lt;&#x2F;a&gt; from the Tokio blog.&lt;&#x2F;p&gt;
+</content>
+    </entry>
+</feed>

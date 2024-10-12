@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - coroutine</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/coroutine/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2023-06-12T12:29:41+00:00</updated>
+    <id>https://wendajiang.github.io/tags/coroutine/atom.xml</id>
+    <entry xml:lang="en">
+        <title>coroutine learn</title>
+        <published>2023-06-12T12:29:41+00:00</published>
+        <updated>2023-06-12T12:29:41+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/coroutine-learn/" type="text/html"/>
+        <id>https://wendajiang.github.io/coroutine-learn/</id>
+        <content type="html">&lt;p&gt;https:&#x2F;&#x2F;www.open-std.org&#x2F;jtc1&#x2F;sc22&#x2F;wg21&#x2F;docs&#x2F;papers&#x2F;2021&#x2F;p2464r0.html
+反对 asio 进入标准&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;coroutine-theory&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#coroutine-theory&quot; aria-label=&quot;Anchor link for: coroutine-theory&quot;&gt;Coroutine Theory&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;coroutines-are-functions-are-coroutines&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#coroutines-are-functions-are-coroutines&quot; aria-label=&quot;Anchor link for: coroutines-are-functions-are-coroutines&quot;&gt;Coroutines are Functions are Coroutines&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;A coroutine is a generalisation of a function that allows the function to be suspended and then later resumed.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;normal-functions&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#normal-functions&quot; aria-label=&quot;Anchor link for: normal-functions&quot;&gt;&amp;quot;Normal&amp;quot; Functions&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;A normal function can be thought of as having two operations: &lt;strong&gt;Call&lt;&#x2F;strong&gt; and &lt;strong&gt;Return&lt;&#x2F;strong&gt;(note that I&#x27;m lumping &amp;quot;throwing an exception&amp;quot; here broadly under the Return operation)&lt;&#x2F;p&gt;
+&lt;p&gt;The &lt;strong&gt;Call&lt;&#x2F;strong&gt; operation creates an activation frame, suspends execution of the calling function and transfers execution to the start of the function being called.&lt;&#x2F;p&gt;
+&lt;p&gt;The &lt;strong&gt;Return&lt;&#x2F;strong&gt; operation passes the return-value to the caller, destroys the activation frame and then resumes execution of the caller just after the point at which it called the function.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Activation Frames
+The block of memory that holds the current state of a particular invocation of a function. This state includes the values of any parameters that were passed to it and the values of any local variables.&lt;&#x2F;p&gt;
+&lt;p&gt;For &amp;quot;normal&amp;quot; functions, the activation frame also includes the return-address. You can think of these pieces of information together as describing the &#x27;continuation&#x27; of the function-call. ie. they describe which invocation of which function should continue executing at which point when this function completes.&lt;&#x2F;p&gt;
+&lt;p&gt;With &amp;quot;normal&amp;quot; functions, all activation frames have strictly nested lifetimes. This strict nesting allows use of a highly efficient memory allocation data-structure for allocating and freeing the activation frames for each of the function calls. This data-structure is commonly refered to as &amp;quot;the stack&amp;quot;.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h4 id=&quot;the-call-operation&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#the-call-operation&quot; aria-label=&quot;Anchor link for: the-call-operation&quot;&gt;The &#x27;Call&#x27; operation&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;When a funtion calls another function, the caller must first prepare itself for suspension.&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;the-return-operation&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#the-return-operation&quot; aria-label=&quot;Anchor link for: the-return-operation&quot;&gt;The &#x27;Return&#x27; operation&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;When a function returns via &lt;code&gt;return&lt;&#x2F;code&gt;-stmt, the function first stores the return value (if any) where the caller can access it. This could either be in the caller&#x27;s activation frame or the function&#x27;s activation frame.&lt;&#x2F;p&gt;
+&lt;p&gt;Then the function destorys the activation frame by:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;destroying any local variables in-scope at the return-point&lt;&#x2F;li&gt;
+&lt;li&gt;destroying any parameter objects&lt;&#x2F;li&gt;
+&lt;li&gt;freeing memory used by the activation-frame&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;And finally, it resumes execution of the caller by:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;restoring the activation frame of the caller by setting the stack register to point to the activation frame of the caller and restoring any registers that might have been clobbered by the function.&lt;&#x2F;li&gt;
+&lt;li&gt;jumping to the resume-point of the caller that was stored during the &#x27;Call&#x27; operation.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;coroutines&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#coroutines&quot; aria-label=&quot;Anchor link for: coroutines&quot;&gt;Coroutines&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Coroutines generalise the operations of a function by separating out some of the steps performed in the Call and Return operations into three extra operations: &lt;strong&gt;Suspend, Resume, Destroy&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;The &lt;strong&gt;Suspend&lt;&#x2F;strong&gt; operation suspends execution of the coroutine at the current point within the function and transfers execution back to the caller or resumer without destroying the activation frame. Any Objects in-scope at the point of suspension remain alive after the coroutine execution is suspended.&lt;&#x2F;p&gt;
+&lt;p&gt;Note that, like the &lt;strong&gt;Return&lt;&#x2F;strong&gt; operation of a function, a coroutine can only be suspended from within the coroutine itself at well-defined suspend-points.(&lt;code&gt;co_await, co_yield&lt;&#x2F;code&gt;)&lt;&#x2F;p&gt;
+&lt;p&gt;The &lt;strong&gt;Resume&lt;&#x2F;strong&gt; operation resumes execution of a suspended coroutine at the point at which is was suspended. This reactivates the coroutine&#x27;s activation frame.&lt;&#x2F;p&gt;
+&lt;p&gt;The &lt;strong&gt;Destroy&lt;&#x2F;strong&gt; operation destroys the activation frame without resuming execution of the coroutine. Any objects that were in-scope at the suspend point will be destroyed. Memory used to store the activation frame is freed.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;coroutine-activation-frames&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#coroutine-activation-frames&quot; aria-label=&quot;Anchor link for: coroutine-activation-frames&quot;&gt;Coroutine activation frames&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Since coroutines can be suspended without destroying the activation frame, we can no longer guarantee that activation frame frame lifetimes will be stricted nested. This means that activation frames cannot in general be allocated using a stack data-structure and so may need to be stored on the heap instead.&lt;&#x2F;p&gt;
+&lt;p&gt;There are some provisions in the C++ Coroutines TS to allow the memory for the coroutine frame to be allocated from the activation frame of the caller if the compiler can prove that the lifetime of the coroutine is indeed strictly nested within the lifetime of the caller. This can avoid heap allocations in many case provided you have a sufficiently smart pointer.&lt;&#x2F;p&gt;
+&lt;p&gt;With coroutins there are some parts of the activation frame that need to be preserved across coroutine suspension and there are some parts that only need to be kept around while the coroutine is executing. For example, the lifetime of a variable with scope that does not span any coroutine suspend-points can potentially be stored on the stack.&lt;&#x2F;p&gt;
+&lt;p&gt;You can logically think of the activation frame of a corouine as being comprised of two parts: the &lt;strong&gt;coroutine fame&lt;&#x2F;strong&gt; and the &lt;strong&gt;stack frame&lt;&#x2F;strong&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;The &#x27;coroutine frame&#x27; holds part of the coroutine&#x27;s activation frame that &lt;strong&gt;persists&lt;&#x2F;strong&gt; while the coroutine if suspended and the &#x27;stack frame&#x27; part only exists while the coroutine is executing and is freed when the coroutine suspends and transfers execution back to the caller&#x2F;resumer.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;reference&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#reference&quot; aria-label=&quot;Anchor link for: reference&quot;&gt;reference&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;https:&#x2F;&#x2F;devblogs.microsoft.com&#x2F;oldnewthing&#x2F;20210504-01&#x2F;?p=105178&lt;&#x2F;li&gt;
+&lt;li&gt;https:&#x2F;&#x2F;lewissbaker.github.io&#x2F;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+</feed>

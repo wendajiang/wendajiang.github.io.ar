@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - spa</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/spa/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2024-04-25T17:07:42+00:00</updated>
+    <id>https://wendajiang.github.io/tags/spa/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Data flow analysis</title>
+        <published>2024-04-25T17:07:42+00:00</published>
+        <updated>2024-04-25T17:07:42+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/data-flow-analysis-info/" type="text/html"/>
+        <id>https://wendajiang.github.io/data-flow-analysis-info/</id>
+        <content type="html">&lt;h1 id=&quot;purpose-of-data-flow-analysis&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#purpose-of-data-flow-analysis&quot; aria-label=&quot;Anchor link for: purpose-of-data-flow-analysis&quot;&gt;Purpose of data flow analysis&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;It is a static analysis technique that proves facts about a program or its fragment. It can make conclusions about all paths through the program, while takeing control flow into account and scaling to large programs. The basic idea is propagating facts about the program through the edges of the control flow graph (CFG) until a fixpoint is reached.&lt;&#x2F;p&gt;
+</content>
+    </entry>
+</feed>

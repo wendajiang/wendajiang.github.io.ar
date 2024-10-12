@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - kernel</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/kernel/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2021-10-18T21:14:37+00:00</updated>
+    <id>https://wendajiang.github.io/tags/kernel/atom.xml</id>
+    <entry xml:lang="en">
+        <title>【翻译】零拷贝的意义</title>
+        <published>2021-10-18T21:14:37+00:00</published>
+        <updated>2021-10-18T21:14:37+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/zero-copy/" type="text/html"/>
+        <id>https://wendajiang.github.io/zero-copy/</id>
+        <content type="html">&lt;!--
+mermaid example:
+&lt;div class=&quot;mermaid&quot;&gt;
+    mermaid program
+&lt;&#x2F;div&gt;
+--&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.linuxjournal.com&#x2F;article&#x2F;6345&quot;&gt;原文&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;shi-yao-shi-ling-kao-bei&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#shi-yao-shi-ling-kao-bei&quot; aria-label=&quot;Anchor link for: shi-yao-shi-ling-kao-bei&quot;&gt;什么是零拷贝&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;为了更好地理解解决了什么问题，首先要理解问题本身。我们来看下下面的代码发生了什么&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;read&lt;&#x2F;span&gt;&lt;span&gt;(file, tmp_buf, len);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;write&lt;&#x2F;span&gt;&lt;span&gt;(socket, tmp_buf, len);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;看起来简单，你可能觉得两次系统调用也不是多大的开销。实际上，远比你想象中的大。这两次系统调用之下，&lt;strong&gt;数据拷贝了四次&lt;&#x2F;strong&gt;，并且还有内核态和用户态之间的上下文切换（实际上这个进程更复杂，但是先保持这种程度的简化）。为了更好地了解这个进程的调用，看下图&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;zero_copy&#x2F;image-20211019174214718.png&quot; alt=&quot;image-20211019174214718&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;第一步：read 系统调用发生了用户态到内核态的切换。第一次拷贝由DMA执行，从 disk 读取文件内容到内核空间的 buffer&lt;&#x2F;p&gt;
+&lt;p&gt;第二步：数据从内核空间的 buffer 拷贝到用户空间的 buffer，然后 read 系统调用 return。return 又发生了内核态到用户态的切换。现在数据存储在用户态的 buffer 中&lt;&#x2F;p&gt;
+&lt;p&gt;第三步：write 系统调用发生了用户态到内核态的切换。第三次拷贝从用户空间 buffer 到内核空间 buffer，这次内核空间的buffer 与 socket 关联&lt;&#x2F;p&gt;
+&lt;p&gt;第四步：write 系统调用 return，触发了第四次上下文切换。单独异步的拷贝由DMA控制将数据从内核空间的 buffer 拷贝到协议栈中。你可能会问“什么叫独立异步？数据不是在return的时候就传输完成了吗？”事实上，return 并不保证传输完成；甚至不保证传输开始。可能在这次调用之前队列中有很多包，除非硬件驱动实现了优先队列，并且本次数据在第一优先级的队列中&lt;&#x2F;p&gt;
+&lt;p&gt;正如你所看到的，很多数据拷贝实际本不必要发生。有些拷贝可以规避掉来减少开销提升程序性能。对一个驱动开发者，硬件实际有很多增强功能。有些硬件支持 bypass 主存，直接从将数据传输到其他设备。这个特性可以减少系统存储中的拷贝，但并不是所有硬件都支持。还有一个问题就是从disk得到数据需要为了网络重新封装，这带来了复杂性。为了减少开销，我们可以从减少内核空间和用户空间之间的拷贝开始。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;mmap&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#mmap&quot; aria-label=&quot;Anchor link for: mmap&quot;&gt;mmap&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;一个方法就是避免使用read，而使用 mmap&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span&gt;tmp_buf &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;mmap&lt;&#x2F;span&gt;&lt;span&gt;(file, len);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;write&lt;&#x2F;span&gt;&lt;span&gt;(socket, tmp_buf, len);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;为了更好地理解这个过程，看下图&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;zero_copy&#x2F;image-20211019192834679.png&quot; alt=&quot;image-20211019192834679&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;第一步：mmap 系统调用使得文件内容通过 DMA 从disk 拷贝到内核空间的buffer，这个buffer可以直接在用户空间访问，不需要拷贝到用户空间&lt;&#x2F;p&gt;
+&lt;p&gt;第二步：write 系统调用使得内核将内核空间buffer中的数据拷贝到 socket 关联的内核buffer中&lt;&#x2F;p&gt;
+&lt;p&gt;第三步：第三次拷贝是 DMA 将socket buffer中的数据拷贝到协议栈中&lt;&#x2F;p&gt;
+&lt;p&gt;通过使用 mmap，我们减少了一次使用 CPU 的拷贝。当大量数据传输时这比较有用，但并不是没有代价，有些隐藏的问题其实。当另一个进程也mmap到了同一个文件，然后对其进行了写入操作。上面代码的 write 就会被 SIGBUS 中断。这个信号默认的行为是杀死进程并coredump -- 这个操作对于网络服务器恨不能接受。有两种方法解决这个问题&lt;&#x2F;p&gt;
+&lt;p&gt;第一个是定义一下 SIGBUS 的信号处理程序，直接return。这样 write 系统调用就会返回中断前写入的字节数，然后 errno 被设置为成功。这是个垃圾方案，无视问题，因为 SIGBUS 实际表示进程发生了严重错误，不应该无视&lt;&#x2F;p&gt;
+&lt;p&gt;第二个是使用内核的文件租约（也叫“乐观锁”）。这是正确的解决方案。你可以从内核请求 read&#x2F;write lease，当另一个进程视图对同一个文件进行截断时，内核会发送 RT_SINGAL_LEASE信号给有租约的进程，告诉你内核正在打断你的租约。你的写请求就会在程序访问无效地址之前被中断而不会导致 SIGBUS。write的返回值就是已经写入的字节数，errno被设置为成功，代码如下&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;fcntl&lt;&#x2F;span&gt;&lt;span&gt;(fd, F_SETSIG, RT_SIGNAL_LEASE) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;== -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;perror&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;kernel lease set signal&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*l_type can be F_RDLCK F_WRLCK*&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;fcntl&lt;&#x2F;span&gt;&lt;span&gt;(fd, F_SETLEASE, l_type)) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;peror&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;kernel lease set type&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;return -&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;你应该在 mmap file之前获取租约，然后完成写入后主动放弃租约。通过调用 fcntl(F_SETLEASE, F_UNLCK) &lt;&#x2F;p&gt;
+&lt;h3 id=&quot;sendfile&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#sendfile&quot; aria-label=&quot;Anchor link for: sendfile&quot;&gt;Sendfile&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;在内核2.1版本，sendfile 系统调用简化了将数据从文件传输到socket的方法，不仅减少了数据拷贝，还减少了内核与用户空间的上下文切换&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;sendfile&lt;&#x2F;span&gt;&lt;span&gt;(socket, file, len);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;为了更好地理解底层过程，如下图&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;zero_copy&#x2F;image-20211019194434427.png&quot; alt=&quot;image-20211019194434427&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;第一步：sendfile 系统调用使得文件内容通过 DMA 拷贝到内核buffer，然后数据被内核拷贝到 socket buffer&lt;&#x2F;p&gt;
+&lt;p&gt;第二步：第三次拷贝 DMA 控制从 socket buffer 拷贝到协议栈&lt;&#x2F;p&gt;
+&lt;p&gt;你可能想知道如果另一个进程截断了这个文件，sendfile会发生什么。如果没有注册信号处理函数，sendfile 调用会返回已经传输的字节，errno被设置为成功&lt;&#x2F;p&gt;
+&lt;p&gt;如果 sendfile 之前获取了文件租约，行为相同。同时sendfile return前会有 RT_SIGNAL_LEASE 信号&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;sendfile-gather-hardware&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#sendfile-gather-hardware&quot; aria-label=&quot;Anchor link for: sendfile-gather-hardware&quot;&gt;sendfile + gather(hardware)&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;如此说来，我们已经避免了内核进行多次拷贝，但是还有一次拷贝，可以也避免吗？当然，但是需要硬件的支持。为了消除内核的所有拷贝，需要网卡支持 gather 操作。内核2.4版本引入了socket对这种操作的支持，这种方法不需要内核态切换，也不需要处理器进行数据拷贝。同时用户代码不变&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;sendfile&lt;&#x2F;span&gt;&lt;span&gt;(socket, file, len);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;底层流程如下图&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;zero_copy&#x2F;image-20211019200216564.png&quot; alt=&quot;image-20211019200216564&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;第一步：sendfile 系统调用可以将文件内容通过 DMA 拷贝到内核 buffer&lt;&#x2F;p&gt;
+&lt;p&gt;第二步：没有数据被拷贝到 socket buffer。socket 文件描述符只有数据的长度信息。DMA 直接将数据从kernel buffer 拷贝到协议栈&lt;&#x2F;p&gt;
+&lt;p&gt;因为数据从 disk 到主存的拷贝和从主存到总线的拷贝，有些人觉得这也不是零拷贝。这只是从操作系统角度的零拷贝，因为在操作系统中只有一个buffer。当使用零拷贝时，性能提升还来自，比如更少的内核用户态切换，更少的 CPU cache 污染以及不需要 CPU 校验&lt;&#x2F;p&gt;
+&lt;p&gt;现在我们知道了什么是零拷贝，练习些代码吧。你可以下载&lt;a href=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;zero-copy&#x2F;%5Bwww.xalien.org&#x2F;articles&#x2F;source&#x2F;sfl-src.tgz%5D(http:&#x2F;&#x2F;www.xalien.org&#x2F;articles&#x2F;source&#x2F;sfl-src.tgz)&quot;&gt;完整代码&lt;&#x2F;a&gt;。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.uidaho.edu&#x2F;-&#x2F;media&#x2F;UIdaho-Responsive&#x2F;Files&#x2F;engr&#x2F;research&#x2F;csds&#x2F;publications&#x2F;2012&#x2F;Performance-Review-of-Zero-Copy-Techniques-2012.pdf?la=en&amp;amp;hash=B5F37435875AAD15C55C7DFC1FDA53DBF242C0E3&quot;&gt;论文&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;splice&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#splice&quot; aria-label=&quot;Anchor link for: splice&quot;&gt;splice&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;sendfile 只适用于将数据从文件拷贝到socket（依赖于具体实现，linux系统可以从文件到文件），而且使用 gather 需要硬件的支持。Linux 在2.6.17版本中实现了 splice 系统调用，不需要硬件支持，实现了两个文件描述符之间的数据零拷贝。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;Copysplice&lt;&#x2F;span&gt;&lt;span&gt;(fd_in, off_in, fd_out, off_out, len, flags);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;splice 系统调用在内核空间的 buffer 和 socket buffer 之间建立了管道，避免了两者之间的 CPU 拷贝操作&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;zero_copy&#x2F;image-20211020191755511.png&quot; alt=&quot;image-20211020191755511&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;基于 splice 系统调用的零拷贝方式，整个拷贝过程会发生 2 次上下文切换，0 次 CPU 拷贝以及 2 次 DMA 拷贝，用户程序读写数据的流程如下：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;用户进程通过 &lt;code&gt;splice()&lt;&#x2F;code&gt; 函数向内核(kernel)发起系统调用，上下文从用户态 (user space) 切换为内核态(kernel space)；&lt;&#x2F;li&gt;
+&lt;li&gt;CPU 利用 DMA 控制器将数据从主存或硬盘拷贝到内核空间 (kernel space) 的读缓冲区 (read buffer)；&lt;&#x2F;li&gt;
+&lt;li&gt;CPU 在内核空间的读缓冲区 (read buffer) 和网络缓冲区(socket buffer)之间建立管道 (pipeline)；&lt;&#x2F;li&gt;
+&lt;li&gt;CPU 利用 DMA 控制器将数据从网络缓冲区 (socket buffer) 拷贝到网卡进行数据传输；&lt;&#x2F;li&gt;
+&lt;li&gt;上下文从内核态 (kernel space) 切换回用户态 (user space)，splice 系统调用执行返回。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;splice 拷贝方式也同样存在用户程序不能对数据进行修改的问题。除此之外，它使用了 Linux 的管道缓冲机制，可以用于任意两个文件描述符中传输数据，但是它的两个文件描述符参数中有一个必须是管道设备。&lt;&#x2F;p&gt;
+&lt;h5 id=&quot;xie-shi-fu-zhi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#xie-shi-fu-zhi&quot; aria-label=&quot;Anchor link for: xie-shi-fu-zhi&quot;&gt;写时复制&lt;&#x2F;a&gt;&lt;&#x2F;h5&gt;
+&lt;p&gt;在某些情况下，内核缓冲区可能被多个进程所共享，如果某个进程想要这个共享区进行 write 操作，由于 write 不提供任何的锁操作，那么就会对共享区中的数据造成破坏，写时复制的引入就是 Linux 用来保护数据的。&lt;&#x2F;p&gt;
+&lt;p&gt;写时复制指的是当多个进程共享同一块数据时，如果其中一个进程需要对这份数据进行修改，那么就需要将其拷贝到自己的进程地址空间中。这样做并不影响其他进程对这块数据的操作，每个进程要修改的时候才会进行拷贝，所以叫写时拷贝。这种方法在某种程度上能够降低系统开销，如果某个进程永远不会对所访问的数据进行更改，那么也就永远不需要拷贝。&lt;&#x2F;p&gt;
+&lt;p&gt;缺点：&lt;&#x2F;p&gt;
+&lt;p&gt;需要 MMU 的支持，MMU 需要知道进程地址空间中哪些页面是只读的，当需要往这些页面写数据时，发出一个异常给操作系统内核，内核会分配新的存储空间来供写入的需求。&lt;&#x2F;p&gt;
+&lt;h5 id=&quot;huan-chong-qu-gong-xiang&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#huan-chong-qu-gong-xiang&quot; aria-label=&quot;Anchor link for: huan-chong-qu-gong-xiang&quot;&gt;缓冲区共享&lt;&#x2F;a&gt;&lt;&#x2F;h5&gt;
+&lt;p&gt;缓冲区共享方式完全改写了传统的 I&#x2F;O 操作，传统的 Linux I&#x2F;O 接口支持数据在应用程序地址空间和操作系统内核之间交换，这种交换操作导致所有的数据都需要进行拷贝。&lt;&#x2F;p&gt;
+&lt;p&gt;如果采用 fbufs 这种方法，需要交换的是包含数据的缓冲区，这样就消除了多余的拷贝操作。应用程序将 fbuf 传递给操作系统内核，这样就能减少传统的 write 系统调用所产生的数据拷贝开销。&lt;&#x2F;p&gt;
+&lt;p&gt;同样的应用程序通过 fbuf 来接收数据，这样也可以减少传统 read 系统调用所产生的数据拷贝开销。&lt;&#x2F;p&gt;
+&lt;p&gt;fbuf 的思想是每个进程都维护着一个缓冲区池，这个缓冲区池能被同时映射到用户空间 (user space) 和内核态 (kernel space)，内核和用户共享这个缓冲区池，这样就避免了一系列的拷贝操作。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;zero_copy&#x2F;007S8ZIlgy1ggj9hmikddj30gy0c4mys.png&quot; alt=&quot;12&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;缺点：&lt;&#x2F;p&gt;
+&lt;p&gt;缓冲区共享的难度在于管理共享缓冲区池需要应用程序、网络软件以及设备驱动程序之间的紧密合作，而且如何改写 API 目前还处于试验阶段并不成熟。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;linuxling-kao-bei-dui-bi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#linuxling-kao-bei-dui-bi&quot; aria-label=&quot;Anchor link for: linuxling-kao-bei-dui-bi&quot;&gt;Linux零拷贝对比&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;无论是传统 I&#x2F;O 拷贝方式还是引入零拷贝的方式，2 次 DMA Copy 是都少不了的，因为两次 DMA 都是依赖硬件完成的。下面从 CPU 拷贝次数、DMA 拷贝次数以及系统调用几个方面总结一下上述几种 I&#x2F;O 拷贝方式的差别。&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;拷贝方式&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: center&quot;&gt;CPU拷贝&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: center&quot;&gt;DMA拷贝&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: center&quot;&gt;系统调用&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: center&quot;&gt;上下文切换&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;传统方式(read + write)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;read &#x2F; write&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;4&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;内存映射(mmap + write)&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;1&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;mmap &#x2F; write&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;4&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;sendfile&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;1&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;sendfile&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;sendfile + DMA gather copy&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;0&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;sendfile&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;splice&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;0&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;splice&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;2&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+    </entry>
+</feed>

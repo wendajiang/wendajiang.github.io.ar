@@ -1,0 +1,85 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>Cpp Iterator | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/iterator-cpp/ rel=canonical><meta content="Cpp Iterator" property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/iterator-cpp/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta property=og:updated_time><meta content="Cpp Iterator" property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/iterator-cpp/"
+      },
+      "headline": "Cpp Iterator",
+      "image": ,
+      "datePublished": "2022-12-22T16:39:52",
+      "dateModified": "",
+      "author": {
+        "@type": "Organization",
+        "name": "Cpp Iterator"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Cpp Iterator",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Iterator Cpp",
+            "item": "https://wendajiang.github.io/iterator-cpp/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><script>function initMermaid(){var a={startOnLoad:true,theme:"neutral",flowchart:{useMaxWidth:true,htmlLabels:true}};mermaid.initialize(a);window.mermaid.init(undefined,document.querySelectorAll('.mermaid'))}</script><script async onload=initMermaid() src=https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/iterator-cpp/#iterator-traits>Iterator traits</a><li><a href=https://wendajiang.github.io/iterator-cpp/#std-iterator>std::iterator</a><li><a href=https://wendajiang.github.io/iterator-cpp/#wei-shi-yao-fei-qi>为什么废弃</a><li><a href=https://wendajiang.github.io/iterator-cpp/#reference>reference</a></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>Cpp Iterator</h1><p><small>Posted 2022-12-22 16:39:52 ‐ <strong>3 min read</strong></small><p><div class=category-area>「 <a href=https://wendajiang.github.io/tags/C++> <div class=category>C++</div> </a><a href=https://wendajiang.github.io/tags/iterator> <div class=category>iterator</div> </a> 」</div></div><p>C++17 has deprecated a few components that has been in C++ since its beginning, and std::iterator is one of them.<p>首先看一下如何使用 std::iterator ，以及为什么要废弃，然后替代品是什么<h2 id=iterator-traits><a aria-label="Anchor link for: iterator-traits" class=zola-anchor href=#iterator-traits>Iterator traits</a></h2><p>generic code 使用 iterator，比如 STL 算法强依赖 iterator，需要其中的信息，比如 value_type<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span>std</span><span style=color:#ff79c6>::</span><span>vector<</span><span style=font-style:italic;color:#8be9fd>int</span><span>> numbers </span><span style=color:#ff79c6>= </span><span style=color:#fff>{</span><span style=color:#bd93f9>1</span><span>, </span><span style=color:#bd93f9>2</span><span>, </span><span style=color:#bd93f9>3</span><span>, </span><span style=color:#bd93f9>4</span><span>, </span><span style=color:#bd93f9>5</span><span style=color:#fff>}</span><span>;
+</span><span>std</span><span style=color:#ff79c6>::</span><span>cout </span><span style=color:#ff79c6><< </span><span>std</span><span style=color:#ff79c6>::</span><span style=color:#50fa7b>reduce</span><span>(</span><span style=color:#50fa7b>begin</span><span>(numbers), </span><span style=color:#50fa7b>end</span><span>(numbers)) </span><span style=color:#ff79c6><< </span><span style=color:#f1fa8c>"</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>;
+</span></code></pre><p><code>std::reduce</code>使用两个 iterator， 然后输出这个区间中元素的求和。那么 <code>std::reduce</code> 如何获取 iterator 元素的类型呢。事实上，这与 <code>std::vector</code> 没有关系，iterator 中有 value_type 表示元素类型。然后 iterator 还需要表示是不是可以随机访问，是不是只能递增不能递减等，通过 tag dispatch 实现 iterator_category:<ul><li>std::input_iterator_tag<li>std::forward_iterator_tag<li>std::bidirectional_iterator_tag<li>std::random_access_iterator_tag</ul><p>最后，STL iterator 还需要<ul><li>difference_type: - 操作结果的类型<li>pointer： 元素的指针类型<li>reference：元素的引用类型</ul><p>如果元素就是指针呢，所以还需要 <code>std::iterator_traits&LTIterator>::value_type</code> 消除指针<h2 id=std-iterator><a aria-label="Anchor link for: std-iterator" class=zola-anchor href=#std-iterator>std::iterator</a></h2><p>It is a helper to define the iterator traits of an iterator.<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>template</span><span><</span><span style=font-style:italic;color:#8be9fd>typename</span><span> Category,
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>typename</span><span> T,
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>typename</span><span> Distance </span><span style=color:#ff79c6>=</span><span> std</span><span style=color:#ff79c6>::</span><span style=font-style:italic;color:#66d9ef>ptrdiff_t</span><span>,
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>typename</span><span> Pointer </span><span style=color:#ff79c6>=</span><span> T</span><span style=color:#ff79c6>*</span><span>,
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>typename</span><span> Reference </span><span style=color:#ff79c6>=</span><span> T</span><span style=color:#ff79c6>&</span><span>> </span><span style=font-style:italic;color:#8be9fd>struct </span><span>iterator;
+</span></code></pre><p>比如可以这样用<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>MyIterator</span><span>: </span><span style=color:#ff79c6>public </span><span style=text-decoration:underline;font-style:italic;color:#8be9fd>std</span><span style=text-decoration:underline;font-style:italic;color:#ff79c6>::</span><span style=text-decoration:underline;font-style:italic;color:#8be9fd>iterator</span><span>&LTstd</span><span style=color:#ff79c6>::</span><span>random_access_iterator, </span><span style=font-style:italic;color:#8be9fd>int</span><span>> </span><span style=color:#fff>{}
+</span></code></pre><h2 id=wei-shi-yao-fei-qi><a aria-label="Anchor link for: wei-shi-yao-fei-qi" class=zola-anchor href=#wei-shi-yao-fei-qi>为什么废弃</a></h2><p>至少有一个问题，使用上是不明确的<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>MyIterator</span><span>: </span><span style=color:#ff79c6>public </span><span style=text-decoration:underline;font-style:italic;color:#8be9fd>std</span><span style=text-decoration:underline;font-style:italic;color:#ff79c6>::</span><span style=text-decoration:underline;font-style:italic;color:#8be9fd>iterator</span><span>&LTstd</span><span style=color:#ff79c6>::</span><span>random_acess_iterator, </span><span style=font-style:italic;color:#8be9fd>int</span><span>, </span><span style=font-style:italic;color:#8be9fd>int</span><span>, </span><span style=font-style:italic;color:#8be9fd>int</span><span style=color:#ff79c6>*</span><span>, </span><span style=font-style:italic;color:#8be9fd>int</span><span style=color:#ff79c6>&</span><span>> </span><span style=color:#fff>{}
+</span></code></pre><p>并不能清晰表明，哪里是 value_type，哪里是 reference_type<p>更清晰的方式是直接这样写<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>MyIterator </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#ff79c6>public</span><span>:
+</span><span>    </span><span style=color:#ff79c6>using </span><span>iterator_category </span><span style=color:#ff79c6>=</span><span> std</span><span style=color:#ff79c6>::</span><span>forward_iterator_tag;
+</span><span>    </span><span style=color:#ff79c6>using </span><span>value_type </span><span style=color:#ff79c6>= </span><span style=font-style:italic;color:#8be9fd>int</span><span>;
+</span><span>    </span><span style=color:#ff79c6>using </span><span>difference_type </span><span style=color:#ff79c6>= </span><span style=font-style:italic;color:#8be9fd>int</span><span>;
+</span><span>    </span><span style=color:#ff79c6>using </span><span>pointer </span><span style=color:#ff79c6>= </span><span style=font-style:italic;color:#8be9fd>int</span><span style=color:#ff79c6>*</span><span>;
+</span><span>    </span><span style=color:#ff79c6>using </span><span>reference </span><span style=color:#ff79c6>= </span><span style=font-style:italic;color:#8be9fd>int</span><span style=color:#ff79c6>&</span><span>;
+</span><span style=color:#fff>}
+</span></code></pre><p>这个原因已经可以说服委员会废弃，不过还有一个缺陷，你无法直接访问 base struct 中的 value_type<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>class </span><span style=text-decoration:underline;color:#8be9fd>MyIterator</span><span>: </span><span style=color:#ff79c6>public </span><span style=text-decoration:underline;font-style:italic;color:#8be9fd>std</span><span style=text-decoration:underline;font-style:italic;color:#ff79c6>::</span><span style=text-decoration:underline;font-style:italic;color:#8be9fd>iterator</span><span>&LTstd</span><span style=color:#ff79c6>::</span><span>random_acess_iterator, </span><span style=font-style:italic;color:#8be9fd>int</span><span>, </span><span style=font-style:italic;color:#8be9fd>int</span><span>, </span><span style=font-style:italic;color:#8be9fd>int</span><span style=color:#ff79c6>*</span><span>, </span><span style=font-style:italic;color:#8be9fd>int</span><span style=color:#ff79c6>&</span><span>> </span><span style=color:#fff>{
+</span><span>  base_type a; </span><span style=color:#6272a4>// error
+</span><span style=color:#fff>}
+</span></code></pre><h2 id=reference><a aria-label="Anchor link for: reference" class=zola-anchor href=#reference>reference</a></h2><p>https://www.fluentcpp.com/2018/05/08/std-iterator-deprecated/</article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'Cpp Iterator',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

@@ -1,0 +1,99 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>file locking | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/file-locking/ rel=canonical><meta content="file locking" property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/file-locking/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta content=2023-12-12T13:21:53 property=og:updated_time><meta content="file locking" property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/file-locking/"
+      },
+      "headline": "file locking",
+      "image": ,
+      "datePublished": "2023-12-12T13:21:53",
+      "dateModified": "2023-12-12T13:21:53",
+      "author": {
+        "@type": "Organization",
+        "name": "file locking"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "file locking",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "File Locking",
+            "item": "https://wendajiang.github.io/file-locking/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><script>function initMermaid(){var a={startOnLoad:true,theme:"neutral",flowchart:{useMaxWidth:true,htmlLabels:true}};mermaid.initialize(a);window.mermaid.init(undefined,document.querySelectorAll('.mermaid'))}</script><script async onload=initMermaid() src=https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/file-locking/#overview>overview</a><li><a href=https://wendajiang.github.io/file-locking/#the-interceding-update-problem>The interceding update problem</a><li><a href=https://wendajiang.github.io/file-locking/#file-locking-in-linux>File locking in Linux</a></li><ul><li><a href=https://wendajiang.github.io/file-locking/#advisory-lock>Advisory lock</a><li><a href=https://wendajiang.github.io/file-locking/#mandaroty-locking>Mandaroty locking</a></ul><li><a href=https://wendajiang.github.io/file-locking/#inspect-all-locks-in-a-system>Inspect all locks in a system</a></li><ul><li><a href=https://wendajiang.github.io/file-locking/#the-lslocks-command>the lslocks command</a><li><a href=https://wendajiang.github.io/file-locking/#proc-locks>/proc/locks</a></ul><li><a href=https://wendajiang.github.io/file-locking/#introduction-to-flock-command>Introduction to flock command</a></li><ul><li><a href=https://wendajiang.github.io/file-locking/#exmaple>exmaple</a></ul><li><a href=https://wendajiang.github.io/file-locking/#reference>reference</a></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>file locking</h1><p><small>Posted 2023-12-12 13:21:53 ‐ <strong>4 min read</strong></small><p></div><h1 id=overview><a aria-label="Anchor link for: overview" class=zola-anchor href=#overview>overview</a></h1><p>File locking is a mutual-exclusion mechanism to ensure a file can be read/written by muliple processes in a safe way.<h1 id=the-interceding-update-problem><a aria-label="Anchor link for: the-interceding-update-problem" class=zola-anchor href=#the-interceding-update-problem>The interceding update problem</a></h1><p>The interceding update is a <strong>typical race condition</strong> problem in a concurrent system. Let's see an example to understand the problem better.<p>Let's say we have a <em>balance.dat</em> file storing the balance of an account, and it has an initial value of "100". Our concurrent system has two processes to update the balance value:<ol><li>Process A: reads the current value, substracts 20 and saves the result back to the file.<li>Process B: reads the current value, adds 80 and writes the result back into the file.</ol><p>Obviously, after the execution of two processes, we are expects the file has value: 100 - 20 + 80 = 160.<p>However, an interdecing update problem may occur in this problem:<ol><li>Process A reads the file's current value(100), and prepares to do further calculation.<li>Process B now reads the same file and gets the current balance(100).<li>Process A calculates 100 - 20 and saves the result 80 back to the file<li>Process B doesn't know the balance has been updated since its last read. So it will still use the stale value 100 to calculate 100 + 80 and write the result 180 to the file.</ol><p>As a result, we have 180 in the <em>balance.dat</em> file instead of the expected value of 160.<h1 id=file-locking-in-linux><a aria-label="Anchor link for: file-locking-in-linux" class=zola-anchor href=#file-locking-in-linux>File locking in Linux</a></h1><p>File locking is a mechanism to restrict access to a file among muliple processes. It allows only one process to access the file in a specific time, thus avoiding the interceding update problem.<p>Linux supports two kinds of the file locks: advisory locks and mandatory locks.<h2 id=advisory-lock><a aria-label="Anchor link for: advisory-lock" class=zola-anchor href=#advisory-lock>Advisory lock</a></h2><p>Advisory locking is not an enforced locking scheme. It will work only if the partipating processes are cooperating by explicityly acquiring locks. Otherwise, advisory locks will be ignored if a process is not aware of locks at all.<p>System call <em>flock</em> is an advisory lock.<h2 id=mandaroty-locking><a aria-label="Anchor link for: mandaroty-locking" class=zola-anchor href=#mandaroty-locking>Mandaroty locking</a></h2><p>Before we start looking at mandaroty file locking, we should keep in mind that <a href=https://www.kernel.org/doc/Documentation/filesystems/mandatory-locking.txt>Linx implementation of mandaroty locking is unreliable</a>.<p>Unlike advisory locking, mandatory locking doesn't require any cooperation between the paricipating processes. Once a mandatory lock is avrivated on a file, the operating system prevents other processes from reading or writing the file.<p>To enable mandatory file locking in Linux, two requirements must be satisfield.<ol><li>we must mount the file system with the mand option (mount -o mand FILESYSTEM MOUNT_POINT)<li>we must turn on the set-group-ID bit and turn off the group-execute bit for the files we are about to lock (chmod g+s,g-x FILE)</ol><h1 id=inspect-all-locks-in-a-system><a aria-label="Anchor link for: inspect-all-locks-in-a-system" class=zola-anchor href=#inspect-all-locks-in-a-system>Inspect all locks in a system</a></h1><h2 id=the-lslocks-command><a aria-label="Anchor link for: the-lslocks-command" class=zola-anchor href=#the-lslocks-command>the lslocks command</a></h2><p>We can use this command to see all the currently locked files in the system.<h2 id=proc-locks><a aria-label="Anchor link for: proc-locks" class=zola-anchor href=#proc-locks>/proc/locks</a></h2><p>It is a file in the <a href=https://en.wikipedia.org/wiki/Procfs>procfs</a> virtual file system. The file holds all current file locks, the <em>lslocks</em> command relies on this file to generate the list, too.<h1 id=introduction-to-flock-command><a aria-label="Anchor link for: introduction-to-flock-command" class=zola-anchor href=#introduction-to-flock-command>Introduction to flock command</a></h1><p><em>flock</em> command is also provided by the util-linux package.<pre class=language-bash data-lang=bash style=background:#282a36;color:#f8f8f2><code class=language-bash data-lang=bash><span style=color:#50fa7b>flock</span><span> FILE_TO_LOCK COMMAND
+</span></code></pre><h2 id=exmaple><a aria-label="Anchor link for: exmaple" class=zola-anchor href=#exmaple>exmaple</a></h2><pre class=language-bash data-lang=bash style=background:#282a36;color:#f8f8f2><code class=language-bash data-lang=bash><span style=color:#6272a4>#!/bin/bash
+</span><span style=color:#fff>file</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>"balance.dat"
+</span><span style=color:#fff>value</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>$(</span><span style=color:#50fa7b>cat </span><span style=color:#f1fa8c>$</span><span style=color:#fff>file</span><span style=color:#f1fa8c>)
+</span><span style=color:#8be9fd>echo </span><span style=color:#f1fa8c>"Read current balance:$</span><span style=color:#fff>value</span><span style=color:#f1fa8c>"
+</span><span>
+</span><span style=color:#6272a4>#sleep 10 seconds to simulate business calculation
+</span><span style=color:#fff>progress</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>10
+</span><span style=color:#ff79c6>while </span><span style=color:#8be9fd>[[ </span><span>$</span><span style=color:#fff>progress </span><span style=font-style:italic;color:#ffb86c>-lt</span><span> 101 </span><span style=color:#8be9fd>]]</span><span style=color:#ff79c6>; do
+</span><span>	</span><span style=color:#8be9fd>echo </span><span style=font-style:italic;color:#ffb86c>-n -e </span><span style=color:#f1fa8c>"\033[77DCalculating new balance..$</span><span style=color:#fff>progress</span><span style=color:#f1fa8c>%"
+</span><span>	</span><span style=color:#50fa7b>sleep</span><span> 1
+</span><span>	</span><span style=color:#fff>progress</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>$((</span><span style=color:#bd93f9>10</span><span style=color:#ff79c6>+</span><span style=color:#f1fa8c>progress))
+</span><span style=color:#ff79c6>done
+</span><span style=color:#8be9fd>echo </span><span style=color:#f1fa8c>""
+</span><span>
+</span><span style=color:#fff>value</span><span style=color:#ff79c6>=</span><span style=color:#f1fa8c>$((value</span><span style=color:#ff79c6>+</span><span style=color:#f1fa8c>$</span><span style=color:#fff>1</span><span style=color:#f1fa8c>))
+</span><span style=color:#8be9fd>echo </span><span style=color:#f1fa8c>"Write new balance ($</span><span style=color:#fff>value</span><span style=color:#f1fa8c>) back to $</span><span style=color:#fff>file</span><span style=color:#f1fa8c>." 
+</span><span style=color:#8be9fd>echo </span><span>$</span><span style=color:#fff>value </span><span style=color:#ff79c6>> </span><span style=color:#f1fa8c>"$</span><span style=color:#fff>file</span><span style=color:#f1fa8c>"
+</span><span style=color:#8be9fd>echo </span><span style=color:#f1fa8c>"Done."
+</span></code></pre><p>We create a simple shell script a.sh to simulate process A:<pre class=language-bash data-lang=bash style=background:#282a36;color:#f8f8f2><code class=language-bash data-lang=bash><span style=color:#6272a4>#!/bin/bash
+</span><span style=color:#6272a4>#-----------------------------------------
+</span><span style=color:#6272a4># process A: lock the file and subtract 20 
+</span><span style=color:#6272a4># from the current balance
+</span><span style=color:#6272a4>#-----------------------------------------
+</span><span style=color:#50fa7b>flock</span><span style=font-style:italic;color:#ffb86c> --verbose</span><span> balance.dat ./update_balance.sh </span><span style=color:#f1fa8c>'-20'
+</span></code></pre><p>Now let's start process A to test:<pre class=language-bash data-lang=bash style=background:#282a36;color:#f8f8f2><code class=language-bash data-lang=bash><span style=color:#50fa7b>$</span><span> ./a.sh 
+</span><span style=color:#50fa7b>flock:</span><span> getting lock took 0.000002 seconds
+</span><span style=color:#50fa7b>flock:</span><span> executing ./update_balance.sh
+</span><span style=color:#50fa7b>Read</span><span> current balance:100
+</span><span style=color:#50fa7b>Calculating</span><span> new balance..100%
+</span><span style=color:#50fa7b>Write</span><span> new balance (80) </span><span style=color:#50fa7b>back</span><span> to balance.dat.
+</span><span style=color:#50fa7b>Done.
+</span></code></pre><p>Through the output, we can see the <em>flock</em> command first acquired a lock on the file <em>balance.dat</em>, then the <em>update_balance.sh</em> script read and updated the file.<p>During its run, we can check the lock information via the <em>lslocks</em> command:<pre class=language-bash data-lang=bash style=background:#282a36;color:#f8f8f2><code class=language-bash data-lang=bash><span style=color:#50fa7b>$</span><span> lslocks </span><span style=color:#ff79c6>| </span><span style=color:#50fa7b>grep </span><span style=color:#f1fa8c>"balance"
+</span><span style=color:#50fa7b>flock</span><span>  825712 FLOCK 4B WRITE 0 0 0 /tmp/test/balance.dat
+</span></code></pre><p>The output shows that the <em>flock</em> command is holding a WRITE lock on the entire file /tmp/test/balance.dat<h1 id=reference><a aria-label="Anchor link for: reference" class=zola-anchor href=#reference>reference</a></h1><ul><li><a href=https://github.com/jeandiogo/locker>File locking.hpp</a><li>man 2 flock<li>man 2 readlink<li><a href=https://en.wikipedia.org/wiki/Hard_link>file hard link</a></ul></article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'file locking',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - rust</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/rust/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2022-01-19T14:38:11+00:00</updated>
+    <id>https://wendajiang.github.io/tags/rust/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Rust Protobuf 对比分析(prost vs rust-protobuf)</title>
+        <published>2022-01-19T14:38:11+00:00</published>
+        <updated>2022-01-19T14:38:11+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/rust-protobuf/" type="text/html"/>
+        <id>https://wendajiang.github.io/rust-protobuf/</id>
+        <content type="html">&lt;!--
+mermaid example:
+&lt;div class=&quot;mermaid&quot;&gt;
+    mermaid program
+&lt;&#x2F;div&gt;
+--&gt;
+&lt;h1 id=&quot;prost&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#prost&quot; aria-label=&quot;Anchor link for: prost&quot;&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;tokio-rs&#x2F;prost&quot;&gt;prost&lt;&#x2F;a&gt;&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;优势：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;generates simple, idiomatic and readable Rust types&lt;&#x2F;li&gt;
+&lt;li&gt;保留 proto 中的注释&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;可以在已有的 Rust types 中增加 attributes 来转换为 Message&lt;&#x2F;strong&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;使用 &lt;code&gt;bytes::{Buf, BufMut}&lt;&#x2F;code&gt; 来抽象而不是 &lt;code&gt;std::io::{Read, Write}&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;可以识别 package 自动转换为 Rust module&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;&lt;em&gt;不支持 reflection&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;generated-code&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#generated-code&quot; aria-label=&quot;Anchor link for: generated-code&quot;&gt;generated code&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;prost 可以根据 &lt;code&gt;.proto&lt;&#x2F;code&gt; 文件生成 rust 代码&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;packages&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#packages&quot; aria-label=&quot;Anchor link for: packages&quot;&gt;Packages&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;code&gt;package foo.bar&lt;&#x2F;code&gt; -&amp;gt; &lt;code&gt;foo::bar&lt;&#x2F;code&gt; module&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;messages&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#messages&quot; aria-label=&quot;Anchor link for: messages&quot;&gt;Messages&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;message &amp;lt;-&amp;gt; Rust struct&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;message Foo {
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;&#x2F; &amp;lt;-&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;#[derive(Clone, Debug, PartialEq, Message)]
+&lt;&#x2F;span&gt;&lt;span&gt;pub struct Foo {
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;fields&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#fields&quot; aria-label=&quot;Anchor link for: fields&quot;&gt;Fields&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;protobuf message fields 对应 Rust struct pub fields&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;scalar-values&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#scalar-values&quot; aria-label=&quot;Anchor link for: scalar-values&quot;&gt;Scalar Values&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;protobuf type&lt;&#x2F;th&gt;&lt;th&gt;rust type&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;double&lt;&#x2F;td&gt;&lt;td&gt;f64&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;float&lt;&#x2F;td&gt;&lt;td&gt;f32&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;int32,sint32,sfixed32&lt;&#x2F;td&gt;&lt;td&gt;i32&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;int64,sint64,sfixed64&lt;&#x2F;td&gt;&lt;td&gt;i64&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;uint32, fixed32&lt;&#x2F;td&gt;&lt;td&gt;u32&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;uint64, fixed64&lt;&#x2F;td&gt;&lt;td&gt;u64&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;bool&lt;&#x2F;td&gt;&lt;td&gt;bool&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;string&lt;&#x2F;td&gt;&lt;td&gt;String&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;bytes&lt;&#x2F;td&gt;&lt;td&gt;Vec&lt;u8&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h4 id=&quot;enumerations&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#enumerations&quot; aria-label=&quot;Anchor link for: enumerations&quot;&gt;Enumerations&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;.proto&lt;&#x2F;code&gt; 枚举对应 Rust 的 &lt;code&gt;i32&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;enum PhoneType {
+&lt;&#x2F;span&gt;&lt;span&gt;  MOBILE = 0;
+&lt;&#x2F;span&gt;&lt;span&gt;  HOME = 1;
+&lt;&#x2F;span&gt;&lt;span&gt;  WORK = 2;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;pub enum PhoneType {
+&lt;&#x2F;span&gt;&lt;span&gt;  Mobile = 0,
+&lt;&#x2F;span&gt;&lt;span&gt;  Home = 1,
+&lt;&#x2F;span&gt;&lt;span&gt;  Work = 2,
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;&#x2F; PhoneType::Mobile as i32 可行
+&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;&#x2F; #[derive(::prost::Enumeration)] 会给 `PhoneType` 增加方法
+&lt;&#x2F;span&gt;&lt;span&gt;impl PhoneType {
+&lt;&#x2F;span&gt;&lt;span&gt;  pub fn is_valid(value: i32) -&amp;gt; bool
+&lt;&#x2F;span&gt;&lt;span&gt;  pub fn from_i32(value: i32) -&amp;gt; Option&amp;lt;PhoneType&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;field-modifiers&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#field-modifiers&quot; aria-label=&quot;Anchor link for: field-modifiers&quot;&gt;Field Modifiers&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;&lt;code&gt;.proto&lt;&#x2F;code&gt; Version&lt;&#x2F;th&gt;&lt;th&gt;modifier&lt;&#x2F;th&gt;&lt;th&gt;Rust Type&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;proto2&lt;&#x2F;td&gt;&lt;td&gt;optional&lt;&#x2F;td&gt;&lt;td&gt;Option&lt;T&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;proto2&lt;&#x2F;td&gt;&lt;td&gt;required&lt;&#x2F;td&gt;&lt;td&gt;T&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;proto3&lt;&#x2F;td&gt;&lt;td&gt;default&lt;&#x2F;td&gt;&lt;td&gt;T&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;proto2&#x2F;proto3&lt;&#x2F;td&gt;&lt;td&gt;repeated&lt;&#x2F;td&gt;&lt;td&gt;Vec&lt;T&gt;&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;h4 id=&quot;map-fields&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#map-fields&quot; aria-label=&quot;Anchor link for: map-fields&quot;&gt;Map Fields&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;Rust &lt;code&gt;HashMap&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;message-fields&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#message-fields&quot; aria-label=&quot;Anchor link for: message-fields&quot;&gt;Message Fields&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;proto3&lt;&#x2F;code&gt; 默认会生成 &lt;code&gt;Option&amp;lt;T&amp;gt;&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;message 会 Box 避免无限 size 的 struct&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;oneof-fileds&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#oneof-fileds&quot; aria-label=&quot;Anchor link for: oneof-fileds&quot;&gt;Oneof Fileds&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;Oneof 会转换成 enum&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#282a36;color:#f8f8f2;&quot;&gt;&lt;code&gt;&lt;span&gt;message Foo {
+&lt;&#x2F;span&gt;&lt;span&gt;  oneof widget {
+&lt;&#x2F;span&gt;&lt;span&gt;    int32 quux = 1;
+&lt;&#x2F;span&gt;&lt;span&gt;    string bar = 2;
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;pub struct Foo {
+&lt;&#x2F;span&gt;&lt;span&gt;  pub widget: Option&amp;lt;foo::Widget&amp;gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;pub mod foo {
+&lt;&#x2F;span&gt;&lt;span&gt;  pub enum Widget {
+&lt;&#x2F;span&gt;&lt;span&gt;    Quux(i32),
+&lt;&#x2F;span&gt;&lt;span&gt;    Bar(String),
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;services&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#services&quot; aria-label=&quot;Anchor link for: services&quot;&gt;Services&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;prost-build&lt;&#x2F;code&gt; 支持自定义处理 &lt;code&gt;service&lt;&#x2F;code&gt; 定义，根据项目需要生成 &lt;code&gt;trait&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;example&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#example&quot; aria-label=&quot;Anchor link for: example&quot;&gt;Example&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;proto&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-proto &quot;&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;syntax = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;proto3&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;package &lt;&#x2F;span&gt;&lt;span&gt;tutorial;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;Person &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int32 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;id &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; unique id number for this person
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;email &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;enum &lt;&#x2F;span&gt;&lt;span&gt;PhoneType {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;MOBILE &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;HOME &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;WORK &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;PhoneNumber &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;string &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;number &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;PhoneNumber &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;type &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;repeated &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;PhoneNumber &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;phones &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;4&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; our address book file is just one of these
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;message &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#8be9fd;&quot;&gt;AddressBook &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;repeated &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;Person &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;people &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;生成的代码&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span&gt;#[derive(Clone, PartialEq, ::prost::Message)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;Person &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    #[prost(string, tag&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;1&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: ::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;prost&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;alloc&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;string&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;String,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;&#x2F; unique id number for this person
+&lt;&#x2F;span&gt;&lt;span&gt;    #[prost(int32, tag&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;2&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;id&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;i32&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    #[prost(string, tag&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;3&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;email&lt;&#x2F;span&gt;&lt;span&gt;: ::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;prost&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;alloc&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;string&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;String,
+&lt;&#x2F;span&gt;&lt;span&gt;    #[prost(message, repeated, tag&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;4&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;phones&lt;&#x2F;span&gt;&lt;span&gt;: ::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;prost&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;alloc&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;vec&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Vec&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;person&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;PhoneNumber&amp;gt;,
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;&#x2F; Nested message and enum types in `Person`.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;mod &lt;&#x2F;span&gt;&lt;span&gt;person &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    #[derive(Clone, PartialEq, ::prost::Message)]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;PhoneNumber &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;        #[prost(string, tag&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;1&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)]
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;number&lt;&#x2F;span&gt;&lt;span&gt;: ::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;prost&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;alloc&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;string&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;String,
+&lt;&#x2F;span&gt;&lt;span&gt;        #[prost(message, optional, boxed, tag&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;2&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)]
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub&lt;&#x2F;span&gt;&lt;span&gt; r#&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;type&lt;&#x2F;span&gt;&lt;span&gt;: ::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;core&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;option&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Option&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;prost&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;alloc&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;boxed&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Box&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;PhoneNumber&amp;gt;&amp;gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+&lt;&#x2F;span&gt;&lt;span&gt;    #[repr(i32)]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;enum &lt;&#x2F;span&gt;&lt;span&gt;PhoneType &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;        Mobile &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;        Home &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;        Work &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F;&#x2F; our address book file is just one of these
+&lt;&#x2F;span&gt;&lt;span&gt;#[derive(Clone, PartialEq, ::prost::Message)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;AddressBook &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    #[prost(message, repeated, tag&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;1&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;people&lt;&#x2F;span&gt;&lt;span&gt;: ::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;prost&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;alloc&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;vec&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Vec&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;Person&amp;gt;,
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h2 id=&quot;xu-lie-hua-yi-jing-cun-zai-de-lei-xing&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#xu-lie-hua-yi-jing-cun-zai-de-lei-xing&quot; aria-label=&quot;Anchor link for: xu-lie-hua-yi-jing-cun-zai-de-lei-xing&quot;&gt;序列化已经存在的类型&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;Prost 会根据声明的顺序自动推断 struct 中 field 的 tag，加上合适的 derive and field annotation 就能实现序列化&#x2F;反序列化已有的类型&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;use&lt;&#x2F;span&gt;&lt;span&gt; prost;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;prost&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{&lt;&#x2F;span&gt;&lt;span&gt;Enumeration, Message&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;#[derive(Clone, PartialEq, Message)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;Person &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    #[prost(string, tag &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;1&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;id&lt;&#x2F;span&gt;&lt;span&gt;: String, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; tag=1
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; NOTE: Old &amp;quot;name&amp;quot; field has been removed
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; pub name: String, &#x2F;&#x2F; tag=2 (Removed)
+&lt;&#x2F;span&gt;&lt;span&gt;    #[prost(string, tag &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;6&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;given_name&lt;&#x2F;span&gt;&lt;span&gt;: String, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; tag=6
+&lt;&#x2F;span&gt;&lt;span&gt;    #[prost(string)]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;family_name&lt;&#x2F;span&gt;&lt;span&gt;: String, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; tag=7
+&lt;&#x2F;span&gt;&lt;span&gt;    #[prost(string)]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;formatted_name&lt;&#x2F;span&gt;&lt;span&gt;: String, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; tag=8
+&lt;&#x2F;span&gt;&lt;span&gt;    #[prost(uint32, tag &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;3&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;age&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; tag=3
+&lt;&#x2F;span&gt;&lt;span&gt;    #[prost(uint32)]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;height&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;u32&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; tag=4
+&lt;&#x2F;span&gt;&lt;span&gt;    #[prost(enumeration &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;Gender&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;gender&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;i32&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; tag=5
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; NOTE: Skip to less commonly occurring fields
+&lt;&#x2F;span&gt;&lt;span&gt;    #[prost(string, tag &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;16&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;name_prefix&lt;&#x2F;span&gt;&lt;span&gt;: String, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; tag=16  (eg. mr&#x2F;mrs&#x2F;ms)
+&lt;&#x2F;span&gt;&lt;span&gt;    #[prost(string)]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;name_suffix&lt;&#x2F;span&gt;&lt;span&gt;: String, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; tag=17  (eg. jr&#x2F;esq)
+&lt;&#x2F;span&gt;&lt;span&gt;    #[prost(string)]
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;maiden_name&lt;&#x2F;span&gt;&lt;span&gt;: String, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; tag=18
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;#[derive(Clone, Copy, Debug, PartialEq, Eq, Enumeration)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;pub &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;enum &lt;&#x2F;span&gt;&lt;span&gt;Gender &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    Unknown &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    Female &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    Male &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h1 id=&quot;rust-protobuf&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#rust-protobuf&quot; aria-label=&quot;Anchor link for: rust-protobuf&quot;&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;stepancheg&#x2F;rust-protobuf&quot;&gt;rust-protobuf&lt;&#x2F;a&gt;&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;protobuf&#x2F;latest&#x2F;protobuf&#x2F;index.html&quot;&gt;doc&lt;&#x2F;a&gt;
+&lt;a href=&quot;https:&#x2F;&#x2F;docs.rs&#x2F;protobuf-codegen-pure&#x2F;2.25.2&#x2F;protobuf_codegen_pure&#x2F;&quot;&gt;rust codegen doc&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;优势：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;生成的代码有运行时库 ？（prost 可以 no_std 支持），支持 reflection&lt;&#x2F;li&gt;
+&lt;li&gt;更像 cpp protobuf 版本的生成文件（不好说是优势还是劣势）&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;劣势：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;文档较少，比如类型之间的对应关系&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h1 id=&quot;dui-bi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#dui-bi&quot; aria-label=&quot;Anchor link for: dui-bi&quot;&gt;对比&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;生成的代码行数 rust-protobuf 是 prost 的十倍，
+prost 生成的 &lt;code&gt;.rs&lt;&#x2F;code&gt; 几乎与 &lt;code&gt;.proto&lt;&#x2F;code&gt; 行数一致&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;p&gt;PS.
+&lt;a href=&quot;https:&#x2F;&#x2F;doc.rust-lang.org&#x2F;cargo&#x2F;reference&#x2F;build-scripts.html&quot;&gt;cargo build script doc&lt;&#x2F;a&gt;
+cargo build 在编译之前会先编译 build.rs 文件并执行，The script may communicate with Cargo by printing specially formatted commands prefixed with &lt;code&gt;cargo:&lt;&#x2F;code&gt; to stdout，比如 &lt;code&gt;println!(&amp;quot;cargo:rerun-if-changed={}&amp;quot;, file_name);&lt;&#x2F;code&gt;，默认 package 文件任何一个变更都会重新执行&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; build.rs
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;use &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;anyhow&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;Result;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;#[rustfmt::skip]
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;PROTOBUF_FILES&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;[(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;)] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;[
+&lt;&#x2F;span&gt;&lt;span&gt;    (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;a&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;a.proto&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;    (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;b&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;b.proto&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;    (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;c&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;c.proto&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;];
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Result&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;lt;()&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;(dir, file) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;PROTOBUF_FILES &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; file_path &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;format!(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, dir, file);
+&lt;&#x2F;span&gt;&lt;span&gt;        println!(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;cargo:rerun-if-changed=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, file_path);
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; prost
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;prost_build&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;Config&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;new()
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;out_dir&lt;&#x2F;span&gt;&lt;span&gt;(dir)
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;compile_protos&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;file_path], &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;[dir])&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;?&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; rust-protobuf
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;protobuf_codegen_pure&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#66d9ef;&quot;&gt;Codegen&lt;&#x2F;span&gt;&lt;span style=&quot;text-decoration:underline;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span&gt;new()
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;out_dir&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;src&#x2F;protos&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;input&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt;file_path)
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;include&lt;&#x2F;span&gt;&lt;span&gt;(dir)
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;run&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8be9fd;&quot;&gt;expect&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;Codegen failed&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;Ok&lt;&#x2F;span&gt;&lt;span&gt;(())
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+</content>
+    </entry>
+</feed>

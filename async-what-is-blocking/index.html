@@ -1,0 +1,184 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>【翻译】async what is blocking | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/async-what-is-blocking/ rel=canonical><meta content="【翻译】async what is blocking" property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/async-what-is-blocking/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta property=og:updated_time><meta content="【翻译】async what is blocking" property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/async-what-is-blocking/"
+      },
+      "headline": "【翻译】async what is blocking",
+      "image": ,
+      "datePublished": "2022-02-16T09:20:44",
+      "dateModified": "",
+      "author": {
+        "@type": "Organization",
+        "name": "【翻译】async what is blocking"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "【翻译】async what is blocking",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Async What Is Blocking",
+            "item": "https://wendajiang.github.io/async-what-is-blocking/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><script>function initMermaid(){var a={startOnLoad:true,theme:"neutral",flowchart:{useMaxWidth:true,htmlLabels:true}};mermaid.initialize(a);window.mermaid.init(undefined,document.querySelectorAll('.mermaid'))}</script><script async onload=initMermaid() src=https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/async-what-is-blocking/#blocking-vs-non-blocking-code>Blocking vs. non-blocking code</a><li><a href=https://wendajiang.github.io/async-what-is-blocking/#what-if-i-want-to-block>What if I want to block?</a></li><ul><li><a href=https://wendajiang.github.io/async-what-is-blocking/#the-spawn-blocking-function>The spawn_blocking function</a><li><a href=https://wendajiang.github.io/async-what-is-blocking/#the-rayon-crate>The rayon crate</a><li><a href=https://wendajiang.github.io/async-what-is-blocking/#spawn-a-dedicated-thread>Spawn a dedicated thread</a></ul><li><a href=https://wendajiang.github.io/async-what-is-blocking/#summary>Summary</a></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>【翻译】async what is blocking</h1><p><small>Posted 2022-02-16 09:20:44 ‐ <strong>9 min read</strong></small><p><div class=category-area>「 <a href=https://wendajiang.github.io/tags/Rust> <div class=category>Rust</div> </a><a href=https://wendajiang.github.io/tags/async> <div class=category>async</div> </a><a href=https://wendajiang.github.io/tags/translate> <div class=category>translate</div> </a> 」</div></div><p><a href=https://ryhl.io/blog/async-what-is-blocking/>The Post</a><p>Rust 中的 async/await 特性使用被称为协作调度的机制实现，这对编写 Rust async 代码的开发者有些重要影响。<p>这篇 post 的用户是 async 代码的新手。我会使用 <a href=https://tokio.rs/>Tokio</a> 运行时作为例子，但是这里提出的观点适合任何异步运行时。<p>如果你只需要从这篇 post 记住一点，就是：<blockquote><p>async 代码在不运行 .await 不能花费过长的时间</blockquote><h2 id=blocking-vs-non-blocking-code><a aria-label="Anchor link for: blocking-vs-non-blocking-code" class=zola-anchor href=#blocking-vs-non-blocking-code>Blocking vs. non-blocking code</a></h2><p>The naive way to write an application that works on many things at the same time is to spawn a new thread for every task. If the number of tasks is small, this is a perfectly fine solution, but as the number of tasks becomes large, you will eventually run into problems due to the large number of threads. There are various solutions to this problem in different programming languages, but they all boil down to the same thing: very quickly swap out the currently running task on each thread, such that all of the tasks get an opportunity to run. In Rust, this swapping happens when you <code>.await</code> something.<p>When writing async Rust, the phrase “blocking the thread” means “preventing the runtime from swapping the current task”. This can be a major issue because it means that other tasks on the same runtime will stop running until the thread is no longer being blocked. To prevent this, we should write code that can be swapped quickly, which you do by never spending a long time away from an <code>.await</code>.<p>Let's take an example:<pre class=language-rust data-lang=rust style=background:#282a36;color:#f8f8f2><code class=language-rust data-lang=rust><span style=color:#ff79c6>use </span><span style=text-decoration:underline;color:#66d9ef>std</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>time</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>Duration;
+</span><span>
+</span><span>#[tokio::main]
+</span><span>async </span><span style=font-style:italic;color:#8be9fd>fn </span><span style=color:#50fa7b>main</span><span>() </span><span style=color:#fff>{
+</span><span>    println!(</span><span style=color:#f1fa8c>"Hello World!"</span><span>);
+</span><span>
+</span><span>    </span><span style=color:#6272a4>// No .await here!
+</span><span>    </span><span style=text-decoration:underline;color:#66d9ef>std</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>thread</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>sleep(</span><span style=text-decoration:underline;color:#66d9ef>Duration</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>from_secs(</span><span style=color:#bd93f9>5</span><span>));
+</span><span>
+</span><span>    println!(</span><span style=color:#f1fa8c>"Five seconds later..."</span><span>);
+</span><span style=color:#fff>}
+</span></code></pre><p>The above code looks correct, and if you run it, it will appear to work. But it has a fatal flaw: it is blocking the thread. In this case, there are no other tasks, so it's not a problem, but this wont be the case in real programs. To illustrate this point, consider the following example:<pre class=language-rust data-lang=rust style=background:#282a36;color:#f8f8f2><code class=language-rust data-lang=rust><span style=color:#ff79c6>use </span><span style=text-decoration:underline;color:#66d9ef>std</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>time</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>Duration;
+</span><span>
+</span><span>async </span><span style=font-style:italic;color:#8be9fd>fn </span><span style=color:#50fa7b>sleep_then_print</span><span>(</span><span style=font-style:italic;color:#ffb86c>timer</span><span>: </span><span style=font-style:italic;color:#8be9fd>i32</span><span>) </span><span style=color:#fff>{
+</span><span>    println!(</span><span style=color:#f1fa8c>"Start timer </span><span style=color:#bd93f9>{}</span><span style=color:#f1fa8c>."</span><span>, timer);
+</span><span>
+</span><span>    </span><span style=color:#6272a4>// No .await here!
+</span><span>    </span><span style=text-decoration:underline;color:#66d9ef>std</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>thread</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>sleep(</span><span style=text-decoration:underline;color:#66d9ef>Duration</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>from_secs(</span><span style=color:#bd93f9>1</span><span>));
+</span><span>
+</span><span>    println!(</span><span style=color:#f1fa8c>"Timer </span><span style=color:#bd93f9>{}</span><span style=color:#f1fa8c> done."</span><span>, timer);
+</span><span style=color:#fff>}
+</span><span>
+</span><span>#[tokio::main]
+</span><span>async </span><span style=font-style:italic;color:#8be9fd>fn </span><span style=color:#50fa7b>main</span><span>() </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#6272a4>// The join! macro lets you run multiple things concurrently.
+</span><span>    </span><span style=text-decoration:underline;color:#66d9ef>tokio</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>join</span><span style=color:#ff79c6>!</span><span>(
+</span><span>        </span><span style=color:#8be9fd>sleep_then_print</span><span>(</span><span style=color:#bd93f9>1</span><span>),
+</span><span>        </span><span style=color:#8be9fd>sleep_then_print</span><span>(</span><span style=color:#bd93f9>2</span><span>),
+</span><span>        </span><span style=color:#8be9fd>sleep_then_print</span><span>(</span><span style=color:#bd93f9>3</span><span>),
+</span><span>    );
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=color:#6272a4>// result
+</span><span>Start timer </span><span style=color:#bd93f9>1.
+</span><span>Timer </span><span style=color:#bd93f9>1</span><span> done</span><span style=color:#ff79c6>.
+</span><span>Start timer </span><span style=color:#bd93f9>2.
+</span><span>Timer </span><span style=color:#bd93f9>2</span><span> done</span><span style=color:#ff79c6>.
+</span><span>Start timer </span><span style=color:#bd93f9>3.
+</span><span>Timer </span><span style=color:#bd93f9>3</span><span> done</span><span style=color:#ff79c6>.
+</span></code></pre><p>The example will take three seconds to run, and the timers will run one after the other with no concurrency whatsoever. The reason is simple: the Tokio runtime was not able to swap one task for another, because such a swap can only happen at an <code>.await</code>. Since there is no <code>.await</code> in <code>sleep_then_print</code>, no swapping can happen while it is running.<p>However if we instead use Tokio's <a href=https://docs.rs/tokio/1/tokio/time/fn.sleep.html><code>sleep</code></a> function, which uses an <code>.await</code> to sleep, the function will behave correctly:<pre class=language-rust data-lang=rust style=background:#282a36;color:#f8f8f2><code class=language-rust data-lang=rust><span style=color:#ff79c6>use </span><span style=text-decoration:underline;color:#66d9ef>tokio</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>time</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>Duration;
+</span><span>
+</span><span>async </span><span style=font-style:italic;color:#8be9fd>fn </span><span style=color:#50fa7b>sleep_then_print</span><span>(</span><span style=font-style:italic;color:#ffb86c>timer</span><span>: </span><span style=font-style:italic;color:#8be9fd>i32</span><span>) </span><span style=color:#fff>{
+</span><span>    println!(</span><span style=color:#f1fa8c>"Start timer </span><span style=color:#bd93f9>{}</span><span style=color:#f1fa8c>."</span><span>, timer);
+</span><span>
+</span><span>    </span><span style=text-decoration:underline;color:#66d9ef>tokio</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>time</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>sleep(</span><span style=text-decoration:underline;color:#66d9ef>Duration</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>from_secs(</span><span style=color:#bd93f9>1</span><span>))</span><span style=color:#ff79c6>.</span><span>await;
+</span><span style=color:#6272a4>//                                            ^ execution can be paused here
+</span><span>
+</span><span>    println!(</span><span style=color:#f1fa8c>"Timer </span><span style=color:#bd93f9>{}</span><span style=color:#f1fa8c> done."</span><span>, timer);
+</span><span style=color:#fff>}
+</span><span>
+</span><span>#[tokio::main]
+</span><span>async </span><span style=font-style:italic;color:#8be9fd>fn </span><span style=color:#50fa7b>main</span><span>() </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#6272a4>// The join! macro lets you run multiple things concurrently.
+</span><span>    </span><span style=text-decoration:underline;color:#66d9ef>tokio</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>join</span><span style=color:#ff79c6>!</span><span>(
+</span><span>        </span><span style=color:#8be9fd>sleep_then_print</span><span>(</span><span style=color:#bd93f9>1</span><span>),
+</span><span>        </span><span style=color:#8be9fd>sleep_then_print</span><span>(</span><span style=color:#bd93f9>2</span><span>),
+</span><span>        </span><span style=color:#8be9fd>sleep_then_print</span><span>(</span><span style=color:#bd93f9>3</span><span>),
+</span><span>    );
+</span><span style=color:#fff>}
+</span><span>Start timer </span><span style=color:#bd93f9>1.
+</span><span>Start timer </span><span style=color:#bd93f9>2.
+</span><span>Start timer </span><span style=color:#bd93f9>3.
+</span><span>Timer </span><span style=color:#bd93f9>1</span><span> done</span><span style=color:#ff79c6>.
+</span><span>Timer </span><span style=color:#bd93f9>2</span><span> done</span><span style=color:#ff79c6>.
+</span><span>Timer </span><span style=color:#bd93f9>3</span><span> done</span><span style=color:#ff79c6>.
+</span></code></pre><p>The code runs in just one second, and properly runs all three functions at the same time as desired.<p>Be aware that it is not always this obvious. By using <a href=https://docs.rs/tokio/1/tokio/macro.join.html><code>tokio::join!</code></a>, all three tasks are guaranteed to run on the same thread, but if you replace it with <a href=https://docs.rs/tokio/1/tokio/fn.spawn.html><code>tokio::spawn</code></a> and use a multi-threaded runtime, you <em>will</em> be able to run multiple blocking tasks until you run out of threads. The default Tokio runtime spawns one thread per CPU core, and you will typically have around 8 CPU cores. This is enough that you can miss the issue when testing locally, but sufficiently few that you will very quickly run out of threads when running the code for real.<p>To give a sense of scale of how much time is too much, a good rule of thumb is no more than 10 to 100 microseconds between each <code>.await</code>. That said, this depends on the kind of application you are writing.<h2 id=what-if-i-want-to-block><a aria-label="Anchor link for: what-if-i-want-to-block" class=zola-anchor href=#what-if-i-want-to-block>What if I want to block?</a></h2><p>Sometimes we just want to block the thread. This is completely normal. There are two common reasons for this:<ol><li>Expensive CPU-bound computation.<li>Synchronous IO.</ol><p>In both cases, we are dealing with an operation that prevents the task from reaching an <code>.await</code> for an extended period of time. To solve this issue, we must move the blocking operation to a thread outside of Tokio's thread pool. There are three variations on this:<ol><li>Use the <a href=https://docs.rs/tokio/1/tokio/task/fn.spawn_blocking.html><code>tokio::task::spawn_blocking</code></a> function.<li>Use the <a href=https://lib.rs/crates/rayon><code>rayon</code></a> crate.<li>Spawn a dedicated thread with <a href=https://doc.rust-lang.org/stable/std/thread/fn.spawn.html><code>std::thread::spawn</code></a>.</ol><p>Let us go through each solution to see when we should use it.<h3 id=the-spawn-blocking-function><a aria-label="Anchor link for: the-spawn-blocking-function" class=zola-anchor href=#the-spawn-blocking-function>The <code>spawn_blocking</code> function</a></h3><p>The Tokio runtime includes a separate thread pool specifically for running blocking functions, and you can spawn tasks on it using <a href=https://docs.rs/tokio/1/tokio/task/fn.spawn_blocking.html><code>spawn_blocking</code></a>. This thread pool has an upper limit of around 500 threads, so you can spawn quite a lot of blocking operations on this thread pool.<p>Since the thread pool has so many threads, it is best suited for blocking IO such as interacting with the file system or using a blocking database library such as <a href=https://lib.rs/crates/diesel><code>diesel</code></a>.<p>The thread pool is poorly suited for expensive CPU-bound computations, since it has many more threads than you have CPU cores on your computer. CPU-bound computations run most efficiently if the number of threads is equal to the number of CPU cores. That said, if you only need a few CPU-bound computations, I wont blame you for running them on <code>spawn_blocking</code> as it is quite simple to do so.<pre class=language-rust data-lang=rust style=background:#282a36;color:#f8f8f2><code class=language-rust data-lang=rust><span>#[tokio::main]
+</span><span>async </span><span style=font-style:italic;color:#8be9fd>fn </span><span style=color:#50fa7b>main</span><span>() </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#6272a4>// This is running on Tokio. We may not block here.
+</span><span>
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>let</span><span> blocking_task </span><span style=color:#ff79c6>= </span><span style=text-decoration:underline;color:#66d9ef>tokio</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>task</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>spawn_blocking(|| </span><span style=color:#fff>{
+</span><span>        </span><span style=color:#6272a4>// This is running on a thread where blocking is fine.
+</span><span>        println!(</span><span style=color:#f1fa8c>"Inside spawn_blocking"</span><span>);
+</span><span>    </span><span style=color:#fff>}</span><span>);
+</span><span>
+</span><span>    </span><span style=color:#6272a4>// We can wait for the blocking task like this:
+</span><span>    </span><span style=color:#6272a4>// If the blocking task panics, the unwrap below will propagate the
+</span><span>    </span><span style=color:#6272a4>// panic.
+</span><span>    blocking_task</span><span style=color:#ff79c6>.</span><span>await</span><span style=color:#ff79c6>.</span><span style=color:#8be9fd>unwrap</span><span>();
+</span><span style=color:#fff>}
+</span></code></pre><h3 id=the-rayon-crate><a aria-label="Anchor link for: the-rayon-crate" class=zola-anchor href=#the-rayon-crate>The <code>rayon</code> crate</a></h3><p>The <a href=https://lib.rs/crates/rayon><code>rayon</code></a> crate is a well known library that provides a thread pool specifically intended for expensive CPU-bound computations, and you can use it for this purpose together with Tokio. Unlike <code>spawn_blocking</code>, the <code>rayon</code> thread pool has a small maximum number of threads, which is why it is suitable for expensive computations.<p>We will use the sum of a large list as an example of an expensive computation, but note that in practice, unless the array is very very large, just computing a sum is probably cheap enough that you can just do it directly in Tokio.<p>The main danger of using <code>rayon</code> is that you must be careful not to block the thread while waiting for rayon to complete. To do this, combine <a href=https://docs.rs/rayon/1/rayon/fn.spawn.html><code>rayon::spawn</code></a> with <a href=https://docs.rs/tokio/1/tokio/sync/oneshot/index.html><code>tokio::sync::oneshot</code></a> like this:<pre class=language-rust data-lang=rust style=background:#282a36;color:#f8f8f2><code class=language-rust data-lang=rust><span>async </span><span style=font-style:italic;color:#8be9fd>fn </span><span style=color:#50fa7b>parallel_sum</span><span>(</span><span style=font-style:italic;color:#ffb86c>nums</span><span>: </span><span style=font-style:italic;color:#66d9ef>Vec</span><span><</span><span style=font-style:italic;color:#8be9fd>i32</span><span>>) </span><span style=color:#ff79c6>-> </span><span style=font-style:italic;color:#8be9fd>i32 </span><span style=color:#fff>{
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>let </span><span>(send, recv) </span><span style=color:#ff79c6>= </span><span style=text-decoration:underline;color:#66d9ef>tokio</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>sync</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>oneshot</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>channel();
+</span><span>
+</span><span>    </span><span style=color:#6272a4>// Spawn a task on rayon.
+</span><span>    </span><span style=text-decoration:underline;color:#66d9ef>rayon</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>spawn(</span><span style=color:#ff79c6>move || </span><span style=color:#fff>{
+</span><span>        </span><span style=color:#6272a4>// Perform an expensive computation.
+</span><span>        </span><span style=font-style:italic;color:#8be9fd>let </span><span style=color:#ff79c6>mut</span><span> sum </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span>        </span><span style=color:#ff79c6>for</span><span> num </span><span style=color:#ff79c6>in</span><span> nums </span><span style=color:#fff>{
+</span><span>            sum </span><span style=color:#ff79c6>+=</span><span> num;
+</span><span>        </span><span style=color:#fff>}
+</span><span>
+</span><span>        </span><span style=color:#6272a4>// Send the result back to Tokio.
+</span><span>        </span><span style=font-style:italic;color:#8be9fd>let </span><span style=color:#ff79c6>_ =</span><span> send</span><span style=color:#ff79c6>.</span><span style=color:#8be9fd>send</span><span>(sum);
+</span><span>    </span><span style=color:#fff>}</span><span>);
+</span><span>
+</span><span>    </span><span style=color:#6272a4>// Wait for the rayon task.
+</span><span>    recv</span><span style=color:#ff79c6>.</span><span>await</span><span style=color:#ff79c6>.</span><span style=color:#8be9fd>expect</span><span>(</span><span style=color:#f1fa8c>"Panic in rayon::spawn"</span><span>)
+</span><span style=color:#fff>}
+</span><span>
+</span><span>#[tokio::main]
+</span><span>async </span><span style=font-style:italic;color:#8be9fd>fn </span><span style=color:#50fa7b>main</span><span>() </span><span style=color:#fff>{
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>let</span><span> nums </span><span style=color:#ff79c6>= </span><span>vec![</span><span style=color:#bd93f9>1</span><span>; </span><span style=color:#bd93f9>1024 </span><span style=color:#ff79c6>* </span><span style=color:#bd93f9>1024</span><span>];
+</span><span>    println!(</span><span style=color:#f1fa8c>"</span><span style=color:#bd93f9>{}</span><span style=color:#f1fa8c>"</span><span>, </span><span style=color:#8be9fd>parallel_sum</span><span>(nums)</span><span style=color:#ff79c6>.</span><span>await);
+</span><span style=color:#fff>}
+</span></code></pre><p>This uses the rayon thread pool to run the expensive operation. Be aware that the above example uses only one thread in the rayon thread pool per call to <code>parallel_sum</code>. This makes sense if you have many calls to <code>parallel_sum</code> in your application, but it is also possible to use rayon's parallel iterators to compute the sum on several threads:<pre class=language-rust data-lang=rust style=background:#282a36;color:#f8f8f2><code class=language-rust data-lang=rust><span style=color:#ff79c6>use </span><span style=text-decoration:underline;color:#66d9ef>rayon</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=text-decoration:underline;color:#66d9ef>prelude</span><span style=text-decoration:underline;color:#ff79c6>::</span><span style=color:#ff79c6>*</span><span>;
+</span><span>
+</span><span style=color:#6272a4>// Spawn a task on rayon.
+</span><span style=text-decoration:underline;color:#66d9ef>rayon</span><span style=text-decoration:underline;color:#ff79c6>::</span><span>spawn(</span><span style=color:#ff79c6>move || </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#6272a4>// Compute the sum on multiple threads.
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>let</span><span> sum </span><span style=color:#ff79c6>=</span><span> nums</span><span style=color:#ff79c6>.</span><span style=color:#8be9fd>par_iter</span><span>()</span><span style=color:#ff79c6>.</span><span style=color:#8be9fd>sum</span><span>();
+</span><span>
+</span><span>    </span><span style=color:#6272a4>// Send the result back to Tokio.
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>let </span><span style=color:#ff79c6>_ =</span><span> send</span><span style=color:#ff79c6>.</span><span style=color:#8be9fd>send</span><span>(sum);
+</span><span style=color:#fff>}</span><span>);
+</span></code></pre><p>Note that you still need the <code>rayon::spawn</code> call when you use parallel iterators, because parallel iterators are blocking.<h3 id=spawn-a-dedicated-thread><a aria-label="Anchor link for: spawn-a-dedicated-thread" class=zola-anchor href=#spawn-a-dedicated-thread>Spawn a dedicated thread</a></h3><p>If a blocking operation keeps running forever, you should run it on a dedicated thread. For example consider a thread that manages a database connection using a channel to receive database operations to perform. Since this thread is listening on that channel in a loop, it never exits.<p>Running such a task on either of the two other thread pools is a problem, because it essentially takes away a thread from the pool permanently. Once you've done that a few times, you have no more threads in the thread pool and all other blocking tasks fail to get executed.<p>Of course you can also use dedicated threads for shorter lived purposes if you are okay with paying the cost of spawning a new thread every time you start a new one.<h2 id=summary><a aria-label="Anchor link for: summary" class=zola-anchor href=#summary>Summary</a></h2><p>In case you forgot, here's the main thing you need to remember:<blockquote><p>Async code should never spend a long time without reaching an <code>.await</code>.</blockquote><p>Below you will find a cheat sheet of what methods you can use when you want to block:<table><thead><tr><th style=text-align:left><th style=text-align:left>CPU-bound computation<th style=text-align:left>Synchronous IO<th style=text-align:left>Running forever<tbody><tr><td style=text-align:left><strong><code>spawn_blocking</code></strong><td style=text-align:left>Suboptimal<td style=text-align:left>OK<td style=text-align:left>No<tr><td style=text-align:left><strong><code>rayon</code></strong><td style=text-align:left>OK<td style=text-align:left>No<td style=text-align:left>No<tr><td style=text-align:left><strong>Dedicated thread</strong><td style=text-align:left>OK<td style=text-align:left>OK<td style=text-align:left>OK</table><p>Finally, I recommend checking out <a href=https://tokio.rs/tokio/tutorial/shared-state>the chapter on shared state</a> from the Tokio tutorial. This chapter explains how you can correctly use <a href=https://doc.rust-lang.org/stable/std/sync/struct.Mutex.html><code>std::sync::Mutex</code></a> in async code, and goes more in-depth with why this is okay even though locking a mutex is blocking. (Spoiler: if you block for a short time, is it really blocking?)<p>I also strongly recommend the article <a href=https://tokio.rs/blog/2020-04-preemption>Reducing tail latencies with automatic cooperative task yielding</a> from the Tokio blog.</article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'【翻译】async what is blocking',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

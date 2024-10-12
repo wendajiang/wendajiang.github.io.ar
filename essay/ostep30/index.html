@@ -1,0 +1,254 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>condition variable | 「靡不有初，鲜克有终」</title><meta content="ostep 30 chapter understand" name=description><link href=https://wendajiang.github.io/essay/ostep30/ rel=canonical><meta content="condition variable" property=og:title><meta content="ostep 30 chapter understand" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/essay/ostep30/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta content=2023-06-14T11:08:39 property=og:updated_time><meta content="condition variable" property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/essay/ostep30/"
+      },
+      "headline": "condition variable",
+      "image": ,
+      "datePublished": "2023-06-14T11:08:39",
+      "dateModified": "2023-06-14T11:08:39",
+      "author": {
+        "@type": "Organization",
+        "name": "condition variable"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "condition variable",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "ostep 30 chapter understand"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Essay",
+            "item": "https://wendajiang.github.io/essay/"
+          },
+        
+      
+        
+        
+        
+        
+        
+        
+        
+        
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  3 ,
+            "name": "Ostep30",
+            "item": "https://wendajiang.github.io/essay/ostep30/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><script>function initMermaid(){var a={startOnLoad:true,theme:"neutral",flowchart:{useMaxWidth:true,htmlLabels:true}};mermaid.initialize(a);window.mermaid.init(undefined,document.querySelectorAll('.mermaid'))}</script><script async onload=initMermaid() src=https://cdn.jsdelivr.net/npm/mermaid@latest/dist/mermaid.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/essay/ostep30/#definition-and-routines>Definition and Routines</a><li><a href=https://wendajiang.github.io/essay/ostep30/#let-s-explain-if-stmt-problem-in-the-bounded-buffer-problem-producer-consumer>Let's explain if stmt problem in the bounded-buffer problem(producer/consumer)</a><li><a href=https://wendajiang.github.io/essay/ostep30/#summary-about-using>Summary about using</a><li><a href=https://wendajiang.github.io/essay/ostep30/#next-problem-which-one-thread-should-be-awoke>Next problem, which one thread should be awoke?</a><li><a href=https://wendajiang.github.io/essay/ostep30/#implementation-uing-mutex>Implementation uing mutex</a><li><a href=https://wendajiang.github.io/essay/ostep30/#reference>reference</a></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>condition variable</h1><p><small>Posted 2023-06-14 11:08:39 ‐ <strong>7 min read</strong></small><p><div class=category-area>「 <a href=https://wendajiang.github.io/tags/ostep> <div class=category>ostep</div> </a> 」</div></div><p>In particular, there are many cases where a thread wishes to check whether a condition is true before continuing its execution. For example, a parent thread might wish to check whether a child thread has completed before continuing (this is often called a <code>join</code>); how should such a wait be implemented? Let's look at one example:<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#ff79c6>*</span><span style=color:#50fa7b>child</span><span>(</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>arg</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#8be9fd>printf</span><span>(</span><span style=color:#f1fa8c>"child</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>);
+</span><span>  </span><span style=color:#6272a4>/// how to indicate we are done?
+</span><span>  </span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>NULL</span><span>;
+</span><span style=color:#fff>}
+</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#50fa7b>main</span><span>() </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#8be9fd>printf</span><span>(</span><span style=color:#f1fa8c>"parent: begin</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>);
+</span><span>  </span><span style=font-style:italic;color:#66d9ef>pthread_t</span><span> c;
+</span><span>  </span><span style=color:#50fa7b>pthread_create</span><span>(</span><span style=color:#ff79c6>&</span><span>c, </span><span style=color:#bd93f9>nullptr</span><span>, child, </span><span style=color:#bd93f9>nullptr</span><span>);
+</span><span>  </span><span style=color:#6272a4>/// how to wait for child
+</span><span>  </span><span style=color:#8be9fd>printf</span><span>(</span><span style=color:#f1fa8c>"parent: end</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>);
+</span><span>  </span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>0</span><span>;
+</span><span style=color:#fff>}
+</span></code></pre><p>The first approach is using a shared varaible, like follow:<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=color:#ff79c6>volatile </span><span style=font-style:italic;color:#8be9fd>int</span><span> done </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#ff79c6>*</span><span style=color:#50fa7b>child</span><span>(</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>arg</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#8be9fd>printf</span><span>(</span><span style=color:#f1fa8c>"child</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>);
+</span><span>  done </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>1</span><span>;
+</span><span>  </span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>NULL</span><span>;
+</span><span style=color:#fff>}
+</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#50fa7b>main</span><span>() </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#8be9fd>printf</span><span>(</span><span style=color:#f1fa8c>"parent: begin</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>);
+</span><span>  </span><span style=font-style:italic;color:#66d9ef>pthread_t</span><span> c;
+</span><span>  </span><span style=color:#50fa7b>pthread_create</span><span>(</span><span style=color:#ff79c6>&</span><span>c, </span><span style=color:#bd93f9>nullptr</span><span>, child, </span><span style=color:#bd93f9>nullptr</span><span>);
+</span><span>  </span><span style=color:#ff79c6>while</span><span>(</span><span style=color:#ff79c6>!</span><span>done); </span><span style=color:#6272a4>// spin
+</span><span>  </span><span style=color:#8be9fd>printf</span><span>(</span><span style=color:#f1fa8c>"parent: end</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>);
+</span><span>  </span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>0</span><span>;
+</span><span style=color:#fff>}
+</span></code></pre><p>But it is inefficient as parent spins and wastes CPU time. What we would like here insead is some way to put the parent to sleep until the condition we are waiting for (e.g. the child is done executing) comes ture.<h1 id=definition-and-routines>Definition and Routines</h1><p>To wait for a condition to become true, a thread can make use of what is known as a <strong>conditino variable.</strong> <em>A <strong>condition variable</strong> is an explicit queue that threads can put themselves on when some state of execution(i.e. some condition) is not as desired(by waiting on the condition); some other thread, when it changes said state, can then wake one(or more) of those waiting threads and thus allow them to continue(by signaling on the condition).</em><p>The idea goes back to Dijkstra's use of <code>private semaphores</code>.<p>A condition variable has two operations associated with it: wait() and signal().<ul><li>the wait() call is executed when a thread wishes to put itself to sleep<li>the signal() call is executed when a thread has changed something in the program and thus wants to wake a sleeping thread waiting on this condition.</ul><p>Let's show the last paragraph example:<pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>int</span><span> done </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span style=font-style:italic;color:#66d9ef>pthread_mutex_t</span><span> m </span><span style=color:#ff79c6>=</span><span> PTHREAD_MUTEX_INITIALIZER;
+</span><span style=font-style:italic;color:#66d9ef>pthread_cond_t</span><span> cv </span><span style=color:#ff79c6>=</span><span> PTHREAD_COND_INITIALIZER;
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>thr_exit</span><span>() </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#50fa7b>pthread_mutex_lock</span><span>(</span><span style=color:#ff79c6>&</span><span>m);
+</span><span>  done </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>1</span><span>;
+</span><span>  </span><span style=color:#50fa7b>pthread_cond_signal</span><span>(</span><span style=color:#ff79c6>&</span><span>cv);
+</span><span>  </span><span style=color:#50fa7b>pthread_mutex_unlock</span><span>(</span><span style=color:#ff79c6>&</span><span>m);
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#ff79c6>*</span><span style=color:#50fa7b>child</span><span>(</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>arg</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#8be9fd>printf</span><span>(</span><span style=color:#f1fa8c>"child</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>);
+</span><span>  </span><span style=color:#50fa7b>thr_exit</span><span>();
+</span><span>  </span><span style=color:#ff79c6>return </span><span style=color:#bd93f9>NULL</span><span>;
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>thr_join</span><span>() </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#50fa7b>pthread_mutex_lock</span><span>(</span><span style=color:#ff79c6>&</span><span>m);
+</span><span>  </span><span style=color:#ff79c6>while</span><span>(done </span><span style=color:#ff79c6>== </span><span style=color:#bd93f9>0</span><span>) 
+</span><span>    </span><span style=color:#50fa7b>pthread_cond_wait</span><span>(</span><span style=color:#ff79c6>&</span><span>cv, </span><span style=color:#ff79c6>&</span><span>m);
+</span><span>  </span><span style=color:#50fa7b>pthread_mutex_unlock</span><span>(</span><span style=color:#ff79c6>&</span><span>m);
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#50fa7b>main</span><span>() </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#8be9fd>printf</span><span>(</span><span style=color:#f1fa8c>"parent: begin</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>);
+</span><span>  </span><span style=font-style:italic;color:#66d9ef>pthread_t</span><span> p;
+</span><span>  </span><span style=color:#50fa7b>pthread_create</span><span>(</span><span style=color:#ff79c6>&</span><span>p, </span><span style=color:#bd93f9>NULL</span><span>, child, </span><span style=color:#bd93f9>NULL</span><span>);
+</span><span>  </span><span style=color:#50fa7b>thr_join</span><span>();
+</span><span>  </span><span style=color:#8be9fd>printf</span><span>(</span><span style=color:#f1fa8c>"parent: end</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>);
+</span><span style=color:#fff>}
+</span></code></pre><p>One thing you might notice about the wait() call is that it also takes a mutex as a parameter; it assumes that this mutex is blocked when wait() is called. <strong>The responsibility of wait() is to release the lock and put the calling thread to sleep (atomically); when the thread wakes up, it must re-acquire the lock before returning to the caller.</strong> This purpose is to prevent certain race conditions from occurring when a thread is trying to put itself to sleep.<p>There are two case that maybe happen:<pre class=mermaid>
+  sequenceDiagram
+  parent->>child: thr_join
+  parent->parent: wait() and release the lock
+  child->>child: acquire the lock and set done
+  parent->parent: return from wait() wich lock held and continue
+</pre><pre class=mermaid>
+  sequenceDiagram
+  child ->> child: acquire the lock and set done
+  parent -> parent: wait() directly return and continue
+</pre><p>One last noe: you might observe that the parent use a <code>while</code> loop instead of just an <code>if</code> stmt when deciding whether to wait on the condition.<ol><li>If we remove the state variable done, what is happened? Think about, first child calls <code>thr_exit</code> immediately; in this case, the child will signal, but there is no thread asleep on the condition. When the parent runs, it will simply call wait and be stuck; no thread will ever wake it.<li>If we remove the mutext ? The issue here is a subtle race condition.</ol><h1 id=let-s-explain-if-stmt-problem-in-the-bounded-buffer-problem-producer-consumer>Let's explain if stmt problem in the bounded-buffer problem(producer/consumer)</h1><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>int</span><span> buffer;
+</span><span style=font-style:italic;color:#8be9fd>int</span><span> count </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>int</span><span> loops;
+</span><span>cond_t cond;
+</span><span>mutext_t mutex;
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>put</span><span>(</span><span style=font-style:italic;color:#8be9fd>int </span><span style=font-style:italic;color:#ffb86c>value</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#8be9fd>assert</span><span>(count </span><span style=color:#ff79c6>== </span><span style=color:#bd93f9>0</span><span>);
+</span><span>  count </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>1</span><span>;
+</span><span>  buffer </span><span style=color:#ff79c6>=</span><span> value;
+</span><span style=color:#fff>}
+</span><span style=font-style:italic;color:#8be9fd>int </span><span style=color:#50fa7b>get</span><span>() </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#8be9fd>assert</span><span>(count </span><span style=color:#ff79c6>== </span><span style=color:#bd93f9>1</span><span>);
+</span><span>  count </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>;
+</span><span>  </span><span style=color:#ff79c6>return</span><span> buffer;
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#ff79c6>*</span><span style=color:#50fa7b>producer</span><span>(</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>arg</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>int</span><span> i;
+</span><span>  </span><span style=color:#ff79c6>for </span><span>(i </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>; i </span><span style=color:#ff79c6><</span><span> loops; i</span><span style=color:#ff79c6>++</span><span>) </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#50fa7b>pthread_mutex_lock</span><span>(</span><span style=color:#ff79c6>&</span><span>mutex);              </span><span style=color:#6272a4>// p1
+</span><span>    </span><span style=color:#ff79c6>if </span><span>(count </span><span style=color:#ff79c6>== </span><span style=color:#bd93f9>1</span><span>)                          </span><span style=color:#6272a4>// p2
+</span><span>      </span><span style=color:#50fa7b>pthread_cond_wait</span><span>(</span><span style=color:#ff79c6>&</span><span>cond, </span><span style=color:#ff79c6>&</span><span>mutex);      </span><span style=color:#6272a4>// p3
+</span><span>    </span><span style=color:#50fa7b>put</span><span>(i);                                  </span><span style=color:#6272a4>// p4
+</span><span>    </span><span style=color:#50fa7b>pthread_cond_signal</span><span>(</span><span style=color:#ff79c6>&</span><span>cond);              </span><span style=color:#6272a4>// p5
+</span><span>    </span><span style=color:#50fa7b>pthread_mutex_unlock</span><span>(</span><span style=color:#ff79c6>&</span><span>mutex);            </span><span style=color:#6272a4>// p6
+</span><span>  </span><span style=color:#fff>}
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#ff79c6>*</span><span style=color:#50fa7b>consumer</span><span>(</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>arg</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>int</span><span> i;
+</span><span>  </span><span style=color:#ff79c6>for</span><span>(i </span><span style=color:#ff79c6>= </span><span style=color:#bd93f9>0</span><span>; i </span><span style=color:#ff79c6><</span><span> loops; i</span><span style=color:#ff79c6>++</span><span>) </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#50fa7b>pthread_mutex_lock</span><span>(</span><span style=color:#ff79c6>&</span><span>mutex);             </span><span style=color:#6272a4>// c1
+</span><span>    </span><span style=color:#ff79c6>if </span><span>(count </span><span style=color:#ff79c6>== </span><span style=color:#bd93f9>0</span><span>)                         </span><span style=color:#6272a4>// c2
+</span><span>      </span><span style=color:#50fa7b>pthread_cond_wait</span><span>(</span><span style=color:#ff79c6>&</span><span>cond, </span><span style=color:#ff79c6>&</span><span>mutex);     </span><span style=color:#6272a4>// c3
+</span><span>    </span><span style=font-style:italic;color:#8be9fd>int</span><span> temp </span><span style=color:#ff79c6>= </span><span style=color:#50fa7b>get</span><span>();                       </span><span style=color:#6272a4>// c4
+</span><span>    </span><span style=color:#50fa7b>pthread_cond_signal</span><span>(</span><span style=color:#ff79c6>&</span><span>cond);             </span><span style=color:#6272a4>// c5
+</span><span>    </span><span style=color:#50fa7b>pthread_mutext_unlock</span><span>(</span><span style=color:#ff79c6>&</span><span>mutex);          </span><span style=color:#6272a4>// c6
+</span><span>    </span><span style=color:#8be9fd>printf</span><span>(</span><span style=color:#f1fa8c>"</span><span style=color:#bd93f9>%d</span><span style=color:#ff79c6>\n</span><span style=color:#f1fa8c>"</span><span>, temp);
+</span><span>  </span><span style=color:#fff>}
+</span><span style=color:#fff>}
+</span></code></pre><p>one-producer and one-consumer this works. However, if we have more than one of these threads, the solution has two critical problems. What are they?<p>If stmt cause race conditon:<table><thead><tr><th>TC1 State<th>TC2 State<th>TP<th>count<th>Comment<tbody><tr><td>c1 run<td>ready<td>ready<td>0<td><tr><td>c2 run<td>ready<td>ready<td>0<td><tr><td>c3 sleep<td>ready<td>ready<td>0<td><tr><td>sleep<td>ready<td>p1 run<td>0<td><tr><td>sleep<td>ready<td>p2 run<td>0<td><tr><td>sleep<td>ready<td>p4 run<td>1<td>buffer now fill TC1 awoken<tr><td>ready<td>ready<td>p5 run<td>1<td><tr><td>ready<td>ready<td>p6 run<td>1<td><tr><td>ready<td>ready<td>p1 run<td>1<td><tr><td>ready<td>ready<td>p2 run<td>1<td><tr><td>ready<td>ready<td>P3 sleep<td>1<td>buffer rull; sleep tc2 sneaks in...<tr><td>ready<td>c1 run<td>sleep<td>1<td><tr><td>ready<td>c2 run<td>sleep<td>1<td><tr><td>ready<td>c4 run<td>sleep<td>0<td>... and grabs data TP awoken<tr><td>ready<td>c5 run<td>ready<td>0<td><tr><td>ready<td>c6 run<td>ready<td>0<td><tr><td>c4 run<td>ready<td>ready<td>0<td>Oh ho! No data</table><p>Changing p2 and c2 if stmt to while will fix the issue. But there is another problem, as there is only one condition variable.<table><thead><tr><th>TC1 State<th>TC2 State<th>TP<th>count<th>Comment<tbody><tr><td>c1 run<td>ready<td>ready<td>0<td><tr><td>c2 run<td>ready<td>ready<td>0<td><tr><td>c3 sleep<td>ready<td>ready<td>0<td><tr><td>sleep<td>c1 run<td>ready<td>0<td><tr><td>sleep<td>c2 run<td>ready<td>0<td><tr><td>sleep<td>c3 sleep<td>ready<td>0<td>nothing to get<tr><td>sleep<td>sleep<td>p1 run<td>0<td><tr><td>sleep<td>sleep<td>p2 run<td>0<td><tr><td>sleep<td>sleep<td>p4 run<td>1<td>buffer now full TC1 awoken<tr><td>ready<td>sleep<td>p5 run<td>1<td><tr><td>ready<td>sleep<td>P6 run<td>1<td><tr><td>ready<td>sleep<td>p1 run<td>1<td><tr><td>ready<td>sleep<td>p2 run<td>1<td><tr><td>ready<td>sleep<td>P3 sleep<td>1<td>must sleep (full)<tr><td>c2 run<td>sleep<td>sleep<td>1<td>recheck condition<tr><td>c4 run<td>sleep<td>sleep<td>0<td>TC1 grab data<tr><td><strong>c5 run</strong><td><strong>ready</strong><td><strong>sleep</strong><td><strong>0</strong><td><strong>Oops! Woek TC2</strong><tr><td>c6 run<td>ready<td>sleep<td>0<td><tr><td>c1 run<td>ready<td>sleep<td>0<td><tr><td>c2 run<td>ready<td>sleep<td>0<td><tr><td>c3 sleep<td>ready<td>sleep<td>0<td><tr><td>sleep<td>c2 run<td>sleep<td>0<td><tr><td>sleep<td>c3 sleep<td>sleep<td>0<td></table><p>The problem happen at the blackbody line. TC1 awake TC2, as there is only one condition variable.<h1 id=summary-about-using>Summary about using</h1><ul><li>Using mutex with condition variable<li>When checking for a condition in a multi-threaded program, using while loop is always correct.</ul><h1 id=next-problem-which-one-thread-should-be-awoke>Next problem, which one thread should be awoke?</h1><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>int</span><span> bytes_left </span><span style=color:#ff79c6>=</span><span> MAX_HEAP_SIZE;
+</span><span>
+</span><span>cond_t c;
+</span><span>mutex m;
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>allocate</span><span>(</span><span style=font-style:italic;color:#8be9fd>int </span><span style=font-style:italic;color:#ffb86c>size</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#50fa7b>pthread_mutex_lock</span><span>(</span><span style=color:#ff79c6>&</span><span>m);
+</span><span>  </span><span style=color:#ff79c6>while</span><span>(bytes_left </span><span style=color:#ff79c6><</span><span> size) 
+</span><span>    </span><span style=color:#50fa7b>pthread_cond_wait</span><span>(</span><span style=color:#ff79c6>&</span><span>c, </span><span style=color:#ff79c6>&</span><span>m);
+</span><span>  </span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#ff79c6>*</span><span>ptr </span><span style=color:#ff79c6>= ...</span><span>;
+</span><span>  bytes_left </span><span style=color:#ff79c6>-=</span><span> size;
+</span><span>  </span><span style=color:#50fa7b>pthread_mutex_unlock</span><span>(</span><span style=color:#ff79c6>&</span><span>m);
+</span><span>  </span><span style=color:#ff79c6>return</span><span> ptr;
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>free</span><span>(</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>ptr</span><span>, </span><span style=font-style:italic;color:#8be9fd>int </span><span style=font-style:italic;color:#ffb86c>size</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#50fa7b>pthread_mutex_lock</span><span>(</span><span style=color:#ff79c6>&</span><span>m);
+</span><span>  bytes_left </span><span style=color:#ff79c6>+=</span><span> size;
+</span><span>  </span><span style=color:#50fa7b>pthread_cond_signal</span><span>(</span><span style=color:#ff79c6>&</span><span>c); </span><span style=color:#6272a4>// whom to signal???
+</span><span>  </span><span style=color:#50fa7b>pthread_mutex_unlock</span><span>(</span><span style=color:#ff79c6>&</span><span>m);
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=color:#6272a4>// threada allocate(100);
+</span><span style=color:#6272a4>// threadb allocate(10);
+</span><span style=color:#6272a4>// threadc free(50);
+</span></code></pre><p>As comments, threadc free 50 bytes memory, if it awake threadb, the result is correct, but if it awake threada, it's error. The sollution is introduce the <code>pthread_cond_broadcase</code> semantic.<p>In general, if you find that your program only works when you change your signals to broadcasts (but you don't think it should need to), you probably have a buf, fix it!<h1 id=implementation-uing-mutex>Implementation uing mutex</h1><pre class=language-cpp data-lang=cpp style=background:#282a36;color:#f8f8f2><code class=language-cpp data-lang=cpp><span style=font-style:italic;color:#8be9fd>struct </span><span>condition </span><span style=color:#fff>{
+</span><span>  proc next;
+</span><span>  proc prev;
+</span><span>  mutex mx; </span><span style=color:#6272a4>// protect operations on this queue. This semaphore should be spin-lock since it will only be held for very short periods of time
+</span><span style=color:#fff>}</span><span>;
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>wait</span><span>(condition </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>c</span><span>, mutex </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>mx</span><span>) </span><span style=color:#fff>{
+</span><span>  </span><span style=color:#50fa7b>mutex_acquire</span><span>(</span><span style=color:#ff79c6>&</span><span>c</span><span style=color:#ff79c6>-></span><span style=color:#fff>mx</span><span>);
+</span><span>  </span><span style=color:#50fa7b>enqueue</span><span>(</span><span style=color:#ff79c6>&</span><span>c</span><span style=color:#ff79c6>-></span><span style=color:#fff>next</span><span>, </span><span style=color:#ff79c6>&</span><span>c</span><span style=color:#ff79c6>-></span><span style=color:#fff>prev</span><span>, </span><span style=color:#50fa7b>thr_self</span><span>());
+</span><span>  </span><span style=color:#50fa7b>mutex_release</span><span>(</span><span style=color:#ff79c6>&</span><span>c</span><span style=color:#ff79c6>-></span><span style=color:#fff>mx</span><span>);
+</span><span>  
+</span><span>  </span><span style=color:#6272a4>// the suspend and release_mutex() operation should be atomic
+</span><span>  </span><span style=color:#50fa7b>release_mutex</span><span>(mx);
+</span><span>  </span><span style=color:#50fa7b>thr_suspend</span><span>(self);
+</span><span>  
+</span><span>  </span><span style=color:#50fa7b>mutex_acquire</span><span>(mx); </span><span style=color:#6272a4>// woke up -- our turn, get resource lock
+</span><span>  </span><span style=color:#ff79c6>return</span><span>;
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>signal</span><span>(condition </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>c</span><span>) </span><span style=color:#fff>{
+</span><span>  thread_id tid;
+</span><span>  </span><span style=color:#50fa7b>mutex_acquire</span><span>(</span><span style=color:#ff79c6>&</span><span>c</span><span style=color:#ff79c6>-></span><span style=color:#fff>mx</span><span>);
+</span><span>  tid </span><span style=color:#ff79c6>= </span><span style=color:#50fa7b>dequeue</span><span>(</span><span style=color:#ff79c6>&</span><span>c</span><span style=color:#ff79c6>-></span><span style=color:#fff>next</span><span>, </span><span style=color:#ff79c6>&</span><span>c</span><span style=color:#ff79c6>-></span><span style=color:#fff>prev</span><span>);
+</span><span>  </span><span style=color:#50fa7b>mutex_release</span><span>(</span><span style=color:#ff79c6>&</span><span>c</span><span style=color:#ff79c6>-></span><span style=color:#fff>mx</span><span>);
+</span><span>  
+</span><span>  </span><span style=color:#ff79c6>if </span><span>(tid </span><span style=color:#ff79c6>> </span><span style=color:#bd93f9>0</span><span>) </span><span style=color:#fff>{
+</span><span>    </span><span style=color:#50fa7b>thr_continue</span><span>(tid);
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#ff79c6>return</span><span>;
+</span><span style=color:#fff>}
+</span><span>
+</span><span style=font-style:italic;color:#8be9fd>void </span><span style=color:#50fa7b>boradcast</span><span>(condition </span><span style=color:#ff79c6>*</span><span style=font-style:italic;color:#ffb86c>c</span><span>) </span><span style=color:#fff>{
+</span><span>  thread_id tid;
+</span><span>  </span><span style=color:#50fa7b>mutex_acquire</span><span>(</span><span style=color:#ff79c6>&</span><span>c</span><span style=color:#ff79c6>-></span><span style=color:#fff>mx</span><span>);
+</span><span>  </span><span style=color:#ff79c6>while</span><span>(</span><span style=color:#ff79c6>&</span><span>c</span><span style=color:#ff79c6>-></span><span style=color:#fff>next</span><span>) </span><span style=color:#fff>{
+</span><span>    tid </span><span style=color:#ff79c6>= </span><span style=color:#50fa7b>dequeue</span><span>(</span><span style=color:#ff79c6>&</span><span>c</span><span style=color:#ff79c6>-></span><span style=color:#fff>next</span><span>, </span><span style=color:#ff79c6>&</span><span>c</span><span style=color:#ff79c6>-></span><span style=color:#fff>prev</span><span>);
+</span><span>    </span><span style=color:#50fa7b>thr_continue</span><span>(tid);
+</span><span>  </span><span style=color:#fff>}
+</span><span>  </span><span style=color:#50fa7b>mutex_release</span><span>(</span><span style=color:#ff79c6>&</span><span>c</span><span style=color:#ff79c6>-></span><span style=color:#fff>mx</span><span>);
+</span><span style=color:#fff>}
+</span></code></pre><h1 id=reference>reference</h1><ul><li>https://cseweb.ucsd.edu/classes/sp17/cse120-a/applications/ln/lecture7.html</ul></article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'condition variable',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

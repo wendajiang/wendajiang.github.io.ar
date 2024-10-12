@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - ieee1800</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/ieee1800/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2023-04-11T15:02:54+00:00</updated>
+    <id>https://wendajiang.github.io/tags/ieee1800/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Scheduling semantics</title>
+        <published>2023-04-11T15:02:54+00:00</published>
+        <updated>2023-04-11T15:02:54+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/scheduling-semantics/" type="text/html"/>
+        <id>https://wendajiang.github.io/scheduling-semantics/</id>
+        <content type="html">&lt;h1 id=&quot;4-1-general&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#4-1-general&quot; aria-label=&quot;Anchor link for: 4-1-general&quot;&gt;4.1 General&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;event-based simulation scheduling semantics&lt;&#x2F;li&gt;
+&lt;li&gt;system verilog&#x27;s stratified event scheduling algorithm&lt;&#x2F;li&gt;
+&lt;li&gt;determinism and nondeterminism of event ordering&lt;&#x2F;li&gt;
+&lt;li&gt;possible sources of race conditions&lt;&#x2F;li&gt;
+&lt;li&gt;PLI callback control points&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h1 id=&quot;4-2-execution-of-a-hardware-model-and-its-verification-environment&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#4-2-execution-of-a-hardware-model-and-its-verification-environment&quot; aria-label=&quot;Anchor link for: 4-2-execution-of-a-hardware-model-and-its-verification-environment&quot;&gt;4.2 execution of a hardware model and its verification environment&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;The elements that make up the System Verilog language can be used to describe the behavior, at varying levels of abstraction, of electronic hardware. System Verilog is a parallel programming language. The execution of certain language constructs is defined by parallel execution of blocks or processes. It is important to understand what execution order is guaranteed to the user and what execution order is indeterminate.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;4-3-event-simulation&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#4-3-event-simulation&quot; aria-label=&quot;Anchor link for: 4-3-event-simulation&quot;&gt;4.3 Event Simulation&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;SV 语言是离散事件执行模型。根据定义，各个厂商实现的模拟器用户侧行为一致即可，具体实现使用什么算法是自由的。&lt;&#x2F;p&gt;
+&lt;p&gt;SV 描述了相连接的执行线程或者 process。process 就是执行对象，有状态，将输入与输出关联起来。process 是并发调度元素，比如 &lt;code&gt;initial&lt;&#x2F;code&gt; 块。process 包括但不限于 &lt;code&gt;initial, always, always_comb, always_latch, always_ff&lt;&#x2F;code&gt; 块，primitives, continuous assignments; asynchonous tasks; procedural assignment statements.&lt;&#x2F;p&gt;
+&lt;p&gt;net 或者 variable 状态的改变都被认为是 update event。&lt;&#x2F;p&gt;
+&lt;p&gt;process 对于 update event 是敏感的。当 update event 发出，所有相关 process 以一定的顺序 evaluation。 evaluation of process 也是 event，&lt;em&gt;evaluation event&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;evaluation event 也包括 PLI callback&lt;&#x2F;p&gt;
+&lt;p&gt;为了完整支持清晰可预测的交互，一个 time slot 被分为多个区域从而 event 可以被调度为特定顺序执行。这样也可以 properties 和 checkers 让 dut 在一个稳定状态采样。property expression 可以安全计算，tb 也可以没有延时执行，所有这些在可预测的行为中。这个机制也可以支持设计中的非零延时，clock propagation，以及 cyclu-accurate descriptions 的响应。&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;4-4-stratified-event-scheduler&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#4-4-stratified-event-scheduler&quot; aria-label=&quot;Anchor link for: 4-4-stratified-event-scheduler&quot;&gt;4.4 Stratified event scheduler&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;遵守标准的仿真器应该构建随时可动态调度，执行，删除的一系列数据结构。数据结构通常使用时间排序的链表实现，这种数据结构也容易实现二次划分。&lt;&#x2F;p&gt;
+&lt;p&gt;第一次划分是根据时间。每个事件有且仅有一个仿真执行时间。所有可调度的 event 在特定时间都处于一个 time slot。仿真将本 time slot 的 event 执行或者清理完毕后才移动到下一个 time slot。这个过程保证了仿真器时间上不会回退。&lt;&#x2F;p&gt;
+&lt;p&gt;一个 time slot 分为，&lt;strong&gt;划分的目的是在 design 和 testbench code 之间提供可预测的交互&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;preponed&lt;&#x2F;li&gt;
+&lt;li&gt;pre-active&lt;&#x2F;li&gt;
+&lt;li&gt;active&lt;&#x2F;li&gt;
+&lt;li&gt;inactive&lt;&#x2F;li&gt;
+&lt;li&gt;pre-NBA&lt;&#x2F;li&gt;
+&lt;li&gt;NBA&lt;&#x2F;li&gt;
+&lt;li&gt;post-NBA&lt;&#x2F;li&gt;
+&lt;li&gt;pre-Observed&lt;&#x2F;li&gt;
+&lt;li&gt;Observed&lt;&#x2F;li&gt;
+&lt;li&gt;post-Observed&lt;&#x2F;li&gt;
+&lt;li&gt;reactive&lt;&#x2F;li&gt;
+&lt;li&gt;re-inactive&lt;&#x2F;li&gt;
+&lt;li&gt;pre-re-NBA&lt;&#x2F;li&gt;
+&lt;li&gt;re-NBA&lt;&#x2F;li&gt;
+&lt;li&gt;post-re-NBA&lt;&#x2F;li&gt;
+&lt;li&gt;pre-postponed&lt;&#x2F;li&gt;
+&lt;li&gt;postponed&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;可以分为 active region set 和 reactive region set。也可以分为 simulation region 和 PLI region。&lt;&#x2F;p&gt;
+&lt;p&gt;PS. &lt;em&gt;NBA (nonblocking assignment update)&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;scheduling_semantics&#x2F;image-20230411163845834.png&quot; alt=&quot;image-20230411163845834&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;4-5-systemverilog-simulation-reference-algorithm&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#4-5-systemverilog-simulation-reference-algorithm&quot; aria-label=&quot;Anchor link for: 4-5-systemverilog-simulation-reference-algorithm&quot;&gt;4.5 SystemVerilog simulation reference algorithm&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span&gt;execute_simulation &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  T &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  initialize the values of all nets &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;and&lt;&#x2F;span&gt;&lt;span&gt; variables;
+&lt;&#x2F;span&gt;&lt;span&gt;  schedule all initialization events into time zero slot;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;while &lt;&#x2F;span&gt;&lt;span&gt;(some time slot is nonempty) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    move to the first nonempty time slot &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;and&lt;&#x2F;span&gt;&lt;span&gt; set T;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;execute_time_slot&lt;&#x2F;span&gt;&lt;span&gt;(T);
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;execute_time_slot &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;execute_region&lt;&#x2F;span&gt;&lt;span&gt;(Preponed);
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;execute_region&lt;&#x2F;span&gt;&lt;span&gt;(Pre&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span&gt;Active);
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;while&lt;&#x2F;span&gt;&lt;span&gt;(any region in [Active &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;...&lt;&#x2F;span&gt;&lt;span&gt; Pre&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span&gt;Postponed] is nonempty) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;while&lt;&#x2F;span&gt;&lt;span&gt;(any region in [Active &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;...&lt;&#x2F;span&gt;&lt;span&gt; Post&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span&gt;Observed] is nonempty) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;execute_region&lt;&#x2F;span&gt;&lt;span&gt;(Active);
+&lt;&#x2F;span&gt;&lt;span&gt;      R &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; first nonempty region in [Active &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;...&lt;&#x2F;span&gt;&lt;span&gt; Post&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span&gt;Observed];
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(R is nonempty) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;        move events in R to the Active region;
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;} 
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;while&lt;&#x2F;span&gt;&lt;span&gt;(any resion in [Reactive &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;...&lt;&#x2F;span&gt;&lt;span&gt; Post&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span&gt;Re&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span&gt;NBA] is nonempty) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;execute_region&lt;&#x2F;span&gt;&lt;span&gt;(Reactive);
+&lt;&#x2F;span&gt;&lt;span&gt;      R &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; first nonempty region in [Reactive &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;...&lt;&#x2F;span&gt;&lt;span&gt; Post&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span&gt;Re&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span&gt;NBA];
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(R is nonempty) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;        move events in R to the Reactive region;
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(all regions in [Active &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;...&lt;&#x2F;span&gt;&lt;span&gt; Post&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span&gt;Re&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span&gt;NBA] are empty) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;execute_region&lt;&#x2F;span&gt;&lt;span&gt;(Pre&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span&gt;PostPoned);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;execute_region&lt;&#x2F;span&gt;&lt;span&gt;(PostPoned);
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;execute_region &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;while&lt;&#x2F;span&gt;&lt;span&gt;(region is nonempty) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    E &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; any event from region;
+&lt;&#x2F;span&gt;&lt;span&gt;    remove E from the region;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(E is an update event) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;      update the modified object;
+&lt;&#x2F;span&gt;&lt;span&gt;      schedule evaluation event &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span&gt; any process sensitive to the object;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;} &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;else &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; E is an evaluation event
+&lt;&#x2F;span&gt;&lt;span&gt;      evaluate the process associated with the event &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;and&lt;&#x2F;span&gt;&lt;span&gt; possibly schedule further events &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span&gt; execution;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h1 id=&quot;4-6-determinism&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#4-6-determinism&quot; aria-label=&quot;Anchor link for: 4-6-determinism&quot;&gt;4.6 Determinism&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;标准保证了这样的顺序：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;在 begin-end 块中的 stmt 应该按序执行。begin-end 块中的 stmt 可以按需挂起（支持其他 process）&lt;&#x2F;li&gt;
+&lt;li&gt;NBA 应该按序执行&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h1 id=&quot;4-7-nondeterminism&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#4-7-nondeterminism&quot; aria-label=&quot;Anchor link for: 4-7-nondeterminism&quot;&gt;4.7 Nondeterminism&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;不确定性来源&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;active events 可以从 active 或者 reactive event 中取出执行&lt;&#x2F;li&gt;
+&lt;li&gt;没有时间控制块不必作为一个 event 执行。在 procedural stmt 中执行任何时候仿真器可以允许 process 交错执行，这样就是不确定的并且不受用户控制&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;h1 id=&quot;4-8-race-conditions&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#4-8-race-conditions&quot; aria-label=&quot;Anchor link for: 4-8-race-conditions&quot;&gt;4.8 Race conditions&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;pre data-lang=&quot;verilog&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-verilog &quot;&gt;&lt;code class=&quot;language-verilog&quot; data-lang=&quot;verilog&quot;&gt;&lt;span&gt;assign p = q;
+&lt;&#x2F;span&gt;&lt;span&gt;initial begin
+&lt;&#x2F;span&gt;&lt;span&gt;  q = 1;
+&lt;&#x2F;span&gt;&lt;span&gt;  #1 q = 0;
+&lt;&#x2F;span&gt;&lt;span&gt;  $display(p);
+&lt;&#x2F;span&gt;&lt;span&gt;end
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;输出1 0 都对。&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;4-9-scheduling-implication-of-assignments&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#4-9-scheduling-implication-of-assignments&quot; aria-label=&quot;Anchor link for: 4-9-scheduling-implication-of-assignments&quot;&gt;4.9 Scheduling implication of assignments&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;h1 id=&quot;4-10-pli-callback-control-points&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#4-10-pli-callback-control-points&quot; aria-label=&quot;Anchor link for: 4-10-pli-callback-control-points&quot;&gt;4.10 PLI callback control points&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;两种 PLI cb：特定事件出现时执行；注册为 one-shot evaluation event&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Callback&lt;&#x2F;th&gt;&lt;th&gt;Event Region&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;cbAfterDelay&lt;&#x2F;td&gt;&lt;td&gt;Pre-Active&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;cbNextSimTime&lt;&#x2F;td&gt;&lt;td&gt;Pre-Active&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;cbReadWriteSynch&lt;&#x2F;td&gt;&lt;td&gt;Pre-NBA or Post-NBA&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;cbAtStartOfSimTime&lt;&#x2F;td&gt;&lt;td&gt;Pre-Active&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;cbNBASynch&lt;&#x2F;td&gt;&lt;td&gt;Pre-NBA&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;CbAtEndOfSimTime&lt;&#x2F;td&gt;&lt;td&gt;Pre-Postponed&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;cbReadOnlySynch&lt;&#x2F;td&gt;&lt;td&gt;PostPoned&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>DPI C Layer</title>
+        <published>2022-09-14T20:49:31+00:00</published>
+        <updated>2022-09-14T20:49:31+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/ieee-dpi-c-layer/" type="text/html"/>
+        <id>https://wendajiang.github.io/ieee-dpi-c-layer/</id>
+        <content type="html">&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;svdpi.h&quot;&gt;svdpi.h&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;overview&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#overview&quot; aria-label=&quot;Anchor link for: overview&quot;&gt;Overview&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;h1 id=&quot;naming-conventions&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#naming-conventions&quot; aria-label=&quot;Anchor link for: naming-conventions&quot;&gt;Naming Conventions&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;h1 id=&quot;portablility&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#portablility&quot; aria-label=&quot;Anchor link for: portablility&quot;&gt;Portablility&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;h1 id=&quot;semantic-constrints&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#semantic-constrints&quot; aria-label=&quot;Anchor link for: semantic-constrints&quot;&gt;Semantic constrints&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;以上基本与 ieee_1800_2017 描述相似&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;data-types&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#data-types&quot; aria-label=&quot;Anchor link for: data-types&quot;&gt;Data types&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;h3 id=&quot;data-representation&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#data-representation&quot; aria-label=&quot;Anchor link for: data-representation&quot;&gt;Data representation&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;DPI 在 SV 数据类型表征上加入了如下约束：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;unpakced 的 SV 类型和不包含 packed 元素的类型兼容 C 表征&lt;&#x2F;li&gt;
+&lt;li&gt;基本整数和实数类型在&lt;a href=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;ieee-dpi-c-layer&#x2F;#basic-types&quot;&gt;这里&lt;&#x2F;a&gt;定义&lt;&#x2F;li&gt;
+&lt;li&gt;packed 类型，包括 time ，整数和用户定义类型，使用&lt;a href=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;ieee-dpi-c-layer&#x2F;#mapping-between-sv-ranges-and-c-ranges&quot;&gt;这里&lt;&#x2F;a&gt; 定义的规范形式&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;ieee_dpi_c_layer&#x2F;image-20220913185228713.png&quot; alt=&quot;image-20220913185228713&quot; &#x2F;&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;嵌入 structure 的 unpacked array 与 C 的 layout 兼容。类似的标准 array 作为实参传递给定长形参也是可以的&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;ieee_dpi_c_layer&#x2F;image-20220913185517604.png&quot; alt=&quot;image-20220913185517604&quot; &#x2F;&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;ieee_dpi_c_layer&#x2F;image-20220913185541864.png&quot; alt=&quot;image-20220913185541864&quot; &#x2F;&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;basic-types&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#basic-types&quot; aria-label=&quot;Anchor link for: basic-types&quot;&gt;Basic types&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;SV type&lt;&#x2F;th&gt;&lt;th&gt;C type&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;byte&lt;&#x2F;td&gt;&lt;td&gt;char&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;shortint&lt;&#x2F;td&gt;&lt;td&gt;short int&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;int&lt;&#x2F;td&gt;&lt;td&gt;int&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;longint&lt;&#x2F;td&gt;&lt;td&gt;long long&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;real&lt;&#x2F;td&gt;&lt;td&gt;double&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;shortreal&lt;&#x2F;td&gt;&lt;td&gt;float&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;chandle&lt;&#x2F;td&gt;&lt;td&gt;void *&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;string&lt;&#x2F;td&gt;&lt;td&gt;const char *&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;$$bit^a$$&lt;&#x2F;td&gt;&lt;td&gt;unsigned char&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;$$logic^a&#x2F;reg$$&lt;&#x2F;td&gt;&lt;td&gt;unsigned char&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;input 模式的参数 byte unsigned 和 shorting unsigned 不同于 bit[7:0] bit[15:0] ，前面使用 C 的 unsigned char 和 unsigned short ，后面的使用 svBitVecVal 类型。类似的等效性也存在于 output 和 inout 模式，但是是通过 C 的对应指针传递。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;normialized-and-linearized-ranges&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#normialized-and-linearized-ranges&quot; aria-label=&quot;Anchor link for: normialized-and-linearized-ranges&quot;&gt;Normialized and linearized ranges&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;packed array 是一维的；unpacked 是多维的。归一化 ranges 意味着 [n - 1:0] 索引 packed array，[0:n - 1] 索引 unpacked array。除了 open array 的 unpacked 部分，array 参数都适用归一化。标准 packed array 表示也使用归一化索引。&lt;&#x2F;p&gt;
+&lt;p&gt;线性化多维 SV array，表示 (i, j, k) 展开成 i * j * k 的一维。一维数组与多维的具有相同的内存布局。用户的 C 代码引用线性数组元素时可以使用原始维度。比如 SV packed 2-state 数组维度 (i, j, k) 对应的 &lt;code&gt;myArray[l][m][n]&lt;&#x2F;code&gt;（归一化之后的） 在 C 代码中使用 &lt;code&gt;bit(n + (m * k) + (l * j * k))&lt;&#x2F;code&gt; 访问。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;mapping-between-sv-ranges-and-c-ranges&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#mapping-between-sv-ranges-and-c-ranges&quot; aria-label=&quot;Anchor link for: mapping-between-sv-ranges-and-c-ranges&quot;&gt;Mapping between SV ranges and C ranges&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;ieee_dpi_c_layer&#x2F;image-20220914192359417.png&quot; alt=&quot;image-20220914192359417&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;比如 &lt;code&gt;logic[2:3][1:3][2:0] b[1:10][31:0]&lt;&#x2F;code&gt; 的归一化版本 &lt;code&gt;logic[17:0] b[0:9][0:31]&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;canonical-representation-of-packed-arrays&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#canonical-representation-of-packed-arrays&quot; aria-label=&quot;Anchor link for: canonical-representation-of-packed-arrays&quot;&gt;Canonical representation of packed arrays&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;DPI 定义了 canonical 的 packed 2-state 表示 &lt;code&gt;svBitVecVal&lt;&#x2F;code&gt; 和 4-state 数组 &lt;code&gt;svLogicVecVal&lt;&#x2F;code&gt; &lt;&#x2F;p&gt;
+&lt;h1 id=&quot;argument-passing-modes&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#argument-passing-modes&quot; aria-label=&quot;Anchor link for: argument-passing-modes&quot;&gt;Argument passing modes&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;SV exported  的函数和任务不能有 open array 参数。&lt;&#x2F;p&gt;
+&lt;p&gt;small value 都是传值。函数返回值也是传值。&lt;&#x2F;p&gt;
+&lt;p&gt;按引用传递就是指针。caller 需要负责分配内存空间。比如 C 调用 SV，需要先申请好内存，然后指针传递。&lt;&#x2F;p&gt;
+&lt;p&gt;passing by handle -- open array 没有尺寸的数组。handle 的实现依赖工具，对用户是透明的。handle 通常使用 &lt;code&gt;void *&lt;&#x2F;code&gt; 表示 (&lt;code&gt;svOpenArrayHandle&lt;&#x2F;code&gt;)。handle 总是使用 const 修饰。&lt;&#x2F;p&gt;
+&lt;p&gt;input 参数在 C 中也应该总是 const 修饰的，small value 除外使用引用传递， small value 如下&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;byte, shortin, int, longint, real, shortreal&lt;&#x2F;li&gt;
+&lt;li&gt;scalar bit and logic&lt;&#x2F;li&gt;
+&lt;li&gt;chandle, string&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;函数返回值只能是 small value&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;string-can-shu&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#string-can-shu&quot; aria-label=&quot;Anchor link for: string-can-shu&quot;&gt;String 参数&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;string 从 SV 传递到 C 中，内存布局应该兼容 C 的，包括尾部的 &lt;code&gt;&#x27;\0&#x27;&lt;&#x2F;code&gt; 。类似 C 传递到 SV 也应该确保 null-terminated。&lt;&#x2F;p&gt;
+&lt;p&gt;string 参数的方向适用于 string 的指针，而不是构成字符串的字符&lt;&#x2F;p&gt;
+&lt;p&gt;对于 imported 的函数和任务：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;input 模式的 string 可以是 SV 提供的指针访问，并且不能在 C 代码中释放。在 C 的应用中不能有字符串存储声明周期的假设。并且用户（C 代码）不能修改&lt;&#x2F;li&gt;
+&lt;li&gt;output 模式的 string 开始没有意义。通过 &lt;code&gt;const char **&lt;&#x2F;code&gt; 方式提供。等回到  SV 侧，DPI 应用应该已经写入了有效值进去 &lt;code&gt;const char * 地址指向的 const char ** 的值&lt;&#x2F;code&gt;。SV 不能释放这个地址的内容&lt;&#x2F;li&gt;
+&lt;li&gt;inout 模式的 string 开始就有意义。string 的存储不应该被 DPI C 的应用释放。也不应该有生命周期的假设。任何对于 string 的修改应该由 C 程序提供新的地址，SV 不能修改和释放。如果修改了，SV 需要复制到自己的内存空间&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;对于 exported 的函数和任务：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;input 模式的 string 通过 &lt;code&gt;const char *&lt;&#x2F;code&gt; 传递给 SV。SV 只读。&lt;&#x2F;li&gt;
+&lt;li&gt;output 模式的 string 通过 &lt;code&gt;const char ** &lt;&#x2F;code&gt;表示。没有初始值。SV 会写一个有效地址进去，但是不保证生命周期，如果 C 中要用，需要复制数据到自己的内存空间。&lt;&#x2F;li&gt;
+&lt;li&gt;inout 模式的 string 也是 &lt;code&gt;const char **&lt;&#x2F;code&gt;。SV 只读用户的 string 空间，也不会试图释放。如果 SV 需要修改，就会对地址重新赋值。用户也不应该有生命周期的假设，如果需要使用，要拷贝自己的空间。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h1 id=&quot;context-tasks-and-functinos&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#context-tasks-and-functinos&quot; aria-label=&quot;Anchor link for: context-tasks-and-functinos&quot;&gt;Context tasks and functinos&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;略&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;include-files&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#include-files&quot; aria-label=&quot;Anchor link for: include-files&quot;&gt;include files&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;头文件解析：&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;scalars-of-type-bit-and-logic&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#scalars-of-type-bit-and-logic&quot; aria-label=&quot;Anchor link for: scalars-of-type-bit-and-logic&quot;&gt;Scalars of type bit and logic&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#define &lt;&#x2F;span&gt;&lt;span&gt;sv_0 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#define &lt;&#x2F;span&gt;&lt;span&gt;sv_1 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#define &lt;&#x2F;span&gt;&lt;span&gt;sv_z &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#define &lt;&#x2F;span&gt;&lt;span&gt;sv_x &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;3
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typedef unsigned char &lt;&#x2F;span&gt;&lt;span&gt;svScalar;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typedef&lt;&#x2F;span&gt;&lt;span&gt; svScalar svBit;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typedef&lt;&#x2F;span&gt;&lt;span&gt; svScalar svLogic;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;canonical-representation-of-packed-arrays-1&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#canonical-representation-of-packed-arrays-1&quot; aria-label=&quot;Anchor link for: canonical-representation-of-packed-arrays-1&quot;&gt;Canonical representation of packed arrays&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#ifndef&lt;&#x2F;span&gt;&lt;span&gt; VPI_VECVAL
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#define &lt;&#x2F;span&gt;&lt;span&gt;VPI_VECVAL
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typedef struct&lt;&#x2F;span&gt;&lt;span&gt; t_vpi_vecval &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;uint32_t&lt;&#x2F;span&gt;&lt;span&gt; aval;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;uint32_t&lt;&#x2F;span&gt;&lt;span&gt; bval;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ffffff;&quot;&gt;}&lt;&#x2F;span&gt;&lt;span&gt; s_vpi_vecval, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;p_vpi_vecval;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#endif
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;* (a chunk of) packed logic array *&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typedef&lt;&#x2F;span&gt;&lt;span&gt; s_vpi_vecval svLogicVecVal;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;* (a chunk of) packed bit array *&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typedef &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;uint32_t &lt;&#x2F;span&gt;&lt;span&gt;svBitVecVal;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;* Number of chunks required to represent the given width packed array *&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#define &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;SV_PACKED_DATA_NELEMS&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;WIDTH&lt;&#x2F;span&gt;&lt;span&gt;) (((WIDTH) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;31&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;5&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;*
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt; * Because the contents of the unused bits is undetermined,
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt; * the following macros can be handy.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt; *&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#define &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;SV_MASK&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;N&lt;&#x2F;span&gt;&lt;span&gt;) (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;~&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;lt;&amp;lt; &lt;&#x2F;span&gt;&lt;span&gt;(N)))
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#define &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;SV_GET_UNSIGNED_BITS&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;VALUE&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;N&lt;&#x2F;span&gt;&lt;span&gt;) \
+&lt;&#x2F;span&gt;&lt;span&gt;    ((N) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;32 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;? &lt;&#x2F;span&gt;&lt;span&gt;(VALUE) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;((VALUE)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;SV_MASK&lt;&#x2F;span&gt;&lt;span&gt;(N)))
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;#define &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;SV_GET_SIGNED_BITS&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;VALUE&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#ffb86c;&quot;&gt;N&lt;&#x2F;span&gt;&lt;span&gt;)                               \
+&lt;&#x2F;span&gt;&lt;span&gt;    ((N) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;32 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;? &lt;&#x2F;span&gt;&lt;span&gt;(VALUE)                                           \
+&lt;&#x2F;span&gt;&lt;span&gt;               &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;(((VALUE) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp; &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;lt;&amp;lt; &lt;&#x2F;span&gt;&lt;span&gt;(N))) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;? &lt;&#x2F;span&gt;&lt;span&gt;((VALUE) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;| ~&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;SV_MASK&lt;&#x2F;span&gt;&lt;span&gt;(N)) \
+&lt;&#x2F;span&gt;&lt;span&gt;                                         &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span&gt;((VALUE)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;SV_MASK&lt;&#x2F;span&gt;&lt;span&gt;(N))))
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;implementation-dependent-representation&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#implementation-dependent-representation&quot; aria-label=&quot;Anchor link for: implementation-dependent-representation&quot;&gt;Implementation-dependent representation&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;svDpiVersion&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typedef void&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;svCdope;
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;typedef void&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;svOpenArrayHandle;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h1 id=&quot;arrays&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#arrays&quot; aria-label=&quot;Anchor link for: arrays&quot;&gt;Arrays&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;略&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;open-arrays&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#open-arrays&quot; aria-label=&quot;Anchor link for: open-arrays&quot;&gt;Open arrays&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;如果数组元素复合 C 的布局，不需要辅助函数，可以直接通过指针访问。【译者注：下面的辅助函数都是 canonical representation 访问，实现也是根据 spec 实现的，对用户透明。】&lt;&#x2F;p&gt;
+&lt;p&gt;辅助函数查询数组的范围。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;ieee_dpi_c_layer&#x2F;image-20220914200459670.png&quot; alt=&quot;image-20220914200459670&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;还有辅助函数可以从 open array 中复制数据。&lt;&#x2F;p&gt;
+&lt;p&gt;访问数据辅助函数&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;ieee_dpi_c_layer&#x2F;image-20220914200639050.png&quot; alt=&quot;image-20220914200639050&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;sv3-1a-compatible-access-to-packed-data-deprecated-functionallity&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#sv3-1a-compatible-access-to-packed-data-deprecated-functionallity&quot; aria-label=&quot;Anchor link for: sv3-1a-compatible-access-to-packed-data-deprecated-functionallity&quot;&gt;SV3.1a-compatible access to packed data(deprecated functionallity)&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;略&lt;&#x2F;p&gt;
+</content>
+    </entry>
+    <entry xml:lang="en">
+        <title>IEEE Std 1800-2017 DPI</title>
+        <published>2022-09-08T10:54:17+00:00</published>
+        <updated>2022-09-08T10:54:17+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/ieee-1800-2017-chapter35/" type="text/html"/>
+        <id>https://wendajiang.github.io/ieee-1800-2017-chapter35/</id>
+        <content type="html">&lt;h2 id=&quot;35-1-general&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-1-general&quot; aria-label=&quot;Anchor link for: 35-1-general&quot;&gt;35.1 General&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;按照下面的方面来描述：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Direct programming interface (DPI) tasks and functions&lt;&#x2F;li&gt;
+&lt;li&gt;DPI layers&lt;&#x2F;li&gt;
+&lt;li&gt;Importing and exporting functions&lt;&#x2F;li&gt;
+&lt;li&gt;Importing and exporting tasks&lt;&#x2F;li&gt;
+&lt;li&gt;Disabling DPI tasks and functions&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;35-2-overview&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-2-overview&quot; aria-label=&quot;Anchor link for: 35-2-overview&quot;&gt;35.2 Overview&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;本节强调 DPI 并提供了 SystemVerilog 接口层面的详细描述。C 层面在&lt;a href=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;ieee-dpi-c-layer&quot;&gt;附录&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;DPI 是 SV 和其他语言的接口。包含了两个部分：SV 层和其他语言层，这两个部分是分离的。实际上，哪种语言在使用 DPI 对于 SV 来说是透明无关的。SV 的编译器和其他语言的编译器都不需要分析对方的代码。不同的编译语言都可以支持 DPI。不过，现在 SV 只定义了 C 语言的接口。&lt;&#x2F;p&gt;
+&lt;p&gt;动机来自两个方面。接口的方法论要求应该可以允许构建异构系统（design 或者 testbench）。另一方面，也有一些实际需要要连接已经存在的代码，通常使用 C&#x2F;C++ 写成，而不需要 VPI 的知识和开销。&lt;&#x2F;p&gt;
+&lt;p&gt;DPI 依据黑箱原则：组件的规范和实现分离，每个组件的实现对系统其他部分是透明的。因此，真实编程语言中的实现也是透明的，即使目前只有 C 语言的语法支持。其他语言和 SV 分离基于使用函数作为 SV unit 的自然封装。总的来说，任何函数都可以看作黑盒，并以透明的方式在 SV 或者其他语言中实现，并且不需要修改调用方。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;35-2-1-tasks-and-functions&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-2-1-tasks-and-functions&quot; aria-label=&quot;Anchor link for: 35-2-1-tasks-and-functions&quot;&gt;35.2.1 Tasks and functions&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;DPI 允许两侧的语言直接进行调用。需要强调的是，在外部语言实现，在 SV 中调用的函数称为 &lt;em&gt;imported function&lt;&#x2F;em&gt;。在外部语言中调用的 SV 的函数称为 &lt;em&gt;exported functions&lt;&#x2F;em&gt;。DPI 允许通过函数参数和结果在两种语言之间传递，没有内部开销。&lt;&#x2F;p&gt;
+&lt;p&gt;也可以通过执行任务跨越语言边界。外部语言可以调用 SV task，SV 也可以调用 imported task。imported task 有 SV task 相同的语义：没有返回值，会消耗模拟时间。&lt;&#x2F;p&gt;
+&lt;p&gt;在 DPI 中使用的所有函数都假定会立刻执行完不消耗模拟时间，就像 SV 的函数一样。DPI 除了通过数据交换和显式传输的控制，没有提供同步的手段。&lt;&#x2F;p&gt;
+&lt;p&gt;每个 imported subroutine 需要被声明。而且这个声明相当于 SV 的实现，当然实际上是在外部语言实现的。同样的外部 subroutine 可以用来实现多个 SV 的 task 和 function（这对于相同的 subroutine 提供不同的默认参数很有用），但是一个给定的 name 在 SV 的一个 scope 只能使用一次。Imported 函数可以有零个或者多个参数（formal &lt;strong&gt;input, output, inout&lt;&#x2F;strong&gt;）。Imported 任务总是没有返回值，所以可以用在 statement context。&lt;&#x2F;p&gt;
+&lt;p&gt;DPI 完全基于 SV 结构构造的。imported 函数使用上就像 SV 函数一样。除了少数功能，调用起来一样。这可以有效减少学习曲线。类似的语义相似性也存在于 imported 任务和 SV 任务。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;35-2-2-data-types&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-2-2-data-types&quot; aria-label=&quot;Anchor link for: 35-2-2-data-types&quot;&gt;35.2.2 Data types&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;SV 的数据类型是唯一可以跨越语言边界的数据类型。不能直接使用其他语言中的数据类型。SV 中丰富的数据类型子集都可以用于 imported 和 exported 函数参数，当然也有一些限制和一些符号扩展。函数返回类型只限于 small values，但是请参考&lt;a href=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;ieee-1800-2017-chapter35&#x2F;#35-5-5-function-result&quot;&gt;35.5.5&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;imported 函数的参数可以是 open arrays，参考&lt;a href=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;ieee-1800-2017-chapter35&#x2F;#35-5-6-1-open-arrays&quot;&gt;35.5.6.1&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;35-2-2-1-data-representation&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-2-2-1-data-representation&quot; aria-label=&quot;Anchor link for: 35-2-2-1-data-representation&quot;&gt;35.2.2.1 Data representation&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;DPI 并没有在 SV 的数据类型实现增加任何约束。优化 representation 依赖平台。2- or 4-state packed structrues 和 arrays 的 layout 实现依赖平台。&lt;&#x2F;p&gt;
+&lt;p&gt;4-state values, structures, arrays 的 representation 和 layout 与 SV 语义无关，并且只作用于外部语言的接口。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;35-3-two-layers-of-dpi&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-3-two-layers-of-dpi&quot; aria-label=&quot;Anchor link for: 35-3-two-layers-of-dpi&quot;&gt;35.3 Two layers of DPI&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;DPI 包含了两个部分：SV 和外部语言。SV 只要求实现支持 C 的协议和链接。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;35-3-1-dpi-systemverilog-layer&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-3-1-dpi-systemverilog-layer&quot; aria-label=&quot;Anchor link for: 35-3-1-dpi-systemverilog-layer&quot;&gt;35.3.1 DPI SystemVerilog layer&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;DPI 的 SV 侧不依赖外部语言。特别的是，外部语言的函数调用协议和参数传递机制对 SV 是透明的。无论外部代码如何 SV 代码看起来都应该相同。SV 侧的接口语义应该与外部语言的接口语义独立。&lt;&#x2F;p&gt;
+&lt;p&gt;本章不会描述完整的接口规范，只是描述 SV 侧接口的功能，语义和语法。另一半外部接口侧，参数传递机制，如何从外部代码访问到参数，请参考&lt;a href=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;ieee-dpi-c-layer&quot;&gt;附录&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;35-3-2-dpi-foreign-language-layer&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-3-2-dpi-foreign-language-layer&quot; aria-label=&quot;Anchor link for: 35-3-2-dpi-foreign-language-layer&quot;&gt;35.3.2 DPI foreign language layer&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;外部语言接口侧应该规定参数如何传递，如何从外部代码被访问，SV 规范的数据类型如何被表征，如何与预定义的类似 C 的类型转换。&lt;&#x2F;p&gt;
+&lt;p&gt;被允许的参数数据类型和返回类型基本就是 SV 的数据类型（加一些限制和 open arrays 的额外扩展）。用户负责在外部代码中的参数使用 SV 等效的数据类型。像是 SV 编译器这种软件工具可以方便地生成正确 SV 的外部代码的函数头（头文件声明）。&lt;&#x2F;p&gt;
+&lt;p&gt;SV 编译器或者模拟器应该使用外部语言使用的函数调用协议和参数传递机制生成。相同的 SV 代码应该可以兼容不同的外部语言，尽管数据方法访问在不同语言中不同。&lt;a href=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;ieee-dpi-c-layer&quot;&gt;附录&lt;&#x2F;a&gt;定义了 C 语言的外部语言规范。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;35-4-global-name-space-of-imported-and-exported-functions&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-4-global-name-space-of-imported-and-exported-functions&quot; aria-label=&quot;Anchor link for: 35-4-global-name-space-of-imported-and-exported-functions&quot;&gt;35.4 Global name space of imported and exported functions&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;每个 imported 的 subroutine 都应该对应一个全局符号。类似的，每个 exported 定义了一个全局符号。因此 SV 的 imported 和 exported 的函数和任务都自己的全局命名空间在链接中，不同于编译单元的 scope 命名空间。全局符号命名应该是唯一的，并且与 C 语言的命名保持一致（ABI 兼容）；尤其是，名字应该以字母或者下划线开头，后面可以是数字或者字母或者下划线。但是 exported 和 imported 的任务和函数应该可以使用 local 的 SV 命名声明，它们允许用户指定一个全局名字。如果与 SV 的关键字和保留字冲突，应该使用 escaped identifier 形式。&lt;code&gt;\&lt;&#x2F;code&gt; 反斜线符号和结尾空白应该被 SV 工具忽略。最后的链接符号应该符合 C 标准。如果全局命名没有被显式指定，就等于 SV 的 subroutine 命名。比如：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;sv&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-sv &quot;&gt;&lt;code class=&quot;language-sv&quot; data-lang=&quot;sv&quot;&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;export &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;DPI-C&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt; f_plus &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;= function&lt;&#x2F;span&gt;&lt;span&gt; \f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; &amp;quot;f+&amp;quot; exported as &amp;quot;f_plus&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;export &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;DPI-C&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;f&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; &amp;quot;f&amp;quot; exported under its own name
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;DPI-C&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt; init_1 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; function&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt; void&lt;&#x2F;span&gt;&lt;span&gt; \init[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;] (); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; &amp;quot;init_1&amp;quot; is a linkage name
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;DPI-C&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt; \&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;begin =&lt;&#x2F;span&gt;&lt;span&gt; funciton&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#8be9fd;&quot;&gt; void&lt;&#x2F;span&gt;&lt;span&gt; \init[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;] (); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#6272a4;&quot;&gt;&#x2F;&#x2F; &amp;quot;begin&amp;quot; is a linkage name
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;相同的全局 subroutine 可以被多个在不同 scope 的 import 声明引用（参考&lt;a href=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;ieee-1800-2017-chapter35&#x2F;#35-5-4-import-declarations&quot;&gt;35.5.4&lt;&#x2F;a&gt;）&lt;&#x2F;p&gt;
+&lt;p&gt;多个 export 声明也可以使用同一个 C 的标识符，隐式或者显式，在不同的 scope 使用同样的类型声明（&lt;a href=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;ieee-1800-2017-chapter35&#x2F;#35-5-4-import-declarations&quot;&gt;35.5.4&lt;&#x2F;a&gt; 中定义的 imported 任务和函数）。多个 export 声明使用同一个 C 标识符在同样的 scope 是被禁止的。&lt;&#x2F;p&gt;
+&lt;p&gt;【略：deprecated &amp;quot;DPI&amp;quot; 版本】&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;35-5-imported-tasks-and-functions&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-5-imported-tasks-and-functions&quot; aria-label=&quot;Anchor link for: 35-5-imported-tasks-and-functions&quot;&gt;35.5 Imported tasks and functions&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;imported 的函数类似 SV 本身的函数&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;35-5-1-required-properties-of-imported-tasks-and-functions-semantic-constraints&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-5-1-required-properties-of-imported-tasks-and-functions-semantic-constraints&quot; aria-label=&quot;Anchor link for: 35-5-1-required-properties-of-imported-tasks-and-functions-semantic-constraints&quot;&gt;35.5.1 Required properties of imported tasks and functions - semantic constraints&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;本小节定义 imported subroutine 的语义约束。有些限制是 subroutine 共同的。有些依赖特定的 properties &lt;code&gt;pure (35.5.2), context(35.5.3)&lt;&#x2F;code&gt;。SV 编译器无法验证这些限制；如果有些限制没有被满足，这些 imported subroutine 调用就会有不可预知的影响。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;35-5-1-1-instant-completion-of-imported-functions&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-5-1-1-instant-completion-of-imported-functions&quot; aria-label=&quot;Anchor link for: 35-5-1-1-instant-completion-of-imported-functions&quot;&gt;35.5.1.1 Instant completion of imported functions&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;imported 函数不消耗模拟时间。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;35-5-1-2-input-output-and-inout-arguments&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-5-1-2-input-output-and-inout-arguments&quot; aria-label=&quot;Anchor link for: 35-5-1-2-input-output-and-inout-arguments&quot;&gt;35.5.1.2 input, output and inout arguments&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;imported 函数可以有 input, output, inout 参数。input 参数不可被修改。&lt;&#x2F;p&gt;
+&lt;p&gt;imported 函数不可以对 output 参数的初始值有什么假设，是未定义的。&lt;&#x2F;p&gt;
+&lt;p&gt;imported 函数可以访问 inout 参数的初始值，inout 参数的修改是外部可见的。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;35-5-1-3-special-properties-pure-and-context&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-5-1-3-special-properties-pure-and-context&quot; aria-label=&quot;Anchor link for: 35-5-1-3-special-properties-pure-and-context&quot;&gt;35.5.1.3 Special properties pure and context&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;一个结果严格依赖 input 参数的函数，并且没有 side effect 可以看作 &lt;code&gt;pure&lt;&#x2F;code&gt;。这通常可以更好的优化，并且在模拟中有很好的性能。35.5.2 详细说明了 &lt;code&gt;pure&lt;&#x2F;code&gt; 函数应该遵守的规则。imported 任务不能被声明为 &lt;code&gt;pure&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;imported subroutine 会调用 exported subroutines 或者反问 SV 的数据对象而不是参数（比如通过 VPI）应该称为 &lt;code&gt;context&lt;&#x2F;code&gt;。对 &lt;code&gt;context&lt;&#x2F;code&gt; 函数和任务的调用会影响 SV 编译器的优化；因此当不必要的 &lt;code&gt;context&lt;&#x2F;code&gt; 被指定会影响模拟性能。没有声明 &lt;code&gt;context&lt;&#x2F;code&gt; 的 subroutine 对于 VPI 的调用或者 exported SV subroutine 的调用会导致未定义行为，非常危险。35.5.3 详细说明了非 &lt;code&gt;context&lt;&#x2F;code&gt; subroutine 应该遵守的限制。&lt;&#x2F;p&gt;
+&lt;p&gt;如果 &lt;code&gt;pure, context&lt;&#x2F;code&gt; 都没有声明，imported subroutine 不应该访问 SV 数据对象，并且也可以写入文件或者修改全局变量（施加 side effect）。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;35-5-1-4-memory-management&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-5-1-4-memory-management&quot; aria-label=&quot;Anchor link for: 35-5-1-4-memory-management&quot;&gt;35.5.1.4 Memory management&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;外部代码和 SV 代码分配和持有的内存空间是分开的。自己负责自己分配的空间。尤其是，imported 函数不应该释放 SV 代码申请的内存反之亦然。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;35-5-1-5-reentrancy-of-imported-tasks&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-5-1-5-reentrancy-of-imported-tasks&quot; aria-label=&quot;Anchor link for: 35-5-1-5-reentrancy-of-imported-tasks&quot;&gt;35.5.1.5 Reentrancy of imported tasks&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;对于 imported 的调用会导致当前执行线程的挂起，这发生于 imported 任务调用了一个 exported 任务，exported 任务中执行了延迟操作，事件控制，或者等待语句。因此 imported 任务的 C 代码可能在多个执行线程中活跃。C 开发者应该考虑可重入性。比如使用静态变量，确保使用了线程安全的 C 标准库 API。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;35-5-1-6-c-exceptions&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-5-1-6-c-exceptions&quot; aria-label=&quot;Anchor link for: 35-5-1-6-c-exceptions&quot;&gt;35.5.1.6 C++ exceptions&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;可能会使用 C++ 完成 imported 函数和任务，即使在接口上遵循了 C 约束。如果使用 C++，异常不能传递出来。如果跨语言边界存在异常会导致未定义行为。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;35-5-2-pure-functions&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-5-2-pure-functions&quot; aria-label=&quot;Anchor link for: 35-5-2-pure-functions&quot;&gt;35.5.2 Pure functions&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;pure&lt;&#x2F;code&gt;函数如果它的结果不需要，或者之前有相同参数的调用，可以被消除。只有有返回值，并且没有 ouput 和 inout 参数的函数可以被声明为 &lt;code&gt;pure&lt;&#x2F;code&gt;。&lt;code&gt;pure&lt;&#x2F;code&gt; 函数的返回值只依赖于 input 参数，没有 side effect。这种函数的调用可能被 SV 编译器优化掉或者使用之前的值代替。&lt;&#x2F;p&gt;
+&lt;p&gt;特别的是，&lt;code&gt;pure&lt;&#x2F;code&gt;函数假定不会直接或者间接执行以下操作：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;文件操作&lt;&#x2F;li&gt;
+&lt;li&gt;读写操作，包括 I&#x2F;O，环境变量，操作系统或者其他进程的对象，共享内存，socket 等&lt;&#x2F;li&gt;
+&lt;li&gt;persistent 数据的访问，比如全局或者静态变量。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;如果 &lt;code&gt;pure&lt;&#x2F;code&gt;没有遵守这些约束，SV 编译器的优化会导致不可预测的行为。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;35-5-3-context-tasks-and-functions&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-5-3-context-tasks-and-functions&quot; aria-label=&quot;Anchor link for: 35-5-3-context-tasks-and-functions&quot;&gt;35.5.3 Context tasks and functions&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;有些 DPI imported subroutines 需要知道调用它们的上下文。需要特殊的调用来支持这种上下文；比如，一个关联“当前实例”的内部变量需要被赋值。为了避免不必要的开销，SV 代码中 imported subroutine 的特殊调用只会标签 &lt;code&gt;context&lt;&#x2F;code&gt; 发生。&lt;&#x2F;p&gt;
+&lt;p&gt;DPI export 任务和函数必须知道被调用的时机，包括被 import 调用的 SV 上下文。当 import 调用 export 之前先调用了 &lt;code&gt;svSetScope&lt;&#x2F;code&gt; ，显式设置了上下文。否则，上下文就是调用处实例 scope 的上下文。因为不同实例 scope 的 import 可以 export 相同的 subroutine，在 elaboration 之后可能存在多个 export 实例。在进行 &lt;code&gt;svSetScope&lt;&#x2F;code&gt; 之前，这些 export 实例有不同的上下文反映不同的 imported 调用者实例 scope。&lt;&#x2F;p&gt;
+&lt;p&gt;通过外部语言支持的一些其他接口（比如 VPI 回调）的 subroutine ，也可以调用 &lt;code&gt;svSetScope&lt;&#x2F;code&gt; 或者 DPI scope 相关的 API。外部语言 subroutine 也可以调用 &lt;code&gt;svSetScope&lt;&#x2F;code&gt; 指定的上下文中的 export subroutine。DPI scope 相关的 API 行为和 DPI export subroutine 的请求由模拟器定义，超出了 DPI 定义的 scope。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;call chains&lt;&#x2F;em&gt; 的概念对于理解 &lt;em&gt;context&lt;&#x2F;em&gt; 如何在 SV 和外部语言之间控制转换很有帮助。为了描述清晰，使用 &lt;em&gt;inter-language call&lt;&#x2F;em&gt; 表示跨语言调用，&lt;em&gt;intra-language call&lt;&#x2F;em&gt; 在 SV 或者外部语言内部的调用，不跨语言。&lt;&#x2F;p&gt;
+&lt;p&gt;DPI import 调用链是 inter-language 调用链，从 SV 到外部语言定义的 subroutine。SV 的调用开始点称为调用链的根。调用链可以包含多个 inter-language call 和多个 intra-language call 。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;&#x2F;ieee_1800_2017_chapter35&#x2F;image-20220910003552091.png&quot; alt=&quot;image-20220910003552091&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;对于 context subroutine 的调用会阻止 SV 编译器优化。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;35-5-4-import-declarations&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-5-4-import-declarations&quot; aria-label=&quot;Anchor link for: 35-5-4-import-declarations&quot;&gt;35.5.4 Import declarations&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;每个 imported 的 subroutine 都需要声明。声明的格式如下&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;&#x2F;ieee_1800_2017_chapter35&#x2F;image-20220909102105075.png&quot; alt=&quot;image-20220909102105075&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;任务的返回值总是 int 类型，所以外部函数定义也使用 int。&lt;&#x2F;p&gt;
+&lt;p&gt;import 声明指定了 subroutine 名字，函数返回类型，参数类型。也可以提供可选的参数默认值。参数名字也是可选的，除非需要名字绑定。import 函数声明也可以可选 &lt;code&gt;pure or context&lt;&#x2F;code&gt;标注，import 任务声明可选 &lt;code&gt;context &lt;&#x2F;code&gt; 标注。&lt;&#x2F;p&gt;
+&lt;p&gt;由于 import 声明等于 SV 内部的定义，所以在同一个 scope 不能出现多次相同的 import 声明。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;dpi_spec_string&lt;&#x2F;em&gt; 可以是 &amp;quot;DPI-C&amp;quot; 或者 &amp;quot;DPI&amp;quot;。&amp;quot;DPI&amp;quot; 用来表明要用到 SV 已经弃用的 packed array 参数传递语义。在这种语义下，参数传递机制不同。并且会给出编译器警告或者错误：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&amp;quot;DPI&amp;quot; is deprecated and should be replaced with &amp;quot;DPI-C&amp;quot;&lt;&#x2F;li&gt;
+&lt;li&gt;Use of the &amp;quot;DPI-C&amp;quot; string may require changes in the DPI application&#x27;s C code.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;&lt;em&gt;c_identifier&lt;&#x2F;em&gt; 提供了给外部语言的链接名称。如果没有，就使用 SV 的 subroutine 名字。链接名称需要满足 C 规范，不满足应该报错。&lt;&#x2F;p&gt;
+&lt;p&gt;对于给定的 &lt;em&gt;c_identifier&lt;&#x2F;em&gt; 所有的声明应该有相同的类型签名。签名包括返回类型，参数的数量，顺序，方向，和类型。类型也包括了 array 的维度。签名还包括了 &lt;code&gt;pure &#x2F; context&lt;&#x2F;code&gt; 标签，以及&lt;em&gt;dpic_spec_string&lt;&#x2F;em&gt;。&lt;&#x2F;p&gt;
+&lt;p&gt;在不同的 scope 是允许存在相同的声明的，因此参数名称和默认值可以不同。&lt;&#x2F;p&gt;
+&lt;p&gt;下面是一些例子：&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;&#x2F;ieee_1800_2017_chapter35&#x2F;image-20220909171529703.png&quot; alt=&quot;image-20220909171529703&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;35-5-5-function-result&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-5-5-function-result&quot; aria-label=&quot;Anchor link for: 35-5-5-function-result&quot;&gt;35.5.5 Function result&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;imported 函数声明应该显式指定数据类型或者 void。函数返回类型被限制为 samll value。下面的 SV 数据类型可以作为返回类型：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;void, byte, shortint, int, longint, real, shortreal, chandle, string&lt;&#x2F;li&gt;
+&lt;li&gt;scalar values of type &lt;code&gt;bit&lt;&#x2F;code&gt; and &lt;code&gt;logic&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;exported 函数返回类型有相同的限制。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;35-5-6-types-of-formal-arguments&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-5-6-types-of-formal-arguments&quot; aria-label=&quot;Anchor link for: 35-5-6-types-of-formal-arguments&quot;&gt;35.5.6 Types of formal arguments&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;SV 的数据类型很大的子集可以作为参数类型。通常，C 兼容类型，packed 类型，和基于这两种类型的用户定义类型都可以用于 DPI 的 subroutine。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;&#x2F;ieee_1800_2017_chapter35&#x2F;image-20220909172451991.png&quot; alt=&quot;image-20220909172451991&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;&#x2F;ieee_1800_2017_chapter35&#x2F;image-20220909172733051.png&quot; alt=&quot;image-20220909172733051&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;35-5-6-1-open-arrays&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-5-6-1-open-arrays&quot; aria-label=&quot;Anchor link for: 35-5-6-1-open-arrays&quot;&gt;35.5.6.1 Open arrays&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;packed 大小，unpakced 大小没有定义的还没涉及：这种情况属于 open array（unsized arrays）。open array 允许通用代码处理不同的大小。&lt;&#x2F;p&gt;
+&lt;p&gt;imported 函数的参数可以作为 open arrays（exported SV 函数不行）。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;&#x2F;ieee_1800_2017_chapter35&#x2F;image-20220909173145522.png&quot; alt=&quot;image-20220909173145522&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;35-6-calling-imported-functions&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-6-calling-imported-functions&quot; aria-label=&quot;Anchor link for: 35-6-calling-imported-functions&quot;&gt;35.6 Calling imported functions&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;调用 imported 函数与 SV 函数是一样的。有默认参数的不能在调用中被省略，如果形参有名字，参数可以通过名字绑定。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;35-6-1-argument-passing&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-6-1-argument-passing&quot; aria-label=&quot;Anchor link for: 35-6-1-argument-passing&quot;&gt;35.6.1 Argument passing&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;imported 函数的参数传递依据 WYSIWYG 原则：What You Specify Is What You Get。形参的运算顺序参照 SV 规则。&lt;&#x2F;p&gt;
+&lt;p&gt;参数兼容性和强制转换规则也和 SV 一样。如果需要转换类型，会创建一个临时变量，然后作为实参传入。对于 input 和 inout 参数类型，临时变量使用实参的值来初始化。对于 output 或者 inout 参数，临时变量使用实参赋值。&lt;&#x2F;p&gt;
+&lt;p&gt;SV 侧的接口，input 参数的实参不会被被调影响。output 参数初始值未定义。imported 函数不应该修改 input 参数。&lt;&#x2F;p&gt;
+&lt;p&gt;对于 SV 侧的接口，参数传递的语义是：input 参数 copy-in，output 参数 copy-out，inout 参数 copy-in， copy-out。&lt;&#x2F;p&gt;
+&lt;p&gt;参数传递的实现对于 SV 是透明的。尤其是对于 SV 来说通过值传递还是引用传递是透明的。实参传递机制是外部语言定义的 layout。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;35-6-1-1-wysiwyg-principle&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-6-1-1-wysiwyg-principle&quot; aria-label=&quot;Anchor link for: 35-6-1-1-wysiwyg-principle&quot;&gt;35.6.1.1 WYSIWYG principle&lt;&#x2F;a&gt;&lt;&#x2F;h4&gt;
+&lt;p&gt;WYSIWYG 原则保证了 imported 函数形参类型：实参保证符合形参的类型，除了 open arrays。除了 open arrays，形参完全由 import 声明定义。&lt;&#x2F;p&gt;
+&lt;p&gt;另一种说法是，没有编译器（C 或者 SV）可以在调用者声明的形参和被调者声明的形参之间强制转换。这是因为被调者形参声明的语言与调用者不同，因此两种形参是互相不可见的。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;35-6-2-value-changes-for-output-and-inout-arguments&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-6-2-value-changes-for-output-and-inout-arguments&quot; aria-label=&quot;Anchor link for: 35-6-2-value-changes-for-output-and-inout-arguments&quot;&gt;35.6.2 Value changes for output and inout arguments&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;SV 模拟器需要负责处理 output 和 inout 参数的修改。这种修改在 imported 函数完成回到 SV 代码之后应该是完成的。&lt;&#x2F;p&gt;
+&lt;p&gt;对于 output 和 inout 参数，值的传播（值修改事件）发生在 imported 函数返回后实参的值马上赋值给形参。如果有超过一个参数，赋值顺序参照 SV 的规则。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;35-7-exported-functions&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-7-exported-functions&quot; aria-label=&quot;Anchor link for: 35-7-exported-functions&quot;&gt;35.7 Exported functions&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;DPI 还允许 SV 函数被外部语言调用。但是，函数的限制与 imported 函数相同。通过声明为 exported 不改变 SV 函数的语义。&lt;&#x2F;p&gt;
+&lt;p&gt;SV exported 函数可以被外部语言调用，但是 export 的声明只在函数定义的 scope 有效。&lt;&#x2F;p&gt;
+&lt;p&gt;有一个重要限制，类的成员函数不能被 exported，其他所有函数都可以。&lt;&#x2F;p&gt;
+&lt;p&gt;声明格式在介绍 imported 函数一节已经描述过。&lt;strong&gt;所有的 exported 函数都是 context 函数&lt;&#x2F;strong&gt;。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;35-8-exported-tasks&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-8-exported-tasks&quot; aria-label=&quot;Anchor link for: 35-8-exported-tasks&quot;&gt;35.8 Exported tasks&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;SV 允许外部函数调用 task。&lt;&#x2F;p&gt;
+&lt;p&gt;35.7 对于 exported 函数的都有描述都适用于 exported 任务。&lt;&#x2F;p&gt;
+&lt;p&gt;在 imported 函数中调用 exported 任务是不合法的，与 SV 自己的定义规则相同：在函数中调用任务不合法。&lt;&#x2F;p&gt;
+&lt;p&gt;只有在 context imported 任务中调用 exported 任务才合法。&lt;&#x2F;p&gt;
+&lt;p&gt;exported 的任务和函数的不同点在于 SV 任务没有返回值。任务的返回值是一个 int 值，表明禁用是否处于当前执行的线程。&lt;&#x2F;p&gt;
+&lt;p&gt;类似的，imported 任务返回 int 值用于表明 imported 任务关于禁用的知识。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;35-9-disabling-dpi-tasks-and-functions&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#35-9-disabling-dpi-tasks-and-functions&quot; aria-label=&quot;Anchor link for: 35-9-disabling-dpi-tasks-and-functions&quot;&gt;35.9 Disabling DPI tasks and functions&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;p&gt;可以使用 disable 语句使得 block 禁用当前正在执行混合语言调用链。当一个 DPI impor subroutine 被禁用，C 代码需要符合一个简单的禁用协议：使得 C 代码可以执行必要的资源清理，不如关闭打开的文件，关闭打开的 VPI handle，或者释放堆内存。&lt;&#x2F;p&gt;
+&lt;p&gt;当 disable 语句在设计目标或者父模块正在 diabling，imported subroutine 就处于禁止状态。imported subroutine 只会在调用 exported subroutine 返回之后进入禁止状态。协议的重要一点是禁止的 import 任务和函数应该在语义上了解自己被禁止了。subroutine 可以通过调用 &lt;code&gt;svIsDisabledState()&lt;&#x2F;code&gt;来了解是否被禁止。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;wendajiang.github.io&#x2F;pics&#x2F;&#x2F;ieee_1800_2017_chapter35&#x2F;image-20220910113931996.png&quot; alt=&quot;image-20220910113931996&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;b，c，d 是 imported DPI 任务和函数的强制行为。DPI 开发者有责任正确实现这个行为。&lt;&#x2F;p&gt;
+&lt;p&gt;a 由 SV 模拟器保证。并且模拟器应该也对 b，c，d 验证，如果没有满足应该报错。&lt;&#x2F;p&gt;
+&lt;p&gt;外部语言包含禁止协议，这个协议是用户代码与模拟器一起工作的。禁止协议允许外部模型参与模拟器的禁止处理。&lt;&#x2F;p&gt;
+&lt;p&gt;任务的特殊返回值没有改变 SV 代码的调用语法。export 任务的返回值由模拟器保证，import 任务的返回值由 DPI 应用保证。&lt;&#x2F;p&gt;
+&lt;p&gt;exported 任务本省是禁止的，但是其父 imported 任务不在禁止状态。&lt;&#x2F;p&gt;
+&lt;p&gt;当一个 DPI imported subroutine 由于禁用返回，output 和 inout 参数的值是未定义的。同时，函数的返回值也是未定义的。C 程序员可以从禁用函数返回，修改 output 和 inout 参数，但是 SV 模拟器不会传递这个值。&lt;&#x2F;p&gt;
+</content>
+    </entry>
+</feed>

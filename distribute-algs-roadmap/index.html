@@ -1,0 +1,68 @@
+<!doctype html><html lang=en-US><head><meta charset=utf-8><meta content="ie=edge" http-equiv=x-ua-compatible><meta content="width=device-width,initial-scale=1,shrink-to-fit=no" name=viewport><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-regular.woff2 rel=preload type=font/woff2><link as=font crossorigin href=https://wendajiang.github.io/fonts/vendor/jost/jost-v4-latin-700.woff2 rel=preload type=font/woff2><link href=https://wendajiang.github.io/main.css rel=stylesheet><meta content="index, follow" name=robots><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=googlebot><meta content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" name=bingbot><title>分布式算法路线图 | 「靡不有初，鲜克有终」</title><meta content="blog of david" name=description><link href=https://wendajiang.github.io/distribute-algs-roadmap/ rel=canonical><meta content=分布式算法路线图 property=og:title><meta content="blog of david" property=og:description><meta content=article property=og:type><meta content=https://wendajiang.github.io/distribute-algs-roadmap/ property=og:url><meta content=https://wendajiang.github.io/david.png property=og:image><meta property=og:updated_time><meta content=分布式算法路线图 property=og:site_name><meta content=en_US property=og:locale><script type=application/ld+json>
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/distribute-algs-roadmap/"
+      },
+      "headline": "分布式算法路线图",
+      "image": ,
+      "datePublished": "2021-02-03T01:02:18",
+      "dateModified": "",
+      "author": {
+        "@type": "Organization",
+        "name": "分布式算法路线图"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "分布式算法路线图",
+        
+        "logo": {
+          "@type": "ImageObject",
+          "url": "/david.png"
+        }
+        
+      },
+      "description": "blog of david"
+    }
+    </script><script type=application/ld+json>
+  {
+    "@context": "http://schema.org",
+    "@type": "BreadcrumbList",
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          {
+            "@type": "ListItem",
+            "position":  1 ,
+            "name": "Home",
+            "item": "https://wendajiang.github.io/"
+          },
+          
+          
+          {
+            "@type": "ListItem",
+            "position":  2 ,
+            "name": "Distribute Algs Roadmap",
+            "item": "https://wendajiang.github.io/distribute-algs-roadmap/"
+          },
+        
+      
+    
+  }
+</script><meta content=#fff name=theme-color><link href=https://wendajiang.github.io/david.png rel=apple-touch-icon sizes=180x180><link href=https://wendajiang.github.io/david.png rel=icon sizes=32x32 type=image/png><link href=https://wendajiang.github.io/david.png rel=icon sizes=16x16 type=image/png><link crossorigin href=https://wendajiang.github.io/site.webmanifest rel=manifest><link href=https://wendajiang.github.io/rss.xml rel=alternate title=RSS type=application/rss+xml><link crossorigin href=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css integrity=sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq rel=stylesheet><script crossorigin defer integrity=sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js></script><script crossorigin defer integrity=sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI onload=renderMathInElement(document.body); src=https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js></script><body class="blog single"><div class="header-bar fixed-top"></div><header class="navbar fixed-top navbar-expand-md navbar-light"><div class=container><input class="menu-btn order-0" id=menu-btn type=checkbox><label class="menu-icon d-md-none" for=menu-btn><span class=navicon></span></label><a class="navbar-brand order-1 order-md-0 me-auto" href=https://wendajiang.github.io>「靡不有初，鲜克有终」</a><button aria-label="Toggle mode" class="btn btn-link order-2 order-md-4" id=mode type=button><span class=toggle-dark><svg class="feather feather-moon" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span> <span class=toggle-light><svg class="feather feather-sun" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><circle cx=12 cy=12 r=5></circle><line x1=12 x2=12 y1=1 y2=3></line><line x1=12 x2=12 y1=21 y2=23></line><line x1=4.22 x2=5.64 y1=4.22 y2=5.64></line><line x1=18.36 x2=19.78 y1=18.36 y2=19.78></line><line x1=1 x2=3 y1=12 y2=12></line><line x1=21 x2=23 y1=12 y2=12></line><line x1=4.22 x2=5.64 y1=19.78 y2=18.36></line><line x1=18.36 x2=19.78 y1=5.64 y2=4.22></line></svg></span></button><ul class="navbar-nav fork-me order-3 order-md-5"><li class=nav-item><a class=nav-link href=https://github.com/wendajiang><svg class="feather feather-github" viewbox="0 0 24 24" fill=none height=20 stroke=currentColor stroke-linecap=round stroke-linejoin=round stroke-width=2 width=20 xmlns=http://www.w3.org/2000/svg><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg><span class="ms-2 visually-hidden">GitHub</span></a></ul><div class="collapse navbar-collapse order-4 order-md-1"><ul class="navbar-nav main-nav me-auto order-5 order-md-2"><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/books/effective-modern-cpp/>Books</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/turtle/>Turtle</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/essay/>Essay</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/QA/>Q&A</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/tags>Tags</a><li class=nav-item><a class=nav-link href=https://wendajiang.github.io/archive>Archive</a></ul><div class="break order-6 d-md-none"></div></div></div></header><div class="wrap container" role=document><div class=content><div class="row justify-content-center"><nav aria-label="Secondary navigation" class="books-toc d-none d-xl-block col-xl-3"><div class=page-links><h3>On this page</h3><nav id=TableOfContents><ul><li><a href=https://wendajiang.github.io/distribute-algs-roadmap/#yi-zhi-xing>一致性</a><li><a href=https://wendajiang.github.io/distribute-algs-roadmap/#ke-yong-xing>可用性</a><li><a href=https://wendajiang.github.io/distribute-algs-roadmap/#xing-neng>性能</a></ul></nav></div></nav><div class="col-md-12 col-lg-10 col-xxl-8"><article><div class=blog-header><h1>分布式算法路线图</h1><p><small>Posted 2021-02-03 01:02:18 ‐ <strong>4 min read</strong></small><p><div class=category-area>「 <a href=https://wendajiang.github.io/tags/distribute> <div class=category>distribute</div> </a><a href=https://wendajiang.github.io/tags/alg> <div class=category>alg</div> </a> 」</div></div><p>开发分布式系统最关键的是根据场景特点，选择合适的算法，在一致性和可用性之间折中<p>分布式算法的四度空间：<table><thead><tr><th style=text-align:center>协议<th style=text-align:center>拜占庭容错<th style=text-align:center>一致性<th style=text-align:center>性能<th style=text-align:center>可用性<tbody><tr><td style=text-align:center>2PC（2阶段提交协议）<td style=text-align:center>否<td style=text-align:center>强一致性<td style=text-align:center>低<td style=text-align:center>低<tr><td style=text-align:center>TCC<td style=text-align:center>否<td style=text-align:center>最终一致性<td style=text-align:center>低<td style=text-align:center>低<tr><td style=text-align:center>Paxos<td style=text-align:center>否<td style=text-align:center>强一致性<td style=text-align:center>中<td style=text-align:center>中<tr><td style=text-align:center>ZAB<td style=text-align:center>否<td style=text-align:center>最终一致性<td style=text-align:center>中<td style=text-align:center>中<tr><td style=text-align:center>Raft<td style=text-align:center>否<td style=text-align:center>强一致性<td style=text-align:center>中<td style=text-align:center>中<tr><td style=text-align:center>Gossip<td style=text-align:center>否<td style=text-align:center>最终一致性<td style=text-align:center>高<td style=text-align:center>高<tr><td style=text-align:center>Quorum NWR<td style=text-align:center>否<td style=text-align:center>强一致性<td style=text-align:center>中<td style=text-align:center>中<tr><td style=text-align:center>PBFT<td style=text-align:center>是<td style=text-align:center>N/A<td style=text-align:center>低<td style=text-align:center>中<tr><td style=text-align:center>POW<td style=text-align:center>是<td style=text-align:center>N/A<td style=text-align:center>低<td style=text-align:center>中</table><h3 id=yi-zhi-xing><a aria-label="Anchor link for: yi-zhi-xing" class=zola-anchor href=#yi-zhi-xing>一致性</a></h3><ul><li>强一致性：保证写操作完成后，任何后续访问都能读到更新后的值<li>弱一致性：写操作完成后，系统不能保证后续访问都能读到更新后的值<li>最终一致性：保证如果某个对象没有新的写操作了，最终所有后续访问都能读到相同的最近更新的值</ul><p>强一致性是具有多种含义的。<p>首先，在埃里克·布鲁尔的猜想中，CAP 中的强一致性（也就是 C）是指 ACID 的 C，系统状态的一致性，而这种一致性，可以通过二阶段提交协议来实现。<p>其次，在 CAP 定理中，CAP 中的强一致性（也就是 C）是指原子一致性（也就是线性一致性）。其中，Paxos、Raft 能实现线性一致性，而 ZooKeeper 基于读性能的考虑，它通过 ZAB 协议提供的是最终一致性。<p>一般而言，在需要系统状态的一致性时，你可以考虑采用二阶段提交协议、TCC。在需要数据访问是的强一致性时，你可考虑 Raft 算法。在可用性优先的系统，你可以采用 Gossip 协议来实现最终一致性，并实现 Quorum NWR 来提供强一致性。<h3 id=ke-yong-xing><a aria-label="Anchor link for: ke-yong-xing" class=zola-anchor href=#ke-yong-xing>可用性</a></h3><p>可用性强调的是服务可用<p>一般来讲，采用Gossip协议实现最终一致性的系统，可用性最高。其次是Paxos、ZAB、Raft、Quorum NWR、PBFT、POW，可以容忍一定数量节点故障<p>最后是二阶段提交协议、TCC，只有当所有节点都运行时，才能工作，可用性最低<h3 id=xing-neng><a aria-label="Anchor link for: xing-neng" class=zola-anchor href=#xing-neng>性能</a></h3><p>一般来讲，采用 Gossip 协议的 AP 型分布式系统，具备水平扩展能力，读写性能是最高的。其次是 Paxos 算法、ZAB 协议、Raft 算法，因为它们都是领导者模型，写性能受限于领导者，读性能取决于一致性实现。最后是二阶段提交协议和 TCC，因为在实现事务时，需要预留和锁定资源，性能相对低。<p><img alt=111 src=https://wendajiang.github.io/pics/2021-02-03-distribute-algs-roadmap/%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%AE%AE%E5%92%8C%E7%AE%97%E6%B3%95%E5%AE%9E%E6%88%98.png></article></div></div></div><div id=gitalk-container></div><link href=https://unpkg.com/gitalk/dist/gitalk.css rel=stylesheet><script src=https://unpkg.com/gitalk/dist/gitalk.min.js></script><script>var gitalk=new Gitalk({id:'分布式算法路线图',clientID:'a17500877ddbb2dd70b9',clientSecret:'77e1c5816e97e2473c0a617bd0e3ece99f33559f',repo:'wendajiang.github.io',owner:'wendajiang',admin:['wendajiang'],perPage:50});gitalk.render('gitalk-container')</script></div><script defer src=https://wendajiang.github.io/js/main.js></script><script defer src=https://wendajiang.github.io/plugins/elasticlunr.min.js></script><script defer src=https://wendajiang.github.io/search_index.en.js></script><script defer src=https://wendajiang.github.io/js/search.js></script>

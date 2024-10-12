@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - work</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/work/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2021-04-01T21:23:02+00:00</updated>
+    <id>https://wendajiang.github.io/tags/work/atom.xml</id>
+    <entry xml:lang="en">
+        <title>业务思考</title>
+        <published>2021-04-01T21:23:02+00:00</published>
+        <updated>2021-04-01T21:23:02+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/QA/busi-thinking/" type="text/html"/>
+        <id>https://wendajiang.github.io/QA/busi-thinking/</id>
+        <content type="html">&lt;p&gt;关于数据库使用，选型，或者任何公共组件的使用，对于业务方来说，可靠是第一要素，如果使用过程中又一次失败案例，业务方的抵触直接飙满，基本不会有下一次合作，除非都烂。&lt;&#x2F;p&gt;
+&lt;p&gt;而且很多业务并不喜欢主动接入新东西，在目前所在的公司来看，业务方负责人是要对业务负责的，如果选择什么组件导致业务除了问题，业务负责人是要被问责的，人都有趋利避害的天性，所以为了自我保护，除了上级指示要接入什么，否则对于各种组件的使用，一般是保持规避的态度，除非业务需求上有些不得不接入，那么方案会给领导做很细致的评审，甩锅？&lt;&#x2F;p&gt;
+&lt;p&gt;所以数据库这种公共组件如何吸引业务的青睐就是一个一直都有的问题&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;p&gt;业务代码或者其他代码的快速切入理解，改造（就是没文档，看代码逻辑自行推测）&lt;&#x2F;p&gt;
+&lt;p&gt;首先着重于数据构成，代码逻辑基于数据组成&lt;&#x2F;p&gt;
+</content>
+    </entry>
+</feed>

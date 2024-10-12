@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+    <title>「靡不有初，鲜克有终」 - unit test</title>
+    <subtitle>blog of david</subtitle>
+    <link href="https://wendajiang.github.io/tags/unit test/atom.xml" rel="self" type="application/atom+xml"/>
+    <link href="https://wendajiang.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2023-02-09T16:22:43+00:00</updated>
+    <id>https://wendajiang.github.io/tags/unit test/atom.xml</id>
+    <entry xml:lang="en">
+        <title>Testing Framework</title>
+        <published>2023-02-09T16:22:43+00:00</published>
+        <updated>2023-02-09T16:22:43+00:00</updated>
+        <author>
+          <name>Unknown</name>
+        </author>
+        <link rel="alternate" href="https://wendajiang.github.io/testing-framework/" type="text/html"/>
+        <id>https://wendajiang.github.io/testing-framework/</id>
+        <content type="html">&lt;h1 id=&quot;from-catch2&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#from-catch2&quot; aria-label=&quot;Anchor link for: from-catch2&quot;&gt;From Catch2&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;When I need to unit-test for some software, I find the Catch2 library, v2 version is only header-library. I read the document: &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;catchorg&#x2F;Catch2&#x2F;blob&#x2F;devel&#x2F;docs&#x2F;why-catch.md#top&quot;&gt;Why do we need yet another C++ test framework?&lt;&#x2F;a&gt;, for c++ there are so many established frameworks, including to(but not limited to), Google Test, Boost.Test, CppUnit and so on. Summary as follow:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Easy to use. Just download some file, add them into your project. No external dependencies.&lt;&#x2F;li&gt;
+&lt;li&gt;BDD-style, Given-When-Then sections as well as traditional unit test cases&lt;&#x2F;li&gt;
+&lt;li&gt;Write test cases as, self-registering, functions(or methods, if you prefer)&lt;&#x2F;li&gt;
+&lt;li&gt;Tests are named using free-form strings - no more couching names in legal identifiers&lt;&#x2F;li&gt;
+&lt;li&gt;...&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;For me simple and practical using, the first tip is important.&lt;&#x2F;p&gt;
+&lt;p&gt;But, yes, there is always but, the v3 version brings a bunch of significant changes, the big one being that Catch2 is no longer a single-header library, and behaves as a normal library, with multiple headers and separately compiled implementation.&lt;&#x2F;p&gt;
+&lt;p&gt;It&#x27;s ok, and what I need particular requirement is I want to write test with productive code. And personly I like the single-header library, it&#x27;s easiest to use.&lt;&#x2F;p&gt;
+&lt;p&gt;And I find the doctest repo.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;doctest&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#doctest&quot; aria-label=&quot;Anchor link for: doctest&quot;&gt;Doctest&lt;&#x2F;a&gt;&lt;&#x2F;h1&gt;
+&lt;p&gt;Tests can be a form of documentation and should be able to reside near the production code which they test. &lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;This makes the barrier for writing tests much lower - you don&#x27;t have to: 1) make a separate source file 2) include a bunch of stuff in it 3) add it to the build system and 4) add it to source control - You can just write the tests for a class or a piece of functionality at the bottom of its source file - or even header file!&lt;&#x2F;li&gt;
+&lt;li&gt;Tests in the production code can be thought of as documentation&#x2F;up-to-date comments - showcasing the APIs&lt;&#x2F;li&gt;
+&lt;li&gt;Testing internals that are not exposed through the public API and headers is no longer a mind-bending exercise&lt;&#x2F;li&gt;
+&lt;li&gt;Test-driven development in C++ has never been easier!&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;And there is the DOCTEST_CONFIG_DISABLE config to remove all tests from the library or binary.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;assertion-micro&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#assertion-micro&quot; aria-label=&quot;Anchor link for: assertion-micro&quot;&gt;Assertion Micro&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;REQUIRE : will immediately quit the test case if the assert fails and will mark the test case as failed&lt;&#x2F;li&gt;
+&lt;li&gt;CHECK : will mark the test case as failed if the assert fails but will continue with the test case&lt;&#x2F;li&gt;
+&lt;li&gt;WARN : will only print a message if the assert fails but will not mark the test case as failed&lt;&#x2F;li&gt;
+&lt;li&gt;&amp;lt;LEVEL&amp;gt;_THOWS : except a throw&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;test-cases&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#test-cases&quot; aria-label=&quot;Anchor link for: test-cases&quot;&gt;Test cases&lt;&#x2F;a&gt;&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;TEST_CASE(test name)&lt;&#x2F;li&gt;
+&lt;li&gt;SUBCASE &lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;bdd-style-test-cases&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#bdd-style-test-cases&quot; aria-label=&quot;Anchor link for: bdd-style-test-cases&quot;&gt;BDD-style test cases&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;SCENARIO(scenario name) -&amp;gt; map to TEST_CASE, and the test case name will be prefixed by &amp;quot;Scenario: &amp;quot;&lt;&#x2F;li&gt;
+&lt;li&gt;GIVEN &#x2F; WHEN&#x2F; THEN - map to SUBCASE, the prefixed would be &amp;quot;given: &#x2F; when: &#x2F; then: &amp;quot;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;test-suites&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#test-suites&quot; aria-label=&quot;Anchor link for: test-suites&quot;&gt;Test suites&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Test cases can be grouped into test suites.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;TEST_SUITE(&amp;lt;suite name&amp;gt;) {}&lt;&#x2F;li&gt;
+&lt;li&gt;TEST_SUITE_BEGIN(&amp;lt;suite name&amp;gt;)&lt;&#x2F;li&gt;
+&lt;li&gt;TEST_SUITE_END()&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;decorators&quot;&gt;&lt;a class=&quot;zola-anchor&quot; href=&quot;#decorators&quot; aria-label=&quot;Anchor link for: decorators&quot;&gt;Decorators&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
+&lt;p&gt;Test cases can be decorated with additional attributes like this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;cpp&quot; style=&quot;background-color:#282a36;color:#f8f8f2;&quot; class=&quot;language-cpp &quot;&gt;&lt;code class=&quot;language-cpp&quot; data-lang=&quot;cpp&quot;&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;TEST_CASE&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;name&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;doctest&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;description&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f1fa8c;&quot;&gt;&amp;quot;shouldn&amp;#39;t take more than 500ms&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;doctest&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ff79c6;&quot;&gt;::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#50fa7b;&quot;&gt;timeout&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bd93f9;&quot;&gt;0.5&lt;&#x2F;span&gt;&lt;span&gt;))
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Multiple decorators can be used at the same time.&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;skip(bool = true)&lt;&#x2F;li&gt;
+&lt;li&gt;no_breaks(bool = true)&lt;&#x2F;li&gt;
+&lt;li&gt;no_output(bool = true)&lt;&#x2F;li&gt;
+&lt;li&gt;may_fail(bool = true) doesn&#x27;t fail the test case if any given assertion fails(but still report it)&lt;&#x2F;li&gt;
+&lt;li&gt;should_fail(bool = true)&lt;&#x2F;li&gt;
+&lt;li&gt;expected_failures(int)&lt;&#x2F;li&gt;
+&lt;li&gt;timeout(double) fails the test case if its execution exceeds this limit (in seconds) - but doesn&#x27;t terminate it - that would require subprocess support&lt;&#x2F;li&gt;
+&lt;li&gt;test_suite(&amp;quot;name&amp;quot;)&lt;&#x2F;li&gt;
+&lt;li&gt;description(&amp;quot;text&amp;quot;)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</content>
+    </entry>
+</feed>
